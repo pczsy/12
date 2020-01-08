@@ -1,0 +1,218 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(九)  基础篇 生命周期详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(九)  基础篇 生命周期详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11062881.html</div><br>
+    <p>&nbsp;先来看看官网的介绍:</p>
+<p><img src="./images/Vue.js 源码分析(九)  基础篇 生命周期详解0.png" alt="" /></p>
+<p>主要有八个生命周期，分别是:</p>
+<p>beforeCreate、created、beforeMount、mounted、beforeupdate、updated&nbsp;&nbsp; 、beforeDestroy和destroyed，分别对应八个不同的时期，另外还有两个activated和deactivated生命周期是对应Keep-Alive组件的</p>
+<p>关于这八个生命周期的具体用法官网介绍的很详细了，飞机入口:<a href="https://cn.vuejs.org/v2/api/#beforeCreate" target="_blank"><span style="color: #ff0000;">点我点我</span></a> ，另外还有一张比较直观图形介绍，飞机入口:<span style="color: #ff0000;"><a href="https://cn.vuejs.org/v2/guide/instance.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E5%9B%BE%E7%A4%BA" target="_blank"><span style="color: #ff0000;">点我点我</span></a></span></p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>    
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{message}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test1()"</span><span style="color: #0000ff;">&gt;</span>测试(更新操作)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test2()"</span><span style="color: #0000ff;">&gt;</span>测试(销毁操作)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data:{message:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Hello World!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+            beforeCreate:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){    console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">beforeCreate</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);    },
+            created:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){         console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">created</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);         },
+            beforeMount:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){     console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">beforeMount</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);     },  
+            mounted:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){         console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">mounted</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);         },
+            beforeUpdate:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){    console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">beforeUpdate</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);    },
+            updated:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){         console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">updated</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);         },
+            beforeDestroy:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){   console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">beforeDestroy</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);   },
+            destroyed:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){       console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">destroyed</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);       },
+            methods:{
+                test1:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.message</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;},
+                test2:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$destroy();},
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>页面渲染如下:</p>
+<p><img src="./images/Vue.js 源码分析(九)  基础篇 生命周期详解1.png" alt="" /></p>
+<p>渲染完成后控制台输出:</p>
+<p><img src="./images/Vue.js 源码分析(九)  基础篇 生命周期详解2.png" alt="" /></p>
+<p>当点击了测试(更新操作)这个按钮后，修改了Vue实例的<span style="color: #000000;">message值做了更新操作，此时控制台输出如下:</span></p>
+<p><span style="color: #000000;"><img src="./images/Vue.js 源码分析(九)  基础篇 生命周期详解3.png" alt="" /></span></p>
+<p>当我们点击测试(销毁操作)按钮时，Vue实例做了销毁操作，控制台输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(九)  基础篇 生命周期详解4.png" alt="" /></p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>&nbsp;<span style="color: #000000;">对于Vue的插件(包括官方的生态)来说，绝大多数都用到了beforeCreate()这个生命周期函数，可以在实例化前混入一些属性，以vuex为例，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function<span style="color: #000000;"> applyMixin (Vue) {
+    <span style="color: #0000ff;">var version = Number(Vue.version.split('.')[0<span style="color: #000000;">]);
+
+    <span style="color: #0000ff;">if (version &gt;= 2<span style="color: #000000;">) {
+      Vue.mixin({ beforeCreate: vuexInit });              <span style="color: #008000;">//<span style="color: #008000;">如果Vue的版本大于2，则将vuexInit混入到beforeCreate生命周期函数，这样vuex就会进行初始化
+    } <span style="color: #0000ff;">else<span style="color: #000000;"> {
+      <span style="color: #008000;">//<span style="color: #008000;"> override init and inject vuex init procedure
+      <span style="color: #008000;">//<span style="color: #008000;"> for 1.x backwards compatibility.
+      <span style="color: #0000ff;">var _init =<span style="color: #000000;"> Vue.prototype._init;
+      Vue.prototype._init = <span style="color: #0000ff;">function<span style="color: #000000;"> (options) {
+        <span style="color: #0000ff;">if ( options === <span style="color: #0000ff;">void 0 ) options =<span style="color: #000000;"> {};
+
+        options.init =<span style="color: #000000;"> options.init
+          ?<span style="color: #000000;"> [vuexInit].concat(options.init)
+          : vuexInit;
+        _init.call(<span style="color: #0000ff;">this<span style="color: #000000;">, options);
+      };
+    }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>vue-router也是的,如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.mixin({                                     <span style="color: #008000;">//<span style="color: #008000;">混入了两个生命周期，分别是beforeCreate和destroyed
+    beforeCreate: <span style="color: #0000ff;">function<span style="color: #000000;"> beforeCreate () {
+      <span style="color: #0000ff;">if (isDef(<span style="color: #0000ff;">this<span style="color: #000000;">.$options.router)) {
+        <span style="color: #0000ff;">this._routerRoot = <span style="color: #0000ff;">this<span style="color: #000000;">;
+        <span style="color: #0000ff;">this._router = <span style="color: #0000ff;">this<span style="color: #000000;">.$options.router;
+        <span style="color: #0000ff;">this._router.init(<span style="color: #0000ff;">this<span style="color: #000000;">);
+        Vue.util.defineReactive(<span style="color: #0000ff;">this, '_route', <span style="color: #0000ff;">this<span style="color: #000000;">._router.history.current);
+      } <span style="color: #0000ff;">else<span style="color: #000000;"> {
+        <span style="color: #0000ff;">this._routerRoot = (<span style="color: #0000ff;">this.$parent &amp;&amp; <span style="color: #0000ff;">this.$parent._routerRoot) || <span style="color: #0000ff;">this<span style="color: #000000;">;
+      }
+      registerInstance(<span style="color: #0000ff;">this, <span style="color: #0000ff;">this<span style="color: #000000;">);
+    },
+    destroyed: <span style="color: #0000ff;">function<span style="color: #000000;"> destroyed () {
+      registerInstance(<span style="color: #0000ff;">this<span style="color: #000000;">);
+    }
+  });</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;生命周期的源码实现比较简单，都是通过Vue内部的一个叫callHook()的全局函数执行的，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> callHook (vm, hook) {    <span style="color: #008000;">//</span><span style="color: #008000;">第2914行 vm:vue实例 hook:对应的操作名(例如:beforeCreate、created等)</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> #7573 disable dep collection when invoking lifecycle hooks</span>
+<span style="color: #000000;">  pushTarget();
+  </span><span style="color: #0000ff;">var</span> handlers = vm.$options[hook];           <span style="color: #008000;">//</span><span style="color: #008000;">获取生命周期函数    </span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (handlers) {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0, j = handlers.length; i &lt; j; i++) {    <span style="color: #008000;">//</span><span style="color: #008000;">遍历生命周期函数</span>
+      <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+        handlers[i].call(vm);                               </span><span style="color: #008000;">//</span><span style="color: #008000;">执行该函数，以vm作为上下文</span>
+      } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+        handleError(e, vm, (hook </span>+ " hook"<span style="color: #000000;">));
+      }
+    }
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (vm._hasHookEvent) {
+    vm.$emit(</span>'hook:' +<span style="color: #000000;"> hook);
+  }
+  popTarget();
+}</span></pre>
+</div>
+<p>beforeCreate和created是在init()的时候执行的，如下:</p>
+<div class="cnblogs_code">
+<pre><code>Vue.prototype._init = <span style="color: #0000ff;">function</span> (options) {  <span style="color: #008000;">//</span><span style="color: #008000;">第4576行</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    vm._self </span>=<span style="color: #000000;"> vm;
+    initLifecycle(vm);
+    initEvents(vm);
+    initRender(vm);
+    callHook(vm, </span>'beforeCreate');             <span style="color: #008000;">//</span><span style="color: #008000;">执行beforeCreate生命周期函数</span>
+    initInjections(vm); <span style="color: #008000;">//</span><span style="color: #008000;"> resolve injections before data/props</span>
+<span style="color: #000000;">    initState(vm);
+    initProvide(vm); </span><span style="color: #008000;">//</span><span style="color: #008000;"> resolve provide after data/props</span>
+    callHook(vm, 'created');                  <span style="color: #008000;">//</span><span style="color: #008000;">执行created生命周期函数</span>
+
+    <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  };</span></pre>
+</div>
+<p>beforeMount和mounted是在挂载的时候在mountComponent()里执行的，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> mountComponent(vm, el, hydrating) {    <span style="color: #008000;">//</span><span style="color: #008000;">第2739行 挂载组件 vm:Vue实例  el:真实的DOM节点对象 </span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    callHook(vm, </span>'beforeMount');                    <span style="color: #008000;">//</span><span style="color: #008000;">挂载前 执行生命周期里的beforeMount事件</span>
+    <span style="color: #0000ff;">var</span><span style="color: #000000;"> updateComponent;
+    </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; config.performance &amp;&amp; mark) {         <span style="color: #008000;">//</span><span style="color: #008000;">开启了性能追踪时的分支</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        updateComponent </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {vm._update(vm._render(), hydrating);};   
+    }
+
+    </span><span style="color: #0000ff;">new</span> Watcher(vm, updateComponent, noop, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">true</span><span style="color: #000000;">);                       
+    hydrating </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">if</span> (vm.$vnode == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {                       
+        vm._isMounted </span>= <span style="color: #0000ff;">true</span>;                       <span style="color: #008000;">//</span><span style="color: #008000;">设置vm._isMounted为true,表示已挂载</span>
+        callHook(vm, 'mounted');                    <span style="color: #008000;">//</span><span style="color: #008000;">执行生命周期里的Mount事件</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vm
+}</span></pre>
+</div>
+<p>beforeUpdate是在Vue原型上的_update更新时触发的，如下:</p>
+<div class="cnblogs_code">
+<pre><code>Vue.prototype._update = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (vnode, hydrating) { <span style="color: #008000;">//第2646行
+    </span></span><span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (vm._isMounted) {                        <span style="color: #008000;">//</span><span style="color: #008000;">如果已经挂载了，则表示已经挂载了</span>
+        callHook(vm, 'beforeUpdate');               <span style="color: #008000;">//</span><span style="color: #008000;">则触发beforeUpdate</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>updated是在nextTick()执行时当watcher执行完了之后触发的，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> callUpdatedHooks (queue) { <span style="color: #008000;">//</span><span style="color: #008000;">第3016行</span>
+  <span style="color: #0000ff;">var</span> i =<span style="color: #000000;"> queue.length;
+  </span><span style="color: #0000ff;">while</span> (i--<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">var</span> watcher =<span style="color: #000000;"> queue[i];
+    </span><span style="color: #0000ff;">var</span> vm =<span style="color: #000000;"> watcher.vm;
+    </span><span style="color: #0000ff;">if</span> (vm._watcher === watcher &amp;&amp; vm._isMounted) { <span style="color: #008000;">//</span><span style="color: #008000;">如果当前是渲染watcher,且已经挂载了</span>
+      callHook(vm, 'updated');                        <span style="color: #008000;">//</span><span style="color: #008000;">则触发update生命周期函数</span>
+<span style="color: #000000;">    }
+  }
+}</span></pre>
+</div>
+<p>beforeDestroy和destroyed是在Vue原型的$destroy()方法里触发的，如下:</p>
+<div class="cnblogs_code">
+<pre><code> Vue.prototype.$destroy = <span style="color: #0000ff;">function</span> () { <span style="color: #008000;">//</span><span style="color: #008000;">第2695行</span>
+    <span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (vm._isBeingDestroyed) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+    }
+    callHook(vm, </span>'beforeDestroy');        <span style="color: #008000;">//</span><span style="color: #008000;">触发beforeDestroy生命周期函数</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">这里进行销毁过程</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    callHook(vm, </span>'destroyed');            <span style="color: #008000;">//</span><span style="color: #008000;">触发destroyed生命周期函数</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  };
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

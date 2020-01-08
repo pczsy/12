@@ -1,0 +1,55 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修浏览器渲染页面流程' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>浏览器渲染页面流程</center></div><div class='banquan'>原文出处:本文由博客园博主迪迪的博客提供。<br/>
+原文连接:https://www.cnblogs.com/yadiblogs/p/10730123.html</div><br>
+    <h1>浏览器步骤：</h1>
+<ol>
+<li>解析HTML文本，构建dom tree， 同时进行第3步。</li>
+<li>歇息CSS样式表，构建CSSOM tree</li>
+<li>根据DOM tree和 CSSOM tree 构建Render tree</li>
+<li>根据Render tree来进行布局处理（Layout）</li>
+<li>将页面元素进行绘制（Painting）</li>
+</ol>
+<p>&nbsp;</p>
+<ul>
+<li>浏览器从服务端拿到html文件后，首先开始解析html文件，构建DOM tree，并且同时构建Render Tree；</li>
+<li>遇到js文件的话，阻塞DOM tree的构建；因为js可能会改变dom和css，因此浏览器会先解析script，避免浪费。</li>
+<li>遇到css文件的话，先加载css然后构建CSSOM Tree，与此同时构建DOM Tree， 但是 将阻塞Render Tree的构建。</li>
+</ul>
+<p>如果将css文件放在底部，render tree在之前就已经构建完了，因此用户可能会看到无样式的页面，或者闪屏。</p>
+<h2>谈谈阻塞：</h2>
+<p>css： css被视为阻塞渲染的资源，也很好理解，要不然怎么构建render tree， 怎么进行布局处理呀~~ 因此浏览器会等待CSSOM tree构建完毕，当浏览器遇到&lt;link&gt;标签时候，会有限处理这些CSS资源。直至CSSOM构建完毕。</p>
+<p>js：&nbsp;script标签会阻塞html解析，因为js可能会改变dom和css，因此浏览器会先解析script，避免浪费。 要想避免阻塞的话，可使用defer 和 async。</p>
+<p>&nbsp;</p>
+<h2>谈谈Repaint和Reflow</h2>
+<p>Repaint： 发生在屏幕的一部分要重新画，比如背景颜色，布局没有改变！，浏览器只需要走第五步。</p>
+<p>Reflow： 布局发生了改变！浏览器需要重新从Layout这一步开始，因为Render tree已经变了。多走一步，显然更加耗费性能啦~~</p>
+<h3>所以呢重点关注会引起Reflow的操作：</h3>
+<ul>
+<li>当你增加、删除、修改DOM结点时，会导致Reflow或Repaint</li>
+<li>当你移动DOM的位置，或是搞个动画的时候。</li>
+<li>当你修改CSS样式的时候。</li>
+<li>当你Resize窗口的时候（移动端没有这个问题），或是滚动的时候。</li>
+<li>注：display:none会触发reflow，而visibility:hidden只会触发repaint，因为没有发现位置变化。</li>
+</ul>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

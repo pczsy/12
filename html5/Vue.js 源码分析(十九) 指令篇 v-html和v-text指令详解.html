@@ -1,0 +1,220 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11128344.html</div><br>
+    <p>双大括号会将数据解释为普通文本，而非 HTML 代码。<span style="color: #ff0000;">为了输出真正的 HTML，你需要使用 <code>v-html</code> 指令</span>，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span>&lt;/script&gt;
+    &lt;div id="app"&gt;
+        &lt;p&gt;{{message}}&lt;/p&gt;
+        &lt;p v-html="message"&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app'<span style="color: #000000;">,
+            data:{
+                message:</span>'&lt;span style="color:#f00"&gt;Hell World!&lt;/span&gt;'<span style="color: #000000;">
+            }
+        })
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>渲染结果为:</p>
+<p><img src="./images/Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解0.png" alt="" /></p>
+<p>&lt;p&gt;{{message}}&lt;/p&gt;里的message被解释为了普通文本，而不是输出真正的 HTML，而&lt;p v-html="message"&gt;&lt;/p&gt;输出了真正的html</p>
+<p>v-text和v-html类似，v-text以普通文本来插入，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span>&lt;/script&gt;
+    &lt;div id="app"&gt;
+        &lt;p v-html="message"&gt;{{message}}&lt;/p&gt;
+        &lt;p v-text="hello"&gt;你好&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app'<span style="color: #000000;">,
+            data:{
+                message:</span>'&lt;span style="color:#f00"&gt;Hell World!&lt;/span&gt;'<span style="color: #000000;">,
+                hello:</span>"Hello world"<span style="color: #000000;">
+            }
+        })
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>渲染的结果为:</p>
+<p><img src="./images/Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解1.png" alt="" /></p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>我们以第二个例子为例。</p>
+<p>v-html和v-text都是内部指令，它们有初始化函数，分别如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> text (el, dir) {       <span style="color: #008000;">//</span><span style="color: #008000;">第9785行 v-text指令</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (dir.value) {
+    addProp(el, </span>'textContent', ("_s(" + (dir.value) + ")"<span style="color: #000000;">)); 　　　　<span style="color: #ff0000;">//给el.prop上增加一个textContext属性</span>
+  }
+}
+</span><span style="color: #0000ff;">function</span> html (el, dir) {       <span style="color: #008000;">//</span><span style="color: #008000;">第9788行 v-html指令</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (dir.value) {
+    addProp(el, </span>'innerHTML', ("_s(" + (dir.value) + ")"<span style="color: #000000;">)); 　　　　　<span style="color: #ff0000;">//给el.prop上增加一个innerHTML属性</span>
+  }
+}</span></pre>
+</div>
+<p>parse()解析模板时会执行processAttrs()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {  <span style="color: #008000;">//</span><span style="color: #008000;">第9526行 对剩余的属性进行分析</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList; 
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++<span style="color: #000000;">) {
+    name </span>= rawName =<span style="color: #000000;"> list[i].name;
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span> (dirRE.test(name)) {           <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind        </span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-bind的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-on的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives               //普通指令</span>
+        name = name.replace(dirRE, '');               <span style="color: #008000;">//</span><span style="color: #008000;">去掉指令前缀，比如v-model执行后等于model</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> parse arg</span>
+        <span style="color: #0000ff;">var</span> argMatch =<span style="color: #000000;"> name.match(argRE);
+        </span><span style="color: #0000ff;">var</span> arg = argMatch &amp;&amp; argMatch[1<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (arg) {
+          name </span>= name.slice(0, -(arg.length + 1<span style="color: #000000;">));
+        }
+        addDirective(el, name, rawName, value, arg, modifiers);     </span><span style="color: #008000;">//</span><span style="color: #008000;">执行addDirective给el增加一个directives属性，值是一个数组，例如:[{name: "model", rawName: "v-model", value: "message", arg: null, modifiers: undefined}]</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; name === 'model'<span style="color: #000000;">) {
+          checkForAliasModel(el, value);
+        }
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">普通属性的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      }
+    }
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> addDirective (     <span style="color: #008000;">//</span><span style="color: #008000;">第6561行  指令相关，给el这个AST对象增加一个directives属性，值为该指令的信息，比如:</span>
+<span style="color: #000000;">  el,
+  name,
+  rawName,
+  value,
+  arg,
+  modifiers
+) {
+  (el.directives </span>|| (el.directives =<span style="color: #000000;"> [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>对于&lt;p v-html="message"&gt;{{message}}&lt;/p&gt;节点来说，他的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解2.png" alt="" /></p>
+<p>对于&lt;p v-text="hello"&gt;你好&lt;/p&gt;对象来说，他的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(十九) 指令篇 v-html和v-text指令详解3.png" alt="" /></p>
+<p>执行gendata$2()拼凑data属性时会先执行genDirectives()函数，该函数会执行v-html和v-text指令的安装函数，添加对应的prop属性，最后会转换为domProps属性，例子里的代码经过解析后生产的render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"app"}},[_c('p',{<span style="color: #ff0000;">domProps:{"innerHTML":_s(message)}</span>},[_v(_s(message))]),_v(" "),_c('p',{<span style="color: #ff0000;">domProps:{"textContent":_s(hello)}</span>},[_v("你好")])])}</pre>
+</div>
+<p>可以看到给两个p元素分别添加了一个domProps属性，值为对应的信息,</p>
+<p>最后渲染成对应的真实的DOM节点后就会执行domProps模块(Vue内置的模块，当DOM元素渲染、更新、删除时做一些操作)的初始化函数，也就是updateDOMProps函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> updateDOMProps (oldVnode, vnode) {       <span style="color: #008000;">//</span><span style="color: #008000;">第7102行 更新DOM对象的props</span>
+  <span style="color: #0000ff;">if</span> (isUndef(oldVnode.data.domProps) &amp;&amp; isUndef(vnode.data.domProps)) {    <span style="color: #008000;">//</span><span style="color: #008000;">如果oldVnode和vnode的data上都没有domProps属性</span>
+    <span style="color: #0000ff;">return</span>                                                                    <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回不做处理</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> key, cur;
+  </span><span style="color: #0000ff;">var</span> elm =<span style="color: #000000;"> vnode.elm;                                                     <span style="color: #008000;"> //vnode对应的DOM节点对象
+  </span></span><span style="color: #0000ff;">var</span> oldProps = oldVnode.data.domProps ||<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span> props = vnode.data.domProps || {};                                    <span style="color: #008000;">//</span><span style="color: #008000;">vnode的domProps对象</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> clone observed objects, as the user probably wants to mutate it</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(props.__ob__)) {
+    props </span>= vnode.data.domProps =<span style="color: #000000;"> extend({}, props);
+  }
+
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span><span style="color: #000000;"> oldProps) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(props[key])) {
+      elm[key] </span>= ''<span style="color: #000000;">;
+    }
+  }
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span> props) {                                                    <span style="color: #008000;">//</span><span style="color: #008000;">遍历props <span style="color: #ff0000;">对于&lt;p v-html="message"&gt;{{message}}&lt;/p&gt;这个节点来说，这里的key等于:innerHTML</span> </span>
+    cur = props[key];                                                         <span style="color: #008000;">//</span><span style="color: #008000;">获取对应的值,<span style="color: #ff0000;">对于&lt;p v-html="message"&gt;{{message}}&lt;/p&gt;这个节点来说，cur等于:"&lt;span style="color:#f00"&gt;Hell World!&lt;/span&gt;"</span> </span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> ignore children if the node has textContent or innerHTML,</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> as these will throw away existing DOM nodes and cause removal errors</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> on subsequent patches (#3360)</span>
+    <span style="color: #0000ff;">if</span> (key === 'textContent' || key === 'innerHTML') {                   <span style="color: #008000;">//</span><span style="color: #008000;">如果key等于textContent或innerHTML，<span style="color: #ff0000;">这里是对指令v-html和v-text的支持</span></span>
+      <span style="color: #0000ff;">if</span> (vnode.children) { vnode.children.length = 0; }                      <span style="color: #008000;">//</span><span style="color: #ff0000;">如果有子节点，则删除它们</span>
+      <span style="color: #0000ff;">if</span> (cur === oldProps[key]) { <span style="color: #0000ff;">continue</span><span style="color: #000000;"> }                       
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> #6601 work around Chrome version &lt;= 55 bug where single textNode</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> replaced by innerHTML/textContent retains its parentNode property</span>
+      <span style="color: #0000ff;">if</span> (elm.childNodes.length === 1<span style="color: #000000;">) {
+        elm.removeChild(elm.childNodes[</span>0<span style="color: #000000;">]);
+      }
+    }
+
+    </span><span style="color: #0000ff;">if</span> (key === 'value') {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果key等于value</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> store value as _value as well since</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> non-string values will be stringified</span>
+      elm._value =<span style="color: #000000;"> cur;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> avoid resetting cursor position when value is the same</span>
+      <span style="color: #0000ff;">var</span> strCur = isUndef(cur) ? ''<span style="color: #000000;"> : String(cur);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (shouldUpdateValue(elm, strCur)) {
+        elm.value </span>=<span style="color: #000000;"> strCur;
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      elm[key] </span>= cur;                                                     <span style="color: #008000;">//</span><span style="color: #ff0000;">否则直接设置elm的key属性值为cur，也就是设置元素的innerHTML或textContent属性</span>
+<span style="color: #000000;">    }
+  }
+}</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>从updateDOMProp函数内看到，对于v-html或v-text指令来说，如果有子节点，会每个删除掉，所以如果一个元素绑定了v-html或v-text指令，它的子节点时将忽略掉。</p>
+<p>总结:通过源码可以发现，<span style="color: #ff0000;">对于v-html和v-text来说，Vue是通过设置元素原生的innerHTML或textContent这两个属性来实现的。</span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

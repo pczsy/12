@@ -1,0 +1,64 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修解决elementui日期时间选择器提交时与后台date类型不匹配问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>解决elementui日期时间选择器提交时与后台date类型不匹配问题</center></div><div class='banquan'>原文出处:本文由博客园博主十五小哥哥提供。<br/>
+原文连接:https://www.cnblogs.com/wanghj-15/p/11283851.html</div><br>
+    <p><span style="font-size: 16px;"><strong>问题描述：</strong></span></p>
+<p><span style="font-size: 15px;">　　在前端使用elementui的日期时间选择器后，在通过<span style="color: #660e7a; font-weight: bold;">axios</span>进行提交的时候，前端控制台出现了400（数据类型不匹配的错误）的错误。</span></p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-form-item </span><span style="color: #ff0000;">label</span><span style="color: #0000ff;">="跟进时间"</span><span style="color: #ff0000;"> prop</span><span style="color: #0000ff;">="traceTime"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-date-picker
+                        </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="customerTraceHistory.traceTime"</span><span style="color: #ff0000;">
+                        type</span><span style="color: #0000ff;">="datetime"</span><span style="color: #ff0000;">
+                        placeholder</span><span style="color: #0000ff;">="跟进时间"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-date-picker</span><span style="color: #0000ff;">&gt;</span>
+ <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-form-item</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>错误的原因：</strong>后台实体类的注解问题</p>
+<p>错误前的代码：</p>
+<div class="cnblogs_code">
+<pre><code> 　　<span style="color: #808000;">@DateTimeFormat</span>(pattern = "<span style="color: #008000;">yyyy-MM-dd HH:mm:ss</span>"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Date getTraceTime() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> traceTime;
+    }
+
+    <span style="color: #808000;">@JsonFormat</span>(pattern </span>= "<strong><span style="color: #ff00ff;">yyyy-MM-dd HH:mm:ss</span></strong>",timezone = "<span style="color: #008000;">GMT+8</span>"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setTraceTime(Date traceTime) {
+        </span><span style="color: #0000ff;">this</span>.traceTime =<span style="color: #000000;"> traceTime;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>解决之后的代码：</p>
+<div class="cnblogs_code">
+<pre><code> 　　<span style="color: #808000;">@DateTimeFormat</span>(pattern = "<span style="color: #008000;">yyyy-MM-dd HH:mm:ss</span>"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span><span style="color: #000000;"> Date getTraceTime() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> traceTime;
+    }
+
+    <span style="color: #808000;">@JsonFormat</span>(pattern </span>= "<strong><span style="color: #ff00ff;">yyyy-MM-dd</span></strong>",timezone = "<span style="color: #008000;">GMT+8</span>"<span style="color: #000000;">)
+    </span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> setTraceTime(Date traceTime) {
+        </span><span style="color: #0000ff;">this</span>.traceTime =<span style="color: #000000;"> traceTime;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

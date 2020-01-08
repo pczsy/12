@@ -1,0 +1,217 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修WebGL three.js学习笔记 阴影与实现物体的动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>WebGL three.js学习笔记 阴影与实现物体的动画</center></div><div class='banquan'>原文出处:本文由博客园博主nsytsqdtn提供。<br/>
+原文连接:https://www.cnblogs.com/nsytsqdtn/p/10767559.html</div><br>
+    <h2 id="实现物体的旋转跳动以及场景阴影的开启与优化">实现物体的旋转、跳动以及场景阴影的开启与优化</h2>
+<p>本程序将创建一个场景，并实现物体的动画效果<br />
+运行的结果如图：</p>
+<p><img src="./images/WebGL three.js学习笔记 阴影与实现物体的动画0.png" alt="运行结果" /><br />
+完整代码如下：</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Three.js&lt;/title&gt;
+    &lt;script src=&quot;../../../Import/three.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../../../Import/stats.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../../../Import/Setting.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../../../Import/OrbitControls.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;../../../Import/dat.gui.min.js&quot;&gt;&lt;/script&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+        div#canvas-frame {
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            height: 850px;
+            background-color: #333333;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body onload=&quot;threeStart()&quot;&gt;
+&lt;div id=&quot;canvas-frame&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+    //控制面板中需要的两个数据
+    let control = new function () {
+        this.rotationSpeed = 0.01;
+        this.jumpSpeed = 0.03;
+    };
+    let renderer, camera, scene;
+    let controller;
+    let width,height;
+
+    //初始化渲染器
+    function initThree() {
+        width = document.getElementById(&#39;canvas-frame&#39;).clientWidth;
+        height = document.getElementById(&#39;canvas-frame&#39;).clientHeight;
+        renderer = new THREE.WebGLRenderer({
+            antialias: true
+        });//定义渲染器
+        renderer.setSize(width, height);//设置渲染的宽度和高度
+        document.getElementById(&quot;canvas-frame&quot;).appendChild(renderer.domElement);//将渲染器加在html中的div里面
+        renderer.setClearColor(0x333333, 1.0);//渲染的颜色设置
+        renderer.shadowMapEnabled = true;//开启阴影，默认是关闭的，太影响性能
+        renderer.shadowMapType = THREE.PCFSoftShadowMap;//阴影的一个类型，可以不设置对比看效果
+    }
+    //初始化摄像机
+    function initCamera() {
+        camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);//perspective是透视摄像机，这种摄像机看上去画面有3D效果
+
+        //摄像机的位置
+        camera.position.x = 50;
+        camera.position.y = 50;
+        camera.position.z = 50;
+        camera.up.x = 0;
+        camera.up.y = 1;//摄像机的上方向是Y轴
+        camera.up.z = 0;
+        camera.lookAt(0, 0, 0);//摄像机对焦的位置
+        //这三个参数共同作用才能决定画面
+    }
+    //初始化场景
+    function initScene() {
+        scene = new THREE.Scene();
+    }
+    //摄像机的控制，可以采用鼠标拖动来控制视野
+    function cameraControl() {
+        controller = new THREE.OrbitControls(camera, renderer.domElement);
+        controller.target = new THREE.Vector3(0, 0, 0);
+    }
+    //一个很方便的控制面板，方便更改程序的参数
+    function datGUI() {
+        let gui = new dat.GUI();
+        //可以设置可以调动的范围
+        gui.add(control, &quot;rotationSpeed&quot;, 0, 0.05);
+        gui.add(control, &quot;jumpSpeed&quot;, 0, 0.08);
+    }
+    //初始化灯光
+    function initLight() {
+        let light = new THREE.SpotLight(0xffffff, 1.0, 0);//点光源
+        light.position.set(-40, 60, -10);
+        light.castShadow = true;//开启阴影
+        light.shadowMapWidth = 8192;//阴影的分辨率
+        light.shadowMapHeight = 8192;
+        scene.add(light);
+        light = new THREE.AmbientLight(0xffffff, 0.2);//环境光，如果不加，点光源照不到的地方就完全是黑色的
+        scene.add(light);
+    }
+
+    let cube;
+    let sphere;
+
+    //初始化物体
+    function initObject() {
+        //定义了一个地面
+        let planeGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+        let planeMaterial = new THREE.MeshLambertMaterial({
+            color: 0xcccccc,
+        });
+        let plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.rotation.x = -0.5 * Math.PI;
+        plane.position.x = 15;
+        plane.receiveShadow = true;//开启地面的接收阴影
+        scene.add(plane);//添加到场景中
+
+        //定义了一个方块
+        let cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+        let cubeMaterial = new THREE.MeshLambertMaterial({
+            color: 0xff1111,
+        });
+        cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.position.x = -4;
+        cube.position.y = 3;
+        cube.position.z = 0;
+        cube.castShadow = true;//开启阴影
+        scene.add(cube);
+
+        //定义了一个球体
+        let sphereGeometry = new THREE.SphereGeometry(4, 100, 100);
+        let sphereMaterial = new THREE.MeshLambertMaterial({
+            color: 0xba7890,
+        });
+        sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.x = 20;
+        sphere.position.y = 4;
+        sphere.position.z = 2;
+        sphere.castShadow = true;//开启阴影
+        scene.add(sphere);
+    }
+    //方块的自动旋转
+    function cubeRotation() {
+        cube.rotation.x += control.rotationSpeed;
+        cube.rotation.y += control.rotationSpeed;
+        cube.rotation.z += control.rotationSpeed;
+    }
+
+    let step = 0;
+    //球体的抛物线运动轨迹
+    function boxJump() {
+        step += control.jumpSpeed;
+        sphere.position.x = 20 + 10 * (Math.cos(step));
+        sphere.position.y = 4 + 10 * (Math.abs(Math.sin(step)));
+    }
+    //定义的一个功能文件
+    function initSetting() {
+        loadAutoScreen(camera,renderer);
+        loadFullScreen();
+        loadStats();
+    }
+    //主函数
+    function threeStart() {
+        initThree();
+        initCamera();
+        initScene();
+        initLight();
+        initObject();
+        cameraControl();
+        datGUI();
+        initSetting();
+        animation();
+    }
+    //动画
+    function animation() {
+        cubeRotation();//方块旋转函数
+        boxJump();//球体运动函数
+        stats.update();//更新性能检测器
+
+        renderer.clear();
+        renderer.render(scene, camera);//开始渲染
+
+        requestAnimationFrame(animation);//重复执行此函数，不停的渲染，达到动画的效果
+    }
+&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>其中OrbitControls.js和dat.gui.min.js这两个文件都是Three.js自带的两个很好用的工具，第一个是可以让摄像机有轨道地进行移动，而不用再自己写函数去实现，第二个是一个轻量级的图形用户界面库（GUI 组件），使用这个库可以很容易地创建出能够改变代码变量的界面组件，方便我们测试程序。</p>
+<p>另外如果想要在程序中开启阴影的话首先需要把renderer.shadowMapEnabled设置为true，默认是关闭的，因为实现阴影的效果是比较消耗性能的。同时要把light的投掷阴影开启light.castShadow = true，但是并不是所有的灯光都可以开启，比如环境光就不可以。每一个需要产生阴影的物体也要开启阴影，我们需要用地面来接收阴影，所以也需要开启地面的接收阴影<br />
+plane.receiveShadow = true；<br />
+cube.castShadow = true;<br />
+sphere.castShadow = true;<br />
+现在的效果是这样的：<br />
+<img src="./images/WebGL three.js学习笔记 阴影与实现物体的动画1.png" alt="阴影" /><br />
+可以看到，阴影是比较难看的，所以设置一些阴影的类型，PCFSoftShadowMap能让边缘柔和，但只是基于像素颗粒的边缘柔和。我们可以先使用此类型，然后再提高阴影的分辨率light.shadowMapWidth = 8192;<br />
+light.shadowMapHeight = 8192;<br />
+默认的值应该是1024。<br />
+此时的阴影效果是这样的<br />
+<img src="./images/WebGL three.js学习笔记 阴影与实现物体的动画2.png" alt="优化后阴影" /><br />
+至此，我们的场景还有物体的动画效果就已经实现。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

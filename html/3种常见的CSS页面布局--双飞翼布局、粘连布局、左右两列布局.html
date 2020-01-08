@@ -1,0 +1,38 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修3种常见的CSS页面布局--双飞翼布局、粘连布局、左右两列布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>3种常见的CSS页面布局--双飞翼布局、粘连布局、左右两列布局</center></div><div class='banquan'>原文出处:本文由博客园博主一只懒惰的大蜜蜂提供。<br/>
+原文连接:https://www.cnblogs.com/chasesunforever/p/12102376.html</div><br>
+    <p>一、左右两列布局</p>
+<p>1、代码如下，可先粘贴复制，自行运行</p>
+<p>&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />	&lt;head&gt;<br />		&lt;meta charset="UTF-8"&gt;<br />		&lt;title&gt;两列布局&lt;/title&gt;<br />&lt;!--左边列固定，右边列自适应--&gt;<br />		&lt;style type="text/css"&gt;<br />			*{<br />				padding: 0;<br />				margin: 0;<br />			}<br />			body{<br />				min-width: 600px;<br />			}<br />			.lef{<br />				width: 100px;<br />				height: 400px;<br />				background: hotpink;<br />				float: left;<br />			}<br />			.rig{<br />				height: 400px;<br />				background: yellowgreen;<br />				margin-left: 50px;<br />				/*给right开启BFC<br />				 利用BFC的特性：<br />				 bfc的区域不会与浮动的box重叠*/</p>
+<p>/* 溢出内容部分被切割,所以使用省略号表示 */<br />				overflow: hidden;<br />				/*出现省略号需要四个设置：<br />				 * display: block;<br />				 * overflow: hidden;<br />				 * white-space: nowrap;<br />				 * text-overflow: ellipsis<br />				 * */<br />				/* white-space: nowrap; */<br />				/* text-overflow: ellipsis; */<br />			}<br />			.con{<br />				width: 300px;<br />				margin: 0 auto;<br />			}<br />		&lt;/style&gt;<br />	&lt;/head&gt;<br />	&lt;body&gt;<br />		&lt;div class="con"&gt;<br />			&lt;div class="lef"&gt;left&lt;/div&gt;<br />			&lt;div class="rig"&gt;<br />				lzprightrightrightrightrightrightrightrightrightrightrightrightrightright &lt;br /&gt;<br />				rightrightrightrightrightrightrightrightrightrightrightrightrightright &lt;br /&gt;<br />				rightrightrightrightrightrightrightrightrightrightrightrightrightright &lt;br /&gt;<br />				rightrightrightrightrightrightrightrightrightrightrightrightrightright &lt;br /&gt;<br />			&lt;/div&gt;<br />		&lt;/div&gt;<br />	&lt;/body&gt;<br />&lt;/html&gt;</p>
+<p>2、必要说明</p>
+<p>外层容器con如果为固定宽度，right元素的overflow: hidden;是必须的，否则会出现rig中的字体不在rig里面</p>
+<p>外层容器con宽度如果是100%，或者默认，此时right元素的overflow: hidden;可有可无，页面不会因此受到影响</p>
+<p>二、粘连布局</p>
+<p>1、代码如下：</p>
+<p>&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />	&lt;head&gt;<br />		&lt;meta charset="UTF-8"&gt;<br />		&lt;meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0,minimum-scale=1.0"/&gt;<br />		&lt;title&gt;粘连布局&lt;/title&gt;<br />&lt;!--<br />	当页面中无内容或内容不足一屏时，footer在页面最底部显示<br />	当页面内容很多一屏装不下时，footer紧随内容其后显示<br />--&gt;<br />		&lt;style type="text/css"&gt;<br />			*{<br />				padding: 0;<br />				margin: 0;<br />			}<br />			html, body{<br />				height: 100%;<br />			}<br />			.wrap{<br />				/* 设置wrap的最小高度,当main元素中的内容较少或者为空时，也能保持100%高度 */<br />				min-height: 100%;<br />				background: yellowgreen;<br />				text-align: center;<br />			}<br />			.main{<br />				/*main的height值由内容决定*/<br />	/*当内容不足一屏时，下面的设置不会撑开父元素wrap，此时wrap的min-height设置生效，<br />	 * 当内容刚好一屏时，下面的设置开始撑开父容器，其height值为100%+50px。<br />	 * 拉开这50px的原因是防止footer遮盖住main内容，这个值不是固定死的，由footer的高度值决定<br />	 * 为footer向上填充margin-top: -50px;做准备<br />	 * */<br />				padding-bottom: 50px;<br />			}<br />			.footer{<br />				height: 50px;<br />				line-height: 50px;<br />				background: deeppink;<br />				text-align: center;<br />				margin-top: -50px;<br />			}<br />		&lt;/style&gt;<br />	&lt;/head&gt;<br />	&lt;body&gt;<br />		&lt;div class="wrap"&gt;<br />			&lt;div class="main"&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;main&lt;br /&gt;<br />				mlzpain&lt;br /&gt;<br />			&lt;/div&gt;<br />		&lt;/div&gt;<br />		&lt;!--footer元素放在wrap外--&gt;<br />		&lt;div class="footer"&gt;<br />			footer<br />		&lt;/div&gt;<br />	&lt;/body&gt;<br />&lt;/html&gt;</p>
+<p>三、双飞翼布局</p>
+<p>&lt;!DOCTYPE html&gt;<br />&lt;html&gt;<br />	&lt;head&gt;<br />		&lt;meta charset="UTF-8"&gt;<br />		&lt;title&gt;双飞翼三列布局&lt;/title&gt;<br />		&lt;style type="text/css"&gt;<br />			/*清除浏览器默认样式*/<br />			*{<br />				padding: 0;<br />				margin: 0;<br />			}<br />			/*设置body的最小宽度*/<br />			body{<br />				min-width: 600px;<br />			}<br />			/*左浮动*/<br />			.fl{<br />				float: left;<br />			}<br />			/*双飞翼三列布局*/<br />			.mid{<br />				width: 100%;<br />			}<br />			.lef{<br />				width: 200px;<br />				background: mediumpurple;<br />				margin-left: -100%;<br />			}<br />			.rig{<br />				width: 200px;<br />				background: orangered;<br />				margin-left: -200px;<br />			}<br />			.inn_mid{<br />				margin: 0 200px;<br />				background: pink;<br />			}<br />			/*等高布局*/<br />			/* 先使子元素溢出父盒子范围，然后在父盒子中设置overflow:hidden;清除溢出部分，从而由原来的不等高达到等高效果 */<br />			.mid, .lef, .rig{<br />				padding-bottom: 10000px;<br />				margin-bottom: -10000px;<br />			}<br />			.con{<br />				border: 5px solid deepskyblue;<br />				overflow: hidden;<br />			}<br />		&lt;/style&gt;<br />	&lt;/head&gt;<br />	&lt;body&gt;<br />		&lt;div class="con"&gt;<br />			&lt;div class="mid fl"&gt;<br />				&lt;div class="inn_mid"&gt;<br />					&lt;h4&gt;middle&lt;/h4&gt;<br />					&lt;h4&gt;middle&lt;/h4&gt;<br />					&lt;h4&gt;middle&lt;/h4&gt;<br />				&lt;/div&gt;<br />			&lt;/div&gt;<br />			&lt;div class="lef fl"&gt;left&lt;/div&gt;<br />			&lt;div class="rig fl"&gt;right&lt;/div&gt;<br />		&lt;/div&gt;<br />	&lt;/body&gt;<br />&lt;/html&gt;</p>
+<p>end，至此三个常见布局介绍完毕，建议稍微花点时间琢磨一下，其中微妙之处只可意会不可言传</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,190 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML连载27-层叠性&amp;优先级&amp;！important用法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML连载27-层叠性&amp;优先级&amp;！important用法</center></div><div class='banquan'>原文出处:本文由博客园博主心悦君兮君不知-睿提供。<br/>
+原文连接:https://www.cnblogs.com/ruigege0000/p/11273637.html</div><br>
+    <p>一、层叠性</p>
+<p>1.定义：CSS处理冲突的一种能力</p>
+<p>2.注意点：层叠性只有在多个选择器中&ldquo;同一标签&rdquo;，然后又设置了&ldquo;相同的属性&rdquo;，才会发生层叠性</p>
+<p>3.CSS缩写：Cascading StyleSheet</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">       #odd{color: red;}
+
+       p{color:blue;}
+
+..........省略代码.........
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #0000ff;">&gt;</span>我被多处设置属性<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法0.png" alt="" /></p>
+<p>解释：如上代码我们对p标签以及odd类进行了属性的设置，但只遵循了一种属性设置，因此可以看出CSS具有解决这种层叠性冲突的功能。开发者工具中也指出了p标签的属性设置不生效。</p>
+<p>二、优先级</p>
+<p>1.作用：当多个选择器选中同一个标签，并且给同一个标签设置相同的属性时，如何层叠就由优先级来确定</p>
+<p>2.优先级的判断的三种方式</p>
+<p>（1）是否被直接选中（间接地选中就是&ldquo;继承&rdquo;），如果是间接选中那么遵循就近原则。</p>
+<p>例子一：遵循直接被选中的情形</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        li{color: red;}
+
+        p{color:blue;}
+
+..........省略代码.........       
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #0000ff;">&gt;</span>我被多处设置属性<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法1.png" alt="" /></p>
+<p>例子二：间接选中遵循就近原则</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        ul{color:blue;}
+
+        li{color: red;}
+
+..........省略代码.........       
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #0000ff;">&gt;</span>我被多处设置属性<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法2.png" alt="" /></p>
+<p>（2）是否是相同的选择器，遵循后设置原则，谁在后面设置的就遵循谁的</p>
+<p>例子：红的在后面就是红的</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        p{color:blue;}
+
+        p{color:red;}
+
+..........省略代码.........       
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #0000ff;">&gt;</span>我被多处设置属性<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法3.png" alt="" /></p>
+<p><br clear="ALL" />
+（3）不同选择器</p>
+<p>如果都是直接被选中，并且不是相同的选择器，那么就会按照选择器的优先级来层叠</p>
+<p>按优先级为：id&gt;类&gt;标签&gt;通配符&gt;继承&gt;浏览器默认</p>
+<p>例子：我们按照上面逆序分别验证了，结果在意料之中正确</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> 
+
+        ul{color:blue;}
+
+        li{color: red;}
+
+        *{color: purple;}
+
+        p{color:yellow;}
+
+        .jjj{color:navajowhite;}
+
+        #odd{color: green;}
+
+..........省略代码......... 
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="jjj"</span><span style="color: #0000ff;">&gt;</span>我被多处设置属性<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法4.png" alt="" /></p>
+<p>三、什么是important?</p>
+<p>（1）作用：用于提升某个直接选中标签的选择器中的某个属性的优先级的，可以将被指定的属性的优先级提升为最高</p>
+<p>（2）格式​：</p>
+<p>选择器｛属性：值 ！iimportant;}</p>
+<p>（3）注意点​：</p>
+<p>i.important只能用于直接选中，不支持间接选中</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #odd{color: red;}
+
+        .jjj color:blue !important;}
+
+..........省略代码.........
+
+ </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="jjj"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+    我是用来让id选择器失效的，让class选择器优先级更高
+
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法5.png" alt="" /></p>
+<p>ii.通配符选择器中标签也属于直接选中</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #odd{color: red;}
+
+        *{color: yellow !important;}
+
+..........省略代码.........
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="odd"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="jjj"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+    我是用来让id选择器失效的，让class选择器优先级更高
+
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法6.png" alt="" /></p>
+<p>iii.​！important只会提升你指定的那个属性优先级</p>
+<p>四、源码：</p>
+<p>d87_usage_of_!important.htm</p>
+<p>ld87_usage_of_!important.html</p>
+<p>地址:</p>
+<p>https://github.com/ruigege66/HTML_learning/tree/master</p>
+<p>2.CSDN：https://blog.csdn.net/weixin_44630050（心悦君兮君不知-睿）3.博客园：https://www.cnblogs.com/ruigege0000/</p>
+<p>4.欢迎关注微信公众号：傅里叶变换，后台回复&ldquo;礼包&rdquo;获取Java大数据学习视频礼包</p>
+<p>&nbsp;<img src="./images/HTML连载27-层叠性&amp;优先级&amp;！important用法7.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

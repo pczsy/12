@@ -1,0 +1,71 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信公众号之获取openId' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信公众号之获取openId</center></div><div class='banquan'>原文出处:本文由博客园博主Agiroy提供。<br/>
+原文连接:https://www.cnblogs.com/kanglinen/p/11490276.html</div><br>
+    <p>在小伙伴们开发微信公众号、小程序或者是在微信内置浏览器打开的项目时，会遇到的第一个问题就是如何获取openId，今天小编就给大家带来的是如何获取openId。</p>
+<p>　　<span style="font-size: 14pt;"><strong><span style="color: #ff0000;">首先&nbsp; </span></strong>&nbsp;<span style="font-size: 13px;">我们要从微信开发者后台得到appid，这个appid是管理员在设置微信后台时获取的，而且是唯一的，而且还需要在微信后台设置回调域名。</span><span style="font-size: 12px; color: #000000;"><br /></span></span></p>
+<p>　　<span style="font-size: 14pt;"><strong><span style="color: #ff0000;">其次</span></strong></span>　这些都准备好以后，我们就可以使用微信自带的方法获取openId：</p>
+<p><img src="./images/微信公众号之获取openId0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;　　　　注意：划线部分是要获取的openId和回调域名，而&nbsp;&nbsp;location.href&nbsp;=&nbsp;url 是当页面第一次渲染时，自动获取openId，当然，这些还是准备工作</p>
+<p><img src="./images/微信公众号之获取openId1.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">//截取URL字段
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    GetQueryString: function(name) {
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">      var reg = new RegExp("(^|&amp;)" + name + "=([^&amp;]*)(&amp;|$)", "i");
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">      var r = window.location.search.substr(1).match(reg);
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">      if (r != null) {
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        return unescape(r[2]);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">      return null;
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">    getToken: function() {
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">      //判断是否有openid
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">      if (this.$cookieStore.getCookie("openid") == null) {
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">        var url =
+</span><span style="color: #008080;">14</span>           "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx1234567890<span style="color: #ff0000;">&amp;redirect_uri</span><span style="color: #000000;">=" +
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">          encodeURIComponent(
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">            "https://www.baidu.com/"
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">          ) +
+</span><span style="color: #008080;">18</span>           "<span style="color: #ff0000;">&amp;response_type</span>=code<span style="color: #ff0000;">&amp;scope</span>=snsapi_base<span style="color: #ff0000;">&amp;state</span>=STATE#wechat_redirect<span style="color: #ff0000;">&amp;connect_redirect</span><span style="color: #000000;">=1#wechat_redirect";
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">        location.href = url;
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">        var code = this.GetQueryString("code");
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        // console.log(code);
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">        axios({
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">          url: "接口名" + code
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">        }).then(res =&gt; {
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">          // console.log(res);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">          if (res.data.code == 0) {
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            this.$cookieStore.setCookie("openid", res.data.result);
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">          }
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">        });
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">      } else {
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">        this.openid = this.$cookieStore.getCookie("openid");
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;">33</span>     },</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #000000; font-size: 13px;">　　　　　　我们要使用上图的方法来获取code值，通过接口，来获取openId，然后把openId存在cookie里每次调用就可以了。</span></p>
+<p><span style="color: #000000; font-size: 13px;">这就是小编给大家带来的获取openId的方法，下面是完整代码。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

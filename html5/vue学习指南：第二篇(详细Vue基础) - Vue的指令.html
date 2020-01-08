@@ -1,0 +1,175 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue学习指南：第二篇(详细Vue基础) - Vue的指令' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue学习指南：第二篇(详细Vue基础) - Vue的指令</center></div><div class='banquan'>原文出处:本文由博客园博主硅谷之火提供。<br/>
+原文连接:https://www.cnblogs.com/jinfeixiang/p/11426606.html</div><br>
+    <p><span style="color: #3366ff;"><strong><span style="font-size: 18pt;">一、 Vue 的介绍</span></strong></span></p>
+<p><span style="font-size: 18px;">1. vue是一个 mvvm 的框架。(面试官经常会问的)，angular 是 mvc的框架。</span></p>
+<p><span style="font-size: 18px;">2. vm 是 vum 的实例，这个实例存在计算机内存中，主要干两件大事：</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 绑定数据</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. dom检测</span></p>
+<p><span style="font-size: 18px;">3. vue 实例 靠 new 关键字实例化 vue 对象，使用 mvvm 模型</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. M modal 数据</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. v view 视图</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. vm 全称viewmodal 就是一个vue实例</span></p>
+<p><span style="font-size: 18px;">4. Vue.js 是封装的一个类，参数是个 options 对象</span></p>
+<p><span style="font-size: 18pt; color: #3366ff;">最常用的属性有哪些：</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. el:&rdquo;&rdquo; 指定 vue所操作的 dom 范围，属性值是你获取的节点</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. data 就是 vue 的 model 存放数据的，属性是一个对象或函数<span style="color: #ff0000;">(在组件中是函数)</span></span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. methods 是vue 中的事件方法。都存在这里面</span></p>
+<p><strong><span style="font-size: 18pt; color: #3366ff;">二、Vue的指令</span></strong></p>
+<p><span style="font-size: 18px;">v-cloak=&rdquo;&rdquo;&nbsp; v-text=&rdquo;&rdquo;&nbsp; v-html=&rdquo;&rdquo;&nbsp; 指令学习</span></p>
+<p><span style="font-size: 18px; color: #ff0000;">v-cloak=&rdquo;&rdquo;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 使用v-cloak=&rdquo;&rdquo; 能够解决 插值表达式闪烁的问题</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 只要应用 v-cloak 这个属性的元素默认 display:none;，请求过来数据才渲染到我们的页面。</span></p>
+<p><span style="font-size: 18px;">&nbsp;</span></p>
+<p><span style="font-size: 18px; color: #ff0000;">v-text=&ldquo;&rdquo;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 默认 v-text 没有闪烁问题 &lt;h4 v-text="meg"&gt;&lt;/h4&gt;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. v-text 会覆盖元素中原本的内容，但是 插值表达式 只会替换自己的占位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 符，不会把整个元素内容清空</span></p>
+<p align="left">&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;p v-cloak&gt;+++++{{meg}}------&lt;/p&gt;
+&lt;h4 v-text="meg"&gt;======&lt;/h4&gt;</pre>
+</div>
+<p><img src="./images/vue学习指南：第二篇(详细Vue基础) - Vue的指令0.png" alt="" /></p>
+<p><span style="font-size: 18px; color: #ff0000;">v-html=&ldquo;&rdquo;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. v-html=&ldquo;&rdquo; 会把标签也一起解析 &lt;div v-html="msg2"&gt;&lt;/div&gt;</span></p>
+<p>&nbsp;<img src="./images/vue学习指南：第二篇(详细Vue基础) - Vue的指令1.png" alt="" /></p>
+<p><span style="font-size: 18px; color: #ff0000;">v-bind=&lsquo;&rdquo;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. v-bind 是 vue 中提供的用于动态属性绑定的指令</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 简写 v-bind 指令 可以简写为一个 英文的冒号 : 要绑定的属性</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3. v-bind 中 可以写合法的js表达式</span></p>
+<p><span style="font-size: 18px; color: #ff0000;">&nbsp; &nbsp; 　&lt;input type="button" v-bind:title="mytitle + '123' " value="按钮" /&gt;</span></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000; font-size: 18px;">v-on=&ldquo;&rdquo;</span></p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 18px;">1. v-on 是事件绑定机制</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 每当我触发 input 的点击事件，会调用 vue 事件的绑定机制，执行这个 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; show方法，show去methods找这个方法。</span></p>
+<p><span style="color: #ff0000;">&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;"> &lt;input type="button" value="按钮" v-on:mouseover="show" /&gt;</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>methods: {	//这个 methods属性中定义了当前 vue 实例所有可用方法
+		show:function () {
+			alert("123")
+		}
+				
+	}</pre>
+</div>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 18px;"> 3. 简写 加 @ 符号</span></p>
+<p align="left"><span style="color: #ff0000; font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;input type="button" value="按钮" @click="show" /&gt;</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>var vm = new Vue({
+        	el : "#app",	//指定控制的区域
+        	data : {		//指定数据
+            	meg : "123",
+	    	msg2:"&lt;h1&gt;会亭好美吖！！！&lt;/h1&gt;",
+	    	mytitle:"这是一个自己定义的title"
+        	},
+})
+</pre>
+</div>
+<p>　　</p>
+<p><span style="font-size: 14pt;"><strong>v-on </strong><strong>的修饰符：</strong></span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #ff0000;">1.</span> stop 阻止事件冒泡</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;div class="inner" @click="divHand"&gt;
+		&lt;input type="button" value="打她" @click.stop="btnHand" /&gt;
+&lt;/div&gt;</pre>
+</div>
+<p><span style="font-size: 18px;">什么是冒泡？</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 当给父子元素绑定同一个事件时，触发子元素身上的事件，执行完毕后也会触发父元素身上的事件，这种传播机制叫事件冒泡</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff0000;">&nbsp; 2.</span> prevent 阻止默认行为</span></p>
+<p><span style="color: #ff0000; font-size: 18px;">　&lt;a href="http://www.baidu.com" @click.prevent="a"&gt;百度&lt;/a&gt;</span></p>
+<p><span style="font-size: 18px;">&nbsp;</span></p>
+<p><span style="font-size: 18px;">什么是事件默认行为？</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 默认行为是指像点击&lt;a href&gt;标签触发的跳转事件，阻止a无故刷新跳转页面。</span></p>
+<p><span style="font-size: 18px;">　　<span style="color: #ff0000;">3.</span> capture 添加事件倾听器使用事件捕获模式。</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;div class="inner" @click.capture="divHand"&gt;
+	&lt;input type="button" value="打她" @click.stop="btnHand" /&gt;
+&lt;/div&gt;
+</pre>
+</div>
+<p>　　</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">什么是事件捕获？</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 给父子元素使用 addEventListener() 绑定同一个事件时，当触发子元素身上的事件，先触发父元素身上的事件，然后在传递给子元素 这种传播机制叫事件捕获。</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #ff0000;">4.</span> self 只当事件在该元素本身(比如不是子元素)触发时触发回调，使用 .self &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 只有点击当前元素的时候，才会触发事件处理函数</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;div class="inner" @click.self="divHand"&gt;
+		&lt;input type="button" value="打她" @click.stop="btnHand" /&gt;
+&lt;/div&gt;
+</pre>
+</div>
+<p>　　</p>
+<p><span style="font-size: 14pt;">　　<span style="color: #ff0000;">5.</span> once 事件只触发一次</span></p>
+<p><span style="font-size: 14pt; color: #ff0000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;a href="http://www.baidu.com" @click.prevent.once="a"&gt;百度&lt;/a&gt;</span></p>
+<p><span style="font-size: 14pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #ff0000;"> 6.</span> .stop , .self 都是阻止事件冒泡，他俩有什么区别？</span></p>
+<p><span style="font-size: 14pt;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. .self 只阻止自己身上的冒泡行为的触发，并不会真的 阻止冒泡行为</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;div class="outer" @click="div1Hand"&gt;
+ 	阻止了自己身上的冒泡行为了，没有阻止div1上的 self不能当作stop使用只管自己 
+	&lt;div class="inner" @click.self="div2Hand"&gt;
+		&lt;input type="button" value="打她" @click="btnHand" /&gt;
+	&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+</div>
+<p>　　</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px; color: #ff0000;">v-for=&ldquo;&rdquo;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. 循环指令 v-for，可循环的东西，数组和对象(item, index) in arr。先元素&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在节点。</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注意：v-for循环的时候 key属性只能使用number或string。</span></p>
+<p><span style="font-size: 18px;">&nbsp; &nbsp; &nbsp; &nbsp;注意：key 在使用的时候， 必须使用 v-bind 属性绑定的形式，指定key的&nbsp;&nbsp; 值。Key是唯一的。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px; color: #ff0000;">v-if 和 v-show</span></p>
+<p><span style="font-size: 18pt; color: #0000ff;">v-if 和 v-show的特点以及区别：</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. v-if 的特点 每次会从新删除或创建元素</span></p>
+<p align="left"><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp; &lt;h3 v-if="flag"&gt;这是用 v-if 控制的元素&lt;/h3&gt;</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. v-show 的特点 每次不会从新进行 dom 的删除和创建操作，只是切换元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 素的 display:none;样式</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #ff0000;">&lt;h3 v-show="flag"&gt;这是用 v-show 控制的元素&lt;/h3&gt;</span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt; color: #0000ff;">什么时间使用 v-if 和 v-show：</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v-if 有较高的切换 切换性能消耗</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v-show 有较高的初始渲染消耗</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 如果 元素 涉及到频繁切换 最好不要使用 v-if，而是推荐使用 v-show。</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 如果 元素 可能永远也不会被显示出来 则推荐 使用 v-if</span></p>
+<p align="left"><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp; data:{</span></p>
+<p align="left"><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; flag:true</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp; },</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px; color: #ff0000;">V-model 和 双向数据绑定</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. v-bind 只能实现数据的单项绑定，从msg自动绑定到 v-bind 中去，无&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 法实现数据的双向绑定。</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. 使用 v-model 指令可以实现数据表单元素和 model中的数据的双向数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 据绑定，v-model 除了能实现数据从 m 渲染到 v-model中去，也能实现 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; v-model里面数据改变同步到 msg 里去。</span></p>
+<p><span style="font-size: 18px; color: #ff0000;">&lt;input type="text" name="" id="" v-model:value="msg" style="width:100% ;" /&gt;</span></p>
+<p><span style="font-size: 18px;"><img src="./images/vue学习指南：第二篇(详细Vue基础) - Vue的指令2.png" alt="" width="240" height="302" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">注意：</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. v-model 只能运用在表单元素中</span></p>
+<p><span style="font-size: 18px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. input(radio，text，address，email)</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px; color: #339966;">作者：晋飞翔</span></p>
+<p><span style="font-size: 18px; color: #339966;">手机号(微信同步)：17812718961</span></p>
+<p><span style="font-size: 18px; color: #339966;">希望本篇文章 能给正在学习 前端的朋友 或 以及工作的朋友 带来收获 不喜勿喷 如有建议 多多提议 谢谢！</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

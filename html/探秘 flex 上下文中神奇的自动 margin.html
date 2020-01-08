@@ -1,0 +1,334 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修探秘 flex 上下文中神奇的自动 margin' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>探秘 flex 上下文中神奇的自动 margin</center></div><div class='banquan'>原文出处:本文由博客园博主ChokCoco提供。<br/>
+原文连接:https://www.cnblogs.com/coco1s/p/10910588.html</div><br>
+    <p><span style="font-size: 14px; font-family: verdana, geneva;">为了引出本文的主题，先看看这个问题，最快水平垂直居中一个元素的方法是什么？</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">水平垂直居中也算是 CSS 领域最为常见的一个问题了，不同场景下的方法也各不相同，各有优劣。嗯，下面这种应该算是最便捷的了：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;div class="g-container"&gt;
+    &lt;div class="g-box"&gt;&lt;/div&gt;
+&lt;/div&gt;
+.g-container {
+    display: flex;
+}
+
+.g-box {
+    margin: auto;
+}</pre>
+</div>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上面的&nbsp;<code>display: flex</code>&nbsp;替换成&nbsp;<code>display: inline-flex | grid | inline-grid</code>&nbsp;也是可以的。</span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><iframe title="最便捷的垂直居中方式" src="https://codepen.io/Chokcoco/embed/GarPev/?height=265&amp;theme-id=0&amp;default-tab=css,result" frameborder="no" scrolling="no" width="320" height="265"></iframe></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/GarPev" rel="nofollow">CodePen Demo -- 使用 margin auto 水平垂直居中元素</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">如何让&nbsp;<code>margin: auto</code>&nbsp;在垂直方向上居中元素</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">嗯。这里其实就涉及了一个问题，如何让&nbsp;<code>margin: auto</code>&nbsp;在垂直方向上生效？</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">换句话说，传统的&nbsp;<code>display: block</code>&nbsp;BFC（块格式化上下文）下，为什么&nbsp;<code>margin: auto</code>&nbsp;在水平方向可以居中元素在垂直方向却不行？</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">通常我们会使用这段代码：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">让元素相对父元素水平居中。但是如果我们想让元素相对父元素垂直居中的话，使用&nbsp;<code>margin: auto 0</code>是不生效的。</span></p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">BFC 下&nbsp;<code>margin: auto</code>&nbsp;垂直方向无法居中元素的原因</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">查看 CSS 文档，原因如下，在 BFC 下：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">If both margin-left and margin-right are auto, their used values are equal, causing horizontal centring.</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">&mdash;CSS2 Visual formatting model details: 10.3.3</span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">If margin-top, or margin-bottom are auto, their used value is 0.</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">&mdash;<a href="https://www.w3.org/TR/CSS2/visudet.html#Computing_heights_and_margins" rel="nofollow">CSS2 Visual formatting model details: 10.6.3</a></span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">简单翻译下，在块格式化上下文中，如果&nbsp;<code>margin-left</code>&nbsp;和&nbsp;<code>margin-right</code>&nbsp;都是 auto，则它们的表达值相等，从而导致元素的水平居中。( 这里的计算值为元素剩余可用剩余空间的一半)</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">而如果&nbsp;<code>margin-top</code>&nbsp;和&nbsp;<code>margin-bottom</code>&nbsp;都是 auto，则他们的值都为 0，当然也就无法造成垂直方向上的居中。</span></p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">使用 FFC/GFC 使&nbsp;<code>margin: auto</code>&nbsp;在垂直方向上居中元素</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，这里要使单个元素使用&nbsp;<code>margin: auto</code>&nbsp;在垂直方向上能够居中元素，需要让该元素处于 FFC(flex formatting context)，或者 GFC(grid formatting context) 上下文中，也就是这些取值中：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>{
+    display: flex;
+    display: inline-flex;
+    display: grid;
+    display: inline-grid;
+}</pre>
+</div>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">FFC 下&nbsp;<code>margin: auto</code>&nbsp;垂直方向可以居中元素的原因</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">本文暂且不谈 grid 布局，我们业务中需求中更多的可能是使用 flex 布局，下文将着重围绕 flex 上下文中自动 margin 的一些表现。</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">嗯，也有很多前端被戏称为 flex 工程师，什么布局都 flex 一把梭。</span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">查看 CSS 文档，原因如下，在&nbsp;<code>dispaly: flex</code>&nbsp;下：</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">Prior to alignment via justify-content and align-self, any positive free space is distributed to auto margins in that dimension.</span></li>
+</ul>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/#auto-margins" rel="nofollow">CSS Flexible Box Layout Module Level 1 -- 8.1. Aligning with auto margins</a></span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">简单翻译一下，大意是在&nbsp;flex 格式化上下文中，设置了&nbsp;<code>margin: auto</code>&nbsp;的元素，在通过&nbsp;<code>justify-content</code>和&nbsp;<code>align-self</code>&nbsp;进行对齐之前，任何正处于空闲的空间都会分配到该方向的自动 margin 中去</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">这里，很重要的一点是，margin auto 的生效不仅是水平方向，垂直方向也会自动去分配这个剩余空间。</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">使用自动 margin 实现 flex 布局下的&nbsp;<code>space-between | space-around</code></span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">了解了上面最核心的这一句 :</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">在通过&nbsp;<code>justify-content</code>&nbsp;和&nbsp;<code>align-self</code>&nbsp;进行对齐之前，任何正处于空闲的空间都会分配到该维度中的自动 margin 中去</span></li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">之后，我们就可以在 flex 布局下使用自动 margin 模拟实现 flex 布局下的&nbsp;<code>space-between</code>&nbsp;以及&nbsp;<code>space-around</code>&nbsp;了。</span></p>
+<h3><span style="font-size: 14px; font-family: verdana, geneva;">自动 margin 实现&nbsp;<code>space-around</code></span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">对于这样一个 flex 布局：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;ul class="g-flex"&gt;
+    &lt;li&gt;liA&lt;/li&gt;
+    &lt;li&gt;liB&lt;/li&gt;
+    &lt;li&gt;liC&lt;/li&gt;
+    &lt;li&gt;liD&lt;/li&gt;
+    &lt;li&gt;liE&lt;/li&gt;
+&lt;/ul&gt;</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果它的 CSS 代码是：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-flex {
+    display: flex;
+    justify-content: space-around;
+}
+
+li { ... }</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">效果如下：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin0.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin0.png" alt="image" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">那么下面的 CSS 代码与上面的效果是完全等同的：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-flex {
+    display: flex;
+    // justify-content: space-around;
+}
+
+li { 
+    margin: auto;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/rgYOVo" rel="nofollow">CodePen Demo -- margin auto 实现 flex 下的 space-around</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14px; font-family: verdana, geneva;">自动 margin 实现&nbsp;<code>space-between</code></span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">同理，使用自动 margin，也很容易实现 flex 下的&nbsp;<code>space-between</code>，下面两份 CSS 代码的效果的一样的：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-flex {
+    display: flex;
+    justify-content: space-between;
+}
+
+li {...}</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-flex {
+    display: flex;
+    // justify-content: space-between;
+}
+
+li {
+    margin: auto;
+}
+
+li:first-child {
+    margin-left: 0;
+}
+
+li:last-child {
+    margin-right: 0;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/gJXawm" rel="nofollow">CodePen Demo -- margin auto 实现 flex 下的 space-between</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，值得注意的是，很重要的一点：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">Note: If free space is distributed to auto margins, the alignment properties will have no effect in that dimension because the margins will have stolen all the free space left over after flexing.</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://www.w3.org/TR/2018/CR-css-flexbox-1-20181119/#auto-margins" rel="nofollow">CSS Flexible Box Layout Module Level 1 -- 8.1. Aligning with auto margins</a></span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">意思是，如果任意方向上的可用空间分配给了该方向的自动 margin ，则对齐属性（justify-content/align-self）在该维度中不起作用，因为 margin 将在排布后窃取该纬度方向剩余的所有可用空间。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">也就是使用了自动 margin 的 flex 子项目，它们父元素设置的&nbsp;<code>justify-content</code>&nbsp;已经它们本身的&nbsp;<code>align-self</code>&nbsp;将不再生效，也就是这里存在一个优先级的关系。</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">使用自动 margin 实现 flex 下的&nbsp;<code>align-self: flex-start | flex-end | center</code></span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">自动 margin 能实现水平方向的控制，也能实现垂直方向的控制，原理是一样的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">用&nbsp;<code>margin: auto</code>&nbsp;模拟 flex 下的&nbsp;<code>align-self: flex-start | flex-end | center</code>，可以看看下面几个 Demo：</span></p>
+<ul>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/oRobEp" rel="nofollow">CodePen Demo -- margin auto 实现 flex 下的 align-self: center</a></span></p>
+</li>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/PvOZMr" rel="nofollow">CodePen Demo -- margin auto 实现 flex 下的 align-self: flex-end</a></span></p>
+</li>
+</ul>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">不同方向上的自动 margin</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，看完上面的一大段铺垫之后，大概已经初步了解了 FFC 下，自动 margin 的神奇。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">无论是多个方向的自动 margin，抑或是单方向的自动 margin，都是非常有用的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">再来看几个有意思的例子：</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">使用&nbsp;<code>margin-left: auto</code>&nbsp;实现不规则两端对齐布局</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">假设我们需要有如下布局：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin1.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin1.png" alt="image" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">DOM 结构如下：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;ul class="g-nav"&gt;
+    &lt;li&gt;导航A&lt;/li&gt;
+    &lt;li&gt;导航B&lt;/li&gt;
+    &lt;li&gt;导航C&lt;/li&gt;
+    &lt;li&gt;导航D&lt;/li&gt;
+    &lt;li class="g-login"&gt;登陆&lt;/li&gt;
+&lt;/ul&gt;</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">对最后一个元素使用&nbsp;<code>margin-left: auto</code>，可以很容易实现这个布局：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-nav {
+    display: flex;
+}
+
+.g-login {
+    margin-left: auto;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">此时，&nbsp;<code>auto</code>&nbsp;的计算值就是水平方向上容器排列所有 li 之后的剩余空间。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，不一定是要运用在第一个或者最后一个元素之上，例如这样的布局，也是完全一样的实现：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin2.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin2.png" alt="image" /></a></span></p>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;ul class="g-nav"&gt;
+    &lt;li&gt;导航A&lt;/li&gt;
+    &lt;li&gt;导航B&lt;/li&gt;
+    &lt;li&gt;导航C&lt;/li&gt;
+    &lt;li&gt;导航D&lt;/li&gt;
+    &lt;li class="g-login"&gt;登陆&lt;/li&gt;
+    &lt;li&gt;注册&lt;/li&gt;
+&lt;/ul&gt;</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre><code>.g-nav {
+    display: flex;
+}
+
+.g-login {
+    margin-left: auto;
+}</pre>
+</div>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin3.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin3.png" alt="marginauto" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/eaGmyv" rel="nofollow">Codepen Demo -- nav list by margin left auto</a></span></p>
+<h3><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;&nbsp;</span></h3>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">垂直方向上的多行居中</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，又或者，我们经常会有这样的需求，一大段复杂的布局中的某一块，高度或者宽度不固定，需要相对于它所在的剩余空间居中：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin4.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin4.png" alt="image" width="364" height="187" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">这里有 5 行文案，我们需要其中的第三、第四行相对于剩余空间进行垂直居中。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">这里如果使用 flex 布局，简单的&nbsp;<code>align-self</code>&nbsp;或者&nbsp;<code>align-items</code>&nbsp;好像都没法快速解决问题。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">而使用自动 margin，我们只需要在需要垂直居中的第一个元素上进行&nbsp;<code>margin-top: auto</code>，最后一个元素上进行&nbsp;<code>margin-bottom: auto</code>&nbsp;即可，看看代码示意：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;div class="g-container"&gt;
+    &lt;p&gt;这是第一行文案&lt;/p&gt;
+    &lt;p&gt;这是第二行文案&lt;/p&gt;
+    &lt;p class="s-thirf"&gt;1、剩余多行文案需要垂直居中剩余空间&lt;/p&gt;
+    &lt;p class="s-forth"&gt;2、剩余多行文案需要垂直居中剩余空间&lt;/p&gt;
+    &lt;p&gt;这是最后一行文案&lt;/p&gt;
+&lt;/div&gt;</pre>
+</div>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_Highlighter">
+<pre><code>.g-container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.s-thirf {
+    margin-top: auto;
+}
+
+.s-forth {
+    margin-bottom: auto;
+}</pre>
+</div>
+</div>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，这里将任意需要垂直居中剩余空间的元素用一个 div 包裹起来，对该 div 进行&nbsp;<code>margin: auto 0</code>也是可以的。</span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">嗯，非常的好用且方便：<a href="https://codepen.io/Chokcoco/pen/ZNvzdx" rel="nofollow">CodePen Demo -- 自动margin快速垂直居中任意段落</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">使用&nbsp;<code>margin-top: auto</code>&nbsp;实现粘性 footer 布局</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，最后再来看这样一个例子。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">要求：页面存在一个 footer 页脚部分，如果整个页面的内容高度小于视窗的高度，则 footer 固定在视窗底部，如果整个页面的内容高度大于视窗的高度，则 footer 正常流排布（也就是需要滚动到底部才能看到 footer），算是粘性布局的一种。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">看看效果：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/探秘 flex 上下文中神奇的自动 margin5.png" rel="noopener noreferrer" target="_blank"><img src="./images/探秘 flex 上下文中神奇的自动 margin5.png" alt="margintopauto" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">嗯，这个需求如果能够使用 flex 的话，使用&nbsp;<code>justify-content: space-between</code>&nbsp;可以很好的解决，同理使用&nbsp;<code>margin-top: auto</code>&nbsp;也非常容易完成：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;div class="g-container"&gt;
+    &lt;div class="g-real-box"&gt;
+        ...
+    &lt;/div&gt;
+    &lt;div class="g-footer"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+</div>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_Highlighter">
+<pre><code>.g-container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.g-footer {
+    margin-top: auto;
+    flex-shrink: 0;
+    height: 30px;
+    background: deeppink;
+}</pre>
+</div>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/pmrbWX" rel="nofollow">Codepen Demo -- sticky footer by flex margin auto</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上面的例子旨在介绍更多自动 margin 的使用场景。当然，这里不使用 flex 布局也是可以实现的，下面再给出一种不借助 flex 布局的实现方式：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/XwaKNJ" rel="nofollow">CodePen Demo -- sticky footer by margin/paddig</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">值得注意的点</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">自动 margin 还是很实用的，可以使用的场景也很多，有一些上面提到的点还需要再强调下：</span></p>
+<ul>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">块格式化上下文中<code>margin-top</code>&nbsp;和&nbsp;<code>margin-bottom</code>&nbsp;的值如果是 auto，则他们的值都为 0</span></p>
+</li>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">flex 格式化上下文中，在通过&nbsp;<code>justify-content</code>&nbsp;和&nbsp;<code>align-self</code>&nbsp;进行对齐之前，任何正处于空闲的空间都会分配到该方向的自动 margin 中去</span></p>
+</li>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">单个方向上的自动 margin 也非常有用，它的计算值为该方向上的剩余空间</span></p>
+</li>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使用了自动 margin 的 flex 子项目，它们父元素设置的&nbsp;<code>justify-content</code>&nbsp;以及它们本身的&nbsp;<code>align-self</code>&nbsp;将不再生效</span></p>
+</li>
+</ul>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">最后</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">更多精彩 CSS 技术文章汇总在我的&nbsp;<a href="https://github.com/chokcoco/iCSS">Github -- iCSS</a>&nbsp;，持续更新，欢迎点个 star 订阅收藏。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">好了，本文到此结束，希望对你有帮助 :)</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果还有什么疑问或者建议，可以多多交流，原创文章，文笔有限，才疏学浅，文中若有不正之处，万望告知。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

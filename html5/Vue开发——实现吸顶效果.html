@@ -1,0 +1,125 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue开发——实现吸顶效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue开发——实现吸顶效果</center></div><div class='banquan'>原文出处:本文由博客园博主小宾Coder提供。<br/>
+原文连接:https://www.cnblogs.com/xbincoder/p/11289120.html</div><br>
+    <p>因为项目需求，最近开始转到微信公众号开发，接触到了Vue框架，这个效果的实现虽说是基于Vue框架下实现的，但是同样也可以借鉴到其他地方，原理都是一样的。</p>
+<h4 class="heading">进入正题，先看下效果图：</h4>
+<p>&nbsp;<img src="./images/Vue开发——实现吸顶效果0.png" alt="" width="333" height="599" /></p>
+<p>其实js做这个效果还是挺简单的，因为在css中我们可以设置一个元素的<code>position: fixed;</code>，这样它就可以固定在那里，这样不管页面怎么滚动，它的位置都不受影响，所以我们的思路就是在合适的时机把要吸顶的头部元素的position属性设置为fixed就可以了。但是这个合适的时机是什么时候呢，这就需要我们计算了，我们需要监听页面的滚动状态，当页面滚动到要吸顶元素所处的位置的时候就是我们设置它固定的时候，所以就需要我们：</p>
+<p>&nbsp;</p>
+<h3 class="heading">1.监听页面的滚动状态：</h3>
+<p>在mounted回调中加入以下代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">mounted() {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> handleScroll为页面滚动的监听回调</span>
+  window.addEventListener('scroll', <span style="color: #0000ff;">this</span><span style="color: #000000;">.handleScroll);
+ },</span></pre>
+</div>
+<p>同时在destroyed回调中移除监听：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">destroyed(){
+  window.removeEventListener(</span>'scroll', <span style="color: #0000ff;">this</span><span style="color: #000000;">.handleScroll);
+},</span></pre>
+</div>
+<h3 class="heading">2.计算吸顶元素到页面顶部的距离：</h3>
+<p>计算出来这个距离之后就可以确定固定吸顶元素的时机了，如果你的吸顶元素上面的元素的高度是固定的话，那就简单了，直接在handleScroll方法中进行判断就可以了，可以直接跳到第三步了，如果是动态的，那就需要我们在接口请求完数据，dom元素渲染完之后进行动态计算了，Vue中有一个很好用的方法，可以很方便的监听dom渲染完成：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 监听dom渲染完成</span>
+<span style="color: #0000ff;">this</span>.$nextTick(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里fixedHeaderRoot是吸顶元素的ID</span>
+  let header = document.getElementById("fixedHeaderRoot"<span style="color: #000000;">);
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里要得到top的距离和元素自身的高度</span>
+  <span style="color: #0000ff;">this</span>.offsetTop =<span style="color: #000000;"> header.offsetTop;
+  </span><span style="color: #0000ff;">this</span>.offsetHeight =<span style="color: #000000;"> header.offsetHeight;
+  console.log(</span>"offsetTop:" + <span style="color: #0000ff;">this</span>.offsetTop + "," + <span style="color: #0000ff;">this</span><span style="color: #000000;">.offsetHeight);
+});</span></pre>
+</div>
+<h3 class="heading">3.判断页面滚动距离：</h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">handleScroll(){
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> 得到页面滚动的距离</span>
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop ||<span style="color: #000000;"> document.body.scrollTop;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断页面滚动的距离是否大于吸顶元素的位置</span>
+  <span style="color: #0000ff;">this</span>.headerFixed = scrollTop &gt; (<span style="color: #0000ff;">this</span>.offsetTop - <span style="color: #0000ff;">this</span>.offsetHeight * 2<span style="color: #000000;">);
+},</span></pre>
+</div>
+<p>ps:这里理论上其实应该是scrollTop &gt; (this.offsetTop - this.offsetHeight)，但是不知道为啥我这里做出来后滚动到吸顶元素位置的时候scrollTop还是比this.offsetTop - this.offsetHeight的值小，所以这里*2，这样得出来的值才刚刚好，如果有知道的朋友可以帮忙解惑一下。</p>
+<p>上面我们得到了一个headerFixed的boolean属性值，接下来我们只需要根据它的值来设置吸顶元素的<code>position: fixed;</code>属性就可以了。 我们可以写一个css样式：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.isFixed</span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> fixed</span>;<span style="color: #ff0000;">
+  top</span>:<span style="color: #0000ff;"> px2rem(110)</span>;<span style="color: #ff0000;">
+  left</span>:<span style="color: #0000ff;"> px2rem(20)</span>;<span style="color: #ff0000;">
+  right</span>:<span style="color: #0000ff;"> px2rem(20)</span>;
+}</pre>
+</div>
+<p>然后Vue可以在dom元素里这样动态设置class，非常方便：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="fixedHeaderRoot"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="knowPointHeader"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="knowPointHeader"</span><span style="color: #ff0000;"> :class</span><span style="color: #0000ff;">="headerFixed?'isFixed':''"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识模块<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识点<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>能力要求<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4 class="heading">其实到这里这个效果已经实现完成了，不过我在测试过程中发现，因为ios手机页面滚动到底部的时候，还可以上拉，有一个橡皮筋效果，这个效果会导致一个我们页面的一个Bug，因为它的这种橡皮筋效果也会触发页面滚动的监听，当数据很多的时候其实看不出来，只有当数据刚好占满屏幕的时候，这个时候你再继续往上滑动屏幕，就会触发页面的滚动监听，这个时候handleScroll方法中计算出来的值scrollTop是大于吸顶元素top的距离，所以吸顶元素会被设置为固定属性，大家知道一个元素一旦被设置为<code>position: fixed;</code>，那么它就会相对于浏览器窗口进行定位，这样我们下面的内容就会往上顶，这样的话scrollTop的值又小于了吸顶元素top的距离，这样headerFixed属性又为false，<code>position: fixed;</code>属性又没有了，这样它就又相对与它原本的父元素进行定位，这样就成了一个循环，你会发现页面会上下跳到，这样是肯定不行的，所以我下面又针对这个问题进行了一个优化，当然这个方案感觉不是特别完美，不过确实可以解决这个问题。</h4>
+<h4 class="heading">通过上面的分析我们可以得知造成这个问题的原因是因为我们把设置了元素的<code>position: fixed;</code>属性，使得下面的内容往上顶，所以要想解决这个问题，那我们就不固定这个元素，但是这样的话就达不到吸顶的效果了，所以我们需要再加一个和吸顶元素一模一样的元素，它一直就是固定状态：</h4>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="fixedHeaderRootReal"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="knowPointHeader isFixed"</span><span style="color: #ff0000;"> v-show</span><span style="color: #0000ff;">="headerFixed"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识模块<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识点<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>能力要求<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4 class="heading">这个元素默认是隐藏的，只有当页面滚动的距离达到了它的位置的时候我们才让它显示，由于它是固定状态，所以它的隐藏显示并不会对页面产生影响，这样下面的内容就不会往上顶了，就可以解决ios手机上拉页面橡皮筋效果的Bug了，当然这种方式有些取巧，但是暂时没有更好的解决方案了，如果大家有更好的解决方案，欢迎在下面评论。最后给大家看一下我的页面布局：</h4>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="kpointListShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="knowPointList"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="fixedHeaderRoot"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="knowPointHeader"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="knowPointHeader"</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识模块<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识点<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>能力要求<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="fixedHeaderRootReal"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="knowPointHeader isFixed"</span><span style="color: #ff0000;"> v-show</span><span style="color: #0000ff;">="headerFixed"</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识模块<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>知识点<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>能力要求<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="knowPointItem"</span><span style="color: #ff0000;"> v-for</span><span style="color: #0000ff;">="(kpointItem,index) in rows.kpointList"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="index"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>{{kpointItem.knowModule}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>{{kpointItem.knowPoint}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>{{kpointItem.abilityRequire}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><a href="https://blog.csdn.net/dx18520548758/article/details/78983864" target="_blank">参考</a></p>
+<h4 class="heading">喜欢的麻烦动动小手点个赞来支持我，有不对的地方欢迎大家指正，有什么问题也可以在下方留言，我看到后会第一时间回复！谢谢您来看这篇文章！🌹🌹🌹</h4>
+<h4 class="heading"><strong>欢迎关注我的微信公众号 小宾Coder 以此来支持我的创作，谢谢！</strong></h4>
+<p><img src="./images/Vue开发——实现吸顶效果1.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

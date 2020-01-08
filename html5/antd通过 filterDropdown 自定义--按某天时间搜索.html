@@ -1,0 +1,157 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修antd通过 filterDropdown 自定义--按某天时间搜索' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>antd通过 filterDropdown 自定义--按某天时间搜索</center></div><div class='banquan'>原文出处:本文由博客园博主别样青春提供。<br/>
+原文连接:https://www.cnblogs.com/takenotes-MUZI/p/11337926.html</div><br>
+    <div><img src="./images/antd通过 filterDropdown 自定义--按某天时间搜索0.png" alt="" /></div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">import React, { Component } from 'react';
+import { Table, Input, Button, Icon, DatePicker } from 'antd';
+import moment from 'moment';
+import Highlighter from 'react-highlight-words';
+
+export default class RpoliceRecord extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchText: '',
+    }
+  }
+
+ 
+  render() {
+    // 添加搜索
+    this.getColumnSearchProps = (dataIndex, title) =&gt; ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">padding: 8 }}</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Input
+            </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">={node =</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> {
+              this.searchInput = node;
+            }}
+            placeholder={`搜索 ${title}`}
+            value={selectedKeys[0]}
+            onChange={e =&gt; setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() =&gt; this.handleSearch(selectedKeys, confirm)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}
+          /&gt; 
+          </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Button
+            </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="primary"</span><span style="color: #ff0000;">
+            onClick</span><span style="color: #0000ff;">={() =</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> this.handleSearch(selectedKeys, confirm)}
+            icon="search"
+            size="small"
+            style={{ width: 90, marginRight: 8 }}&gt;
+            搜索
+          </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Button</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Button </span><span style="color: #ff0000;">onClick</span><span style="color: #0000ff;">={() =</span><span style="color: #0000ff;">&gt;</span> this.handleReset(clearFilters)} size="small" style={{ width: 90 }}&gt;重置<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      ),
+      filterIcon: filtered =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Icon </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="search"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">color: filtered ? '#1890ff' : undefined }} </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+      ),
+      onFilter: (value, record) =&gt;
+        record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase()),
+      onFilterDropdownVisibleChange: visible =&gt; {
+        if (visible) {
+          setTimeout(() =&gt; this.searchInput.select());
+        }
+      },
+      render: text =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Highlighter
+          </span><span style="color: #ff0000;">highlightStyle</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">backgroundColor: '#ffc069', padding: 0 }}
+          searchWords</span><span style="color: #0000ff;">={[this.state.searchText]}
+          </span><span style="color: #ff0000;">autoEscape
+          textToHighlight</span><span style="color: #0000ff;">={text.toString()}
+        </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+      ),
+    });
+    //搜索
+    this.handleSearch = (selectedKeys, confirm) =&gt; {
+      confirm();
+      console.log(selectedKeys,confirm);
+      this.setState({ searchText: selectedKeys[0] });
+    };
+    this.handleSearchtime = (selectedKeys, confirm) =&gt; {
+      confirm();
+      this.setState({ searchText: selectedKeys });
+    };
+    //重置
+    this.handleReset = clearFilters =&gt; {
+      clearFilters();
+      this.setState({ searchText: '' });
+    };
+    const columns = [
+      { title: '报警时间', dataIndex: 'time', key: 'time',
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">padding: 8 }}</span><span style="color: #0000ff;">&gt;</span>
+           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">DatePicker  </span><span style="color: #ff0000;">placeholder</span><span style="color: #0000ff;">={`搜索时间`}
+            </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">={selectedKeys[0]}
+            </span><span style="color: #ff0000;">onChange</span><span style="color: #0000ff;">={dateString =</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> setSelectedKeys(dateString ? [dateString] : [])}
+            onPressEnter={() =&gt; this.handleSearch(selectedKeys, confirm)}
+            style={{ width: 188, marginBottom: 8, display: 'block' }}/&gt;
+          </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Button
+            </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="primary"</span><span style="color: #ff0000;">
+            onClick</span><span style="color: #0000ff;">={() =</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"> this.handleSearchtime(moment(selectedKeys[0]._d).format('YYYY-MM-DD'), confirm)}
+            icon="search"
+            size="small"
+            style={{ width: 90, marginRight: 8 }}&gt;
+            搜索
+          </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Button</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Button </span><span style="color: #ff0000;">onClick</span><span style="color: #0000ff;">={() =</span><span style="color: #0000ff;">&gt;</span> this.handleReset(clearFilters)} size="small" style={{ width: 90 }}&gt;重置<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+      ),
+      filterIcon: filtered =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Icon </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="search"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">color: filtered ? '#1890ff' : undefined }} </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+      ),
+      onFilter: (value, record) =&gt; {
+        return record.time.indexOf(moment(value).format('YYYY-MM-DD')) != -1},
+      render: text =&gt; (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Highlighter
+          </span><span style="color: #ff0000;">highlightStyle</span><span style="color: #0000ff;">={{ </span><span style="color: #ff0000;">backgroundColor: '#ffc069', padding: 0 }}
+          searchWords</span><span style="color: #0000ff;">={[this.state.searchText]}
+          </span><span style="color: #ff0000;">autoEscape
+          textToHighlight</span><span style="color: #0000ff;">={text.toString()}
+        </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+      ),
+     },
+      { title: '来电', key: 'callnum', dataIndex: 'callnum', ...this.getColumnSearchProps('callnum', '来电'), },
+      { title: '时长', key: 'longtime', dataIndex: 'longtime', }
+    ];
+    const data = [
+      { key: '1', time: '2019-07-30 16:31:05', callnum: '13546540218', longtime: '37秒' },
+      { key: '2', time: '2019-06-24 22:08:05', callnum: '13546540218', longtime: '1分12秒' },
+      { key: '3', time: '2017-08-15 12:31:05', callnum: '13546540218', longtime: '1分10秒' },
+      { key: '4', time: '2016-12-30 06:15:00', callnum: '13546540218', longtime: '20秒' }
+    ];
+
+    return (
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Table </span><span style="color: #ff0000;">className</span><span style="color: #0000ff;">="accidentTable"</span><span style="color: #ff0000;"> columns</span><span style="color: #0000ff;">={columns} </span><span style="color: #ff0000;">dataSource</span><span style="color: #0000ff;">={data} </span><span style="color: #ff0000;">bordered size</span><span style="color: #0000ff;">="small"</span> <span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+    )
+  }
+}</span></pre>
+</div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

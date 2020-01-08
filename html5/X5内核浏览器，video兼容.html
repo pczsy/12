@@ -1,0 +1,60 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修X5内核浏览器，video兼容' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>X5内核浏览器，video兼容</center></div><div class='banquan'>原文出处:本文由博客园博主雨下大了没提供。<br/>
+原文连接:https://www.cnblogs.com/yxdlm/p/10880134.html</div><br>
+    <p>使用vue-video-player在移动端微信内置浏览器打开，点击视频自动全屏问题。 参考官方&nbsp;<a href="https://x5.tencent.com/tbs/guide/video.html" target="_blank">API</a>&nbsp;是 H5 同层浏览器的原因，可通过设置video属性来处理。&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code> &lt;video-player class="video-player vjs-custom-skin "<span style="color: #000000;">
+        ref</span>="videoPlayer"<span style="color: #000000;">
+        :playsinline</span>='true'<span style="color: #000000;">
+        :options</span>='videoOptions'<span style="color: #000000;">
+        @canplay</span>="<span style="color: #ff0000;">onPlayerCanplay</span>($event)"
+       &gt;
+ &lt;/video-player&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">onPlayerCanplay (player) {    
+            let ua </span>=<span style="color: #000000;"> navigator.userAgent.toLocaleLowerCase()
+         
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> x5内核</span>
+            <span style="color: #0000ff;">if</span> (ua.match(/tencenttraveler/) != <span style="color: #0000ff;">null</span> || ua.match(/qqbrowse/) != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+
+                $(</span>'body').find('video'<span style="color: #000000;">)
+                .attr(</span>'x-webkit-airplay', 'true')  <span style="color: #008000;">//</span><span style="color: #008000;">设置允许设备播放</span>
+                .attr('x5-playsinline', 'true')  <span style="color: #008000;">//</span><span style="color: #008000;"> 设置android在微信中内联播放视频</span>
+<span style="color: #000000;">                
+                .attr(</span>'x5-video-player-type','web') <span style="color: #008000;">//</span><span style="color: #008000;"> 关闭同层X5内核播放器    x5-video-player-type='h5' 启用Ｈ5同层播放器</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> .attr('x5-video-player-fullscreen','true')  // 进入全屏通知</span>
+                .attr('x5-video-orientation','portrait')  <span style="color: #008000;">//</span><span style="color: #008000;">控制横竖屏 可选值： landscape 横屏, portraint竖屏  默认值：portraint</span>
+            } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> ios端</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> alert('ios')</span>
+                $('body').find('video'<span style="color: #000000;">)
+                .attr(</span>'webkit-playsinline', 'true')  <span style="color: #008000;">//</span><span style="color: #008000;">设置ios在微信中内联播放视频 ios9</span>
+                .attr('playsinline', 'true')    <span style="color: #008000;">//</span><span style="color: #008000;">设置ios在微信中内联播放视频 ios10/ios11</span>
+<span style="color: #000000;">            }
+        },</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

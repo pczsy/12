@@ -1,0 +1,63 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修超过固定宽度或行数显示“...”' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>超过固定宽度或行数显示“...”</center></div><div class='banquan'>原文出处:本文由博客园博主hooks提供。<br/>
+原文连接:https://www.cnblogs.com/zw0718/p/11110014.html</div><br>
+    <p>　　做前端设计时，通常需要控制字符显示的宽度或者行数，多余字符通常以&ldquo;...&rdquo;替代；本文分两点情况来进行设置：</p>
+<p>　　1、需要字符保持固定宽度，其余字符显示省略号(&lsquo;...&rsquo;);</p>
+<p>　　</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">.addclass{
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">    width: 600px;
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">    overflow: hidden;       //这个是设置隐藏的。还有其他的，例如scroll，是超出固定长度，底部显示滚动条的。
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">    text-overflow: ellipsis;   //这个就是设置直接隐藏掉文字，还是显示...的。当前是显示省略号。直接省略是clip
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">    display: inline-block;     //根据不同标签display值，有的不用加。
+</span><span style="color: #008080;">6</span> }</pre>
+</div>
+<p>　　2、需要字符显示固定行数（本文以三行为例），其余字符显示省略号(&lsquo;...&rsquo;);</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">.addclass{
+    overflow: hidden;      
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;  //这里就是设置超出几行隐藏
+    -webkit-box-orient: vertical;
+    display:-webkit-box;  //根据不同标签display，有的不用加
+}
+</pre>
+</div>
+<p>　　以上方法基本可以满足需求。当使用第二种情况(多行隐藏)时，有童鞋遇到过设置不生效，参考如下方法：</p>
+<p>　　（1）于页面标签添加style="display:-webkit-box;"即可；（一般情况都是-webkit-box-orient，这个属性未生效）</p>
+<p>　　（2）如果方法（1）不生效，尝试以下方法,(具体实现原理请移步：<a href="https://github.com/postcss/autoprefixer/issues/776" target="_blank">https://github.com/postcss/autoprefixer/issues/776</a>)：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">.addclass{
+    overflow: hidden;      
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 3;
+    /* autoprefixer: off */     //加这两个注释就行。
+    -webkit-box-orient: vertical;
+    /* autoprefixer: on */
+    display:-webkit-box; 
+}
+</pre>
+</div>
+<p>　　本文完结，希望可以帮助到大家！</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

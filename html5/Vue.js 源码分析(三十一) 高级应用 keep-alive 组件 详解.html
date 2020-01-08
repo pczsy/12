@@ -1,0 +1,318 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11287509.html</div><br>
+    <p>当使用is特性切换不同的组件时，每次都会重新生成组件Vue实例并生成对应的VNode进行渲染，这样是比较花费性能的，而且切换重新显示时数据又会初始化，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="currentComp=currentComp=='A'?'B':'A'"</span><span style="color: #0000ff;">&gt;</span>切换<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>               <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">动态组件</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">component </span><span style="color: #ff0000;">:is</span><span style="color: #0000ff;">="currentComp"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">with</span><span style="background-color: #f5f5f5; color: #000000;">(Vue.config){productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;}
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app  </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            components:{
+                A:{
+                    template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;&lt;input type='text'/&gt;&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">A</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    mounted:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Comp A mounted</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);}
+                },
+                B:{
+                    template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;B组件&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">B</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    mounted:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Comp B mounted</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);}
+                }
+            },
+            data:{
+                currentComp:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">A</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染结果为:</p>
+<p><img src="./images/Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解0.png" alt="" /></p>
+<p>控制台输出:</p>
+<p><img src="./images/Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解1.png" alt="" /></p>
+<p>当我们在输入框输入内容后再点击切换将切换到B组件后控制台输出:</p>
+<p><img src="./images/Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解2.png" alt="" /></p>
+<p>然后再次点击切换，将显示A组件，此时控制台输出:</p>
+<p><img src="./images/Vue.js 源码分析(三十一) 高级应用 keep-alive 组件 详解3.png" alt="" /></p>
+<p>渲染出的A组件内容是空白的，我们之前在输入框输入的内容将没有了，<span style="color: #ff0000;">这是因为使用is特性切换不同的组件时，每次都会重新生成组件Vue实例并生成对应的VNode进行渲染，数据会丢失的</span></p>
+<p>解决办法是可以用Kepp-alive组件对子组件内的组件实例进行缓存，子组件激活时将不会再创建一个组件实例，而是从缓存里拿到组件实例，直接挂载即可，</p>
+<p>使用keep-alive组件时，可以给该组件传递以下特性:<br />&nbsp;&nbsp; &nbsp;include &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;只有名称匹配的组件会被缓存&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;只可以是字符串数组、字符串(以逗号分隔，分隔后每个内容就是要缓存的组件名)、正则表达式<br />&nbsp;&nbsp; &nbsp;exclude &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;任何名称匹配的组件都不会被缓存&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;只可以是字符串数组、字符串(以逗号分隔，分隔后每个内容就是要缓存的组件名)、正则表达式<br />&nbsp;&nbsp; &nbsp;max&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;数字。最多可以缓存多少组件实例</p>
+<p>keep-alive对应的子组件有两个生命周期函数，这两个生命周期是keep-alive特有的，如下:<br />&nbsp;&nbsp; &nbsp;activated&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;该子组件被激活时调用<br />&nbsp;&nbsp; &nbsp;deactivated &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;该子组件被停用时调用 </p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="currentComp=currentComp=='A'?'B':'A'"</span><span style="color: #0000ff;">&gt;</span>切换<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>        
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">component </span><span style="color: #ff0000;">:is</span><span style="color: #0000ff;">="currentComp"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">with</span><span style="background-color: #f5f5f5; color: #000000;">(Vue.config){productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;}
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app  </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            components:{
+                A:{
+                    template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;&lt;input type='text'/&gt;&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">A</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    mounted:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Comp A mounted</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);},                 </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">挂载事件</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    activated:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Comp A activated</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);},             </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #ff0000;">激活时的事件，Kepp-alive独有的生命周期函数</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    deactivated:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Comp A deactivated</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);}          </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #ff0000;">停用时的事件，Kepp-alive独有的生命周期函数</span>
+<span style="background-color: #f5f5f5; color: #000000;">                },
+                B:{
+                    template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;B组件&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">B</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+                    mounted:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Comp B mounted</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);},
+                    activated:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Comp B activated</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);},
+                    deactivated:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Comp B deactivated</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);}
+                }
+            },
+            data:{
+                currentComp:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">A</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>这样组件在切换时之前的数据就不会丢失了。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;对于keep-alive来说，是通过initGlobalAPI()函数注册的，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> builtInComponents = {           <span style="color: #008000;">//</span><span style="color: #008000;">第5059行,KeppAlive组件的定义</span>
+<span style="color: #000000;">  KeepAlive: KeepAlive
+}<br />
+</span><span style="color: #0000ff;">function</span> initGlobalAPI (Vue) {      <span style="color: #008000;">//</span><span style="color: #008000;">第5015行</span>
+  <span style="color: #008000;">/**/</span><span style="color: #000000;">
+  extend(Vue.options.components, builtInComponents);    </span><span style="color: #008000;">//</span><span style="color: #008000;">第5051行</span>
+  <span style="color: #008000;">/**/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>Keep-alive组件的定义如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> KeepAlive = {         <span style="color: #008000;">//</span><span style="color: #008000;">第4928行</span>
+  name: 'keep-alive'<span style="color: #000000;">,
+  abstract: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+
+  props: {
+    include: patternTypes,
+    exclude: patternTypes,
+    max: [String, Number]
+  },
+
+  created: </span><span style="color: #0000ff;">function</span> created () {            <span style="color: #008000;">//</span><span style="color: #008000;">创建时的周期函数</span>
+    <span style="color: #0000ff;">this</span>.cache = Object.create(<span style="color: #0000ff;">null</span>);         <span style="color: #008000;">//</span><span style="color: #008000;">用于缓存KeepAlive的VNode</span>
+    <span style="color: #0000ff;">this</span>.keys = [];                           <span style="color: #008000;">//</span><span style="color: #008000;">设置this.keys为空数组 </span>
+<span style="color: #000000;">  },
+
+  destroyed: </span><span style="color: #0000ff;">function</span> destroyed () {      <span style="color: #008000;">//</span><span style="color: #008000;">销毁生命周期</span>
+    <span style="color: #0000ff;">var</span> <span style="color: #0000ff;">this</span>$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">this</span>$1<span style="color: #000000;">.cache) {
+      pruneCacheEntry(</span><span style="color: #0000ff;">this</span>$1.cache, key, <span style="color: #0000ff;">this</span>$1<span style="color: #000000;">.keys);
+    }
+  },
+
+  mounted: </span><span style="color: #0000ff;">function</span> mounted () {          <span style="color: #008000;">//</span><span style="color: #008000;">挂载时的生命周期函数</span>
+    <span style="color: #0000ff;">var</span> <span style="color: #0000ff;">this</span>$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">this</span>.$watch('include', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (val) {  　　　　　　　　　　　　　　　　　　　　　　　//<span style="color: #ff0000;">监视include的变化</span>
+      pruneCache(</span><span style="color: #0000ff;">this</span>$1, <span style="color: #0000ff;">function</span> (name) { <span style="color: #0000ff;">return</span><span style="color: #000000;"> matches(val, name); });
+    });
+    </span><span style="color: #0000ff;">this</span>.$watch('exclude', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (val) { 　　　　　　　　　　　　　　　　　　　　　　　　<span style="color: #000000;">//<span style="color: #ff0000;">监视exclude的变化</span></span>
+      pruneCache(</span><span style="color: #0000ff;">this</span>$1, <span style="color: #0000ff;">function</span> (name) { <span style="color: #0000ff;">return</span> !<span style="color: #000000;">matches(val, name); });
+    });
+  },
+
+  render: </span><span style="color: #0000ff;">function</span> render () {          <span style="color: #008000;">//</span><span style="color: #008000;">render函数</span>
+    <span style="color: #008000;">/**/</span><span style="color: #000000;">
+  }
+}</span></pre>
+</div>
+<p>Keep-alive也是一个抽象组件(abstract属性为true),<span style="color: #000000;">mounted</span>挂载时会监视include和exclude的变化，也就是说程序运行时可以通过修改include或exclude来对keep-alive里缓存的子组件进行移除操作。</p>
+<p>Keep-alive组件的render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code>  render: <span style="color: #0000ff;">function</span> render () {          <span style="color: #008000;">//</span><span style="color: #008000;">第4926行 keepalive组件的render函数</span>
+    <span style="color: #0000ff;">var</span> slot = <span style="color: #0000ff;">this</span>.$slots.<span style="color: #0000ff;">default</span>;                             <span style="color: #008000;">//</span><span style="color: #008000;">获取所有的子节点,是个VNode数组</span>
+    <span style="color: #0000ff;">var</span> vnode = getFirstComponentChild(slot);                   <span style="color: #008000;">//</span><span style="color: #008000;">拿到第一个组件VNode</span>
+    <span style="color: #0000ff;">var</span> componentOptions = vnode &amp;&amp; vnode.componentOptions;     <span style="color: #008000;">//</span><span style="color: #008000;">该组件的配置信息</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (componentOptions) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> check pattern</span>
+      <span style="color: #0000ff;">var</span> name = getComponentName(componentOptions);              <span style="color: #008000;">//</span><span style="color: #008000;">获取组件名称，优先获取name属性，如果没有则获取tag名称</span>
+      <span style="color: #0000ff;">var</span> ref = <span style="color: #0000ff;">this</span>;                                             <span style="color: #008000;">//</span><span style="color: #008000;">当前KeppAlive组件的Vue实例</span>
+      <span style="color: #0000ff;">var</span> include = ref.include;                                  <span style="color: #008000;">//</span><span style="color: #008000;">获取include属性</span>
+      <span style="color: #0000ff;">var</span> exclude = ref.exclude;                                  <span style="color: #008000;">//</span><span style="color: #008000;">获取exclude属性</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> not included</span>
+        (include &amp;&amp; (!name || !matches(include, name))) ||
+        <span style="color: #008000;">//</span><span style="color: #008000;"> excluded</span>
+        (exclude &amp;&amp; name &amp;&amp; matches(exclude, name))               <span style="color: #008000;">//</span><span style="color: #ff0000;">执行matches进行匹配，如果该组件不满足条件</span>
+<span style="color: #000000;">      ) { 
+        </span><span style="color: #0000ff;">return</span> vnode                                                <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回vnode，即不做处理</span>
+<span style="color: #000000;">      }
+
+      </span><span style="color: #0000ff;">var</span> ref$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">var</span> cache = ref$1<span style="color: #000000;">.cache;
+      </span><span style="color: #0000ff;">var</span> keys = ref$1<span style="color: #000000;">.keys;
+      </span><span style="color: #0000ff;">var</span> key = vnode.key == <span style="color: #0000ff;">null</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> same constructor may get registered as different local components</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> so cid alone is not enough (#3269)</span>
+        ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : ''<span style="color: #000000;">)
+        : vnode.key;                                              </span><span style="color: #008000;">//</span><span style="color: #008000;">为子组件定义一个唯一的key值 如果该子组件没有定义key则拼凑一个，值为该组件对应的Vue实例的cid::tag，例如:1::A  同一个构造函数可以注册为不同的组件，所以单凭一个cid作为凭证是不够的</span>
+      <span style="color: #0000ff;">if</span> (cache[key]) {                                           <span style="color: #008000;">//</span><span style="color: #008000;">如果该组件被缓存了</span>
+        vnode.componentInstance = cache[key].componentInstance;     <span style="color: #008000;">//</span><span style="color: #ff0000;">直接将该组件的实例保存到vnode.componentInstance里面</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> make current key freshest    </span>
+<span style="color: #000000;">        remove(keys, key);                                          
+        keys.push(key);
+      } </span><span style="color: #0000ff;">else</span> {                                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果当前组件没有被缓存</span>
+        cache[key] = vnode;                                             <span style="color: #008000;">//</span><span style="color: #008000;">先将VNode保存到缓存cache里</span>
+        keys.push(key);                                                 <span style="color: #008000;">//</span><span style="color: #008000;">然后将key保存到keys里</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> prune oldest entry</span>
+        <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.max &amp;&amp; keys.length &gt; parseInt(<span style="color: #0000ff;">this</span>.max)) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果指定了max且当前的keys里存储的长度大于this.max</span>
+          pruneCacheEntry(cache, keys[0], keys, <span style="color: #0000ff;">this</span>._vnode);             <span style="color: #008000;">//</span><span style="color: #008000;">则移除keys[0]，这是最不常用的子组件</span>
+<span style="color: #000000;">        }
+      }
+
+      vnode.data.keepAlive </span>= <span style="color: #0000ff;">true</span>;                                <span style="color: #008000;">//</span><span style="color: #008000;">设置vnode.data.keepAlive为true,即设置一个标记</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span> vnode || (slot &amp;&amp; slot[0])                             <span style="color: #008000;">//</span><span style="color: #ff0000;">最后返回vnode(即第一个组件子节点)</span>
+  }</pre>
+</div>
+<p>matches用于匹配传给Kepp-alive的include或exclude特性是否匹配，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> matches (pattern, name) {    <span style="color: #008000;">//</span><span style="color: #008000;">第4885行      //查看name这个组件是否匹配pattern</span>
+  <span style="color: #0000ff;">if</span> (Array.isArray(pattern)) {                        <span style="color: #008000;">//</span><span style="color: #008000;">pattern可以是数组格式</span>
+    <span style="color: #0000ff;">return</span> pattern.indexOf(name) &gt; -1<span style="color: #000000;">  
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> pattern === 'string') {            <span style="color: #008000;">//</span><span style="color: #008000;">也可以是字符串,用逗号分隔</span>
+    <span style="color: #0000ff;">return</span> pattern.split(',').indexOf(name) &gt; -1<span style="color: #000000;">
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isRegExp(pattern)) {                      <span style="color: #008000;">//</span><span style="color: #008000;">也可以是正则表达式</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> pattern.test(name)
+  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore next </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>初次渲染时，keep-alive下的组件和普通组件是没有区别的，当一个组件从被激活变为激活状态时，和Keep-alive相关的逻辑如下:</p>
+<p>执行patch()将VNode渲染成真实节点时会执行createElm()函数，又会优先执行createComponent创建组件实例，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {   <span style="color: #008000;">//</span><span style="color: #008000;">第5589行 创建组件节点</span>
+    <span style="color: #0000ff;">var</span> i = vnode.data;                                                         <span style="color: #008000;">//</span><span style="color: #008000;">获取vnode的data属性</span>
+    <span style="color: #0000ff;">if</span> (isDef(i)) {                                                             <span style="color: #008000;">//</span><span style="color: #008000;">如果存在data属性(组件vnode肯定存在这个属性，普通vnode有可能存在)</span>
+      <span style="color: #0000ff;">var</span> isReactivated = isDef(vnode.componentInstance) &amp;&amp; i.keepAlive;          <span style="color: #008000;">//</span><span style="color: #008000;">是否为激活操作 如果vnode.componentInstance为true(组件实例存在)且存在keepAlive属性则表示为keepalive组件</span>
+      <span style="color: #0000ff;">if</span> (isDef(i = i.hook) &amp;&amp; isDef(i =<span style="color: #000000;"> i.init)) {                              
+        i(vnode, </span><span style="color: #0000ff;">false</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> hydrating </span><span style="color: #008000;">*/</span>, parentElm, refElm);                         <span style="color: #008000;">//</span><span style="color: #ff0000;">执行组件的init钩子函数</span>
+<span style="color: #000000;">      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> after calling the init hook, if the vnode is a child component</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> it should've created a child instance and mounted it. the child</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> component also has set the placeholder vnode's elm.</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> in that case we can just return the element and be done.</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(vnode.componentInstance)) {
+        initComponent(vnode, insertedVnodeQueue);                               </span><span style="color: #008000;">//</span><span style="color: #008000;">将子组件的VNode push到insertedVnodeQueue里面,</span>
+        <span style="color: #0000ff;">if</span> (isTrue(isReactivated)) {                                            <span style="color: #008000;">//</span><span style="color: #008000;">如果是keep-alive激活的状态</span>
+          reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);        <span style="color: #008000;">//</span><span style="color: #ff0000;">执行reactivateComponent()函数</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">
+      }
+    }
+  }</span></pre>
+</div>
+<p>init是组件的钩子函数，用于创建组件的实例，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  init: <span style="color: #0000ff;">function</span> init (           <span style="color: #008000;">//</span><span style="color: #008000;">第4109行 组件的安装</span>
+<span style="color: #000000;">    vnode,
+    hydrating,
+    parentElm,
+    refElm
+  ) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+      vnode.componentInstance </span>&amp;&amp;
+      !vnode.componentInstance._isDestroyed &amp;&amp;<span style="color: #000000;">
+      vnode.data.keepAlive
+    ) {                                                             </span><span style="color: #008000;">//</span><span style="color: #ff0000;">如果vnode.componentInstance和vnode.data.keepAlive都存在，则表示是一个keep-alive组件的激活状态</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> kept-alive components, treat as a patch</span>
+      <span style="color: #0000ff;">var</span> mountedNode = vnode; <span style="color: #008000;">//</span><span style="color: #008000;"> work around flow</span>
+      componentVNodeHooks.prepatch(mountedNode, mountedNode);       <span style="color: #008000;">//</span><span style="color: #008000;">执行该组件的prepatch方法</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">var</span> child = vnode.componentInstance =<span style="color: #000000;"> createComponentInstanceForVnode(
+        vnode,
+        activeInstance,
+        parentElm,
+        refElm
+      );
+      child.$mount(hydrating </span>?<span style="color: #000000;"> vnode.elm : undefined, hydrating);
+    }
+  },</span></pre>
+</div>
+<p><span style="color: #ff0000;">对于Keep-alive子组件的激活过程来说，它是不会调用createComponentInstanceForVnode去创建一个新的组件实例的，而是直接从VNode的componentInstance拿到组件实例即可</span></p>
+<p>回到createComponent()函数，最后会执行reactivateComponent()函数,该函数就比较简单了，就是将子组件vnode.elm插入到DOM中，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> reactivateComponent (vnode, insertedVnodeQueue, parentElm, refElm) {     <span style="color: #008000;">//</span><span style="color: #008000;">第5628行  激活一个组件</span>
+    <span style="color: #0000ff;">var</span><span style="color: #000000;"> i;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> hack for #4339: a reactivated component with inner transition</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> does not trigger because the inner node's created hooks are not called</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> again. It's not ideal to involve module-specific logic in here but</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> there doesn't seem to be a better way to do it.</span>
+    <span style="color: #0000ff;">var</span> innerNode =<span style="color: #000000;"> vnode;
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (innerNode.componentInstance) {
+      innerNode </span>=<span style="color: #000000;"> innerNode.componentInstance._vnode;
+      </span><span style="color: #0000ff;">if</span> (isDef(i = innerNode.data) &amp;&amp; isDef(i =<span style="color: #000000;"> i.transition)) {
+        </span><span style="color: #0000ff;">for</span> (i = 0; i &lt; cbs.activate.length; ++<span style="color: #000000;">i) {
+          cbs.activate[i](emptyNode, innerNode);
+        }
+        insertedVnodeQueue.push(innerNode);
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">
+      }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> unlike a newly created component,</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> a reactivated keep-alive component doesn't insert itself</span>
+    insert(parentElm, vnode.elm, refElm);                                             <span style="color: #008000;">//</span><span style="color: #008000;">调用insert将vnode.elm插入到parentElm里</span>
+  }</pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>insert会调用原生的insertBefore或者appendChild这去插入DOM，最后返回到patch()函数内，就把之前的B组件从DOM树中移除，并执行相关生命周期函数。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

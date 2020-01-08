@@ -1,0 +1,203 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue – 基础学习(1)对生命周期和钩子函的理解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue – 基础学习(1)对生命周期和钩子函的理解</center></div><div class='banquan'>原文出处:本文由博客园博主帝鸿琬琰提供。<br/>
+原文连接:https://www.cnblogs.com/donghuang/p/10840584.html</div><br>
+    <h3>一、简介</h3>
+<p><span style="font-size: 15px;">　　先贴一下官网对生命周期/钩子函数的说明（先贴为敬）：<span style="background-color: #ffffff; color: #808080;">所有的生命周期钩子自动绑定&nbsp;<span style="color: #ff6600;"><code>this</code></span>&nbsp;上下文到实例中，因此你可以访问数据，对属性和方法进行运算。这意味着<span style="color: #000000;"><strong>你不能使用箭头函数来定义一个生命周期方法</strong></span>&nbsp;(例如<span style="color: #ff6600;">&nbsp;<code>created: () =&gt; this.fetchTodos()</code></span>)。这是因为箭头函数绑定了父上下文，因此&nbsp;<span style="color: #ff6600;"><code>this</code></span>&nbsp;与你期待的 Vue 实例不同，<span style="color: #ff6600;"><code>this.fetchTodos</code></span>&nbsp;的行为未定义。</span></span></p>
+<p><span style="font-size: 15px;">　　上面是官方文档对生命周期/钩子函数的总览介绍。如果单看这个总览介绍，绝对是一头雾水，不清不楚看不出个所以然。虽然文档后面对各个钩子函数的使用有具体说明，但具体实例却不是很清楚，所以在玩了一段时间的Vue项目后，闲来打算自己总结下生命周期和钩子函数的使用。下面先来一张官方生命周期图示：</span></p>
+<p>　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解0.png" alt="" width="837" height="2121" /></p>
+<p><span style="font-size: 15px;">　　生命周期：<span style="color: #ff0000;">描述Vue实例或组件从创建到销毁<span style="color: #000000;">(</span>包括销毁前和销毁<span style="color: #000000;">)</span>的全部经历和过程。</span>就像人一样，从母亲怀胎开始，然后出生，成长，衰老，一直到回光返照(销毁前)，最后死去一把火(销毁)回归大自然，着重是介绍<span style="color: #ff0000;">一种经历和过程</span>。</span></p>
+<p><span style="font-size: 15px;">　　钩子函数：<span style="color: #ff0000;">钩子函数则是Vue实例或组件在生命周期过程中各个阶段自执行的回调函数。</span>就如同新生儿出生后，饿了他会哭，上学途中被高年级学生欺负了会找家长告状，长大了要出去挣钱养家，老了会戴老花镜一样。在不同的阶段Vue实例或组件内部，结构也在发生着变化，随着节点结构的变化就需要执行一些特定的钩子函数，去继续下一步变化和新节点的建立，也正是这些钩子函数的执行为实际开发过程中能够添加自定义功能提供了入口。</span></p>
+<p>&nbsp;</p>
+<p align="left">　　下面结合官方文档先对各个钩子函数做一个简略的总结。</p>
+<p>&nbsp;</p>
+<h3 align="left">二、代码实测</h3>
+<p>&nbsp;　　各个钩子函数的执行位置以及执行时间点，在上面的官方生命周期图示中已经标注得很清楚，下面通过代码实测来逐个加深认识。测试代码如下：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Vue &ndash; 基础学习(1):对生命周期和钩子函的理解&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="app"&gt;
+    &lt;div&gt;静态元素&lt;/div&gt;
+    &lt;div style="margin-top: 5px"&gt;{{ testInfor }}&lt;/div&gt;
+    &lt;div style="margin-top: 20px"&gt;
+        &lt;button @click.stop="editTestInfor"&gt;更新内容&lt;/button&gt;
+        &lt;button @click.stop="destroyedNode"&gt;销毁实例&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script type="text/javascript" src="https://cdn.bootcss.com/vue/2.5.20/vue.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+        el: </span>'#app'<span style="color: #000000;">,
+        data() {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                testInfor: </span>'测试信息!'<span style="color: #000000;">,
+            };
+        },
+        beforeCreate() {
+            console.group(</span>'beforeCreate：实例创建完成，但数据对象data、属性、event/watcher事件均未完成配置和初始化。挂载阶段还未开始，$el属性未初始化，$el元素不可见========》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span>);                                                                      <span style="color: #008000;">//</span><span style="color: #008000;"> object</span>
+            console.log('%c%s', 'color:red', 'el     : ' + <span style="color: #0000ff;">this</span>.$el);                               <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            console.log(<span style="color: #0000ff;">this</span>.$el);                                                                  <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.$data);                             <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('beforeCreate');                                                       <span style="color: #008000;">//</span><span style="color: #008000;"> undefined    this.testFuntion is not a function</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        created() {
+            console.group(</span>'created：实例数据对象data、属性、event/watcher事件均配置和初始化完成。但挂载阶段还未开始，$el属性未初始化，$el元素不可见=========================》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span>);                                                                      <span style="color: #008000;">//</span><span style="color: #008000;"> object</span>
+            console.log('%c%s', 'color:red', 'el     : ' + <span style="color: #0000ff;">this</span>.$el);                               <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            console.log(<span style="color: #0000ff;">this</span>.$el);                                                                  <span style="color: #008000;">//</span><span style="color: #008000;"> undefined</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.$data);                             <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化完成</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化完成</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('created');                                                            <span style="color: #008000;">//</span><span style="color: #008000;"> event事件初始化完成</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        beforeMount() {
+            console.group(</span>'beforeMount：在开始挂载之前被调用,相关的render函数首次被调用。$el属性初始化完成，但处于虚拟dom状态，具体的data.filter尚未替换,$el元素可见=======》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span>);                                                                      <span style="color: #008000;">//</span><span style="color: #008000;"> object</span>
+            console.log('%c%s', 'color:red', 'el     : ' + <span style="color: #0000ff;">this</span>.$el);                               <span style="color: #008000;">//</span><span style="color: #008000;"> $el属性初始化完成</span>
+            console.log(<span style="color: #0000ff;">this</span>.$el);                                                                  <span style="color: #008000;">//</span><span style="color: #008000;"> 节点挂载完成，但数据尚未渲染，处于虚拟DOM状态</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.$data);                             <span style="color: #008000;">//</span><span style="color: #008000;"> 已被初始化</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 已被初始化</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('beforeMount');                                                        <span style="color: #008000;">//</span><span style="color: #008000;"> event事件已被初始化</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        mounted() {
+            console.group(</span>'mounted：挂载完成，data.filter成功渲染，页面整体渲染完成，可进行DOM操作===================》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span>);                                                                      <span style="color: #008000;">//</span><span style="color: #008000;"> object</span>
+            console.log('%c%s', 'color:red', 'el     : ' + <span style="color: #0000ff;">this</span>.$el);                               <span style="color: #008000;">//</span><span style="color: #008000;"> $el属性已被初始化</span>
+            console.log(<span style="color: #0000ff;">this</span>.$el);                                                                  <span style="color: #008000;">//</span><span style="color: #008000;"> 节点挂载完成，数据渲染成功，页面全部渲染完成</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.$data);                             <span style="color: #008000;">//</span><span style="color: #008000;"> 已被初始化</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 已被初始化</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('mounted');                                                            <span style="color: #008000;">//</span><span style="color: #008000;"> event事件已被初始化</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        beforeUpdate() {
+            console.group(</span>'beforeUpdate：页面依赖的参数数据更改之后，DOM结构重新渲染之前触发执行(此时DOM结构还没有重新渲染)=============》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$el);
+            console.log(</span>'%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 点击按钮调用方法更新后的数据</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('beforeUpdate'<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">this</span>.testInfor = 'beforeUpdate修改后的信息!';                                           <span style="color: #008000;">//</span><span style="color: #008000;"> 在beforeUpdate函数内再次修改页面依赖参数数据</span>
+            console.log('%c%s', 'color:blue', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                        <span style="color: #008000;">//</span><span style="color: #008000;"> 在beforeUpdate函数内修改后的数据</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        updated() {
+            console.group(</span>'updated：数据更新完成=====================================================================》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$el);
+            console.log(</span>'%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 最终更新后数据</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('updated'<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+        },
+        beforeDestroy() {
+            console.group(</span>'beforeDestroy：实例或组件销毁之前调用，在这一步，实例或组件仍然完全可用===================》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$el);
+            console.log(</span>'%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span><span style="color: #000000;">.testInfor);
+            </span><span style="color: #0000ff;">this</span>.testFuntion('beforeDestroy');                                                      <span style="color: #008000;">//</span><span style="color: #008000;"> 此时实例内功能函数功能依然正常</span>
+            <span style="color: #0000ff;">this</span>.testInfor = 'beforeDestroy修改后的信息!';                                          <span style="color: #008000;">//</span><span style="color: #008000;"> 在beforeDestroy函数内再次修改页面依赖参数数据，用以验证beforeUpdate和updated函数是否还监听执行</span>
+            console.log('%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 在beforeDestroy函数内修改后的数据</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 此时实例、组件虽然页面结构完整，各种功能正常。但，页面依赖参数更新后生命周期函数beforeUpdate和updated均不再执行，说明实例或组件的销毁一旦启动则不可逆转或中途打断。</span>
+<span style="color: #000000;">        },
+        destroyed() {
+            console.group(</span>'destroyed：实例或组件已被销毁=============================================================》'<span style="color: #000000;">);
+            console.log(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$el);
+            console.log(</span>'%c%s', 'color:red', 'data   : ' + <span style="color: #0000ff;">this</span>.testInfor);                         <span style="color: #008000;">//</span><span style="color: #008000;"> 在beforeDestroy函数内修改的页面依赖参数，依然能正确读取</span>
+            <span style="color: #0000ff;">this</span>.testFuntion('destroyed');                                                          <span style="color: #008000;">//</span><span style="color: #008000;"> 此时实例内功能函数功能依然正常</span>
+            <span style="color: #0000ff;">debugger</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 此时虽然"beforeDestroy"执行完毕，但实例指向的所有东西(参数，方法等)尚未解绑。所以此时实例内各参数、方法功能依然正常。等待"destroyed"执行完毕后，所有的东西才会解绑，尘归尘，土归土。</span>
+<span style="color: #000000;">        },
+        methods: {
+            testFuntion(type) {
+                console.log(</span>'当前运行钩子函数:' +<span style="color: #000000;"> type);
+            },
+
+            editTestInfor() {
+                </span><span style="color: #0000ff;">this</span>.testInfor = '修改后的信息!'<span style="color: #000000;">;
+            },
+
+            destroyedNode() {
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$destroy();
+            }
+        }
+    });
+</span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<h4 align="left"><span style="font-size: 16px;">　　1. beforeCreate 和created</span></h4>
+<p>　<span style="font-size: 15px;">　　　beforeCreate：实例创建完成，但数据对象data、属性、event/watcher事件<span style="color: #ff0000;"><strong>均未</strong>完成配置和初始化</span>。挂载阶段未开始，$el属性尚未初始化，$el属性不可见，$el元素不可见。</span></p>
+<p align="left">&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解1.png" alt="" width="1596" height="512" /></p>
+<p>　　　　<span style="font-size: 15px;">created：实例数据对象data、属性、event/watcher事件<span style="color: #ff0000;">均配置和初始化<strong>完成</strong></span>。但挂载阶段尚未开始，$el属性未初始化，$el属性不可见，$el元素不可见。</span></p>
+<p align="left">&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解2.png" alt="" width="1602" height="517" /></p>
+<p align="left">　　　<strong>　</strong><span style="font-size: 15px;"><strong>小结：</strong>虽然此时$el属性尚未初始化，页面元素不可见，但数据对象data、属性、event/watcher事件<span style="color: #ff0000;"><strong>均已配置和初始化完成</strong></span>，所以一些需要先页面执行的方法（如ajax请求，页面功能权限检测（页面是否能加载、页面依赖参数是否合法）和配置（如按钮点击权限等））在created阶段可以执行，但不允许操作DOM节点和调用操作DOM节点的方法（页面整体结构未渲染完成）。</span></p>
+<p align="left">&nbsp;</p>
+<h4 align="left"><span style="font-size: 16px;">　　2. beforeMount和mounted</span></h4>
+<p>　　　　<span style="font-size: 15px;">beforeMount：在<span style="color: #ff0000;">开始挂载之前被调用</span>，相关的render函数首次被调用。$el属性初始化完成，$el属性可见，el元素可见。但此时el节点并没有渲染进数据，<span style="color: #ff0000;">el节点尚处于&ldquo;<strong>虚拟</strong>&rdquo;节点状态</span>，可看到还是取值表达式{{testInfor }}。这就是Virtual DOM(虚拟Dom)的巧妙之处，先占坑，然后到mounted挂载阶段时再渲染值。</span></p>
+<p>　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解3.png" alt="" width="1609" height="332" /></p>
+<p align="left">　　　　<span style="font-size: 15px;">mounted ：节点挂载完成，数据成功渲染，页面整体渲染完成，实例或组件完全成熟，可进行DOM操作。</span></p>
+<p align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解4.png" alt="" width="1292" height="341" /></p>
+<p align="left">&nbsp;</p>
+<h4 align="left"><span style="font-size: 16px;">　　3. beforeDestroy 和 destroy</span></h4>
+<p><span style="font-size: 15px;">　　　　人生看似很漫长，但在不经意之间就走向了她的终点。Vue实例或组件也一样，在经历了多姿多彩的绚烂时光后，它也逐渐走向了它生命的终点。这里提一下为啥先不说&nbsp;<strong>beforeUpdate&nbsp;</strong>和&nbsp;<strong>updated&nbsp;</strong>而是直接跳到&nbsp;<strong>beforeDestroy&nbsp;</strong>和 <strong>destroy</strong>，因为&nbsp;<strong>beforeUpdate&nbsp;</strong>和 <strong>updated&nbsp;</strong>不是生命周期过程中必须执行的钩子函数。<span style="color: #ff0000;"><strong>beforeUpdate&nbsp;</strong>和 <strong>updated&nbsp;</strong>是基于组件内数据发生变化时触发执行</span>，如果当期实例或组件内数据只是进行显示，不进行任何修改，那么这两个钩子函数将一直不会被触发，也就不会被执行。</span></p>
+<p><span style="font-size: 15px;">　　　　beforeDestroy：实例或组件销毁之前调用，在这一步，<span style="color: #ff0000;">实例或组件内各参数，方法功能依然完整，实例仍完全可用</span>。</span></p>
+<p align="left">&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解5.png" alt="" width="1256" height="293" /></p>
+<p><span style="font-size: 15px;">　　　　destroy：Vue实例或组件销毁后调用。调用后，Vue 实例指示的所有东西都会自动解绑，所有的事件监听器会被移除，所有的子实例也会被销毁。</span></p>
+<p>　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解6.png" alt="" width="1263" height="473" /></p>
+<p><span style="font-size: 15px;">　　　<span style="color: #ff0000;">　实例或组件销毁完成后，再次点击&ldquo;更新内容&rdquo;按钮，此时系统不再做任何响应，但，已渲染完成的Dom结构和节点元素依然存在，所以当执行完destroy操作后，实例或组件就不再受Vue系统控制。此时Vue实例或该子组件已经不存在了，实例或组件内的各参数，属性，方法均已被内存回收清空。</span></span></p>
+<p><span style="font-size: 15px;">　　　　<strong>小结：</strong>beforeDestroy阶段，此时实例、组件虽然页面结构完整，各种功能正常，但，页面依赖参数更新后生命周期函数beforeUpdate和updated<span style="color: #ff0000;"><strong>均不再执行</strong>，<strong>说明实例或组件的销毁过程一旦启动则不可逆转或中途打断</strong></span>。</span></p>
+<p><span style="font-size: 15px;">　　　　destroy阶段，此时虽然"beforeDestroy"执行完毕，但实例指向的所有东西(参数，方法等)尚未解绑。所以此时实例内各参数、方法功能依然正常。等待"destroyed"执行完毕后，所有的东西才会被解绑，资源被回收。尘归尘，土归土，从哪来回哪去！</span></p>
+<p><span style="font-size: 15px;">　　　　到此为止，Vue实例或组件从开始初始化到最终销毁，数据清空的六个钩子函数均测试完毕。<span style="color: #ff0000;"><strong>这六个钩子函数是实例或组件生命周期历程中最主要的六个钩子函数，也是必须执行的六个函数，无法绕过</strong></span>。</span></p>
+<p align="left">&nbsp;</p>
+<h4 align="left"><span style="font-size: 16px;">　　4. beforeUpdate 和 updated</span></h4>
+<p><span style="font-size: 15px;">　　　　现在，返回来看beforeUpdate 和 updated。Vue实例或组件在挂载完成后就标志着功能健全，功能健全的组件就如成年的人生一样丰富多彩，每时每刻都可能发生变化。接下来通过修改testInfor的值，来看看beforeUpdate和updated都各自做了什么。</span></p>
+<p><span style="font-size: 15px;">点击页面&ldquo;更新内容&rdquo;按钮，修改testInfor的值。</span></p>
+<p><span style="font-size: 15px;">　　　　beforeUpdate：页面依赖的参数数据更改之后，<span style="color: #ff0000;">虚拟DOM重新渲染和打补丁之前执行</span>(<span style="color: #993366;">此时DOM结构还未重新渲染</span>)。</span></p>
+<p>&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解7.png" alt="" width="1227" height="317" /></p>
+<p><span style="font-size: 15px;">　　　　updated：页面依赖的参数数据更改之后，<span style="color: #ff0000;">beforeUpdate钩子函数<strong>执行完毕</strong></span>，会立即进行DOM结构的重新渲染。<span style="color: #ff0000;">DOM结构<strong><span style="color: #800080;">渲染完成之后</span></strong>才会调用updated钩子函数，而<strong><span style="color: #800080;">不是渲染时</span></strong>就调用</span>。</span></p>
+<p>&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解8.png" alt="" width="1226" height="240" /></p>
+<p>　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解9.png" alt="" width="1228" height="281" /></p>
+<p><span style="font-size: 15px;">　　　　此图就可以完全看出，调用updated时组件DOM结构已重新渲染完成，所以此时updated函数内是可以进行相关DOM操作的。</span></p>
+<p>&nbsp;</p>
+<p>　　　　<span style="font-size: 15px;"><strong>小结：</strong>在debugger beforeUpdate钩子函数时发现一个小细节，既然beforeUpdate是在页面依赖数据修改之后，虚拟DOM重新渲染之前执行，那么我在beforeUpdate函数内，是可以对依赖数据进行再次修改的，而不会导致多重渲染，也不会多次调用updated函数。</span></p>
+<p align="left">&nbsp;　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解10.png" alt="" width="1228" height="270" /></p>
+<p align="left">　　　　<img src="./images/Vue – 基础学习(1)对生命周期和钩子函的理解11.png" alt="" width="1230" height="430" /></p>
+<p><span style="font-size: 15px;">　　　　从上两图可以看出，<strong>即使在beforeUpdate函数内<span style="color: #ff0000;">修改无数次</span>页面依赖参数数据，组件Dom结构<span style="color: #ff0000;">也只会重新渲染一次</span></strong>，即 将最后修改的依赖参数数据渲染到对应节点，<strong><span style="color: #ff0000;">updated函数也只会执行一次</span></strong>。只是这样做没有多大实际意义，毕竟其他地方调用其他方法更新后的数据，是页面功能需求的数据，在beforeUpdate这又瞎改一通，于功能于系统毫无益处。当然你胆肥不怕死，整一些恶搞和乱操作还是可以玩的。</span></p>
+<p><span style="font-size: 15px;">　　　　虽然beforeUpdate和updated是基于页面依赖参数数据更改后触发和执行，对于页面依赖参数的变化可以起到监控作用，以及在参数变化之后执行其他后续操作，但，它们无法判定是哪个参数发生了变化。虽然每次参数数据变化之后可以通过比较各个参数值的前后值是否相等来判定是哪个参数发生了变化，但，那是基于参数量少，参数数据类型是基本数据类型的情况。一旦需要监控的参数量大，参数数据类型复杂，beforeUpdate和updated就将变得很难处理。所以实际开发过程中，除非一些特别的参数和操作，绝大部分参数的更新监听和后续操作，都是使用watch对象进行监听，因而在实际开发过程中beforeUpdate和updated使用得相当少。</span></p>
+<p><span style="font-size: 15px;">　　　　另外Vue是数据驱动页面刷新，所以必然是在<span style="color: #ff0000;">数据更新<strong>之后</strong></span>系统才会驱动虚拟DOM View层的刷新，<strong>因而beforeUpdate必然是在<span style="color: #ff0000;">参数数据更新之后</span>，<span style="color: #ff0000;">View(视图)层数据(节点内数据)更新之前触发</span></strong>。</span></p>
+<p>&nbsp;</p>
+<h3 align="left">三、总结</h3>
+<p><span style="font-size: 15px;">　　总体而言，生命周期函数虽然有这么多个，但实际开发过程中使用最频繁的也就那么几个，如：created，mounted，beforeDestory，destoryed。开发人员可以：</span></p>
+<p><span style="font-size: 15px;">　　</span><span style="font-size: 15px;">在created内进行：页面是否加载 权限判定或页面依赖参数初始化(如按钮权限配置)、ajax数据请求、自执行函数调用等操作。</span></p>
+<p><span style="font-size: 15px;">　　在mounted内进行：数据过滤、数据渲染赋值(如下拉框选项赋值)、DOM节点操作等功能。</span></p>
+<p><span style="font-size: 15px;">　　在beforeDestroy内进行：参数判定，确定当前页面是否允许切换或刷新、必要数据缓存，操作记录上传等操作。</span></p>
+<p><span style="font-size: 15px;">　　在destoryed内进行：清除当前页面其他缓存数据，如sessionStorage、定时器等。</span></p>
+<p><span style="font-size: 15px;">　　而其他生命周期函数，并不是说它们就不重要，只是它们在平常的开发过程中，使用得不是那么频繁而已。它们也有它们自己独特的用处和用法，所以对于生命周期和生命周期函数的善加利用，可以让实际开发事半功倍，并收到良好的效果。</span>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

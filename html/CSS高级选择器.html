@@ -1,0 +1,133 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS高级选择器' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS高级选择器</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11276513.html</div><br>
+    <h1 id="自我总结">07.31自我总结</h1>
+<h1 id="css高级选择器">CSS高级选择器</h1>
+<h2 id="一.伪类选择器">一.伪类选择器</h2>
+<ul>
+<li>对于之前的类选择器的补充类再定义一个别名</li>
+</ul>
+<p>举例</p>
+<pre><code><code>&lt;div class=&#39;a a-1&#39;&gt;123&lt;/div&gt;
+其中a为类,a-1为伪类,伪类也是一种类,他们之间用宫格隔开
+我们选择该标签的时候可以.a.a-1,也有.a,也可以.a-1</code></pre>
+<p>常用的两个伪类选择器</p>
+<p>伪类选择器都是用:连接的</p>
+<ul>
+<li>类名:nth-child(N):先确定位置，再筛选选择器
+<ul>
+<li>在同一结构下都是相同选择器时使用</li>
+</ul></li>
+<li>类名:nth-of-type(N):先确定选择器，在匹配位置
+<ul>
+<li>在同一结构下不全是相同选择器时使用</li>
+</ul></li>
+</ul>
+<p>举例</p>
+<pre><code><code>&lt;div&gt;
+    &lt;!--不同结构--&gt;
+    &lt;p class=&quot;p&quot;&gt;第1个p&lt;/p&gt;
+    &lt;h1&gt;1&lt;/h1&gt;
+    &lt;p class=&quot;p&quot;&gt;第2个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第3个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第4个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第5个p&lt;/p&gt;
+&lt;/div&gt; 
+&lt;div&gt;
+    &lt;!--同结构--&gt;
+    &lt;p class=&quot;p&quot;&gt;第1个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第2个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第3个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第4个p&lt;/p&gt;
+    &lt;p class=&quot;p&quot;&gt;第5个p&lt;/p&gt;
+&lt;/div&gt; 
+样式设置为
+p:nth-child(2){
+    color:red
+}
+&lt;!--他会先找p找到第2个,然后让他变色成红色,如果第二个不是p他就不起作用--&gt;
+p:nth-of-type(3){
+    color:red
+}
+&lt;!--他会先找p然后往下找找到p计数才+1直到计数为2,他会让他变色成红色,如果第二个不是p他就不起作用--&gt;</code></pre>
+<h2 id="二.后代子代选择器">二.后代(子代)选择器</h2>
+<ul>
+<li><p>后代选择器:</p>
+<p>CSS语法:上一级标签他所有的后代用宫格进行连接</p></li>
+<li><p>子带选择器</p>
+<p>CSS语法:父节点标签后他子节的用<code>&gt;</code>进行连接</p></li>
+<li><p>注意点:连接的子代或者后代不能用他们的<code>标签名</code></p></li>
+</ul>
+<p>举例说明:</p>
+<pre><code><code>&lt;body&gt;
+    &lt;h2 id=&quot;h2&quot;&gt;h2标签&lt;/h2&gt;
+    &lt;div&gt;
+        &lt;h2 id=&quot;h2&quot;&gt;div下的h2&lt;/h2&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;!--我们要body下的所有h2类标签字体都是红色--&gt;
+div .h2{
+    color:red;
+}
+&lt;!--我们只要body下的h2类标签字体都是红色--&gt;
+div&gt;.h2{
+    color:red;
+}</code></pre>
+<h2 id="三.兄弟相邻选择器">三.兄弟(相邻)选择器</h2>
+<ul>
+<li>兄弟选择器:<code>~</code>进行连接,他是找到前者后他会接着找后者然后会一直遍历结束把所有的后者多找到</li>
+<li>相邻选择器:<code>+</code>进行连接,他是找到前者后,在前者后面的相邻的才会选中,如果没相邻他会接着找第二个前者</li>
+<li>注意
+<ul>
+<li>选择器放置位置前与放置位置后,会有影响有点类似正则匹配先匹配到第一个然后匹配第二个</li>
+<li>他所改变的是他们后者而不是两个都改变</li>
+<li>兄弟(相邻)选择器首先他们要是兄弟节点</li>
+</ul></li>
+</ul>
+<h2 id="四.属性选择器">四.属性选择器</h2>
+<ul>
+<li>属性选择器优先级同类</li>
+<li>[属性名]查找所有有该属性的标签</li>
+<li>[属性名=属性值]精确查找</li>
+<li>[属性名^=值]以某某值开头</li>
+<li>[属性名$=值]以某某值结尾</li>
+<li>[属性名*=值]包含某某值(模糊查询)</li>
+</ul>
+<h2 id="五.交叉选择器">五.交叉选择器</h2>
+<p>就是把上述的选择进行组合,包括之前讲的基础选择器</p>
+<h2 id="六.群组选择器">六.群组选择器</h2>
+<p>就是把上述的选择器用包括之前讲的基础选择器<code>,</code>隔开从而选择多个元素</p>
+<h2 id="七.选择器的优先级">七.选择器的优先级</h2>
+<ul>
+<li>权值:不同级别没有可比性、同一级别比个数、选择器类型不影响优先级、优先级一致看顺序</li>
+<li>对于权值有些人对他级别的定义
+<ul>
+<li>标签 10</li>
+<li>类(伪类)100</li>
+<li>id 1000</li>
+<li>!important 10000</li>
+</ul></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

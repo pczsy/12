@@ -1,0 +1,195 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(六) 基础篇 计算属性 computed 属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(六) 基础篇 计算属性 computed 属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11044538.html</div><br>
+    <p>模板内的表达式非常便利，但是设计它们的初衷是用于简单运算的。在模板中放入太多的逻辑会让模板过重且难以维护,比如:</p>
+<div class="cnblogs_code">
+<pre><code>    &lt;div id="example"&gt;{{ message.split('').reverse().join('') }}&lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#example'<span style="color: #000000;">,
+            data:{message:</span>'hello world'<span style="color: #000000;">}
+        })
+    </span>&lt;/script&gt;</pre>
+</div>
+<p>这样模板不再是简单的声明式逻辑，必须看一段时间才能意识到，对于这些复杂逻辑，需要使用计算属性，例如:</p>
+<div class="cnblogs_code">
+<pre><code>    &lt;div id="example"&gt;{{ reversedMessage}}&lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#example'<span style="color: #000000;">,
+            data:{message:</span>'hello world'<span style="color: #000000;">},
+            computed:{
+                reversedMessage:</span><span style="color: #0000ff;">function</span>(){<span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.message.split('').reverse().join(''<span style="color: #000000;">)}
+            }
+        })
+    </span>&lt;/script&gt;</pre>
+</div>
+<p>在模板中可以把computed当作data属性来使用</p>
+<p>computed是一个对象，每个键是计算属性的值，值有两种使用方法:值是一个函数，或者值是一个包含get和set的对象</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;">&nbsp;<span style="font-size: 18pt;">源码分析</span></span></p>
+<hr />
+<p>&nbsp;<span style="color: #000000;">&nbsp;<span style="color: #000000;"> Vue实例后会先执行_init()进行初始化(4579行)时，会执行initState()进行初始化,如下:</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initState (vm) { <span style="color: #008000;">//</span><span style="color: #008000;">第3303行</span>
+  vm._watchers =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> opts =<span style="color: #000000;"> vm.$options;
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.props) { initProps(vm, opts.props); }
+  </span><span style="color: #0000ff;">if</span> (opts.methods) { initMethods(vm, opts.methods); }        
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.data) {              
+    initData(vm);                 
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    observe(vm._data </span>= {}, <span style="color: #0000ff;">true</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> asRootData </span><span style="color: #008000;">*/</span><span style="color: #000000;">);
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.computed) { initComputed(vm, opts.computed); } 　　<span style="color: #339966;">//如果定义了computed，则调用initComputed初始化computed
+  </span></span><span style="color: #0000ff;">if</span> (opts.watch &amp;&amp; opts.watch !==<span style="color: #000000;"> nativeWatch) {
+    initWatch(vm, opts.watch);
+  }
+}</span></pre>
+</div>
+<pre><code><span style="color: #000000;">initComputed函数如下:<br /></span></pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> computedWatcherOptions = {lazy: <span style="color: #0000ff;">true</span>};                  <span style="color: #008000;">//</span><span style="color: #008000;">计算属性的配置信息</span>
+<span style="color: #0000ff;">function</span> initComputed (vm, computed) {                      <span style="color: #008000;">//</span><span style="color: #008000;">第3424行</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+  <span style="color: #0000ff;">var</span> watchers = vm._computedWatchers = Object.create(<span style="color: #0000ff;">null</span>);            <span style="color: #008000;">//</span><span style="color: #008000;">定义一个空对象，没有原型的，用于存储所有计算属性对应的watcher</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> computed properties are just getters during SSR</span>
+  <span style="color: #0000ff;">var</span> isSSR =<span style="color: #000000;"> isServerRendering();
+
+  </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> computed) {                                           <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个计算属性</span>
+    <span style="color: #0000ff;">var</span> userDef = computed[key];                                            <span style="color: #008000;">//</span><span style="color: #008000;">将计算属性的值保存到userDef里面</span>
+    <span style="color: #0000ff;">var</span> getter = <span style="color: #0000ff;">typeof</span> userDef === 'function' ? userDef : userDef.get;     <span style="color: #008000;">//</span><span style="color: #008000;">如果userDef是一个函数则赋值给getter,否则将userDef.get赋值给getter</span>
+    <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; getter == <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+      warn(
+        (</span>"Getter is missing for computed property \"" + key + "\"."<span style="color: #000000;">),
+        vm
+      );
+    }
+
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isSSR) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> create internal watcher for the computed property.</span>
+      watchers[key] = <span style="color: #0000ff;">new</span> Watcher(                                          <span style="color: #008000;">//</span><span style="color: #008000;">创建一个内部的watcher给计算属性用</span>
+<span style="color: #000000;">        vm,
+        getter </span>||<span style="color: #000000;"> noop,
+        noop,
+        computedWatcherOptions
+      );
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> component-defined computed properties are already defined on the</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> component prototype. We only need to define computed properties defined</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> at instantiation here.</span>
+    <span style="color: #0000ff;">if</span> (!(key <span style="color: #0000ff;">in</span> vm)) {                                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果key在vm中没有定义 注:组件的计算属性在模块加载的时候已经被定义在了原型上面了</span>
+      defineComputed(vm, key, userDef);                                       <span style="color: #008000;">//</span><span style="color: #008000;">则执行defineComputed()函数</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">if</span> (key <span style="color: #0000ff;">in</span><span style="color: #000000;"> vm.$data) {
+        warn((</span>"The computed property \"" + key + "\" is already defined in data."<span style="color: #000000;">), vm);
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (vm.$options.props &amp;&amp; key <span style="color: #0000ff;">in</span><span style="color: #000000;"> vm.$options.props) {
+        warn((</span>"The computed property \"" + key + "\" is already defined as a prop."<span style="color: #000000;">), vm);
+      }
+    }
+  }
+}</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<pre><code></pre>
+<p>注:对于计算属性的Watcher来说，它的lazy属性为true，因此new watcher()结尾时不会执行get()方法，而是直接返回undefined(在3127行)(求值会等到该计算属性被调用时才求值的)</p>
+<p>回到initComputed()函数，defineComputed()定义如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> defineComputed ( 　　　　<span style="color: #339966;">//第3465行</span>
+  target,
+  key,
+  userDef
+) {
+  </span><span style="color: #0000ff;">var</span> shouldCache = !<span style="color: #000000;">isServerRendering();
+</span><span style="color: #000000;">&nbsp; if (typeof userDef === 'function') {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #339966;">//如果userDef为函数,则默认为get</span><br />&nbsp;&nbsp;&nbsp; sharedPropertyDefinition.get = shouldCache&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #339966;">//保存到get里</span><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ? createComputedGetter(key)<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : userDef;<br />&nbsp;&nbsp;&nbsp; sharedPropertyDefinition.set = noop;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #339966;"> //将set设为noop</span><br />&nbsp; } else {
+    sharedPropertyDefinition.get </span>=<span style="color: #000000;"> userDef.get
+      </span>? shouldCache &amp;&amp; userDef.cache !== <span style="color: #0000ff;">false</span>
+        ?<span style="color: #000000;"> createComputedGetter(key)
+        : userDef.get
+      : noop;
+    sharedPropertyDefinition.set </span>=<span style="color: #000000;"> userDef.set
+      </span>?<span style="color: #000000;"> userDef.set
+      : noop;
+  }
+  </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp;<span style="color: #000000;">
+      sharedPropertyDefinition.set </span>===<span style="color: #000000;"> noop) {
+    sharedPropertyDefinition.set </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+      warn(
+        (</span>"Computed property \"" + key + "\" was assigned to but it has no setter."<span style="color: #000000;">),
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">
+      );
+    };
+  }
+  Object.defineProperty(target, key, sharedPropertyDefinition);       </span><span style="color: #008000;">//</span><span style="color: #008000;">设置访问器属性,这样当我们在模板里访问计算属性时就会执行sharedPropertyDefinition的get方法了</span>
+}</pre>
+</div>
+<p>初始化完成了，当我们的模板渲染成render函数时会执行如下函数</p>
+<div class="cnblogs_code">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> anonymous( 　　<span style="color: #339966;">//这是模板编译后生成的render函数</span>
+) { 
+</span><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"example"<span style="color: #000000;">}},[_v(_s(reversedMessage))])}
+})</span></pre>
+</div>
+<p>、获取<span style="color: #000000;">reversedMessage属性时就会执行到计算属性的get访问器属性，也就是上面</span>在<span style="color: #000000;">3465行</span>定义<span style="color: #000000;">的<span style="color: #000000;">defineComputed里的访问器属性，如下:</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> createComputedGetter (key) { <span style="color: #339966;">  //第3498行
+  </span></span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> computedGetter () {
+    </span><span style="color: #0000ff;">var</span> watcher = <span style="color: #0000ff;">this</span>._computedWatchers &amp;&amp; <span style="color: #0000ff;">this</span>._computedWatchers[key];    <span style="color: #008000;">//</span><span style="color: #008000;">获取key对应的计算watcher</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (watcher) { 
+      </span><span style="color: #0000ff;">if</span> (watcher.dirty) {                  <span style="color: #008000;">//</span><span style="color: #008000;">当watcher.dirty为true时</span>
+        watcher.evaluate();                   <span style="color: #008000;">//</span><span style="color: #008000;">执行watcher.evaluate()函数</span>
+<span style="color: #000000;">      }
+      </span><span style="color: #0000ff;">if</span> (Dep.target) {                     <span style="color: #008000;">//</span><span style="color: #008000;">这个Dep.target存在(这是个渲染watcher)</span>
+        watcher.depend();                     <span style="color: #008000;">//</span><span style="color: #008000;">则执行watcher.depend();</span>
+<span style="color: #000000;">      }
+      </span><span style="color: #0000ff;">return</span> watcher.value                  <span style="color: #008000;">//</span><span style="color: #008000;">最后返回计算属性的值</span>
+<span style="color: #000000;">    }
+  }
+}</span></pre>
+</div>
+<pre><code><span style="color: #000000;">watcher函数对象的evaluate()和depend()对象都是为计算属性量身定制的,也就是说是它独有的，对于evaluate()来说，如下:<br /></span></pre>
+<div class="cnblogs_code">
+<pre><code>    Watcher.prototype.evaluate = <span style="color: #0000ff;">function</span> evaluate() {      <span style="color: #008000;">//</span><span style="color: #008000;">为计算watcher量身定制的</span>
+        <span style="color: #0000ff;">this</span>.value = <span style="color: #0000ff;">this</span>.get();                                <span style="color: #008000;">//</span><span style="color: #008000;">调用计算属性的get方法，此时如果有依赖其他属性，则会在其他属性的dep对象里将当前计算watcher作为订阅者</span>
+        <span style="color: #0000ff;">this</span>.dirty = <span style="color: #0000ff;">false</span>;                                     <span style="color: #008000;">//</span><span style="color: #008000;">修正this.dirty为false,即一个渲染watcher渲染多个计算属性时，只会执行一次</span>
+    };</pre>
+</div>
+<pre><code>例子里执行完evaluate之后,Vue实例data里的<span style="color: #000000;">message:'hello world'</span>对应的subs就保存了当前的计算watcher，如下:</pre>
+<p><img src="./images/Vue.js 源码分析(六) 基础篇 计算属性 computed 属性详解0.png" alt="" /></p>
+<p>这样当message修改了之后就会触发计算watcher的更新了，回到<span style="color: #000000;">createComputedGetter 里还会执行watcher.depend();，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code>Watcher.prototype.depend = <span style="color: #0000ff;">function</span><span style="color: #000000;"> depend () { <span style="color: #339966;">//第3254行
+    </span></span><span style="color: #0000ff;">var</span> <span style="color: #0000ff;">this</span>$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+
+  </span><span style="color: #0000ff;">var</span> i = <span style="color: #0000ff;">this</span>.deps.length;                      <span style="color: #008000;">//</span><span style="color: #008000;">获取计算watcher的所有deps</span>
+  <span style="color: #0000ff;">while</span> (i--<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">this</span>$1.deps[i].depend();                      <span style="color: #008000;">//</span><span style="color: #008000;">为该deps增加渲染watcher</span>
+<span style="color: #000000;">  }
+};</span></pre>
+</div>
+<p>执行完后会为当前计算属性所依赖的所有其它数据的订阅者subs里添加一个渲染watcher，执行完后Vue实例data里的<span style="color: #000000;">message:'hello world'对应的subs又保存了当前的渲染watcher，如下:</span></p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(六) 基础篇 计算属性 computed 属性详解1.png" alt="" /></p>
+<p>现在计算watcher依赖的data属性对应的subs里存在两个订阅者了，当message进行修改时，会分别触发两个watcher的更新操作，<span style="color: #000000;">reversedMessage也会进行相应的更新操作，然后DOM也更新了。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

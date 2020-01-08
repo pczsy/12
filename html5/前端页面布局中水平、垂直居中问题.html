@@ -1,0 +1,110 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端页面布局中水平、垂直居中问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端页面布局中水平、垂直居中问题</center></div><div class='banquan'>原文出处:本文由博客园博主喜欢安静的时空提供。<br/>
+原文连接:https://www.cnblogs.com/zhangdongya/p/11238763.html</div><br>
+    <p><span style="font-size: 18pt; font-family: 楷体;"><strong>前言</strong></span></p>
+<p style="margin-left: 30px;"><span style="font-family: 楷体; font-size: 16px;">两年前工作时开的博客，一年前写了两篇博文，然后就到了现在才重拾起笔。原因有二，一是自觉技术不足，二曰懒。</span></p>
+<p><span style="font-family: 楷体; font-size: 16px;">　　最近由于在项目中遇到需求为拖动列可调整列顺序的表格，最后找到一款基于JQuery名为DataTables的插件，但网上为之写使用方法的很少，质量也很差，所以就动了为之写一个较为全面的使用方法的文章，又由于最近项目工作繁忙，所以一周过去了还没有写，今天抽空写了这篇文章，至于那个插件则以后抽时间写。</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 楷体; font-size: 16px;">这篇文章里的方法不多，但都是些常用的，足够解决问题了。</span></p>
+<p><strong><span style="font-family: 楷体; font-size: 18pt;">正文</span></strong></p>
+<p style="margin-left: 30px;"><span style="font-size: 16px;"><span style="font-family: 楷体;"><span style="font-size: 18px;"><strong><strong>水平垂直</strong>居中</strong></span></span></span></p>
+<p style="margin-left: 30px;"><span style="font-size: 16px;"><span style="font-family: 楷体;"><span style="font-size: 18px;">1.给元素定位使之居中（利用定位和transform平移的那种方法就不需要写了）</span></span></span></p>
+<p style="margin-left: 60px;"><span style="font-size: 16px;"><span style="font-family: 楷体;">为居中元素的父级添加以下样式：</span></span></p>
+<p style="margin-left: 90px;"><span style="font-size: 16px; color: #ff6600;"><span style="font-family: 楷体;">原因：为元素设置absolute定位时需要为父级设置非static定位</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">position: relative;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 60px;"><span style="font-size: 16px;"><span style="font-family: 楷体;">为居中元素添加以下样式：</span></span></p>
+<p style="margin-left: 90px;"><span style="font-size: 16px;"><span style="font-family: 楷体;"><span style="font-size: 18px;"><span style="font-size: 16px; color: #ff6600;">注意：不给居中元素设置宽高的话，该元素会与设置非static定位的父级（没有的话会是html元素）同宽高。</span></span></span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">width: 40px;
+</span><span style="color: #800000;">height: 40px;
+</span><span style="color: #800000;">position: absolute;
+</span><span style="color: #800000;">top: 0;
+</span><span style="color: #800000;">right: 0;
+</span><span style="color: #800000;">bottom: 0;
+</span><span style="color: #800000;">left: 0;
+</span><span style="color: #800000;">margin: auto;<br /></span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 90px;"><span style="font-family: 楷体; font-size: 16px; color: #ff6600;">我们可利用上面的定位方式让一个元素与浏览器页面显示区域同宽高，<span style="color: #000000;">具体方法如下：</span></span></p>
+<p style="margin-left: 120px;"><span style="font-family: 楷体; font-size: 16px; color: #000000;">设置html元素宽高：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">width: 100%;
+height: 100%;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 120px;"><span style="font-family: 楷体; font-size: 16px; color: #ff6600;"><span style="color: #000000;">设置该元素样式如下（</span>该元素与html元素之间的元素不要设置非static定位<span style="color: #000000;">）：</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">position: absolute;
+top: 0;
+right: 0;
+bottom: 0;
+left: 0;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="font-size: 18px; font-family: 楷体;">2.设置弹性布局使子元素居中两种方式</span></p>
+<p style="margin-left: 60px;"><span style="font-size: 16px; font-family: 楷体;">方式一:为居中元素父级设置以下样式：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">width: 400px;
+height: 400px;
+display: flex;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 60px;"><span style="font-family: 楷体; font-size: 16px;">为居中元素添加以下样式：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">margin: auto;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 60px;"><span style="font-size: 16px; font-family: 楷体;">方式二:为居中元素父级设置以下样式：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">display: flex;
+align-items: center;
+justify-content: center;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="font-family: 楷体; font-size: 18px;"><strong><strong>垂直</strong>居中</strong></span></p>
+<p style="margin-left: 30px;">&nbsp;<span style="font-family: 楷体; font-size: 18px;">利用行高居中</span></p>
+<p style="margin-left: 60px;"><span style="font-family: 楷体; font-size: 16px;">为居中元素父级设置以下样式：</span></p>
+<p style="margin-left: 90px;"><span style="font-family: 楷体; font-size: 16px; color: #ff6600;">此方法可为元素内文字和行元素设置垂直居中</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">line-height: 50px;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="font-family: 楷体; font-size: 18px;"><strong>水平居中</strong></span></p>
+<p style="margin-left: 30px;">&nbsp;<span style="font-family: 楷体; font-size: 18px;">1.利用margin实现居中</span></p>
+<p style="margin-left: 60px;"><span style="font-family: 楷体; font-size: 16px;">为居中元素添加以下样式：</span></p>
+<p style="margin-left: 90px;"><span style="font-family: 楷体; font-size: 16px; color: #ff6600;">必须为居中元素设置宽</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">width: 200px;
+margin: auto;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><span style="font-size: 18px; font-family: 楷体;">2.利用text-align样式居中</span></p>
+<p style="margin-left: 60px;">&nbsp;<span style="font-family: 楷体; font-size: 16px;">为居中元素父级添加以下样式：</span></p>
+<p style="margin-left: 90px;"><span style="font-family: 楷体; font-size: 16px; color: #ff6600;">此方法可为元素内文字和行元素设置垂直居中</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">text-align: center;</span></pre>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

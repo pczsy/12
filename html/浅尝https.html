@@ -1,0 +1,43 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修浅尝https' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>浅尝https</center></div><div class='banquan'>原文出处:本文由博客园博主waitklove提供。<br/>
+原文连接:https://www.cnblogs.com/czkolve/p/11646504.html</div><br>
+    <p>HTTPS</p>
+<p>　　http超文本传输协议，所以的东西都是明文传输，容易被拦截，被攻击，我们希望能对通话内容进行加密，那么因此而生，出现了https</p>
+<p>　　https：在http的基础上新增加了SSL层</p>
+<p>　　先放图</p>
+<p>　　<img src="./images/浅尝https0.png" alt="" width="1026" height="559" /></p>
+<p style="margin-left: 30px;">// http 超文本传输协议<br />// https 加密的超文本传输协议</p>
+<p style="margin-left: 30px;">// 对称加密<br />浏览器生成一个秘钥，然后将秘钥传输给服务器，之后每次传输浏览器都使用该秘钥加数据加密传输给服务器<br />服务器使用得到的秘钥解密加密的数据，因为使用的是同一个秘钥所以称为对称加密<br />缺点 秘钥容易被截取，难么也相当于裸奔了</p>
+<p style="margin-left: 30px;">// 非对称加密算法 RSA<br />秘钥分成公钥和私钥 公钥是大家都知道的，私钥是要保存好，谁都不能告诉的。 经过公钥加密的数据，只有通过对应的私钥才能解密<br />浏览器有自己的公钥和私钥，服务器也有自己的公钥和私钥 <br />1浏览器拿到服务器的公钥，将数据加密，传送给服务器，服务器用自己的私钥解密，拿到传输数据<br />2服务器也可以拿到浏览器的公钥，加数据加密，传输给浏览器，浏览器通过自己的私钥，将私钥解密，拿到服务器返回的数据<br />这样一来秘钥就不会被截取了，所以的信息也都加密了</p>
+<p style="margin-left: 30px;">缺点 RSA加密，比较慢，比对称加密慢个几百倍，所以需要改进</p>
+<p style="margin-left: 30px;">// 非对称加密和 对称加密结合<br />浏览器生成一个秘钥，将其作为数据，通过非对称加密传输给服务器，服务器通过自己的私钥，拿到这个对称加密的秘钥<br />之后数据传输我们就用对称加密，对称加密的秘钥也有了</p>
+<p style="margin-left: 30px;">完美了解决了，数据加密，也防止了秘钥被拦截 ，good</p>
+<p style="margin-left: 30px;">// 中间人攻击</p>
+<p style="margin-left: 30px;">中间人截取服务器给客户端发送的公钥，将中间人的公钥发给客户端，那么客户端用中间人的公钥加密的数据，就能被中间人解密，<br />中间人拿到服务器的公钥，加密数据传输给服务器，服务器也能拿到客户端的数据，并且毫无察觉，数据其实已经被截取了。</p>
+<p style="margin-left: 30px;">// 解决中间人攻击，也就是要确认对方身份信息</p>
+<p style="margin-left: 30px;">// CA 有信度的公正中心</p>
+<p style="margin-left: 30px;">服务器将自己的公钥，认证信息，其他消息，用hash算法生成 消息摘要<br />服务器将消息摘要找CA ，用ca的私钥对齐进行加密 生成数字签名<br />然后服务器将 公钥，认证信息，其他消息组合的混合消息和数字签名组合成数字证书，发送给客户端<br />然后客户端拿到该数字证书<br />客户端用相同的hash算法将混合消息生成消息摘要，<br />客户端拿到CA的公钥，将数字签名进行解密，得到服务器生成的消息摘要，进行对比，就知道有没有被串改<br />这要就完美的防止了中间人攻击</p>
+<p style="margin-left: 30px;">总结一下，https的整个过程</p>
+<p style="margin-left: 30px;">客户端像服务器发送请求<br />1.客户端想服务器请求公钥<br />2.服务器将数字证书，包括公钥key，数字签证(数字签证是通过CA私钥加密的)等信息 返回客户端<br />3.客户端验证服务器信息，通过CA的公钥解密数字签字，验证公钥key是否是服务器的，<br />4.客户端生成对称加密秘钥，通过服务器的公钥加密传输给服务器<br />5.服务器得到信息，通过自己的私钥，解密数据，得到对称加密的秘钥<br />6.双发都知道秘钥了，可以开始加密传输数据了</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

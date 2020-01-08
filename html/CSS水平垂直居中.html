@@ -1,0 +1,152 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS水平垂直居中' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS水平垂直居中</center></div><div class='banquan'>原文出处:本文由博客园博主军刀、提供。<br/>
+原文连接:https://www.cnblogs.com/Army-Knife/p/12029824.html</div><br>
+    <h3>先来一个盒盒（要操作它嘛）</h3>
+<div class="cnblogs_code">
+<pre><code>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="height:50px;border:1px solid red;"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="line-height:50px"</span><span style="color: #0000ff;">&gt;</span>单行文本label垂直居中：设置line-height为父级行高<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 14pt;">水平垂直居中</span></p>
+<p>方式一：Flex布局 [推荐]<br />优点：内容块的高度任意，优雅的溢出。<br />缺点：IE8/IE9不支持，需要浏览器前缀，渲染可能会有问题。</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_flex"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="width: 20px;"</span><span style="color: #0000ff;">&gt;</span>左<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_flexChild"</span><span style="color: #0000ff;">&gt;</span>flex布局垂直水平居中<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="width: 20px;"</span><span style="color: #0000ff;">&gt;</span>右<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+.hv_flex {
+  display: flex;
+  width: 600px;
+  height: 100px;
+  border: 1px solid red;
+  justify-content: center;
+  align-content: center;
+  align-items: stretch; /*  stretch让盒子内的每个元素的高度都等于行高 */
+}
+.hv_flexChild {
+  flex: 1;
+  border: 2px solid green;
+  left: 10px;
+  right: 10px;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>方式二：after伪元素实现水平垂直居中 [推荐]<br />优点：兼容所有游览器</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="parent"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="son"</span><span style="color: #0000ff;">&gt;</span>after伪元素实现水平垂直居中<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+.parent {
+  border: 2px solid blue;
+  text-align: center;
+  height: 100px;
+  width: 600px;
+  /* overflow: hidden; */
+}
+
+.parent::after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  /* width: 100%; */
+}
+
+.son {
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid red;
+  /* width: 100%; */
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>方式三：left:0;right:0;top:0;bottom:0;margin:auto;<br />优点:简单<br />缺点:没有足够空间时, 子元素会被截断, 但不会有滚动条.</p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_parent"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_child1"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        方式一：left:0;right:0;top:0;bottom:0;margin:auto;
+      </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+.hv_parent {
+  position: relative;
+  width: 600px;
+  height: 180px;
+  border: 1px solid red;
+}
+
+.hv_child1 {
+  border: 2px solid green;
+  position: absolute;
+  /* height: 40px; */
+  /* width: 400px; */
+  left: 10px;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>方式四：left: 50%;top: 50%;transform: translate(-50%, -50%); [推荐]<br />优点:代码量少<br />缺点:IE8不支持, 属性需要追加浏览器厂商前缀, 可能干扰其他 transform 效果, 某些情形下会出现文本或元素边界渲染模糊的现象.</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_parent"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_child2"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        方式二：left: 50%;top: 50%;transform: translate(-50%, -50%);
+      </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+.hv_parent {
+  position: relative;
+  width: 600px;
+  height: 180px;
+  border: 1px solid red;
+}
+.hv_child2 {
+  border: 2px solid blue;
+  /* margin-left:50%; */
+  /* margin-top: 50%; */
+  width: 400px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>方式五：height:固定;width:固定;left:50%;top:50%;margin-top:-0.5<em>height;margin-left:- 0.5</em>width;<br />优点: 适用于所有浏览器.<br />缺点: 父元素空间不够时, 子元素可能不可见(当浏览器窗口缩小时,滚动条不出现时).如果子元素设置了overflow:auto, 则高度不够时, 会出现滚动条.</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_parent"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hv_child3"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+        方式三：height:固定;width:固定;left:50%;top:50%;margin-top:-0.5*height;margin-left:- 0.5*width;
+      </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3 id="参考文献">参考文献</h3>
+<p>[1] (<a class="uri" href="https://louiszhai.github.io/2016/03/12/css-center/">https://louiszhai.github.io/2016/03/12/css-center/</a>)</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

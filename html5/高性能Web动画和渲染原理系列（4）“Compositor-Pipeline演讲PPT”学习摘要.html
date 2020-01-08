@@ -1,0 +1,127 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/11862814.html</div><br>
+    <blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/other">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要0.png" alt="" /></p>
+<p>[TOC]</p>
+<blockquote>
+<p>附件PPT来自<a href="https://www.chromium.org/">chromium官方网站</a>开发文档。术语里的<code>cc</code>指的是<code>Chromium Compositor</code></p>
+</blockquote>
+<p>一直以来都想了解浏览器合成层的运作机制，但是相关的中文资料大多比较关注框架和开发技术，这方面的资料实在是太少了，后来在<code>chromium</code>官方网站的文档里找到了项目组成员malaykeshav在 2019年4月的一份关于<strong>浏览器合成流水线</strong>的演讲PPT，个人感觉里面讲的非常清楚了，由于没有找到视频，有些部分只能自行理解，本文仅对关键信息做一些笔记，对此感兴趣的读者可以在文章开头的<code>github</code>仓库或附件中拿到这个PPT自行学习。</p>
+<h2 id="section">摘要</h2>
+<h3 id="section-1">1.合成流水线</h3>
+<p>合成流水线，就是指浏览器处理合成层的工作流程，其基本步骤如下：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要1.png" alt="" /></p>
+<p>大致的流程就是说<code>Paint</code>环节会生成一个列表，列表里登记了页面元素的绘制指令，接着这个列表需要经过<code>Raster</code>光栅化处理，并在<code>合成帧</code>中处理纹理，最后的<code>Draw</code>环节才是将这些纹理图展示在浏览器内容区。</p>
+<h3 id="ui">2. 预定义UI层</h3>
+<p>chromium中预定义了一些指定类型的UI层，大致分为：</p>
+<ul>
+<li>Not Drawn - 为了处理透明度或滤镜效果、transform变形或者clip剪裁的非绘制层</li>
+<li>Solid color layer - 固有颜色层</li>
+<li>Painted texture layer - Texture纹理会在这个层执行<code>paint</code>渲染和后续的<code>rasterized</code>光栅化任务</li>
+<li>Transferable resource layer   - 共享资源层，可能是GPU里面的Texture纹理也可能未来会发给GPU的位图</li>
+<li>Surface layer - 临时占位层，因为自顶向下遍历layer树时子树都还没处理，需要先占位最后再填充</li>
+<li>Nine patch layer - 用于实现阴影的层</li>
+</ul>
+<h3 id="paint">3. paint是什么意思</h3>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要2.png" alt="" /></p>
+<p>每个层<code>layer</code>是由若干个<code>views</code>组成的，所谓<code>paint</code>，就是每个<code>views</code>将自己对应图形的绘制指令添加到层的可展示元素列表<code>Display Item List</code>里，这个列表会被添加到一个延迟执行的光栅化任务中，并最终生成当前层的texture纹理（可以理解为当前层的绘制结果），考虑到传输性能以及未来增量更新的需求，光栅化的结果会以<code>tiles</code>瓦片形式保存。在chrome中也可以看到页面瓦片化拆分的结果:</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要3.png" alt="" /></p>
+<h3 id="section-2">4. 分层的优势和劣势</h3>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要4.png" alt="" /></p>
+<p>分层的优势和劣势也在此进行了说明，和之前我们主动思考的答案基本一致（暗爽一下）。</p>
+<h3 id="section-3">5. 视图属性及其处理方式</h3>
+<p><code>views</code>中支持的属性包含<code>Clip</code>剪裁，<code>transform</code>变换,<code>effect</code>效果（如半透明或滤镜等）,<code>mask</code>遮罩，通常按照后序遍历的方式自底向上进行遍历处理。</p>
+<p><code>clip</code>剪裁的处理方式是在父节点和子节点之间插入一个剪裁层，用来将其子树的渲染结果剪裁到限定的范围内，然后再向上与父级进行合并；</p>
+<p><code>transform</code>变换直接作用于父节点，处理到这个节点时其子树都已经处理完毕，直接将整体应用变形即可；</p>
+<p><code>effect</code>效果一般直接作用于当前处理的节点，有时也会产生交叉依赖的场景；</p>
+<p>PPT第40页中在介绍<code>effect</code>效果处理时描述了两种不同的透明度处理需求，从而引出了一个<code>Render Surface</code>的概念，它相当于一个临时的层，它的子树需要先绘制在这个层上，然后再向上与父节点进行合并，屏幕就是是根级的<code>Render Surface</code>。</p>
+<h3 id="quads">6. Quads</h3>
+<p><code>Layer</code>遍历处理输出的结果被称为<code>Quads</code>（从意思上理解好像就是指输出了很多个矩形方块），每个<code>quad</code>都持有它被绘制到目标缓冲区所需要的资源，根据它持有的资源不同可以分为：</p>
+<ul>
+<li><code>Solid Color</code>-固定颜色型</li>
+<li><code>Texture</code>- 纹理型</li>
+<li><code>Tile</code>- 瓦片型</li>
+<li><code>Surface</code>- 临时绘图表面型</li>
+<li><code>Video</code> - 视频帧型</li>
+<li><code>Render Pass</code> - <code>Render Surface</code>类型的占位区，<code>Render Surface</code>子树处理完后填充到关联的<code>Render Pass</code></li>
+</ul>
+<h3 id="compositor-frame">7. Compositor Frame</h3>
+<p>合成层真正的工作要开始了，主角概念<code>Compositor Frame</code>(合成帧)登场，它负责将<code>quads</code>合并绘制在一起，胶片里59-62页非常清楚地展示了合成的过程，最终输出的结果就是根节点的纹理。</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（4）“Compositor-Pipeline演讲PPT”学习摘要5.png" alt="" /></p>
+<p><code>chromium</code>是多进程架构，<code>Browser Process</code>浏览器进程会对菜单栏等等容器部分的画面生成合成帧来输出，每个网页的<code>Render Process</code>渲染进程会对页面内容生成合成帧来输出，最终的结果都被共享给<code>GPU Process</code>GPU进程进行聚合并生成最终完整的合成表面，接着在<code>Display Compositor</code>环节将最后的位图展示在屏幕上。</p>
+<h3 id="section-4">8. 关于光栅化以及渲染方式</h3>
+<p>胶片里并没有描述具体的光栅化的处理过程，但是<code>layer</code>输出的<code>quads</code>看起来应该是光栅化以后的结果，推测应该是处理<code>Display Item List</code>中的绘图指令时也和WebGL类似，经过<code>顶点着色器</code>和<code>片元着色器</code>的遍历式处理机制，并在过程中自动完成像素插值。</p>
+<h3 id="section-5">9.【重要】软件渲染和硬件渲染的区别</h3>
+<p><strong>声明：本节内容是个人理解，仅用作技术交流，不保证对！</strong></p>
+<p>软件渲染和硬件渲染的区别对笔者而言一直非常抽象，只是知道基本概念。后来在<a href="http://dev.chromium.org/developers/design-documents%3E">【chromium开发者文档】</a>（国内可能无法访问）中**《Compositor Thread Architecture》**这篇合成器线程架构的文章中找到了一些相关描述，也解开了笔者心中一直以来的疑惑，相关部分摘抄如下：</p>
+<blockquote>
+<p><strong>Texture Upload</strong></p>
+<p><strong>One challenge with all these textures is that we rasterize them on the main thread of the renderer process, but need to actually get them into the GPU memory. This requires handing information about these textures (and their contents) to the impl thread, then to the GPU process, and once there, into the GL/D3D driver. Done naively, this causes us to copy a single texture over and over again, something we definitely don't want to do.</strong></p>
+<p><strong>We have two tricks that we use right now to make this a bit faster. To understand them, an aside on “painting” versus “rasterization.”</strong></p>
+<ul>
+<li><strong>Painting is the word we use for telling webkit to dump a part of its RenderObject tree to a GraphicsContext. We can pass the painting routine a GraphicsContext implementation that executes the commands as it receives them, or we can pass it a recording context that simply writes down the commands as it receives them.</strong></li>
+<li><strong>Rasterization is the word we use for actually executing graphics context commands. We typically execute the rasterization commands with the CPU (software rendering) but could also execute them directly with the GPU using Ganesh.</strong></li>
+<li><strong>Upload: this is us actually taking the contents of a rasterized bitmap in main memory and sending it to the GPU as a texture.With these definitions in mind, we deal with texture upload with the following tricks:</strong></li>
+<li><strong>Per-tile painting: we pass WebKit paint a recording context that simply records the GraphicsContext operations into an SkPicture data structure. We can then rasterize several texture tiles from that one picture.</strong></li>
+<li><em><em>SHM upload: instead of rasterizing into a void* from the renderer heap, we allocate a shared memory buffer and upload into that instead. The GPU process then issues its glTex</em> operations using that shared memory, avoiding one texture copy.The holy grail of texture upload is “zero copy” upload. With such a scheme, we manage to get a raw pointer inside the renderer process’ sandbox to GPU memory, which we software-rasterize directly into. We can’t yet do this anywhere, but it is something we fantasize about.</em>*</li>
+</ul>
+</blockquote>
+<p>大概翻译一下，方便英语水平一般的小伙伴理解，GPU处理图片的方式是按照Texture进行贴图的，对此不熟悉的小伙伴可以查看笔者以前发的有关<code>Three.js</code>相关的博文。</p>
+<blockquote>
+<p><strong>纹理上传</strong>:
+处理纹理的挑战之一就是它是在渲染进程（可以理解为单个Tab网页的进程）的主线程里进行的，但是最终需要将其放入GPU内存。这就需要将纹理数据递交给合成器线程，然后再交给GPU进程（Chromium架构里有专门的GPU进程用来专门处理和GPU之间的协作任务），最后再传递给底层的<code>Direct3D</code>或<code>OpenGL</code>（也就是图形学的底层技术），如果只是按照常规流程来处理，就会需要一次又一次来复制生成的纹理数据，这显然不是我们想要的。
+我们现在使用了两个小方法来使这个流程变得快一点。它们分别作用于<code>painting</code>（绘制）和<code>rasterization</code>（光栅化）两个阶段。</p>
+<ul>
+<li><strong>1号知识点！！！</strong><code>Painting</code>我们用来告诉webkit为<code>RenderObject Tree</code>的来生成对应的<code>GraphicsContext</code>。通过给<code>painting routine</code>（绘制流程）传递一个<code>GraphicsContext</code>的具体实现来<strong>执行</strong>这些已经编排好的绘制命令，也可以传递一个<code>record context</code>（记录上下文）只是简单地把绘图命令都<strong>记录</strong>下来。</li>
+<li><strong>2号知识点！！！</strong><code>Rasterization</code>（光栅化）是指<code>Graphics context</code>关联的绘图命令实际被执行的过程。通常我们使用CPU（也就是软件渲染的方式）来执行光栅化任务，也可以直接使用GPU来渲染（也就是硬件渲染的方式）。</li>
+<li>上传：指在主线程存储区获取到光栅化以后的位图内容然后将它作为纹理上传给GPU的过程，考虑到上述已经提及的定义，上传过程是如下来处理的：
+<ul>
+<li>瓦片绘制：我们在webkit中使用<code>recording context</code>来简单地记录<code>Graphics Context</code>的操作指令，将它存储为<strong>SkPicture</strong>类型（直接使用软件光栅化时生成的是<strong>SkBitmap</strong>类型），随后可以从一张picture里面光栅化处理得到多个<code>纹理瓦片</code>。</li>
+<li>共享内存：在软件渲染的方式中，光栅化的结果会被存储在<code>renderer</code>进程的堆内存里，现在不这样搞了，我们重新分配了一块共享缓冲区，然后通过它来传递相关对象，GPU进程随后在获取纹理时直接从共享内存中获取就行了，这样就避免了数据的拷贝。
+总的来说，纹理上传的过程几乎是零拷贝的。利用这样的结构，我们在<code>renderer</code>进程（也就是网页的渲染进程）的沙箱环境内也可以获取到指向GPU 内存的指针，而在软件光栅化的过程中，是直接将位图结果放在这里的。</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>Painting: this is the process of asking Layers for their content. This is where we ask webkit to tell us what is on a layer. We might then rasterize that content into a bitmap using software, or we might do something fancier. Painting is a main thread operation.</li>
+<li>Drawing: this is the process of taking the layer tree and smashing it together with OpenGL onto the screen. Drawing is an impl-thread operation.</li>
+<li>painting:表示的过程是向Layers对象查询层内容，也就是让webkit告诉我们每一层上面到底有什么。接下来我们就可以使用软件光栅化的方式将这些内容处理为位图，也可以做一些更牛的事情，painting是一个主线程行为。</li>
+<li>drawing：是指将Layer中的内容用OpenGL绘制在屏幕上的过程，它是另一个线程中的操作。</li>
+</ul>
+</blockquote>
+<p>概念比较多没有基础的读者可能理解起来有难度，我尝试用自己的话复述一下：</p>
+<p>**【软件渲染】<strong>的模式下，在<code>paint</code>时会直接利用<code>Graphics Context</code>绘图上下文将结果绘制出来，在一个<code>SkBitmap</code>实例中保存为位图信息；</strong>【硬件渲染】**的模式下，在<code>paint</code>时传入一个<code>SkPicture</code>实例，将需要执行的绘图命令保存在里面先不执行，然后通过共享内存将它传给GPU进程，借助GPU来最终去执行绘图命令，生成多个瓦片化的位图纹理结果（<code>OpenGL</code>中顶点着色器向片元着色器传递数据时可以自动进行数据插值，完成光栅化的任务）。 纯软件渲染里严格说是没有合成层概念的，因为最终输出的只有一张位图，按照顺序从下往上画，和画到一个新层上再把新层贴到已有结果上其实是一样的。</p>
+<p>不管使用哪种途径，<code>paint</code>动作都是得到位图数据，而最终的<code>draw</code>这个动作是借助OpenGL和位图数据最终把图形显示在显示器上。</p>
+<blockquote>
+<p>所以**【硬件渲染】**就是渲染进程把要做的事情和需要的数据都写好，然后打包递给GPU让它去干活。</p>
+</blockquote>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

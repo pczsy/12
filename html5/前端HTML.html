@@ -1,0 +1,575 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端HTML' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端HTML</center></div><div class='banquan'>原文出处:本文由博客园博主626提供。<br/>
+原文连接:https://www.cnblogs.com/fengqiang626/p/11478741.html</div><br>
+    <p>[TOC]</p>
+<h2 id="web">1.Web服务本质</h2>
+<pre><code><code>import socket
+
+server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+server.bind((&quot;127.0.0.1&quot;, 8080))
+server.listen(5)
+
+while True:
+    conn, addr = server.accept()
+    data = conn.recv(4096)
+    conn.send(b&quot;HTTP/1.1 200 OK\r\n\r\n&quot;)
+    conn.send(b&quot;&lt;h1&gt;Hello world!&lt;/h1&gt;&quot;)
+    conn.close()
+server.close()
+</code></pre>
+<p><strong>浏览器发请求 --&gt; HTTP协议 --&gt; 服务端接收请求 --&gt; 服务端返回响应 --&gt; 服务端把HTML文件内容发给浏览器 --&gt; 浏览器渲染页面</strong></p>
+<h2 id="html">2.HTML初识</h2>
+<h3 id="html-1">2.1HTML是什么？</h3>
+<ul>
+<li>超文本标记语言（Hypertext Markup Language, HTML）是一种用于创建网页的标记语言。</li>
+<li>本质上是浏览器可识别的规则，我们按照规则写网页，浏览器根据规则渲染我们的网页。对于不同的浏览器，对同一个标签可能会有不同的解释。（兼容性问题）</li>
+<li>网页文件的扩展名：.html或.htm</li>
+</ul>
+<h3 id="html-2">2.2HTML不是什么？</h3>
+<p>​	HTML是一种标记语言（markup language），它不是一种编程语言。</p>
+<p>​	HTML使用标签来描述网页。不像python编程语言一样，有逻辑什么的，这个标记语言是没有逻辑的</p>
+<h3 id="html-3">2.3HTML文档结构</h3>
+<p><strong>最基本的HTML文档：</strong></p>
+<pre><code><code class="language-html">&lt;!DOCTYPE html&gt; 
+&lt;html lang=&quot;zh-CN&quot;&gt;   #这个lang表示语言，zh-CN是中文的意思，就是说，你整个文档的内容以中文为主，如果以英文为主，就写成lang='en'
+&lt;head&gt; 
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;title&gt;css样式优先级&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt; 
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>1.<!DOCTYPE html>声明为HTML5文档。</p>
+<p>2.<html>、</html>是文档的开始标记和结束的标记。是HTML页面的根元素，在它们之间是文档的头部（head）和主体（body）。</p>
+<p>3.<head>、</head>定义了HTML文档的开头部分。它们之间的内容不会在浏览器的文档窗口显示。包含了文档的元（meta）数据，配置信息等，是给浏览器看的，你看到的是在body标签里面写的。</p>
+<p>4.<title>、</title>定义了网页标题，在浏览器标题栏显示。（修改一下title中的内容，然后看一下浏览器，你就会发现title是什么了）</p>
+<p>5.<body>、</body>之间的文本是可见的网页主体内容。</p>
+<p>​	**注意：**对于中文网页需要使用 <strong><meta charset="utf-8"></strong> 声明编码，否则会出现乱码。有些浏览器会设置 GBK 为默认编码，则你需要设置为 <strong><meta charset="gbk">。</strong></p>
+<p><strong>pycharm中创建一个html文件，你就会发现，整个结构都给你直接生成好了，因为不管什么浏览器，这个文档结构都是这样的。</strong></p>
+<p><strong>通过pycharm可以设置整个文档：</strong></p>
+<p><img src="./images/前端HTML0.png" alt="" /></p>
+<h3 id="html-4">2.4HTML标签格式，严格封闭</h3>
+<pre><code><code class="language-html">1.HTML标签是由尖括号包围的关键字，如&lt;html&gt;, &lt;div&gt;等
+    
+2.HTML标签通常是成对出现的，比如：&lt;div&gt;和&lt;/div&gt;，第一个标签是开始，第二个标签是结束。结束标签会有斜线。
+    
+3.也有一部分标签是单独呈现的，比如：&lt;br/&gt;、&lt;hr/&gt;、&lt;img src=&quot;1.jpg&quot; /&gt;等。
+    
+4.标签里面可以有若干属性，也可以不带属性。
+</code></pre>
+<p><strong>标签的语法：</strong></p>
+<ul>
+<li>&lt;标签名 属性1=“属性值1” 属性2=“属性值2”……&gt;内容部分&lt;/标签名&gt;</li>
+<li>&lt;标签名 属性1=“属性值1” 属性2=“属性值2”…… /&gt;</li>
+</ul>
+<pre><code><code class="language-html">有些属性是没有特殊的效果的，而有些属性是有效果的，比如 &lt;h1 s='name'&gt;xxx&lt;h1/&gt;，其中s='name'是没什么效果的，而&lt;a src='http://www.baidu.com'&gt;xxx&lt;/a&gt;，你会看到一些效果，可以点击，有下划线，有颜色。
+</code></pre>
+<p><strong>几个很重要的属性：</strong></p>
+<pre><code><code class="language-html">1.id：定义标签的唯一ID，HTML文档树中唯一，将来页面上的标签有很多，例如：来几个a标签，然后怎么区分这些标签呢，可以铜鼓&lt;a id='a1'&gt;xxx&lt;/a&gt;，id不能重复，将来我们想找这个标签的时候，可以通过这个id的值来找到这个标签 
+
+2.class：为html元素定义一个或多个类名（classname）(CSS样式类名) #将css的是再说
+
+3.style：规定元素的行内样式（CSS样式） #简单来个示例：&lt;h1 style=&quot;color:red;&quot;&gt;xx&lt;/h1&gt;你会发现变成红色了，其他的讲css的时候再讲
+</code></pre>
+<h3 id="html-5">2.5HTML注释</h3>
+<pre><code><code class="language-html">&lt;!--注释内容--&gt;  #找到一行内容ctrl+/就能注释，注释的内容不会在网页上显示出来
+</code></pre>
+<h3 id="doctype">2.6&lt;!DOCTYPE&gt; 标签</h3>
+<pre><code><code class="language-html">&lt;!DOCTYPE&gt; 声明必须是 HTML 文档的第一行，位于 &lt;html&gt; 标签之前。
+
+&lt;!DOCTYPE&gt; 声明不是 HTML 标签；它是指示 web 浏览器关于页面使用哪个 HTML 版本进行编写的指令。
+</code></pre>
+<h2 id="html-6">3.HTML常用标签</h2>
+<h3 id="head">3.1head内常用标签</h3>
+<table>
+<thead>
+<tr>
+<th>标签</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><title></title></td>
+<td>定义网页标题</td>
+</tr>
+<tr>
+<td><style></style></td>
+<td>定义内部样式表</td>
+</tr>
+<tr>
+<td></td>
+<td>定义JS代码或引入外部JS文件</td>
+</tr>
+<tr>
+<td><link/></td>
+<td>引入外部样式表文件</td>
+</tr>
+<tr>
+<td><meta/></td>
+<td>定义网页原信息</td>
+</tr>
+</tbody>
+</table>
+<h3 id="meta">3.2Meta标签</h3>
+<p><strong>Meta标签介绍：</strong> #作为了解内容</p>
+<ul>
+<li><p><meta>元素可提供有关页面的元信息（meta-information）,针对搜索引擎和更新频度的描述和关键词。</p>
+</li>
+<li><p><meta>标签位于文档的头部，不包含任何内容。</p>
+</li>
+<li><p><meta>提供的信息是用户不可见的。</p>
+</li>
+</ul>
+<p>　　meta标签的组成：meta标签共有两个属性，它们分别是http-equiv属性和name 属性，不同的属性又有不同的参数值，这些不同的参数值就实现了不同的网页功能。</p>
+<p>**1.http-equiv属性：**相当于http的文件头作用，它可以向浏览器传回一些有用的信息，以帮助正确地显示网页内容，与之对应的属性值为content，content中的内容其实就是各个参数的变量值。</p>
+<pre><code><code class="language-html">&lt;!--2秒后跳转到对应的网址，注意引号--&gt;
+&lt;meta http-equiv=&quot;refresh&quot; content=&quot;2;URL=https://www.oldboyedu.com&quot;&gt; #如果把URL和后面的内容去掉，就是2秒钟刷新一次，这些内容了解一下就行
+&lt;!--指定文档的编码类型--&gt; 
+&lt;meta http-equiv=&quot;content-Type&quot; charset=UTF8&quot;&gt;
+&lt;!--告诉IE以最高级模式渲染文档--&gt;
+&lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;IE=edge&quot;&gt; #edge是微软的一个全新的浏览器,其实就是告诉IE浏览器，你按照最高标准来渲染我的页面，了解一下就可以啦
+</code></pre>
+<p>**2.name属性: **主要用于描述网页，与之对应的属性值为content，content中的内容主要是便于搜索引擎机器人查找信息和分类信息用的。</p>
+<pre><code><code class="language-html">&lt;meta name=&quot;keywords&quot; content=&quot;meta总结,html meta,meta属性,meta跳转&quot;&gt; #关键字，也就是别人是可以通过这些关键字搜索到我的这个文章的，搜索引擎就是能够这个content内容来帮别人搜索到你的这个文档的#SEO就是做这个的，就是怎么让你们公司的网站在别人搜索的时候能够靠前显示，不算那个花钱的，百度是充值的，你冲个20w，别人可能一天就给你点击完了，特别的贵
+&lt;meta name=&quot;description&quot; content=&quot;xxxxxpythonxxx学习&quot;&gt;  #是对这个文档的描述，在百度一些内容的页面上，f12打开看看
+</code></pre>
+<p><strong>下面这个红框里面就是描述信息：</strong></p>
+<p><img src="./images/前端HTML1.png" alt="" /></p>
+<p><strong>浏览器内核：</strong></p>
+<pre><code><code class="language-html">浏览器    --    内核
+IE       --    trident
+chrome    --   blink
+火狐      ---   gecko
+Safari    ---   webkit
+</code></pre>
+<p>　　PS：「浏览器内核」也就是浏览器所采用的「渲染引擎」，渲染引擎决定了浏览器如何显示网页的内容以及页面的格式信息。<strong>渲染引擎是兼容性问题出现的根本原因。</strong></p>
+<h3 id="bodyhtml">3.3body内常用标签（HTML中的重点）</h3>
+<h4 id="section">3.3.1基本标签（块级标签和内联标签）</h4>
+<pre><code><code class="language-html">不加标签的纯文字也是可以在body中写的
+&lt;b&gt;加粗&lt;/b&gt;
+&lt;i&gt;斜体&lt;/i&gt;
+&lt;u&gt;下划线&lt;/u&gt;
+&lt;s&gt;删除&lt;/s&gt;
+&lt;p&gt;段落标签&lt;/p&gt; #独占一个段落
+&lt;h1&gt;标题1&lt;/h1&gt;
+&lt;h2&gt;标题2&lt;/h2&gt;
+&lt;h3&gt;标题3&lt;/h3&gt;
+&lt;h4&gt;标题4&lt;/h4&gt;
+&lt;h5&gt;标题5&lt;/h5&gt;
+&lt;h6&gt;标题6&lt;/h6&gt;&lt;!--换行--&gt;
+&lt;br&gt;&lt;!--水平线--&gt;&lt;hr&gt; # 就是单独个一个水平线每次加上一些内容，别忘了刷新一下页面，才能看到新添加的效果或者内容，其实上面这些标签很少用
+</code></pre>
+<h4 id="section-1">3.3.2特殊字符</h4>
+<p><strong>还有好多其他的，可以直接百度搜HTML特殊符号对照表</strong></p>
+<table>
+<thead>
+<tr>
+<th>内容</th>
+<th>对应代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>空格(html中默认是不显示空格的，也就是说通过空格键加了空格也没有多个空格的效果，加多少个都是显示一个空格效果，需要这些特殊字符才能显示出空格效果)</td>
+<td> </td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>&gt;</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>&lt;</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>&amp;</td>
+</tr>
+<tr>
+<td>¥</td>
+<td>¥</td>
+</tr>
+<tr>
+<td>版权标识（写公司网站的时候会用到）</td>
+<td>©</td>
+</tr>
+<tr>
+<td>注册（一个圆圈里面有个R）</td>
+<td>®</td>
+</tr>
+</tbody>
+</table>
+<h4 id="divspan">3.3.3div标签和span标签（常用）</h4>
+<p>​		这两个标签是没有特别的样式的。<div>xxxx</div>，但是这是两个标签最大的特点，可以通过CSS来控制，就像咱们画画一样，在一个白纸上画好，还是在一个报纸上画好啊，对不对。打开个网页通过f12看一下，就发现多数都是div和span。</p>
+<p>​		div标签用来定义一个块级元素，并无实际的意义。主要通过CSS样式为其赋予不同的表现。
+​		span标签用来定义内联(行内)元素，并无实际的意义。主要通过CSS样式为其赋予不同的表现。</p>
+<p>​		块级元素与行内元素的区别：
+​		所谓块元素，是以另起一行开始渲染的元素，行内元素则不需另起一行。如果单独在网页中插入这两个元素，不会对页面产生任何的影响。
+​		这两个元素是专门为定义CSS样式而生的。</p>
+<p>​		刚才学的标签：</p>
+<p>​				块级标签：p、h1--h6、hr、div</p>
+<p>​				内联标签：b、i、u、s</p>
+<p>　　<strong>注意：</strong></p>
+<p>　　　　关于标签嵌套：通常块级元素可以包含内联元素或某些块级元素，但内联元素不能包含块级元素，它只能包含其它内联元素。div是可以包含div的</p>
+<p>　　　　p标签比较特殊，不能包含块级标签，p标签也不能包含p标签。可以试一下p标签套p标签，f12你会发现三个p标签</p>
+<h4 id="img">3.3.4img标签</h4>
+<pre><code><code>&lt;img src=&quot;图片的路径&quot; alt=&quot;图片未加载成功时的提示&quot; title=&quot;鼠标悬浮时提示信息&quot; width=&quot;宽&quot; height=&quot;高(宽高两个属性只用一个会自动等比缩放)&quot;&gt;
+</code></pre>
+<p>​		src的路径又分为两种：网上的一个图片路径和本地的一个相对图片路径</p>
+<p><img src="./images/前端HTML2.png" alt="" /></p>
+<h4 id="a">3.3.5a标签</h4>
+<p>​		<strong>超链接标签</strong></p>
+<p>​		所谓的超链接是指从一个网页指向一个目标的连接关系，这个目标可以是另一个网页，也可以是相同网页上的不同位置，还可以是一个图片，一个电子邮件地址，一个文件，甚至是一个应用程序。</p>
+<pre><code><code class="language-html">什么是URL？
+URL是统一资源定位器(Uniform Resource Locator)的缩写，也被称为网页地址，是因特网上标准的资源的地址。
+URL举例
+http://www.sohu.com/stu/intro.html
+http://222.172.123.33/stu/intro.html
+
+URL地址由4部分组成
+第1部分：为协议：http://、ftp://等 
+第2部分：为站点地址：可以是域名或IP地址
+第3部分：为页面在站点中的目录：stu
+第4部分：为页面名称，例如 index.html
+各部分之间用“/”符号隔开。
+</code></pre>
+<p>​		<strong>URL</strong></p>
+<pre><code><code class="language-html">&lt;a href=&quot;http://www.oldboyedu.com&quot; target=&quot;_blank&quot; &gt;点我&lt;/a&gt;
+</code></pre>
+<p>​		<strong>href属性指定目标网页地址。该地址可以有几种类型：</strong></p>
+<ul>
+<li>绝对URL - 指向另一个站点（比如 href=&quot;http://www.jd.com）</li>
+<li>相对URL - 指当前站点中确切的路径（href=&quot;index.htm&quot;） # 学django的时候会用的比较多</li>
+<li>锚URL - 指向页面中的锚（href=&quot;#top&quot;），博客的目录经常用到，还可以跳转到 name属性为p1的a标签上，<a name='top'>xxx</a></li>
+</ul>
+<p><img src="./images/前端HTML3.png" alt="" /></p>
+<p>​		<strong>target：</strong></p>
+<ul>
+<li>_blank表示在新标签页中打开目标网页</li>
+<li>_self表示在当前标签页中打开目标网页</li>
+</ul>
+<h4 id="section-2">3.3.6列表</h4>
+<p>​		<strong>1.无序列表</strong></p>
+<pre><code><code class="language-html">&lt;ul type=&quot;disc&quot;&gt;
+  &lt;li&gt;第一项&lt;/li&gt;
+  &lt;li&gt;第二项&lt;/li&gt;
+&lt;/ul&gt;
+</code></pre>
+<p>​		<strong>type属性：</strong></p>
+<ul>
+<li><p>disc（实心圆点，默认值）</p>
+</li>
+<li><p>circle（空心圆圈）</p>
+</li>
+<li><p>square（实心方块）</p>
+</li>
+<li><p>none（无样式）</p>
+<p><strong>2.有序列表</strong></p>
+</li>
+</ul>
+<pre><code><code class="language-html">&lt;ol type=&quot;1&quot; start=&quot;2&quot;&gt;
+  &lt;li&gt;第一项&lt;/li&gt;
+  &lt;li&gt;第二项&lt;/li&gt;
+&lt;/ol&gt;
+</code></pre>
+<p>​		<strong>type属性： start是从数字几开始</strong></p>
+<ul>
+<li><p>1 数字列表，默认值</p>
+</li>
+<li><p>A 大写字母</p>
+</li>
+<li><p>a 小写字母</p>
+</li>
+<li><p>Ⅰ大写罗马</p>
+</li>
+<li><p>ⅰ小写罗马</p>
+<p><strong>3.标题列表（就像大纲一样，有一个层级效果）</strong></p>
+</li>
+</ul>
+<pre><code><code class="language-html">&lt;dl&gt;
+  &lt;dt&gt;标题1&lt;/dt&gt;
+  &lt;dd&gt;内容1&lt;/dd&gt;
+  &lt;dt&gt;标题2&lt;/dt&gt;
+  &lt;dd&gt;内容1&lt;/dd&gt;
+  &lt;dd&gt;内容2&lt;/dd&gt;
+&lt;/dl&gt;
+</code></pre>
+<h4 id="section-3">3.3.7表格</h4>
+<p>​		表格是一个二维数据空间，一个表格由若干行组成，一个行又有若干单元格组成，单元格里可以包含文字、列表、图案、表单、数字符号、预置文本和其它的表格等内容。
+​		表格最重要的目的是显示表格类数据。表格类数据是指最适合组织为表格格式（即按行和列组织）的数据。
+​		表格的基本结构：</p>
+<pre><code><code class="language-html">&lt;table border='1'&gt;
+  &lt;thead&gt; #标题部分
+  &lt;tr&gt; #一行
+    &lt;th&gt;序号&lt;/th&gt; #一个单元格
+    &lt;th&gt;姓名&lt;/th&gt;
+    &lt;th&gt;爱好&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt; #内容部分
+  &lt;tr&gt; #一行
+    &lt;td&gt;1&lt;/td&gt; #一个单元格
+    &lt;td&gt;Egon&lt;/td&gt;
+    &lt;td&gt;杠娘&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;2&lt;/td&gt;
+    &lt;td&gt;Yuan&lt;/td&gt;
+    &lt;td&gt;日天&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</code></pre>
+<p>　　<strong>属性:</strong></p>
+<ul>
+<li>border: 表格边框.</li>
+<li>cellpadding: 内边距 （内边框和内容的距离）</li>
+<li>cellspacing: 外边距.（内外边框的距离）</li>
+<li>width: 像素 百分比.（最好通过css来设置长宽）</li>
+<li>rowspan: 单元格竖跨多少行</li>
+<li>colspan: 单元格横跨多少列（即合并单元格）</li>
+</ul>
+<p><img src="./images/前端HTML4.png" alt="" /></p>
+<p><img src="./images/前端HTML5.png" alt="" /></p>
+<p>​		上面这几个属性基本上用不到。</p>
+<p>　　其实标签又可以分为两类：1、展示给用户看的  2、获取用户输入内容的标签，刚才前面的这些标签都是展示内容用的，下面要学的标签是捕获用户输入的标签。基本上HTML中常用的就这些标签</p>
+<h4 id="forminput">3.3.8form（最后再学这个标签，先去学input标签）</h4>
+<p>​		<strong>功能：</strong></p>
+<p>　　　　表单用于向服务器传输数据，从而实现用户与Web服务器的交互</p>
+<p>　　　　表单能够包含input系列标签，比如文本字段、复选框、单选框、提交按钮等等。</p>
+<p>　　　　表单还可以包含textarea、select、fieldset和 label标签。</p>
+<p>​		<strong>表单属性</strong></p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accept-charset</td>
+<td>规定在被提交表单中使用的字符集（默认：页面字符集）。</td>
+</tr>
+<tr>
+<td>action</td>
+<td>规定向何处提交表单的地址（URL）（提交页面）。</td>
+</tr>
+<tr>
+<td>autocomplete</td>
+<td>规定浏览器应该自动完成表单（默认：开启）。</td>
+</tr>
+<tr>
+<td>enctype</td>
+<td>规定被提交数据的编码（默认：url-encoded）。</td>
+</tr>
+<tr>
+<td>method</td>
+<td>规定在提交表单时所用的 HTTP 方法（默认：GET）。</td>
+</tr>
+<tr>
+<td>name</td>
+<td>规定识别表单的名称（对于 DOM 使用：document.forms.name）。</td>
+</tr>
+<tr>
+<td>novalidate</td>
+<td>规定浏览器不验证表单。</td>
+</tr>
+<tr>
+<td>target</td>
+<td>规定 action 属性中地址的目标（默认：_self）。</td>
+</tr>
+</tbody>
+</table>
+<p>　　<strong>表单元素</strong></p>
+<p>　　　　基本概念：
+　　　　HTML表单是HTML元素中较为复杂的部分，表单往往和脚本、动态页面、数据处理等功能相结合，因此它是制作动态网站很重要的内容。
+　　　　表单一般用来收集用户的输入信息
+　　　　表单工作原理：
+　　　　访问者在浏览有表单的网页时，可填写必需的信息，然后按某个按钮提交。这些信息通过Internet传送到服务器上。
+　　　　服务器上专门的程序对这些数据进行处理，如果有错误会返回错误信息，并要求纠正错误。当数据完整无误后，服务器反馈一个输入完成的信息。</p>
+<p><img src="./images/前端HTML6.png" alt="" /></p>
+<p><img src="./images/前端HTML7.png" alt="" /></p>
+<p>　　　　点击提交按钮，input中type=submit的那个按钮，然后就会将form表单中所有用户输入的内容或者选择的内容（{name属性:值，}）都发给服务端（以我们自己写的那个socket举例，打印一下接收的内容），但是所有的输入标签必须有一个叫做name的属性。</p>
+<p><img src="./images/前端HTML8.png" alt="" /></p>
+<p>　　　　发现跳到这个页面了：看url的内容，有了我们输入的内容，并且是给你组合起来的，name属性值和你输入的值组合到一起了，通过&amp;符号分隔，并且在路径那里加了个问号</p>
+<p><img src="./images/前端HTML9.png" alt="" /></p>
+<p>　　　　打印一下socket接收的消息，你就发现已经接受到这些数据了</p>
+<p><img src="./images/前端HTML10.png" alt="" /></p>
+<p><img src="./images/前端HTML11.png" alt="" /></p>
+<p><img src="./images/前端HTML12.png" alt="" /></p>
+<p>​		让用户选择的，必须指定一个value值，要不然后端接收不到内容，用户自己填写的标签，不需要指定value值</p>
+<p>​		然后再点击提交，后端打印一下接收的数据：</p>
+<p><img src="./images/前端HTML13.png" alt="" /></p>
+<p>​		但是这样并不好，因为url中显示了你的信息，并且如果内容很多的话，你的地址栏不能够输入那么长的内容，为什么会默认拼接到url里面呢，因为form表单默认是get请求提交内容，我们可以改为post，来看看：post会把所有你提交的信息封装到一个消息体里面，在浏览器上就看不到了，对于小白来说，看着安全一些。</p>
+<p><img src="./images/前端HTML14.png" alt="" /></p>
+<p><img src="./images/前端HTML15.png" alt="" /></p>
+<p>　　　　　　点击提交就跳到这个网址了：</p>
+<p><img src="./images/前端HTML16.png" alt="" /></p>
+<p>　　　　　　在看后端打印的内容：</p>
+<p><img src="./images/前端HTML17.png" alt="" /></p>
+<p>　　　　　　你会发现一个post请求：</p>
+<p>　　　　　　把内容往后拉，就能看到咱们提交的数据了</p>
+<p><img src="./images/前端HTML18.png" alt="" /></p>
+<p>​		那么你看，你的浏览器再你点击提交的时候，获取了你所输入的内容，然后通过网络提交给你的服务端代码程序了。</p>
+<p>​		然后我们后端通过提交过来的数据，来做某些事情，该验证的验证，该保存的保存</p>
+<p>​		所以记住form表单里面有两个属性：action控制往哪里提交数据、method控制用什么方式提交。</p>
+<p>​		还有一个文件input：因为我们刚才说，数据是通过组成一个字典发给后端的，但是文件怎么做键值对啊，做不了，所以需要通过二进制流的形式一点一点的传送给后端，就是这个multipart搞的事情，有个了解就行了，别纠结，到了django我们在细说。</p>
+<p><img src="./images/前端HTML19.png" alt="" /></p>
+<p>​		注意：</p>
+<p>​				form表单提交数据的时候，必须有个submit按钮</p>
+<p>​		下面这个django的示例，等我学django的时候再说吧：</p>
+<pre><code><code>from django.conf.urls import url
+from django.shortcuts import HttpResponse
+
+
+def upload(request):
+    print(&quot;request.GET:&quot;, request.GET)
+    print(&quot;request.POST:&quot;, request.POST)
+
+    if request.FILES:
+        filename = request.FILES[&quot;file&quot;].name
+        with open(filename, 'wb') as f:
+            for chunk in request.FILES['file'].chunks():
+                f.write(chunk)
+            return HttpResponse('上传成功')
+    return HttpResponse(&quot;收到了！&quot;)
+
+urlpatterns = [
+    url(r'^upload/', upload),
+]
+</code></pre>
+<p>Django接收上传文件代码</p>
+<h4 id="input">3.3.9input（都试一下）</h4>
+<p>​		<input> 元素会根据不同的 type 属性，变化为多种形态。</p>
+<table>
+<thead>
+<tr>
+<th>type属性值</th>
+<th>表现形式</th>
+<th>对应代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text</td>
+<td>单行输入文本</td>
+<td>&lt;input type=text&quot; /&gt;</td>
+</tr>
+<tr>
+<td>password</td>
+<td>密码输入框（不显示明文）</td>
+<td><input type="password"  /></td>
+</tr>
+<tr>
+<td>date</td>
+<td>日期输入框</td>
+<td><input type="date" /></td>
+</tr>
+<tr>
+<td>checkbox</td>
+<td>复选框</td>
+<td><input type="checkbox" checked="checked" name='x' /></td>
+</tr>
+<tr>
+<td>radio</td>
+<td>单选框</td>
+<td><input type="radio" name='x' /></td>
+</tr>
+<tr>
+<td>submit</td>
+<td>提交按钮</td>
+<td><input type="submit" value="提交" /> #发送浏览器上输入标签中的内容，配合form表单使用，页面会刷新</td>
+</tr>
+<tr>
+<td>reset</td>
+<td>重置按钮</td>
+<td><input type="reset" value="重置"  />  #页面不会刷新，将所有输入的内容清空</td>
+</tr>
+<tr>
+<td>button</td>
+<td>普通按钮</td>
+<td><input type="button" value="普通按钮"  /></td>
+</tr>
+<tr>
+<td>hidden</td>
+<td>隐藏输入框</td>
+<td><input type="hidden"  /></td>
+</tr>
+<tr>
+<td>file</td>
+<td>文本选择框</td>
+<td><input type="file"  /> （等学了form表单之后再学这个）</td>
+</tr>
+</tbody>
+</table>
+<p>　　<strong>属性说明:</strong></p>
+<ul>
+<li>name：表单提交时的“键”，注意和id的区别</li>
+<li>value：表单提交时对应项的值
+<ul>
+<li>type=&quot;button&quot;, &quot;reset&quot;, &quot;submit&quot;时，为按钮上显示的文本年内容</li>
+<li>type=&quot;text&quot;,&quot;password&quot;,&quot;hidden&quot;时，为输入框的初始值</li>
+<li>type=&quot;checkbox&quot;, &quot;radio&quot;, &quot;file&quot;，为输入相关联的值</li>
+</ul>
+</li>
+<li>checked：radio和checkbox默认被选中的项</li>
+<li>readonly：text和password设置只读</li>
+<li>disabled：所有input均适用</li>
+</ul>
+<p><img src="./images/前端HTML20.png" alt="" /></p>
+<h4 id="select">3.3.10select标签</h4>
+<pre><code><code>&lt;form action=&quot;&quot; method=&quot;post&quot;&gt;
+  &lt;select name=&quot;city&quot; id=&quot;city&quot;&gt;
+    &lt;option value=&quot;1&quot;&gt;北京&lt;/option&gt;
+    &lt;option selected=&quot;selected&quot; value=&quot;2&quot;&gt;上海&lt;/option&gt; #默认选中，当属性和值相同时，可以简写一个selected就行了
+    &lt;option value=&quot;3&quot;&gt;广州&lt;/option&gt;
+    &lt;option value=&quot;4&quot;&gt;深圳&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/form&gt;
+</code></pre>
+<p>　　属性说明：</p>
+<ul>
+<li>multiple：布尔属性，设置后为多选下拉框，否则默认单选</li>
+<li>disabled：禁用</li>
+<li>selected：默认选中该项</li>
+<li>value：定义提交时的选项值</li>
+</ul>
+<h3 id="label">3.3.11label标签</h3>
+<p>​		定义：<label> 标签为 input 元素定义标注（标记）。如果不用这个label给input标签一个标记，input会变黄，不影响使用，只是提示你，别忘了给用户一些提示，也就是这个label标签。
+​		说明：</p>
+<p>​		1.label 元素不会向用户呈现任何特殊效果。但是点击label标签里面的文本，那么和他关联的input标签就获得了光标，让你输入内容</p>
+<p>​		2.<label> 标签的 for 属性值应当与相关元素的 id 属性值相同。</p>
+<pre><code><code>&lt;form action=&quot;&quot;&gt;
+  &lt;label for=&quot;username&quot;&gt;用户名&lt;/label&gt;  #for和input的id属性一样，就关联在一起了
+  &lt;input type=&quot;text&quot; id=&quot;username&quot; name=&quot;username&quot;&gt;
+&lt;/form&gt;
+</code></pre>
+<p><img src="./images/前端HTML21.png" alt="" /></p>
+<p><img src="./images/前端HTML22.png" alt="" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,48 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修小程序 ----踩坑  ---安卓iOS兼容等' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>小程序 ----踩坑  ---安卓iOS兼容等</center></div><div class='banquan'>原文出处:本文由博客园博主luckyJi提供。<br/>
+原文连接:https://www.cnblogs.com/jzh1991/p/11242737.html</div><br>
+    <p>关于小程序一些小功能的代码都在这个GitHub上，感兴趣的可以去看看，<br /><a href="https://github.com/huihuijiang/miniProgram" rel="nofollow" data-token="9786f0fae2c83fc6759be27ed4af7392">https://github.com/huihuijiang/miniProgram</a><a href="https://github.com/huihuijiang/miniProgram" rel="nofollow" data-token="9786f0fae2c83fc6759be27ed4af7392">&nbsp;目前有：列表左滑删除，拖拽浮标</a></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><strong>一、小程序坑</strong></span><br />1.scroll-view横向滚动的时候，包含文字图片等，元素错位，第二个元素掉下去；<br />hack：给子元素添加&nbsp;<span style="background-color: #ff0000;">vertical-align:top;</span></p>
+<p><em>当使用scroll-view横向滚动时要注意几点：<br />父元素设置宽度，加上这两个样式overflow: hidden; white-space: nowrap;自元素设置成display: inline-block;vertical-align:top;<br /></em></p>
+<p><strong><span style="font-size: 18pt;">二、android 和 ios 兼容</span></strong><br />1.不定宽高元素使用全铺背景图片，ios没有问题，安卓手机背景图片显示空白<br />hack:&nbsp;<code>background-size:cover;(元素加上这一属性）</code><em>&nbsp;</em></p>
+<p>2.安卓手机缓存严重问题</p>
+<p>hack:在图片后再加上一串随机数</p>
+<p><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">在wxs中：（有些iOS手机不能识别小数的随机数，所以最好用整数&nbsp;&nbsp;</em></em></em><em id="__mceDel" style="font-family: 'Courier New'; font-size: 12px;"><code>var random = Math.floor(Math.random() * 10 + 1) * 9;</code></em></p>
+<p><em style="font-family: 'Courier New'; font-size: 12px;">3.ios不支持默认最小定时时间（0或不写）</em></p>
+<p>4.截取字符串遇到表情，安卓没问题，ios会报错；<br />hack:(判断是否有表情)</p>
+<p style="text-align: left;">　　　　　　var reg = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/;<br />　　　　　　var re = new RegExp(reg);<br />　　　　　　var en = str.slice(27, 29);<br />　　　　　　if (re.test(en)) {<br />　　　　　　　　title = str.slice(0, 27)<br />　　　　　　} else {<br />　　　　　　　　title =str.slice(0, 28)<br />　　　　　　}<br />5.getTime()时候，iOS必须把时间格式00-00-00转换成00/00/00</p>
+<p style="text-align: left;">6.小程序获取胶囊按钮返回值（一直在变，目前的兼容代码</p>
+<p>const self = this;<br />		wx.getSystemInfo({<br />			success: function (res) {<br />				self.globalData.phonexh = res.model.indexOf("iPhone X");<br />				var menuButton = wx.getMenuButtonBoundingClientRect();<br />				//导航栏高度<br />				self.globalData.totalTopHeight =<br />					menuButton.height == menuButton.bottom ?<br />						menuButton.height :<br />						res.model.indexOf("iPhone") == 0 || (res.platform == 'android' &amp;&amp; res.version == '7.0.3') ?<br />							menuButton.top + menuButton.height + (menuButton.top - res.statusBarHeight) :<br />							menuButton.top + menuButton.height + menuButton.top + res.statusBarHeight				<br />				//状态栏高度<br />				self.globalData.statusBarHeight = res.statusBarHeight;<br />				//标题栏高度<br />				self.globalData.titleBarHeight = self.globalData.totalTopHeight - res.statusBarHeight;</p>
+<p>			}<br />		})</p>
+<p><em id="__mceDel">7.iOS使用overflow：auto；滚动会卡顿</em></p>
+<p style="text-align: left;"><span style="background-color: #ff0000;"><em id="__mceDel">hack：<br /><code>-webkit-overflow-scrolling: touch</code></em></span></p>
+<p>8.转发到微信列表的转发信息卡片图，iOS当图片尺寸不对时，会出现空白，安卓会自动截取左上角</p>
+<p>9.iOS橡皮筋事件<br />hack：在page.json文件中<br />"disableScroll": true</p>
+<p>10.iOS短时间多次扫码进入不会执行onload</p>
+<p>11.new number（）强制转换结果为undefined<br />hack：用parsefloat<br />12.iOS图片加上阿里云编辑参数加载失败<br />Hack:binderror事件中对src重新复制，记得带上随机数，不然会因为路径一样不请求，有时候不是一次就能重新请求成功的，所以下一次获取的时候记得去掉随机数</p>
+<p>loadimgerror: function (e) {<br />        console.log("图片加载失败")<br />        this.setData({<br />           Src: e.target.dataset.src.split("?")[0] + '?' + Math.floor(Math.random() * 10 + 1) * 9<br />        })<br />    },<br /><br /></p>
+<p style="text-align: left;">&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

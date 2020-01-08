@@ -1,0 +1,263 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修manifest.json 解析--手机web app开发笔记（三-1）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>manifest.json 解析--手机web app开发笔记（三-1）</center></div><div class='banquan'>原文出处:本文由博客园博主相信神话提供。<br/>
+原文连接:https://www.cnblogs.com/agoodlife/p/11331291.html</div><br>
+    <p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">在</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">HBuilderX</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">生成的文档中，还有一个&ldquo;</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">manifest.json</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&rdquo;，只要是创建&ldquo;移动</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">App</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&rdquo;应用，都会在工程下生成这个文件，一看扩展名就知道他是一个</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">json</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">格式文件，文件文件根据</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">w3c</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">的</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">webapp</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">规范制定，是</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">5+</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">移动</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">App</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">的配置文件，用于指定应用的显示名称、图标、应用入口文件地址及需要使用的设备权限等信息，用户可通过</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">HBuilderX</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">的可视化界面视图或者源码视图来配置</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">5+</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">移动</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">App</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">的信息。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">在&ldquo;项目管理器&rdquo;中点击即可打开可视化界面，如图3-1。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）0.png" alt="" /></span></p>
+<p align="center"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-1配置文件可视化管理界面</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">在这个管理界面中，左侧有&ldquo;基本配置&rdquo;、&ldquo;图标配置&rdquo;、&ldquo;启动配置&rdquo;、&ldquo;SDK配置&rdquo;、&ldquo;模块权限配置&rdquo;和&ldquo;APP常用其它配置&rdquo;6个可视化配置界面；一个&ldquo;源码试图&rdquo;，是6个可视化界面配置代码，可视化界面选择修改后的配置代码相应的跟着变动。APP相关配置，你可以在可视化界面中进行配置，也可以在代码界面进行配置。下面我们一次学习。</span></p>
+<h1><span style="font-family: 'Microsoft YaHei'; font-size: 18px;">一、基本配置</span></h1>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">在此基本可视化界面中我们有8个参数需要配置，我详细的介绍了每个参数的用途并进行了具体配置，情况如下：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">1.DCloud appid：以后简称 appid，它&nbsp;是 DCloud 应用的唯一标识，在 DCloud 提供的所有服务中，都会以 appid 来标记一个应用。这个appid，只有我们登陆的时候才分配，不登录的时候一直显示红色。也就是说我们需要登陆HBuilderX才能分配真个appid，一般自动生成，不需要我们手动改写。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">2.应用名称：App打包后在手机上桌面的快捷方式名称；我们填写为&ldquo;编程之路&rdquo;。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">3.应用版本名称：用户可通过plus API（plus.runtime.versionName）获取应用的版本号，需提交App云端打包后才能生效。 我们设置为1.0。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">4.应用版本号：用户可通过plus API（plus.runtime.version，这是HTML5+提供的API，后面我们学习的时候会详细讲述）获取应用的版本号，需提交App云端打包后才能生效；设置为10。着重强调一下版本名称和版本号的区别，版本名称为String类型，版本号为int类型，版本号涉及APP更新问题，版本更新一般会通过版本号数字来判断更新。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">5.应用入口页面：应用启动后自动打开的第一个HTML页面，可填写本地html文件地址（相对于应用根目录）或网络地址（以http://或https://开头）；我们使用默认值index.html。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">6.应用描述，对APP程序进行描述，我们填写为&ldquo;编程之路，记录编程点滴&rdquo;;</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">7.应用是否全屏：选中表示应用程序全屏。什么是全屏呢？全屏就是手机运行你的APP运行时，手机界面除了看见你APP的界面外，看不到其它任何别的东西，包括上端的状态栏，也就是看不见电量、信号那条了，而不是状态栏透明。全屏常见于横屏游戏，一般场景应该使用状态栏变色或状态栏透明。状态栏透明、变色和消失是有区别的，在后面的章节我们会有介绍。这个选项我们不进行选择。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">8.根据重力感应自动横竖屏，这里面有4个选项可供选择，这是个多项选择，根据需要进行选择配置。第一个可供选项"portrait-primary"表示竖屏正方向；"portrait-secondary"表示竖屏反方向；"landscape-primary"表示横屏正方向；"landscape-secondary"：表示横屏反方向。这里我们选择"portrait-primary。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">这样我们的基本配置已经配置完毕了，我们点击左侧的&ldquo;源码试图&rdquo;，查看一下对应的代码。</span><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code> {
+
+  "@platforms" : [ "android", "iPhone", "iPad" ],/*app运行平台选择，一个是android，一个是iPhone；一个是iPad；可以删除，但必须保留一项*/
+
+  "id" : "", /*应用的标识*/
+
+    "name" : "编程之路", /*应用名称，程序桌面图标名称*/
+
+    "version" : {
+
+        "name" : "1.0", /*应用版本名称*/
+
+        "code" : 10 /*应用版本号*/
+
+    },
+
+    "description" : "编程之路，一步一个脚印", /*应用描述信息*/
+
+     "launch_path" : "index.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+
+      "orientation" : [ "portrait-primary" ],
+
+      "fullscreen" : false
+
+}&nbsp;</pre>
+</div>
+<h1><span style="font-family: 'Microsoft YaHei'; font-size: 18px;">二、图标配置</span></h1>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">单击左侧的&ldquo;图标配置&rdquo;就进入了图标配置的可视化页面，如图3-2所示，我们对应的选择图标文件即可。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）1.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p style="text-align: center;"><span style="font-family: 宋体;">图</span>3-2<span style="font-family: 宋体;">图标配置界面</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图标配置非常简单，Android平台没有对图标进行限制，按照建议的分辨率配置即可，可以有透明区域，也可以是圆角图标，可能有些特殊ROM对图标有所要求，提交应用市场时注意看是否有要求说明。但是，iOS平台对图标却有些具体要求：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">1.图标必须是直角，不要使用圆角图标，使用圆角appstore审核不会通过</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">2.打包提交appstore时，必须配置1024*1204分辨率的appstore图标，云端打包机默认使用纯白色图标</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">3.所有图标不要包含透明信息（alpha通道），否则提交appstore会报以下错误，导出png图标时去掉alpha通道即可</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">现在，我编写的APP主要是运行Andriod平台，所以我们只配置就好了。我们在可视化界面中选择我们APP的logo文件夹，点击自动生成所有图标并替换，这样我们的图标设置会自动生成17种不同大小格式的PNG图片，存在程序APP文件夹下，具体路径为：&ldquo;编程之路\unpackage\res\icons\&rdquo;，最后配置的结果如图3-3所示。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）2.png" alt="" /></span></p>
+<p align="center"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-3 图标配置</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">点击左侧的&ldquo;源码试图&rdquo;，查看一下对应的代码。</span></p>
+<div class="cnblogs_code">
+<pre><code> "icons"<span style="color: #000000;"> : {
+
+                </span>"ios"<span style="color: #000000;"> : {
+
+                    </span>"prerendered" : <span style="color: #0000ff;">true</span>, <span style="color: #008000;">/*</span><span style="color: #008000;">应用图标是否已经高亮处理，在iOS6及以下设备上有效</span><span style="color: #008000;">*/</span>
+
+                    "auto" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标</span><span style="color: #008000;">*/</span>
+
+                    "iphone"<span style="color: #000000;"> : {
+
+                        </span>"normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone3/3GS程序图标，分辨率：57x57</span><span style="color: #008000;">*/</span>
+
+                        "retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4程序图标，分辨率：114x114</span><span style="color: #008000;">*/</span>
+
+                        "retina7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4S/5/6程序图标，分辨率：120x120</span><span style="color: #008000;">*/</span>
+
+                        "retina8" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone6 Plus程序图标，分辨率：180x180</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone3/3GS Spotlight搜索程序图标，分辨率：29x29</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4 Spotlight搜索程序图标，分辨率：58x58</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-retina7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4S/5/6 Spotlight搜索程序图标，分辨率：80x80</span><span style="color: #008000;">*/</span>
+
+                        "settings-normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4设置页面程序图标，分辨率：29x29</span><span style="color: #008000;">*/</span>
+
+                        "settings-retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone4S/5/6设置页面程序图标，分辨率：58x58</span><span style="color: #008000;">*/</span>
+
+                        "settings-retina8" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPhone6Plus设置页面程序图标，分辨率：87x87</span><span style="color: #008000;">*/</span>
+
+                        "app@2x" : "unpackage/res/icons/120x120.png"<span style="color: #000000;">,
+
+                        </span>"app@3x" : "unpackage/res/icons/180x180.png"<span style="color: #000000;">,
+
+                        </span>"notification@2x" : "unpackage/res/icons/40x40.png"<span style="color: #000000;">,
+
+                        </span>"notification@3x" : "unpackage/res/icons/60x60.png"<span style="color: #000000;">,
+
+                        </span>"settings@2x" : "unpackage/res/icons/58x58.png"<span style="color: #000000;">,
+
+                        </span>"settings@3x" : "unpackage/res/icons/87x87.png"<span style="color: #000000;">,
+
+                        </span>"spotlight@2x" : "unpackage/res/icons/80x80.png"<span style="color: #000000;">,
+
+                        </span>"spotlight@3x" : "unpackage/res/icons/120x120.png"<span style="color: #000000;">
+
+                    },
+
+                    </span>"ipad"<span style="color: #000000;"> : {
+
+                        </span>"normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad普通屏幕程序图标，分辨率：72x72</span><span style="color: #008000;">*/</span>
+
+                        "retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad高分屏程序图标，分辨率：144x144</span><span style="color: #008000;">*/</span>
+
+                        "normal7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad iOS7程序图标，分辨率：76x76</span><span style="color: #008000;">*/</span>
+
+                        "retina7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad iOS7高分屏程序图标，分辨率：152x152</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad Spotlight搜索程序图标，分辨率：50x50</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad高分屏Spotlight搜索程序图标，分辨率：100x100</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-normal7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad iOS7 Spotlight搜索程序图标，分辨率：40x40</span><span style="color: #008000;">*/</span>
+
+                        "spotlight-retina7" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80</span><span style="color: #008000;">*/</span>
+
+                        "settings-normal" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad设置页面程序图标，分辨率：29x29</span><span style="color: #008000;">*/</span>
+
+                        "settings-retina" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">iPad高分屏设置页面程序图标，分辨率：58x58</span><span style="color: #008000;">*/</span>
+
+                        "app" : "unpackage/res/icons/76x76.png"<span style="color: #000000;">,
+
+                        </span>"app@2x" : "unpackage/res/icons/152x152.png"<span style="color: #000000;">,
+
+                        </span>"notification" : "unpackage/res/icons/20x20.png"<span style="color: #000000;">,
+
+                        </span>"notification@2x" : "unpackage/res/icons/40x40.png"<span style="color: #000000;">,
+
+                        </span>"proapp@2x" : "unpackage/res/icons/167x167.png"<span style="color: #000000;">,
+
+                        </span>"settings" : "unpackage/res/icons/29x29.png"<span style="color: #000000;">,
+
+                        </span>"settings@2x" : "unpackage/res/icons/58x58.png"<span style="color: #000000;">,
+
+                        </span>"spotlight" : "unpackage/res/icons/40x40.png"<span style="color: #000000;">,
+
+                        </span>"spotlight@2x" : "unpackage/res/icons/80x80.png"<span style="color: #000000;">
+
+                    },
+
+                    </span>"appstore" : "unpackage/res/icons/1024x1024.png"<span style="color: #000000;">
+
+                },
+
+                </span>"android"<span style="color: #000000;"> : {
+
+                    </span>"mdpi" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">普通屏程序图标，分辨率：48x48</span><span style="color: #008000;">*/</span>
+
+                    "ldpi" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">大屏程序图标，分辨率：48x48</span><span style="color: #008000;">*/</span>
+
+                    "hdpi" : "unpackage/res/icons/72x72.png", <span style="color: #008000;">/*</span><span style="color: #008000;">高分屏程序图标，分辨率：72x72</span><span style="color: #008000;">*/</span>
+
+                    "xhdpi" : "unpackage/res/icons/96x96.png", <span style="color: #008000;">/*</span><span style="color: #008000;">720P高分屏程序图标，分辨率：96x96</span><span style="color: #008000;">*/</span>
+
+                    "xxhdpi" : "unpackage/res/icons/144x144.png", <span style="color: #008000;">/*</span><span style="color: #008000;">1080P 高分屏程序图标，分辨率：144x144</span><span style="color: #008000;">*/</span>
+
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"<span style="color: #000000;">
+
+                }
+
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<h1><span style="font-family: 'Microsoft YaHei'; font-size: 18px;">三、启动配置</span></h1>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">单击左侧的&ldquo;启动配置&rdquo;就进入了图标的配置可视化页面，如图3-4所示：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）3.png" alt="" /></span></p>
+<p style="text-align: center;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-4 启动配置</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">这个界面有3个重要的参数和启动图片需要配置。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">1.启动界面需要显示等待雪花，这个参数勾选以后APP程序启动时，在启动界面会有一个不停旋转的等待雪花，知道进入程序，雪花才消失。如果不选择不会出现等待雪花。我们对此参数进行勾选。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">2.自动关闭启动界面，这个参数勾选以后APP程序进入主界面（也就是我们在基本配置中填写的应用入口页面index.html显示）后会关闭APP程序的启动界面。如果勾选这个参数，APP程序手机显示界面一直会显示启动界面，实质上APP程序进入了主程序，这个界面也不会消失，需要我们编写代码关闭启动界面。这个参数我们会在程序引导页的时候用到，现在我们先默认勾选。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">3.自动关闭启动页面的延时时间，这个参数配置是然我们自动控制控制关闭启动页面的时间，我们这里空着就可以了。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">上述3个参数设置对应的代码如下：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;</span></p>
+<div class="cnblogs_code">
+<pre><code>"plus"<span style="color: #000000;"> : {
+
+        </span>"splashscreen"<span style="color: #000000;"> : {
+
+            </span>"autoclose" : <span style="color: #0000ff;">true</span>, <span style="color: #008000;">/*</span><span style="color: #008000;">是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭</span><span style="color: #008000;">*/</span>
+
+            "waiting" : <span style="color: #0000ff;">true</span> <span style="color: #008000;">/*</span><span style="color: #008000;">是否在程序启动界面显示等待雪花，true表示显示，false表示不显示。</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+        }
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">4.启动图片设置。目前HBuilderX中Android启动图片设置仅定义3种标准分辨率的启动图配置，而实际上存在很多不同分辨率的手机，导致启动图会进行拉伸或压缩引起变形，Android平台为了解决此问题就出现了可以任意调整大小的一种图片格式&ldquo;.9.png&rdquo;。下面详细介绍一下：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">优点：&ldquo;.9.png&rdquo;是一种特殊的图片格式，它可以指定特定的区域进行拉伸而不失真，可以只配置1张或多张图片适配更多分辨率，减少apk的体积（推荐至少配置1080P高分屏启动图片）。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">区别：&ldquo;.9.png&rdquo;图片和一般图片的区别在于.9.png图片有四条黑边，而一般的图片没有，这四条黑边就是用来拉伸和指定显示位置的。使用&ldquo;.9.png&rdquo;图片后，整个图片应该是包裹着你想要显示的内容的，而没有使用的话整个图片将会被拉伸。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">制作：那么如何制作&ldquo;.9.png&rdquo;图片呢？制作&ldquo;.9.png&rdquo;最常用的有两种工具，一是在Android sdk目录下的tools目录下，有一个叫做draw9patch.bat的文件，双击打开就可以使用（最新android SDK该文件已经不存在，若电脑不没有安装android studio，可下载附件工具编辑.9.png图片）；二是使用android studio，因为android studio已经集成.9.png制作工具，只需选中需要生成的png文件，然后右键，点击create 9-patch file 选项。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">绘制之前先来说一下&ldquo;.9.png&rdquo;图片的四条黑边的意义，每条黑边的意义都不一样：上边线：图像横向可拉伸的部分；左边线：图像纵向可拉伸的部分；右边线：图像纵向可填充内容（文字或图片）区域；下边线：图像横向可填充内容（文字或图片）区域</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">我选用的是draw9patch.jar，双击这个程序就可以打开.&ldquo;.9.png&rdquo;图片编辑界面如图3-5所示。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）4.png" alt="" /></span></p>
+<p align="center"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-5draw9patch.jar编辑界面</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">选择菜单栏的file菜单选择&ldquo;open 9-path...&rdquo;选择我们需要创建的&ldquo;.9.png&rdquo;图片，原图片必须是png格式的，效果如图3-6 所示：</span></p>
+<p style="text-align: center;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;"><strong>&nbsp;<img src="./images/manifest.json 解析--手机web app开发笔记（三-1）5.png" alt="" /></strong></span></p>
+<p style="text-align: center;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-6 &ldquo;.9.png&rdquo;编辑界面</span></p>
+<p><br /><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">&nbsp;&nbsp;&nbsp;左侧是我们选择的原图片，右边是拉大的预览图片，我们很容易发现右侧图片变形的厉害。左侧原图片的上下左右都有一列透明的线条，我们只要把鼠标放在线条范围内，按住不放就可画出黑色的线条，就是图像可拉伸的部分，我最后的划线结果如图3-7所示。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;"><strong>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）6.png" alt="" /></strong></span></p>
+<p align="center"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-7画出黑线的&ldquo;.9.png&rdquo;图片</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">这时，我们在看看右侧预览效果如图3-8所示，明显看出右侧预览图片关键部分没有变现，这就是我们想要的效果。选择菜单栏的file菜单选择&ldquo;save 9-path...&rdquo;，把图片保存即可。保存结果图片扩展名自动变为&ldquo;.9.png&rdquo;。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;"><strong>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/manifest.json 解析--手机web app开发笔记（三-1）7.png" alt="" /></strong></span></p>
+<p align="center"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">图3-8&ldquo;.9.png&rdquo;图片预览效果</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">这样我们的一幅&ldquo;.9.png&rdquo;图片就制作完毕。同理，我们如果有需要，可制作需要的多张图片。</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">启动图片设置可视化界面，Android启动图片设置我们选择对应的3张&ldquo;.9.png&rdquo;图片就ok了。对应的代码如下：</span></p>
+<div class="cnblogs_code">
+<pre><code>"splashscreen"<span style="color: #000000;"> : {                
+
+                </span>"android"<span style="color: #000000;"> : {
+
+                    </span>"mdpi" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">普通屏启动图片，分辨率：240x282</span><span style="color: #008000;">*/</span>
+
+                    "ldpi" : "", <span style="color: #008000;">/*</span><span style="color: #008000;">大屏启动图片，分辨率：320x442</span><span style="color: #008000;">*/</span>
+
+                    "hdpi" : "unpackage/res/qidong/480-762.png", <span style="color: #008000;">/*</span><span style="color: #008000;">高分屏启动图片，分辨率：480x762</span><span style="color: #008000;">*/</span>
+
+                    "xhdpi" : "unpackage/res/qidong/720_1242.png", <span style="color: #008000;">/*</span><span style="color: #008000;">720P高分屏启动图片，分辨率：720x1242</span><span style="color: #008000;">*/</span>
+
+                    "xxhdpi" : "unpackage/res/qidong/1080_1882.png" <span style="color: #008000;">/*</span><span style="color: #008000;">1080P高分屏启动图片，分辨率：1080x1882</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+
+                }
+
+            }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">注意：不同尺寸的启动图是为了适配不同分辨率的手机，所以提交打包时请务必上传不同尺寸的启动图，切忌上传多张同尺寸启动图</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

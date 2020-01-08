@@ -1,0 +1,229 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS 了解一下' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS 了解一下</center></div><div class='banquan'>原文出处:本文由博客园博主我是玖柒后提供。<br/>
+原文连接:https://www.cnblogs.com/msunh/p/11996413.html</div><br>
+    <p>CSS 认识一下</p>
+<h2 id="css-的那些事">1、CSS 的那些事</h2>
+<p>CSS（Cascading Style Sheets）译「<strong>层叠样式表</strong>」，我的理解是：<strong>各种样式叠加的表</strong>。</p>
+<p>一个网页，如果没有 CSS，就是穿着“国王的新衣”，在裸奔！CSS 的重要性不言而喻！</p>
+<p>作为 HTML 的衣服，CSS 为 HTML 元素提供了一种样式描述，定义其显示方式，TA 能够对网页中元素进行像素级精确控制。</p>
+<p>CSS 的历史不做过多赘述，先了解几种引入方式以及其区别。</p>
+<h2 id="外部样式">2、外部样式</h2>
+<p>外部样式是指单独建立一个扩展名为 <code>.css</code> 的样式表，在 head 标签中采用 link 方式引入，也可以使用 import 方式引入：</p>
+<pre><code><code>// link 引入
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/style.css&quot; /&gt; 
+// @import 引入
+&lt;style type=&quot;text/css&quot;&gt;
+  @import url(&quot;css/style.css&quot;);
+&lt;/style&gt;</code></pre>
+<p>引入外部样式的好处就是，一个样式表可以在多个页面中复用，墙裂建议使用 link 方式引入，import 新手慎用。</p>
+<h2 id="内嵌样式">3、内嵌样式</h2>
+<p>内嵌样式主要通过 <code>&lt;style&gt; 标签</code>在页面中编辑样式：</p>
+<pre><code><code>&lt;style&gt;
+  .title {
+      color: red      
+  }
+&lt;/style&gt;</code></pre>
+<p>该方法编写的样式仅在当前页面有效，无法用于其他页面，<code>&lt;style&gt;</code>标签可以放在任意位置，建议放在 head 中。</p>
+<h2 id="行内样式">4、行内样式</h2>
+<p>行内样式是在 HTML 页面中的某个元素上直接对其直接定义，以 p 元素为例：</p>
+<pre><code><code>&lt;p style=&quot;color: red&quot;&gt;&lt;/p&gt;</code></pre>
+<p>行内样式只对其所在的标签生效，实际上写页面时建议少用或者不用。</p>
+<p>引用样式最好是采用第一种 link 方式引入，<strong>分离 HTML 页面代码与 CSS 样式</strong>，方便项目的维护管理，以及提高 CSS 样式的复用性。</p>
+<p>其他两种方法少用或者不用，尽量降低页面的的复杂性。</p>
+<h2 id="css-选择器">5、CSS 选择器</h2>
+<p>HTML 页面中的元素样式大多是通过 CSS 选择器进行控制的。</p>
+<p>要想用 CSS 对 HTML 页面中的元素实现一对一，一对多或者多对一的控制，离不开 CSS 选择器。</p>
+<p>CSS 的选择器大概有这些：</p>
+<ul>
+<li>通用选择器</li>
+<li>标签选择器</li>
+<li>class 选择器（类选择器）</li>
+<li>id 选择器</li>
+<li>后代选择器</li>
+<li>子代选择器</li>
+<li>组合选择器</li>
+<li>相邻兄弟选择器</li>
+<li>伪类选择器</li>
+<li>媒体查询（姑且也算吧）</li>
+</ul>
+<p>还有一些可能漏掉了，欢迎留言补充，先复盘一些常见选择器。</p>
+<h4 id="通用选择器">5.1 通用选择器</h4>
+<p>通用选择器用 * 开头，后面直接跟上样式，作用于所有标签，表示通用定义。</p>
+<p>就好比定义所有正常人：一个头、两只手、两条腿。</p>
+<p>例：</p>
+<pre><code><code>* {
+   font-size: 18px;
+   color: red
+}</code></pre>
+<p>这里表示所有标签中的字体大小为 18px，颜色为红色。</p>
+<h4 id="标签选择器">5.2 标签选择器</h4>
+<p>标签选择器可以选中所有的同类标签元素，标签后面直接跟上样式。</p>
+<p>好比规定学生穿校服，不同工厂的工人有对应的工服。</p>
+<p>例：</p>
+<pre><code><code>p {
+    font-size: 16px;
+    color: blue
+}</code></pre>
+<p>这里表示所有 p 标签中的字体大小为 16px，颜色为蓝色。</p>
+<h4 id="class-选择器类选择器">5.3 class 选择器（类选择器）</h4>
+<p>class 选择器可以选中带有特定类名的标签进行样式定义，也就是一对多，书写时以 . 开头，跟上 class 名称，然后编写样式，在对应的标签中用 class=&quot;&quot; 引用。</p>
+<p>好比分配一个班级的班干部，给予他们同一类属性。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+.title{
+  background-color: red
+}
+// html 页面
+&lt;div class=&quot;title&quot;&gt;语文课代表&lt;/div&gt;
+&lt;div class=&quot;title&quot;&gt;数学课代表&lt;/div&gt;</code></pre>
+<p>这里就能把两个课代表的背景颜色都设置成红色，一对多设置。</p>
+<h4 id="id-选择器">5.4 id 选择器</h4>
+<p>id 选择器以 # 开头，后面跟上 id 名，然后书写样式。在对应的标签中使用 id=&quot;&quot; 引用，其 id 名具有唯一性。</p>
+<p>以一个学校为例，定义校长的属性，一个学校只有一个校长。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+#title{
+  background-color: black
+}
+// html 页面
+&lt;div id=&quot;title&quot;&gt;校长&lt;/div&gt;</code></pre>
+<p>这里是定义校长的背景颜色为黑色，虽然说 id 选择器具有唯一性，如果把几个元素都命名成相同的 id 名字，CSS 选择器还是会把被标记的元素都选中应用样式（和 class 选择器一样）。</p>
+<p>乍一看，id 选择器的唯一性似乎不存在。然而，在 javascript 中只会选择具有相同 id 名字元素中的第一个。所以，养成一个好习惯，同一 id 不要在同一页面中出现第二次。</p>
+<p><strong>注意，由于 CSS 的解释是自上而下的，对于一个元素的相同属性赋值，下面的属性描述会把上面的覆盖掉，因此在一定要注意属性的书写顺序。</strong></p>
+<h4 id="后代选择器">5.5 后代选择器</h4>
+<p>后代选择器也称为包含选择器，用来选择特定元素的后代，将父元素放在前面，子元素放在后面，中间加一个空格分开。</p>
+<p>这个应该比较好理解吧，打个比方，我是中国人，我所有的后代都留着中国人的血液。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+.china p {
+    background-color: yellow
+}
+// html 页面
+&lt;div class=&quot;china&quot;&gt;
+    &lt;p&gt;儿子&lt;/p&gt;
+    &lt;p&gt;女儿&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+<p>这里的儿子和女儿的背景颜色都会是黄色。</p>
+<p>后代选择器中的元素不限制两个，也可适用于多层后代关系，用多个空格加以分开最大嵌套层数不超过 256 层。</p>
+<h4 id="子代选择器">5.6 子代选择器</h4>
+<p>与后代选择器的不同的是，子代选择器仅是指 TA 的第一代，后代选择器通过空格来选择，子代选择器通过 &gt; 选择。</p>
+<p>好比我只给我的子女们发红衣服，其他后代，例如孙辈，曾孙辈都不发。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+div &gt; strong {
+  color:red
+}
+// html 页面
+&lt;div&gt;
+  &lt;strong&gt;儿子&lt;/strong&gt;
+  &lt;span&gt;
+    &lt;strong&gt;孙子&lt;/strong&gt;
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+<p>子女的字体颜色是红色的，而孙辈是默认的颜色。</p>
+<h4 id="组合选择器">5.7 组合选择器</h4>
+<p>对多个不同元素做相同的操作的情况下，可以共同使用同一样式代码，元素之间用英文逗号分隔，这就是组合选择器。</p>
+<p>好比给不同身份的人发一个“感动玖柒十大青年奖”，可以把他们全部叫到一起来颁奖。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+div, p, span, h1 {
+  color: red
+}
+// html 页面
+&lt;div&gt;小明&lt;/div&gt;
+&lt;p&gt;小红&lt;/p&gt;
+&lt;span&gt;小刚&lt;/span&gt;
+&lt;h1&gt;小利&lt;/h1&gt;</code></pre>
+<p>这里小明、小红、小刚和小利的颜色都是红色的，采用组合选择器最大的好处就是：简化 CSS 代码，提高了编码效率。</p>
+<h4 id="相邻兄弟选择器-通用兄弟选择器">5.8 相邻兄弟选择器 &amp; 通用兄弟选择器</h4>
+<p>相邻兄弟选择器还是挺好理解的，MDN 的介绍是：介于两个选择器之间，当第二个元素紧跟在第一个元素之后，并且两个元素都是属于同一个父元素的子元素，则第二个元素将被选中。</p>
+<p>好比皇帝说下一个生的是儿子就当太子，那就是以当前的最后一个子女为参照物，下一个儿子就是太子，如果先生了个女儿，则不算。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+div + p {
+  color: red
+}
+// html 页面
+&lt;div&gt;大儿子&lt;/div&gt;
+&lt;span&gt;二女儿&lt;/span&gt;
+&lt;p&gt;二儿子&lt;/p&gt;
+&lt;p&gt;三儿子&lt;/p&gt;</code></pre>
+<p>这里都是默认颜色，因为中间相隔了一个二女儿，所以二儿子不能当太子了。</p>
+<p><strong>相邻兄弟选择器</strong>总结起来就两个关键点：</p>
+<ul>
+<li>紧接在另一元素后的第一个</li>
+<li>二者有相同父元素</li>
+</ul>
+<p>通用兄弟选择器类似于相邻兄弟选择器，但肯定是不一样的，首先不同的是通用兄弟选择器是用 ~ 连接后面的元素。</p>
+<p>继续拿皇帝儿子举例，皇帝说大儿子之后所有的儿子都封王，那就是以大儿子为参照，之后所有的儿子就是王，如果生了个女儿，则略过。</p>
+<p>例：</p>
+<pre><code><code>// css 样式
+div ~ p {
+  color: red
+}
+// html 页面
+&lt;div&gt;大儿子&lt;/div&gt;
+&lt;span&gt;二女儿&lt;/span&gt;
+&lt;p&gt;二儿子&lt;/p&gt;
+&lt;p&gt;三儿子&lt;/p&gt;</code></pre>
+<p>这里都是你猜一下会是神马样子？</p>
+<h4 id="伪类选择器">5.9 伪类选择器</h4>
+<p>伪类选择器通常是用来描述元素在一些特定状态下的样式，最常见的就是用在 a 元素（超链接）中了，当然其他元素也可以，只不过相对来说少一些。</p>
+<p>就好比拿人来说，不开心的时候会皱眉，开心的时候会笑，发火的时候可能会摔东西，主要是对不同的状态定义。</p>
+<p>例：</p>
+<pre><code><code>// 没有被访问过a标签的样式
+a:link {
+  color: black
+}
+// 访问过后a标签的样式
+a:visited {
+  color: yellow
+}
+// 鼠标悬浮时a标签的样式
+a:hover {
+  color: red
+}
+// 鼠标摁住的时候a标签的样式
+a:active {
+  color: blue
+}</code></pre>
+<p>伪类选择器我觉得应该是最有趣的选择器了，试试就知道了。</p>
+<h4 id="媒体查询">5.10 媒体查询</h4>
+<p>媒体查询应该算是选择器吧，不管那么多我先把 TA 拉进来。</p>
+<p>TA 能在不同的条件下使用不同的样式，使页面在不同在设备下达到不同的渲染效果。</p>
+<p>好比一个人在不同的场景下做不同的事，为父亲的时候教育子女，为丈夫的时候保护妻子，为人子的时候照顾父母。</p>
+<p>例：</p>
+<pre><code><code>@media screen and (max-width: 300px) {
+    body {
+        background-color: red
+    }
+}</code></pre>
+<p>这里的样式表示如果页面宽度小于 300px 则修改背景颜色为红色，简单易理解吧。</p>
+<h2 id="最后">6、最后</h2>
+<p>CSS 的简单复盘就到这里了，所有的实例都没有用截图展示，还是希望各位能自己去试一试，看看效果，多敲才是正道。</p>
+<p>如果有一些地方写的不对，也欢迎指正，分享即学习。<br />
+<img src="./images/CSS 了解一下0.png" alt="file" /></p>
+<h4 id="公众号我是玖柒后首发分享即学习">公众号「我是玖柒后」首发，分享即学习！</h4>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

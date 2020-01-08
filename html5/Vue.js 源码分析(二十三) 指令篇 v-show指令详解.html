@@ -1,0 +1,236 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十三) 指令篇 v-show指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十三) 指令篇 v-show指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11157771.html</div><br>
+    <p>v-show的作用是将表达式值转换为布尔值，根据该布尔值的真假来显示/隐藏切换元素，它是通过切换元素的display这个css属性值来实现的，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="d"&gt;&lt;p v-show="isShow"&gt;Hello Vue!&lt;/p&gt;&lt;/div&gt; 
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span> Vue({el:'#d',data:{isShow:<span style="color: #0000ff;">true</span><span style="color: #000000;">}})
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>渲染结果为:</p>
+<p><img src="./images/Vue.js 源码分析(二十三) 指令篇 v-show指令详解0.png" alt="" /></p>
+<p>当我们在修改isShow为false时:</p>
+<p><img src="./images/Vue.js 源码分析(二十三) 指令篇 v-show指令详解1.png" alt="" /></p>
+<p>页面里的Hello Vue!就隐藏部件了，我们查看DOM结构如下:</p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(二十三) 指令篇 v-show指令详解2.png" alt="" /></p>
+<p>可以看到Vue是通过修改display这个CSS属性来隐藏元素的</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>在解析模板将DOM转换成AST对象的时候会执行processAttrs()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {                     <span style="color: #008000;">//</span><span style="color: #008000;">解析Vue的属性</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList; 
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {             <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性 </span>
+    name = rawName =<span style="color: #000000;"> list[i].name;
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span> (dirRE.test(name)) {                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind                          //bindRD等于/^:|^v-bind:/ ，即该属性是v-bind指令时</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-bind的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-on的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives</span>
+        name = name.replace(dirRE, '');                         <span style="color: #008000;">//</span><span style="color: #008000;">去掉指令前缀，比如v-show执行后等于show</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> parse arg</span>
+        <span style="color: #0000ff;">var</span> argMatch =<span style="color: #000000;"> name.match(argRE);
+        </span><span style="color: #0000ff;">var</span> arg = argMatch &amp;&amp; argMatch[1<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (arg) {
+          name </span>= name.slice(0, -(arg.length + 1<span style="color: #000000;">));
+        }
+        addDirective(el, name, rawName, value, arg, modifiers); </span><span style="color: #ff0000;">//执行addDirective给el增加一个directives属性</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; name === 'model'<span style="color: #000000;">) {
+          checkForAliasModel(el, value);
+        }
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">非Vue指令的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+  }
+}</span></pre>
+</div>
+<p>addDirective会给AST对象上增加一个directives属性保存指令信息，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> addDirective (                         <span style="color: #008000;">//</span><span style="color: #008000;">第6561行 指令相关，给el这个AST对象增加一个directives属性，值为该指令的信息</span>
+<span style="color: #000000;">  el,
+  name,
+  rawName,
+  value,
+  arg,
+  modifiers
+) {
+  (el.directives </span>|| (el.directives =<span style="color: #000000;"> [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>例子里的p元素执行到这里时对应的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十三) 指令篇 v-show指令详解3.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候，会执行genDirectives()函数，将AST转换成一个render函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"d"}},[_c('p',{<span style="color: #ff0000;">directives:[{name:"show",rawName:"v-show",value:(isShow),expression:"isShow"}]</span>},[_v("Hello Vue!")])])}</pre>
+</div>
+<p>最后等渲染完成后会执行directives模块的create钩子函数,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> directives = {                 <span style="color: #008000;">//</span><span style="color: #008000;">第6173行 directives模块 </span>
+  create: updateDirectives,             <span style="color: #008000;">//</span><span style="color: #008000;">创建DOM后的钩子</span>
+<span style="color: #000000;">  update: updateDirectives,
+  destroy: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> unbindDirectives (vnode) {
+    updateDirectives(vnode, emptyNode);
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> updateDirectives (oldVnode, vnode) {         <span style="color: #008000;">//</span><span style="color: #008000;">第6181行   oldVnode:旧的Vnode，更新时才有 vnode:新的VNode</span>
+  <span style="color: #0000ff;">if</span> (oldVnode.data.directives ||<span style="color: #000000;"> vnode.data.directives) {
+    _update(oldVnode, vnode);
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> _update (oldVnode, vnode) {                 <span style="color: #008000;">//</span><span style="color: #008000;">第6187行 初始化/更新指令</span>
+  <span style="color: #0000ff;">var</span> isCreate = oldVnode === emptyNode;                                                     <span style="color: #008000;">//</span><span style="color: #008000;">是否为初始化</span>
+  <span style="color: #0000ff;">var</span> isDestroy = vnode ===<span style="color: #000000;"> emptyNode;
+  </span><span style="color: #0000ff;">var</span> oldDirs = normalizeDirectives$1<span style="color: #000000;">(oldVnode.data.directives, oldVnode.context);          
+  </span><span style="color: #0000ff;">var</span> newDirs = normalizeDirectives$1(vnode.data.directives, vnode.context);                 <span style="color: #008000;">//</span><span style="color: #008000;">调用normalizeDirectives$1()函数规范化参数1,返回格式:{v-show:{name: "show", rawName: "v-show", value: true, expression: "ok", modifiers: {&hellip;}, &hellip;}}</span>
+     
+  <span style="color: #0000ff;">var</span> dirsWithInsert =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> dirsWithPostpatch =<span style="color: #000000;"> [];
+
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> key, oldDir, dir;
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span> newDirs) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">遍历newDirs</span>
+    oldDir = oldDirs[key];                                         <span style="color: #008000;">//</span><span style="color: #008000;">oldVnode上的key指令信息</span>
+    dir = newDirs[key];                                            <span style="color: #008000;">//</span><span style="color: #008000;">vnode上的key指令信息</span>
+    <span style="color: #0000ff;">if</span> (!oldDir) {                                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果oldDir不存在，即是新增指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> new directive, bind</span>
+      callHook$1(dir, 'bind', vnode, oldVnode);                     <span style="color: #008000;">//</span><span style="color: #008000;">调用callHook$1()函数，参数2为bind，即执行v-show指令的bind函数</span>
+      <span style="color: #0000ff;">if</span> (dir.def &amp;&amp;<span style="color: #000000;"> dir.def.inserted) {
+        dirsWithInsert.push(dir);
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> existing directive, update</span>
+      dir.oldValue =<span style="color: #000000;"> oldDir.value;
+      callHook$</span>1(dir, 'update'<span style="color: #000000;">, vnode, oldVnode);
+      </span><span style="color: #0000ff;">if</span> (dir.def &amp;&amp;<span style="color: #000000;"> dir.def.componentUpdated) {
+        dirsWithPostpatch.push(dir);
+      }
+    }
+  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">以下略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>&nbsp; normalizeDirectives$1会调用resolveAsset()函数从Vue.options.directives里获取v-show指令的信息如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> normalizeDirectives$1 (         <span style="color: #008000;">//</span><span style="color: #008000;">第6249行      规范化dirs  </span>
+<span style="color: #000000;">  dirs,
+  vm
+) {
+  </span><span style="color: #0000ff;">var</span> res = Object.create(<span style="color: #0000ff;">null</span>);             <span style="color: #008000;">//</span><span style="color: #008000;">存储最后的结果</span>
+  <span style="color: #0000ff;">if</span> (!dirs) {                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果用户没有定义指令，则直接返回空对象</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+  }
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, dir;
+  </span><span style="color: #0000ff;">for</span> (i = 0; i &lt; dirs.length; i++) {             <span style="color: #008000;">//</span><span style="color: #008000;">/遍历dirs</span>
+    dir =<span style="color: #000000;"> dirs[i];
+    </span><span style="color: #0000ff;">if</span> (!dir.modifiers) {                                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果没有修饰符，则重置dir.modifiers为空对象</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+      dir.modifiers =<span style="color: #000000;"> emptyModifiers;
+    }           
+    res[getRawDirName(dir)] </span>= dir;                                             <span style="color: #008000;">//</span><span style="color: #008000;">将dir保存到res里面，键名为原始的指令名</span>
+    dir.def = resolveAsset(vm.$options, 'directives', dir.name, <span style="color: #0000ff;">true</span>);         <span style="color: #008000;">//</span><span style="color: #008000;">调用resolveAsset获取该指令的信息，是一个对象，保存到res的def属性里面</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+  <span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+}</span></pre>
+</div>
+<p><span style="color: #ff0000;">resolveAsset是获取资源用的，当我们定义了组件、过滤器、指令时，都通过该函数获取对应的信息，之前组件和过滤里介绍了，这里不说了</span></p>
+<p>回到_update函数，最后调用callHook$1()函数，参数2为bind,该函数如下:</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> callHook$1 (dir, hook, vnode, oldVnode, isDestroy) {         <span style="color: #008000;">//</span><span style="color: #008000;">第6276行 执行指令的某个回调函数 dir:指令信息，</span>
+  <span style="color: #0000ff;">var</span> fn = dir.def &amp;&amp; dir.def[hook];                                     <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取钩子函数</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (fn) {
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+      fn(vnode.elm, dir, vnode, oldVnode, isDestroy);                         </span><span style="color: #008000;">//</span><span style="color: #ff0000;">执行钩子函数，参数依次为绑定的元素、dir对象、新的VNode，老的VNode</span>
+    } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+      handleError(e, vnode.context, (</span>"directive " + (dir.name) + " " + hook + " hook"<span style="color: #000000;">));
+    }
+  }
+}</span></pre>
+</div>
+<p>v-show指令的信息如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> show = {                 <span style="color: #008000;">//</span><span style="color: #008000;">第8082行 v-show指令的信息</span>
+  bind: <span style="color: #0000ff;">function</span> bind (el, ref, vnode) {         <span style="color: #008000;">//</span><span style="color: #008000;">初次绑定时执行</span>
+    <span style="color: #0000ff;">var</span> value =<span style="color: #000000;"> ref.value;
+
+    vnode </span>=<span style="color: #000000;"> locateNode(vnode);
+    </span><span style="color: #0000ff;">var</span> transition$$1 = vnode.data &amp;&amp; vnode.data.transition;         <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取transition，如果v-show绑定的标签外层套了一个transition则会把信息保存到该对象里 <span style="color: #ff0000;">这是transition的组件分支，可先忽略</span> </span>
+    <span style="color: #0000ff;">var</span> originalDisplay = el.__vOriginalDisplay =                      <span style="color: #008000;">//</span><span style="color: #008000;">保存最初的display属性</span>
+      el.style.display === 'none' ? ''<span style="color: #000000;"> : el.style.display;
+    </span><span style="color: #0000ff;">if</span> (value &amp;&amp; transition$$1) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果transition$$1存在的话</span>
+      vnode.data.show = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      enter(vnode, </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        el.style.display </span>=<span style="color: #000000;"> originalDisplay;
+      });
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      el.style.display </span>= value ? originalDisplay : 'none';             <span style="color: #ff0000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">否则</span><span style="color: #ff0000;">直接根据value的值是否可以转换为1来设置el.style.display属性</span></span>
+<span style="color: #000000;">    }
+  },
+
+  update: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> update (el, ref, vnode) {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">更新时的逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  },
+
+  unbind: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> unbind (
+    el,
+    binding,
+    vnode,
+    oldVnode,
+    isDestroy
+  ) {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">卸载时的逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  }
+}</span></pre>
+</div>
+<p>v-show的流程就是这样的，<span style="color: #ff0000;">注意,v-show不支持&lt;template&gt;元素，也不支持v-else。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

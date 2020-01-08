@@ -1,0 +1,170 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修web前端面试经常遇得到的题型' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>web前端面试经常遇得到的题型</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11898250.html</div><br>
+    <p><strong><span style="font-size: 16px;">1.position的值， relative和absolute分别是相对于谁进行定位的？</span></strong></p>
+<p>&sect; absolute :生成绝对定位的元素， 相对于最近一级的 定位不是 static 的父元素来进行定位。</p>
+<p>&sect; fixed （老IE不支持）生成绝对定位的元素，通常相对于浏览器窗口或 frame 进行定位。</p>
+<p>&sect; relative 生成相对定位的元素，相对于其在普通流中的位置进行定位。</p>
+<p>&sect; static 默认值。没有定位，元素出现在正常的流中</p>
+<p>&sect; sticky 生成粘性定位的元素，容器的位置根据正常文档流计算得出</p>
+<p><strong><span style="font-size: 16px;">2.如何解决跨域问题</span></strong></p>
+<p>JSONP：</p>
+<p>原理是：动态插入script标签，通过script标签引入一个js文件，这个js文件载入成功后会执行我们在url参数中指定的函数，并且会把我们需要的json数据作为参数传入。</p>
+<p>由于同源策略的限制，XmlHttpRequest只允许请求当前源（域名、协议、端口）的资源，为了实现跨域请求，可以通过script标签实现跨域请求，然后在服务端输出JSON数据并执行回调函数，从而解决了跨域的数据请求。</p>
+<p>优点是兼容性好，简单易用，支持浏览器与服务器双向通信。缺点是只支持GET请求。</p>
+<p>JSONP：json+padding（内填充），顾名思义，就是把JSON填充到一个盒子里</p>
+<p>&lt;script&gt;</p>
+<p>functioncreateJs(sUrl){</p>
+<p>var oScript =document.createElement('script');</p>
+<p>oScript.type = 'text/javascript';</p>
+<p>oScript.src= sUrl;</p>
+<p>document.getElementsByTagName('head')[0].appendChild(oScript);</p>
+<p>}</p>
+<p>createJs('jsonp.js');</p>
+<p>box({</p>
+<p>'name': 'test'</p>
+<p>});</p>
+<p>functionbox(json){</p>
+<p>alert(json.name);</p>
+<p>}</p>
+<p>&lt;/script&gt;</p>
+<p>CORS：</p>
+<p>服务器端对于CORS的支持，主要就是通过设置Access-Control-Allow-Origin来进行的。如果浏览器检测到相应的设置，就可以允许Ajax进行跨域的访问。</p>
+<p>通过修改document.domain来跨子域</p>
+<p>将子域和主域的document.domain设为同一个主域.前提条件：这两个域名必须属于同一个基础域名!而且所用的协议，端口都要一致，否则无法利用document.domain进行跨域</p>
+<p>主域相同的使用document.domain</p>
+<p>使用window.name来进行跨域</p>
+<p>window对象有个name属性，该属性有个特征：即在一个窗口(window)的生命周期内,窗口载入的所有的页面都是共享一个window.name的，每个页面对window.name都有读写的权限，window.name是持久存在一个窗口载入过的所有页面中的</p>
+<p>使用<a class=" wrap external" href="https://link.zhihu.com/?target=http%3A//lib.csdn.net/base/html5" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">HTML5</a>中新引进的window.postMessage方法来跨域传送数据</p>
+<p>还有flash、在服务器上设置代理页面等跨域方式。个人认为window.name的方法既不复杂，也能兼容到几乎所有浏览器，这真是极好的一种跨域方法。</p>
+<p><strong><span style="font-size: 16px;">3.谈谈你对webpack的看法</span></strong></p>
+<p>WebPack 是一个模块打包工具，你可以使用WebPack管理你的模块依赖，并编绎输出模块们所需的静态文件。它能够很好地管理、打包Web开发中所用到的HTML、<a class=" wrap external" href="https://link.zhihu.com/?target=http%3A//lib.csdn.net/base/javascript" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">JavaScript</a>、CSS以及各种静态文件（图片、字体等），让开发过程更加高效。对于不同类型的资源，webpack有对应的模块加载器。webpack模块打包器会分析模块间的依赖关系，最后 生成了优化且合并后的静态资源。</p>
+<p>webpack的两大特色：</p>
+<p>1.code splitting（可以自动完成）</p>
+<p>2.loader 可以处理各种类型的静态文件，并且支持串联操作</p>
+<p>webpack 是以commonJS的形式来书写脚本滴，但对 AMD/CMD 的支持也很全面，方便旧项目进行代码迁移。</p>
+<p>webpack具有requireJs和browserify的功能，但仍有很多自己的新特性：</p>
+<p>1. 对 CommonJS 、 AMD、ES6的语法做了兼容</p>
+<p>2. 对js、css、图片等资源文件都支持打包</p>
+<p>3. 串联式模块加载器以及插件机制，让其具有更好的灵活性和扩展性，例如提供对CoffeeScript、ES6的支持</p>
+<p>4. 有独立的配置文件webpack.config.js</p>
+<p>5. 可以将代码切割成不同的chunk，实现按需加载，降低了初始化时间</p>
+<p><strong><span style="font-size: 16px;">4.XSS与CSRF有什么区别吗？</span></strong></p>
+<p>XSS是获取信息，不需要提前知道其他用户页面的代码和数据包。CSRF是代替用户完成指定的动作，需要知道其他用户页面的代码和数据包。</p>
+<p>要完成一次CSRF攻击，受害者必须依次完成两个步骤：</p>
+<p>登录受信任网站A，并在本地生成Cookie。</p>
+<p>在不登出A的情况下，访问危险网站B。</p>
+<p>CSRF的防御</p>
+<p>&sect; 服务端的CSRF方式方法很多样，但总的思想都是一致的，就是在客户端页面增加伪随机数。</p>
+<p>&sect; 通过验证码的方法</p>
+<p>. 支持 SourceUrls 和SourceMaps，易于调试</p>
+<p>. 具有强大的Plugin接口，大多是内部插件，使用起来比较灵活</p>
+<p>.webpack 使用异步 IO 并具有多级缓存。这使得 webpack 很快且在增量编译上更加快</p>
+<p><strong><span style="font-size: 16px;">5.谈谈性能优化问题</span></strong></p>
+<p>代码层面：避免使用css表达式，避免使用高级选择器，通配选择器。</p>
+<p>缓存利用：缓存Ajax，使用CDN，使用外部js和css文件以便缓存，添加Expires头，服务端配置Etag，减少DNS查找等</p>
+<p>请求数量：合并样式和脚本，使用css图片精灵，初始首屏之外的图片资源按需加载，静态资源延迟加载。</p>
+<p>请求带宽：压缩文件，开启GZIP，</p>
+<p>代码层面的优化</p>
+<p>用hash-table来优化查找</p>
+<p>少用全局变量</p>
+<p>用innerHTML代替DOM操作，减少DOM操作次数，优化javascript性能</p>
+<p>用setTimeout来避免页面失去响应</p>
+<p>缓存DOM节点查找的结果</p>
+<p>避免使用CSS Expression</p>
+<p>避免全局查询</p>
+<p>避免使用with(with会创建自己的作用域，会增加作用域链长度)</p>
+<p>多个变量声明合并</p>
+<p>避免图片和iFrame等的空Src。空Src会重新加载当前页面，影响速度和效率</p>
+<p>尽量避免写在HTML标签中写Style属性</p>
+<p>移动端性能优化</p>
+<p>尽量使用css3动画，开启硬件加速。</p>
+<p>适当使用touch事件代替click事件。</p>
+<p>避免使用css3渐变阴影效果。</p>
+<p>可以用transform: translateZ(0)来开启硬件加速。</p>
+<p>不滥用Float。Float在渲染时计算量比较大，尽量减少使用</p>
+<p>不滥用Web字体。Web字体需要下载，解析，重绘当前页面，尽量减少使用。</p>
+<p>合理使用requestAnimationFrame动画代替setTimeout</p>
+<p>CSS中的属性（CSS3 transitions、CSS3 3D transforms、Opacity、Canvas、WebGL、Video）会触发GPU渲染，请合理使用。过渡使用会引发手机过耗电增加</p>
+<p>PC端的在移动端同样适用</p>
+<p><strong><span style="font-size: 16px;">6.js继承方式及其优缺点</span></strong></p>
+<p>原型链继承的缺点</p>
+<p>一是字面量重写原型会中断关系，使用引用类型的原型，并且子类型还无法给超类型传递参数。</p>
+<p>借用构造函数（类式继承）</p>
+<p>借用构造函数虽然解决了刚才两种问题，但没有原型，则复用无从谈起。所以我们需要原型链+借用构造函数的模式，这种模式称为组合继承</p>
+<p>组合式继承</p>
+<p>组合式继承是比较常用的一种继承方法，其背后的思路是 使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。这样，既通过在原型上定义方法实现了函数复用，又保证每个实例都有它自己的属性。</p>
+<p><strong><span style="font-size: 16px;">7.请你谈谈Cookie的弊端</span></strong></p>
+<p>cookie虽然在持久保存客户端数据提供了方便，分担了服务器存储的负担，但还是有很多局限性的。</p>
+<p>第一：每个特定的域名下最多生成20个cookie</p>
+<p>1.IE6或更低版本最多20个cookie</p>
+<p>2.IE7和之后的版本最后可以有50个cookie。</p>
+<p>3.Firefox最多50个cookie</p>
+<p>4.chrome和Safari没有做硬性限制</p>
+<p>IE和Opera 会清理近期最少使用的cookie，Firefox会随机清理cookie。</p>
+<p>cookie的最大大约为4096字节，为了兼容性，一般不能超过4095字节。</p>
+<p>IE 提供了一种存储可以持久化用户数据，叫做userdata，从IE5.0就开始支持。每个数据最多128K，每个域名下最多1M。这个持久化数据放在缓存中，如果缓存没有清理，那么会一直存在。</p>
+<p>优点：极高的扩展性和可用性</p>
+<p>1.通过良好的编程，控制保存在cookie中的session对象的大小。</p>
+<p>2.通过加密和安全传输技术（SSL），减少cookie被破解的可能性。</p>
+<p>3.只在cookie中存放不敏感数据，即使被盗也不会有重大损失。</p>
+<p>4.控制cookie的生命期，使之不会永远有效。偷盗者很可能拿到一个过期的cookie。</p>
+<p>缺点：</p>
+<p>1.`Cookie`数量和长度的限制。每个domain最多只能有20条cookie，每个cookie长度不能超过4KB，否则会被截掉.</p>
+<p>2.安全性问题。如果cookie被人拦截了，那人就可以取得所有的session信息。即使加密也与事无补，因为拦截者并不需要知道cookie的意义，他只要原样转发cookie就可以达到目的了。</p>
+<p>3.有些状态不可能保存在客户端。例如，为了防止重复提交表单，我们需要在服务器端保存一个计数器。如果我们把这个计数器保存在客户端，那么它起不到任何作用。</p>
+<p>浏览器本地存储</p>
+<p>在较高版本的浏览器中，js提供了sessionStorage和globalStorage。在HTML5中提供了localStorage来取代globalStorage。</p>
+<p>html5中的Web Storage包括了两种存储方式：sessionStorage和localStorage。</p>
+<p>sessionStorage用于本地存储一个会话（session）中的数据，这些数据只有在同一个会话中的页面才能访问并且当会话结束后数据也随之销毁。因此sessionStorage不是一种持久化的本地存储，仅仅是会话级别的存储。</p>
+<p>而localStorage用于持久化的本地存储，除非主动删除数据，否则数据是永远不会过期的。</p>
+<p><strong><span style="font-size: 16px;">8.web storage和cookie的区别</span></strong></p>
+<p>Web Storage的概念和cookie相似，区别是它是为了更大容量存储设计的。Cookie的大小是受限的，并且每次你请求一个新的页面的时候Cookie都会被发送过去，这样无形中浪费了带宽，另外cookie还需要指定作用域，不可以跨域调用。</p>
+<p>除此之外，Web Storage拥有setItem,getItem,removeItem,clear等方法，不像cookie需要<a class=" wrap external" href="https://link.zhihu.com/?target=http%3A//lib.csdn.net/base/javascript" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">前端开发</a>者自己封装setCookie，getCookie。</p>
+<p>但是cookie也是不可以或缺的：cookie的作用是与服务器进行交互，作为HTTP规范的一部分而存在 ，而Web Storage仅仅是为了在本地&ldquo;存储&rdquo;数据而生</p>
+<p>浏览器的支持除了IE７及以下不支持外，其他标准浏览器都完全支持(ie及FF需在web服务器里运行)，值得一提的是IE总是办好事，例如IE7、IE6中的userData其实就是javascript本地存储的解决方案。通过简单的代码封装可以统一到所有的浏览器都支持web storage。</p>
+<p>localStorage和sessionStorage都具有相同的操作方法，例如setItem、getItem和removeItem等</p>
+<p>9.<strong><span style="font-size: 16px;">cookie&nbsp;和session&nbsp;的区别：</span></strong></p>
+<p>1、cookie数据存放在客户的浏览器上，session数据放在服务器上。</p>
+<p>2、cookie不是很安全，别人可以分析存放在本地的COOKIE并进行COOKIE欺骗</p>
+<p>考虑到安全应当使用session。</p>
+<p>3、session会在一定时间内保存在服务器上。当访问增多，会比较占用你服务器的性能</p>
+<p>考虑到减轻服务器性能方面，应当使用COOKIE。</p>
+<p>4、单个cookie保存的数据不能超过4K，很多浏览器都限制一个站点最多保存20个cookie。</p>
+<p>5、所以个人建议：</p>
+<p>将登陆信息等重要信息存放为SESSION</p>
+<p>其他信息如果需要保留，可以放在COOKIE中</p>
+<p>display:none和visibility:hidden的区别？</p>
+<p>display:none 隐藏对应的元素，在文档布局中不再给它分配空间，它各边的元素会合拢，就当他从来不存在。</p>
+<p>visibility:hidden 隐藏对应的元素，但是在文档布局中仍保留原来的空间。</p>
+<p><span style="font-size: 16px;"><strong>10.CSS中link 和@import的区别是？</strong></span></p>
+<p>(1) link属于HTML标签，而@import是CSS提供的;</p>
+<p>(2) 页面被加载的时，link会同时被加载，而@import被引用的CSS会等到引用它的CSS文件被加载完再加载;</p>
+<p>(3) import只在IE5以上才能识别，而link是HTML标签，无兼容问题;</p>
+<p>(4) link方式的样式的权重 高于@import的权重.</p>
+<p>position:absolute和float属性的异同</p>
+<p>&sect; 共同点：对内联元素设置float和absolute属性，可以让元素脱离文档流，并且可以设置其宽高。</p>
+<p>&sect; 不同点：float仍会占据位置，absolute会覆盖文档流中的其他元素。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;本人自学了一段时间整理了一些资料和视频，刚创建了一个交流群907694362，有需要的可以进群一起学习交流互相帮助，祝各位在学前端的道路上一帆风顺！！！</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

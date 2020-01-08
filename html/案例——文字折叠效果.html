@@ -1,0 +1,186 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修案例——文字折叠效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>案例——文字折叠效果</center></div><div class='banquan'>原文出处:本文由博客园博主小咸鱼|大梦想提供。<br/>
+原文连接:https://www.cnblogs.com/SSPOFA/p/11834743.html</div><br>
+    <h3 id="文字折叠效果">文字折叠效果</h3>
+<ol>
+<li>效果展示</li>
+</ol>
+<p><img src="./images/案例——文字折叠效果0.png" /></p>
+<ol>
+<li><p>实现过程</p>
+<ul>
+<li><pre><code><code>       &lt;div id=&quot;char1&quot;&gt;
+           &lt;span class=&quot;my-span &quot;&gt;H&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;e&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;o&lt;/span&gt;&amp;nbsp;
+
+           &lt;span class=&quot;my-span&quot;&gt;W&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;o&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;r&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;d&lt;/span&gt;
+       &lt;/div&gt;</code></pre>
+<ul>
+<li>填充内容</li>
+</ul></li>
+<li><p>CSS布局</p>
+<pre class="css"><code>*{
+    margin：0px；
+    padding：0px;
+}
+body{
+    background-color:aquamarine;
+    width:100%;
+    height:100vh;
+}</code></pre>
+<p><img src="./images/案例——文字折叠效果1.png" /></p>
+<p>height:100vh;——vh作用：将视口平分为100份，100vh就是占满屏幕</p></li>
+<li><pre class="css"><code>#char1{
+    width：100px；
+    height:100px;
+    background-color:red;
+}</code></pre>
+<p><img src="./images/案例——文字折叠效果2.png" /></p></li>
+<li><p>给body标签加一个弹性盒子模型，#char1外边距auto，让文字在视口的中间</p></li>
+<li><pre class="css"><code>body{
+
+    background-color:aquamarine;
+    width:100%;
+    height:100vh;
+    dispaly：flex：
+}
+#char1{
+    width：100px；
+    height:100px;
+    background-color:red;
+    margin：auto；
+}</code></pre></li>
+<li><p>【注意】</p>
+<ul>
+<li>弹性盒模型，必须指定高度，利用弹性盒模型，是div在视口的正中间</li>
+</ul></li>
+<li><p><img src="./images/案例——文字折叠效果3.png" /></p></li>
+<li><p>利用border-radius使盒子倒角</p></li>
+<li><pre class="css"><code>#char1{
+    border-radius：80px；
+}</code></pre></li>
+<li><p><img src="./images/案例——文字折叠效果4.png" /></p></li>
+<li><p>设置span样式</p></li>
+<li><pre class="css"><code>.my-span{
+   color: white;
+   font-size: 30px;
+   line-height: 6.25rem;
+   display: inline-block;
+   /*添加样式数值在变幻时的过渡效果*/
+   transition: 1s;
+}</code></pre></li>
+<li><p>display: inline-block;设置成为行内块元素</p></li>
+<li><p>transition: 1s;添加样式数值在变幻时的过渡效果</p></li>
+<li><p>设置隐藏文字</p></li>
+<li><pre class="css"><code>.my-hide{
+    opacity:0px;
+    width:0px;
+}</code></pre></li>
+<li><p>利用伪类选择器在鼠标经过时显示文字</p></li>
+<li><pre class="css"><code>#char1:hover&gt;span.my-hide{
+   opacity: 1;
+   /* width:auto; */
+   width:16px;/*当想要过度显示span时，不要使用width：auto；要是用确定数值的方式*/
+}</code></pre></li>
+<li><p><img src="./images/案例——文字折叠效果5.png" /></p>
+<ul>
+<li>上图为width：auto；时的效果</li>
+</ul></li>
+</ul></li>
+<li><p>完整代码</p>
+<ul>
+<li><p>html代码</p></li>
+<li><pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+   &lt;head&gt;
+       &lt;meta charset=&quot;utf-8&quot;&gt;
+       &lt;title&gt;文字折叠&lt;/title&gt;
+       &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;css/CharStyle.css&quot; /&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+       &lt;div id=&quot;char1&quot;&gt;
+           &lt;span class=&quot;my-span &quot;&gt;H&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;e&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;o&lt;/span&gt;&amp;nbsp;
+
+           &lt;span class=&quot;my-span&quot;&gt;W&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;o&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;r&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;l&lt;/span&gt;
+           &lt;span class=&quot;my-span my-hide&quot;&gt;d&lt;/span&gt;
+       &lt;/div&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre></li>
+<li><p>css代码</p></li>
+<li><pre class="css"><code>* {
+   margin: 0px;
+   padding: 0px;
+}
+
+body {
+   background-color: aquamarine;
+   width: 100%;
+   height: 100vh;/* vh:将视口平分为100份，100vh就占满视口*/
+   display: flex;/*弹性盒模型，必须指定高度，利用弹性盒模型，是div在视口的正中间 */
+}
+ #char1 {
+   /*width: 100px;*/
+   height:100px;
+   background-color: red;
+   margin: auto;
+   border-radius: 95px;
+   padding: 0 50px;
+}
+/*当鼠标悬浮的时候，显示隐藏的审判标签*/
+#char1:hover&gt;span.my-hide{
+   opacity: 1;
+   /* width:auto; */
+   width :16px;当想要过度显示span时，不要使用width：auto；要是用确定数值的方式
+}
+.my-span{
+   color: white;
+   font-size: 30px;
+   line-height: 6.25rem;
+   display: inline-block;
+   /* 添加样式数值在变幻时的过渡效果 */
+   transition: 1s;
+}
+/* 隐藏字母的样式 */
+.my-hide{
+   opacity: 0;
+   width:0px;
+}</code></pre></li>
+</ul></li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

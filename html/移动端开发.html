@@ -1,0 +1,91 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修移动端开发' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>移动端开发</center></div><div class='banquan'>原文出处:本文由博客园博主蜀风古韵提供。<br/>
+原文连接:https://www.cnblogs.com/html-he-css/p/11065724.html</div><br>
+    <div>1.移动端视口问题</div>
+<div>视口是指浏览器的可视区域，移动端的视口到底是多宽呢？</div>
+<div>现在市面上的大部分手机，比如iphone X，它的默认视口宽度为980px，而一个iphone X的屏幕宽度仅仅为375px。看到问题了吗？一个宽度只有375像素的手机，却能够显示宽度为980像素的网页，自然而然，网页会被缩小。</div>
+<div>（注：实际上，这里说的375像素不是真实的物理像素，至于这个375像素是怎么来的，以及为什么大部分移动端的默认视口宽度是980，这就是另一个更加复杂的话题了，在此我们先不做讨论。）</div>
+<div>我们可以使用谷歌浏览器的移动端调试工具，来访问百度的搜索结果，可以看到网页明显被缩小了，而且页面宽度定格在980px（不信的话大家可以试试）。</div>
+<div>（这种情况我也就不给大家演示了，这明显是一个显而易见的道理，比如你在pc端的网页放在手机上能一样吗？）</div>
+<div>&nbsp;</div>
+<div>而且，不同手机的实际宽度是不一样的。</div>
+<div>好在HTML给我们提供了一个关键字device-width ，该关键是读取当前移动设备的宽度。</div>
+<div>因此，我们只需要使用下面的代码，即可让所有移动设备的视口宽度和其自身的宽度相等。</div>
+<div>&lt; meta name="viewport" content="width=device-width"&gt;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>2.移动端误触解决办法</div>
+<div>&lt; meta name="viewport" content="width=device-width, initial-scale=1.0, min</div>
+<div>imum-scale=1.0, maximum-scale=1.0, user-scalable=0"&gt;</div>
+<div>解析：</div>
+<div>initial-scale=1.0 ：初始缩放比例为1.0（原始大小），这句代码的目的还不是放置用户缩放的</div>
+<div>minimum-scale=1.0 ：网页最小的缩小比例为1.0（原始大小），设置这句代码的目的是为了放置某些程序（比如JS）无意中修改了网页的缩小比例</div>
+<div>maximum-scale=1.0 ：网页最大的放大比例为1.0（原始大小），设置这句代码的目的是为了放置某些程序（比如JS）无意中修改了网页的放大比例</div>
+<div>user-scalable=0 ：这句代码才是不允许用户对网页进行缩放</div>
+<div>其实这就是禁止缩放，在手机端写出的页面将会无法整体左右滑动（当然，想要内部滑动可以自己设置啊），正常情况下，我们都会应用到上面的那一串代码（在这里说个题外话，我这两天做项目就有一次忘记添加这段代码，结果找半天找不出来原因，后来一问我的授课老师才发现原因（笑哭））。</div>
+<div>&nbsp;</div>
+<div>3.移动端尺寸</div>
+<div>是同一个网页在不同尺寸手机中的效果。仔细观察，你会发现，网页中的很多元素，随着视口的宽度变大，尺寸也会随之变大，无论是字体、高度、间隙都有这样的特点（这当然不会是响应式布局啦，毕竟响应式布局那么麻烦，脑子有坑才会一点一点的去调吧）。</div>
+<div>这样一来，就要求我们在开发移动端的页面时，当遇到字体大小、宽高、margin、padding等尺寸类的属性时，不能设置固定的像素值。</div>
+<div>注：border边框大小除外</div>
+<div>&nbsp;</div>
+<div>（既然有问题，怎么会没有解决办法呢？我已经给大家写好啦，感谢我吧！）</div>
+<div>解决方法：</div>
+<div>写一段JS代码，应用到网页</div>
+<div>!(function(win, doc) {</div>
+<div>function setFontSize() {</div>
+<div>var winWidth = window.innerWidth;</div>
+<div>doc.documentElement.style.fontSize = (winWidth / 设计稿宽度) * 比例</div>
+<div>+ 'px';}</div>
+<div>var evt = 'onorientationchange' in win ? 'orientationchange' : 'resize';</div>
+<div>var timer = null;</div>
+<div>win.addEventListener(evt, function() {clearTimeout(timer);</div>
+<div>timer = setTimeout(setFontSize, 300);}, false);</div>
+<div>win.addEventListener("pageshow", function(e) {if (e.persisted) {</div>
+<div>clearTimeout(timer);timer = setTimeout(setFontSize, 300);</div>
+<div>}</div>
+<div>}, false);</div>
+<div>setFontSize();</div>
+<div>}(window, document));</div>
+<div>注：将上述代码中的 设计稿宽度 替换为设计稿的实际宽度，比如1080（不要加单位px）</div>
+<div>注2：将上述代码中的 比例 替换为一个合适的值，比如100（推荐而已，你也可以设置为其他的数值）</div>
+<div>替换之后，代码格式自然跟着改变：</div>
+<div><img src="./images/移动端开发0.png" alt="" />
+<p>&nbsp;</p>
+</div>
+<div>这段代码始终在监视视口宽度变化，始终保证：</div>
+<div>根元素html的字体大小 = (视口宽度 / 1080) * 100【呐呐，就是改这个乘号后面的数值，看到了吗？】</div>
+<div>&nbsp;</div>
+<div>4.rem</div>
+<div>rem单位是相对于根元素html字体大小的（如果根元素没有设置字体大小，则相对于基准字号）。而现在，根元素的字体大小，正好反映了视口的宽度。</div>
+<div>于是，我们只需要将各种尺寸的值，使用rem作为单位，就可以适应视口宽度的变化了</div>
+<div>rem值 = 设计稿中的尺寸 / 100（重点！！！这个100就是相对于上面的*100。）</div>
+<div>比如，设计稿中某个元素的宽度为100像素，那么应该设置它的宽度为 1rem ，这样一来，当视口尺寸等于设计稿尺寸1080时，根元素的字体大小为(1080/1080)*100 = 100px ，它的宽度</div>
+<div>为 1rem = 100px ；如果视口尺寸变小了，比如变成了375，那么根元素的字体大小为(375/1080)*100 = 34.72px ，那么它的宽度为 1rem = 34.72px 。这样就完美的和设计稿比例一致了。</div>
+<div>注意：在移动端，如果使用了背景图（比如雪碧图），记得用同样的方式调整背景图的尺寸。</div>
+<div>&nbsp;</div>
+<div>题外话：移动端看上去是不是很麻烦？视口那么小，还要引入各种东西，里面要添加的又杂又乱，还要计算数值，是不是很麻烦？</div>
+<div>其实移动端是很简单的，计算数值问题大家可以使用calc()【括号内输入加减乘除就好了，系统会自动帮你计算最后结果的值的】</div>
+<div>而且，无论任何数值，在经过一切计算后，在浏览器中表现出来的都会是PX为单位的数值！</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

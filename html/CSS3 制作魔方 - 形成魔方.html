@@ -1,0 +1,475 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS3 制作魔方 - 形成魔方' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS3 制作魔方 - 形成魔方</center></div><div class='banquan'>原文出处:本文由博客园博主三人行工作室提供。<br/>
+原文连接:https://www.cnblogs.com/timeddd/p/10867818.html</div><br>
+    <blockquote>
+<p>道路千万条，安全第一条！</p>
+</blockquote>
+<h2 id="魔方结构解析">魔方结构解析</h2>
+<p>从魔方的外观来看，可以有多种方式来表达它的组成，从而也有多种方式来形成一个魔方。如：</p>
+<ul>
+<li>由六个面组成</li>
+<li>由若干层组成</li>
+<li>由多个方块组成</li>
+</ul>
+<p>无论哪种方式，都可以制作魔方。只是，不同的方式对后续的其它操作会有影响，有些方式甚至会导致利用已有的特性无法直接表达。因此，在这项选择上小纠结一下，理出最易于理解和实施（往往也容易自以为是）的方案是有益的。</p>
+<p>这里我们选择“<strong>由多个方块组成</strong>”的方式来形成魔方。</p>
+<p>于是得到魔方的基本结构为：一个魔方由多个魔方格(cube)组成，一个魔方格由多个版面(block)组成。</p>
+<h3 id="一些基本要素的表示">一些基本要素的表示</h3>
+<p>六个方向表示：上(up)、下(down)、左(left)、右(right)、前(front)、后(back)</p>
+<p>六种颜色表示：黄色(yellow)、白色(white)、橙色(orange)、红色(red)、蓝色(blue)、绿色(green)</p>
+<p>初始的魔方组成形式为：上黄，下白，左橙，右红，前蓝，后绿。</p>
+<p><img src="./images/CSS3 制作魔方 - 形成魔方0.png" /></p>
+<h2 id="绘制魔方格">绘制魔方格</h2>
+<p>一个魔方格也有六个方向，每个方向一个版面。在魔方中，一个魔方格可见的只有 1 至 3 个版面。</p>
+<p>为了处理方便，每一个魔方格我们总是从前面来看它，从而上、下、左、右、前、后对于每一个魔方格而言都是确定的位置。</p>
+<h3 id="版面的绘制">版面的绘制</h3>
+<p>首先，定义版面(block)的基础样式：</p>
+<pre><code><code>.block { 
+    position: absolute; 
+    margin: 0 auto;  
+    border:solid 2px black;
+    border-radius:3px;
+    /* 宽高包含边框 */
+    box-sizing:border-box; 
+    /* 旋转原点 */
+    transform-origin:0 0 0;
+}</code></pre>
+<p>一个版面，默认总是“前面”，我们通过旋转将其旋转到指定的方向，每个方向确定的规则如下：</p>
+<p>上：为绕 x 轴逆向 90 度，即 rotateX(-90deg)</p>
+<p>下：y 轴的 top属性增加一格后绕 x 轴逆向 90 度</p>
+<p>左：绕 y 轴 90 度，即 rotateY(90deg)</p>
+<p>右：x 轴的 left 属性增加一格后绕 y 轴 90 度</p>
+<p>前：本尊不用动</p>
+<p>后：z 轴向后平移一格即可，即 translateZ(size px)</p>
+<p>为此，我们通过 javascript 定义一个 Block 类，接收方向、颜色与一格大小作为参数，实现动态绘制版面。</p>
+<pre><code><code>&lt;script&gt;
+/** 版面 block 类 
+ * direct 方向
+ * color  颜色
+ * size   边长大小
+**/
+function Block(direct, color, size){
+    this.direct = direct;
+    this.color = color;
+    this.size = size;
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+
+    // 在父容器中绘制
+    this.DrawIn = function(cubeElement){
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = this.size + &quot;px&quot;;
+        e.style.height = this.size + &quot;px&quot;;
+
+        var top = (this.direct == &#39;down&#39; ? this.size : 0);
+        var left = (this.direct == &#39;right&#39; ? this.size : 0);
+
+        e.style.top = top + &quot;px&quot;;
+        e.style.left = left + &quot;px&quot;;
+        e.style.backgroundColor = this.color;
+
+        var rx = (this.direct == &#39;up&#39; || this.direct == &#39;down&#39; ? -90 : 0);
+        var ry = (this.direct == &#39;left&#39; || this.direct == &#39;right&#39; ? 90 : 0);;
+        var tz = (this.direct == &#39;back&#39; ? this.size : 0);
+
+        e.style[&quot;transform&quot;] = &quot;rotateX(&quot; + rx + &quot;deg) rotateY(&quot; + ry + &quot;deg) translateZ(-&quot; + tz + &quot;px)&quot;;
+        e.className = &quot;block&quot;; 
+        this.Element = e;
+        cubeElement.appendChild(e);
+    };
+}
+
+function onload(){
+    var blockLeft = new Block(&#39;left&#39;, &#39;red&#39;, 50);
+    var blockTop = new Block(&#39;up&#39;, &#39;yellow&#39;, 50);
+    var blockRight = new Block(&#39;right&#39;, &#39;green&#39;, 50);
+
+    blockLeft.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    blockTop.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    blockRight.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+}
+&lt;/script&gt;</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 形成魔方1.png" /></p>
+<h3 id="魔方格的绘制">魔方格的绘制</h3>
+<p>有了版面的绘制，魔方格可以看到是版面的一个集合，我们根据需要组合版面即可。</p>
+<p>首先，我们定义一个魔方格的基础样式 cube：</p>
+<pre><code><code>.cube { 
+    position: absolute;
+    /* 子元素版面是需要三维空间的 */
+    transform-style: preserve-3d;   
+}</code></pre>
+<p>为了动态绘制魔方格，我们定义一个魔方格的 Cube 类，指定大小，以及指明所需要各版面的方向及颜色即可。为了能将魔方格排列成魔方，可以为魔方格设置一个其位于魔方这个三维体的坐标位置，默认坐标总是(0,0,0)。而魔方的三维坐标我们定义如下：</p>
+<p>自左向右为 x 坐标，以三阶为例可取值：0，1，2</p>
+<p>自上向下为 y 从标，以三阶为例可取值：0，1，2</p>
+<p>自前向后为 z 坐标，以三阶为例可取值：0，1，2</p>
+<pre><code><code>/** 魔方格 Cube 类
+ * blockSize 为魔方格的边长代表大小
+ * directColorArray 为指定方向与颜色的数组
+ *                  形式为 [direct,color,direct,color,...]  
+ * x,y,z 为在魔方中的坐标，未指定时默认为0,0,0
+**/
+function Cube(blockSize, directColorArray, x, y, z){
+    this.x = x | 0; 
+    this.y = y | 0; 
+    this.z = z | 0;
+    this.blockSize = blockSize;
+    this.blocks = []; 
+    /* 根据参数建立 Block 对象 */
+    for(var i=0; i &lt; directColorArray.length / 2; i++){
+        this.blocks.push(new Block(directColorArray[ i*2 ], directColorArray[ i*2 + 1 ], this.blockSize)); 
+    }
+
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+
+    // 在父容器中绘制
+    this.DrawIn = function(boxElement, x, y, z){ 
+        this.x = this.x | x;
+        this.y = this.y | y;
+        this.z = this.z | z;
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = this.blockSize + &quot;px&quot;;
+        e.style.height = this.blockSize + &quot;px&quot;;  
+        e.style[&quot;transform&quot;] = &quot;translate3d(&quot; + (x * this.blockSize) + &quot;px,&quot; + (y * this.blockSize) + &quot;px,-&quot; + (z * this.blockSize) + &quot;px) &quot;; 
+        e.className = &quot;cube&quot;;  
+
+        for(var i=0; i &lt; this.blocks.length; i++) {  
+            this.blocks[i].DrawIn(e);
+        }
+
+        this.Element = e;
+
+        boxElement.appendChild(e);
+    };
+}</code></pre>
+<p>以下代码，绘制两个魔方格：</p>
+<pre><code><code>function onload(){
+    var cube1 = new Cube(50, [&#39;left&#39;, &#39;red&#39;, &#39;up&#39;, &#39;yellow&#39;, &#39;back&#39;, &#39;green&#39;]);
+    var cube2 = new Cube(50, [&#39;right&#39;, &#39;red&#39;, &#39;up&#39;, &#39;yellow&#39;, &#39;back&#39;, &#39;green&#39;]);
+
+    cube1.DrawIn( document.querySelector(&quot;.wrap&quot;) ); 
+    cube2.DrawIn( document.querySelector(&quot;.wrap&quot;), 2, 0, 0 ); 
+}</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 形成魔方2.png" /></p>
+<h2 id="形成魔方">形成魔方</h2>
+<p>同样，为了包裹起整个魔方，我们定义一个魔方的基础样式，magicBox：</p>
+<pre><code><code>.magicBox {
+    position: absolute;
+    transform-style: preserve-3d;  
+}</code></pre>
+<p>接下来，再定义一个 MagicBox 的类，根据魔方初始的摆放格局“上黄，下白，左橙，右红，前蓝，后绿”，我们可以根据指定的维度自动生成其所需要的魔方格，所有的魔方格，均通过平移的方式放置到所属的坐标。</p>
+<pre><code><code>/** 魔方 MagicBox 类
+ * dimension 阶数
+ * blockSize 每小格大小
+ **/
+function MagicBox(dimension, blockSize){
+    this.dimension = dimension;
+    this.blockSize = blockSize;
+    this.cubes = [];
+
+    this.MakeDefaultCubes = function(){
+        this.cubes = [];
+        for(var x=0; x &lt; this.dimension; x++){
+            for(var y=0; y &lt; this.dimension; y++){
+                for(var z=0; z &lt; this.dimension; z++){
+                    var cube = this.MakeDefaultCube(x, y, z);
+                    if(cube){
+                      this.cubes.push(cube);
+                    }
+                }
+            }
+        }
+    };
+
+    /* 根据魔方格在阶数中的位置生成魔方格，魔方内部的格子忽略 */
+    this.MakeDefaultCube = function(x, y, z){
+        var max = this.dimension - 1;
+        var dc = [];
+        if(x == 0) dc.push(&quot;left&quot;, &quot;orange&quot;); else if(x == max) dc.push(&quot;right&quot;, &quot;red&quot;);
+        if(y == 0) dc.push(&quot;up&quot;, &quot;yellow&quot;); else if(y == max) dc.push(&quot;down&quot;, &quot;white&quot;);         
+        if(z == 0) dc.push(&quot;front&quot;, &quot;blue&quot;); else if(z == max) dc.push(&quot;back&quot;, &quot;green&quot;);
+        if(dc.length == 0) return null;
+        var cube = new Cube(this.blockSize, dc, x, y, z); 
+        return cube;
+    }
+
+    // 构造时自动产生初始魔方格
+    this.MakeDefaultCubes();
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+    // 在父容器中绘制
+    this.DrawIn = function(domElement){ 
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = (this.dimension * this.blockSize) + &quot;px&quot;;
+        e.style.height = (this.dimension * this.blockSize) + &quot;px&quot;;  
+        e.className = &quot;magicBox&quot;;  
+
+        for(var i=0; i &lt; this.cubes.length; i++) { 
+            this.cubes[i].DrawIn(e);
+        }
+        this.Element = e;
+        domElement.appendChild(e);
+    }; 
+} </code></pre>
+<p>通过以下代码绘制一个三阶魔方：</p>
+<pre><code><code>var magicBox = new MagicBox(3, 50);
+magicBox.DrawIn( document.querySelector(&quot;.wrap&quot;) );</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 形成魔方3.png" /></p>
+<h2 id="附本文完整-html-页面">附本文完整 HTML 页面</h2>
+<p>以下为本文完整的代码文档，复制到记事本中，保存为.html即可在谷歌浏览器中运行。</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt; 
+    &lt;title&gt;CSS3 魔方&lt;/title&gt;
+    &lt;!-- 样式部分全写这里 --&gt;
+    &lt;style&gt;  
+    .wrap {
+        transform-style: preserve-3d;
+        width: 300px;  height: 300px; 
+        position: relative;  /* 定位起点元素 */
+        border-top:solid 1px gray;  /* x 轴 */
+        border-left:solid 1px gray;  /* y 轴 */
+        /* 倾斜一点方能见立体效果 */
+        transform: rotateX(-30deg) rotateY(-30deg); 
+    }
+
+    /* z 轴正方向 */
+    .zaxis_p { 
+        position:absolute; 
+        width : 300px;
+        height:1px;  
+        border-top:solid 1px gray; 
+        /* xy面上，90度立起来就是 z */
+        transform: rotateY(-90deg); 
+        /* 立起来的旋转点 */
+        transform-origin:0 0 0; 
+    }
+
+    /* z 轴负方向 */
+    .zaxis_n { 
+        position:absolute; 
+        width : 300px;
+        height:1px;  
+        border-top:dashed 1px gray; /*（虚线）*/
+        transform: rotateY(90deg);
+        transform-origin:0 0 0; 
+    }
+
+    .block { 
+        position: absolute; 
+        margin: 0 auto;  
+        border:solid 2px black;
+        border-radius:3px;
+        /* 宽高包含边框 */
+        box-sizing:border-box; 
+        transform-origin:0 0 0;
+    }
+
+    .cube { 
+        position: absolute;
+        /* 子元素版面是需要三维空间的 */
+        transform-style: preserve-3d;   
+    }
+
+    .magicBox {
+        position: absolute;
+        transform-style: preserve-3d;  
+    }
+
+    &lt;/style&gt; 
+
+&lt;script&gt;
+/** 版面 block 类 
+ * direct 方向
+ * color  颜色
+ * size   边长大小
+**/
+function Block(direct, color, size){
+    this.direct = direct;
+    this.color = color;
+    this.size = size;
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+
+    // 在父容器中绘制
+    this.DrawIn = function(cubeElement){
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = this.size + &quot;px&quot;;
+        e.style.height = this.size + &quot;px&quot;;
+
+        var top = (this.direct == &#39;down&#39; ? this.size : 0);
+        var left = (this.direct == &#39;right&#39; ? this.size : 0);
+
+        e.style.top = top + &quot;px&quot;;
+        e.style.left = left + &quot;px&quot;;
+        e.style.backgroundColor = this.color;
+
+        var rx = (this.direct == &#39;up&#39; || this.direct == &#39;down&#39; ? -90 : 0);
+        var ry = (this.direct == &#39;left&#39; || this.direct == &#39;right&#39; ? 90 : 0);;
+        var tz = (this.direct == &#39;back&#39; ? this.size : 0);
+
+        e.style[&quot;transform&quot;] = &quot;rotateX(&quot; + rx + &quot;deg) rotateY(&quot; + ry + &quot;deg) translateZ(-&quot; + tz + &quot;px)&quot;;
+        e.className = &quot;block&quot;; 
+        this.Element = e;
+        cubeElement.appendChild(e);
+    };
+}
+
+/** 魔方格 Cube 类
+ * blockSize 为魔方格的边长代表大小
+ * directColorArray 为指定方向与颜色的数组
+ *                  形式为 [direct,color,direct,color,...]  
+ * x,y,z 为在魔方中的坐标，未指定时默认为0,0,0
+**/
+function Cube(blockSize, directColorArray, x, y, z){
+    this.x = x | 0; 
+    this.y = y | 0; 
+    this.z = z | 0;
+    this.blockSize = blockSize;
+    this.blocks = []; 
+    /* 根据参数建立 Block 对象 */
+    for(var i=0; i &lt; directColorArray.length / 2; i++){
+        this.blocks.push(new Block(directColorArray[ i*2 ], directColorArray[ i*2 + 1 ], this.blockSize)); 
+    }
+
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+
+    // 在父容器中绘制
+    this.DrawIn = function(boxElement, x, y, z){ 
+        this.x = x | this.x;
+        this.y = y | this.y;
+        this.z = z | this.z;
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = this.blockSize + &quot;px&quot;;
+        e.style.height = this.blockSize + &quot;px&quot;;  
+        e.style[&quot;transform&quot;] = &quot;translate3d(&quot; + (this.x * this.blockSize) + &quot;px,&quot; + (this.y * this.blockSize) + &quot;px,-&quot; + (this.z * this.blockSize) + &quot;px) &quot;; 
+        e.className = &quot;cube&quot;;  
+
+        for(var i=0; i &lt; this.blocks.length; i++) {  
+            this.blocks[i].DrawIn(e);
+        }
+
+        this.Element = e;
+
+        boxElement.appendChild(e);
+    };
+}
+
+/** 魔方 MagicBox 类
+ * dimension 阶数
+ * blockSize 每小格大小
+ **/
+function MagicBox(dimension, blockSize){
+    this.dimension = dimension;
+    this.blockSize = blockSize;
+    this.cubes = [];
+
+    this.MakeDefaultCubes = function(){
+        this.cubes = [];
+        for(var x=0; x &lt; this.dimension; x++){
+            for(var y=0; y &lt; this.dimension; y++){
+                for(var z=0; z &lt; this.dimension; z++){
+                    var cube = this.MakeDefaultCube(x, y, z);
+                    if(cube){
+                      this.cubes.push(cube);
+                    }
+                }
+            }
+        }
+    };
+
+    /* 根据魔方格在阶数中的位置生成魔方格，魔方内部的格子忽略 */
+    this.MakeDefaultCube = function(x, y, z){
+        var max = this.dimension - 1;
+        var dc = [];
+        if(x == 0) dc.push(&quot;left&quot;, &quot;orange&quot;); else if(x == max) dc.push(&quot;right&quot;, &quot;red&quot;);
+        if(y == 0) dc.push(&quot;up&quot;, &quot;yellow&quot;); else if(y == max) dc.push(&quot;down&quot;, &quot;white&quot;);         
+        if(z == 0) dc.push(&quot;front&quot;, &quot;blue&quot;); else if(z == max) dc.push(&quot;back&quot;, &quot;green&quot;);
+        if(dc.length == 0) return null;
+        var cube = new Cube(this.blockSize, dc, x, y, z); 
+        return cube;
+    }
+
+    // 构造时自动产生初始魔方格
+    this.MakeDefaultCubes();
+    // 绘制过的 UI 元素对象
+    this.Element = null;
+    // 在父容器中绘制
+    this.DrawIn = function(domElement){ 
+        var e = this.Element || document.createElement(&#39;div&#39;);
+        e.style.width = (this.dimension * this.blockSize) + &quot;px&quot;;
+        e.style.height = (this.dimension * this.blockSize) + &quot;px&quot;;  
+        e.className = &quot;magicBox&quot;;  
+
+        for(var i=0; i &lt; this.cubes.length; i++) { 
+            this.cubes[i].DrawIn(e);
+        }
+        this.Element = e;
+        domElement.appendChild(e);
+    }; 
+} 
+
+function onload(){
+    /* 版面绘制示例
+    var blockLeft = new Block(&#39;left&#39;, &#39;red&#39;, 50);
+    var blockTop = new Block(&#39;up&#39;, &#39;yellow&#39;, 50);
+    var blockRight = new Block(&#39;right&#39;, &#39;green&#39;, 50);
+
+    blockLeft.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    blockTop.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    blockRight.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    */
+
+    /* 魔方格绘制示例
+    var cube1 = new Cube(50, [&#39;left&#39;, &#39;red&#39;, &#39;up&#39;, &#39;yellow&#39;, &#39;back&#39;, &#39;green&#39;]);
+    var cube2 = new Cube(50, [&#39;right&#39;, &#39;red&#39;, &#39;up&#39;, &#39;yellow&#39;, &#39;back&#39;, &#39;green&#39;]);
+
+    cube1.DrawIn( document.querySelector(&quot;.wrap&quot;) ); 
+    cube2.DrawIn( document.querySelector(&quot;.wrap&quot;), 2, 0, 0 ); 
+    */
+
+    //* 魔方绘制示例
+    var magicBox = new MagicBox(3, 50);
+    magicBox.DrawIn( document.querySelector(&quot;.wrap&quot;) );
+    //*/
+}
+&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body style=&quot;padding:300px;&quot; onload=&quot;onload()&quot;&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+    &lt;div class=&quot;zaxis_p&quot;&gt;&lt;/div&gt; 
+    &lt;div class=&quot;zaxis_n&quot;&gt;&lt;/div&gt;  
+  &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<p>关注微信公众号“时间维度”，让我们走过一段时空交织的时光。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

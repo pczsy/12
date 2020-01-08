@@ -1,0 +1,285 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Taro多端自定义导航栏Navbar+Tabbar实例' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Taro多端自定义导航栏Navbar+Tabbar实例</center></div><div class='banquan'>原文出处:本文由博客园博主xiaoyan2017提供。<br/>
+原文连接:https://www.cnblogs.com/xiaoyan2017/p/11937043.html</div><br>
+    <p><strong><span style="font-size: 14px; font-family: 'comic sans ms', sans-serif;">运用Taro实现多端导航栏/tabbar实例 (H5 + 小程序 + React Native)</span></strong></p>
+<p><span style="font-size: 12px;">最近一直在捣鼓taro开发，虽说官网介绍支持编译到多端，但是网上大多数实例都是H5、小程序，很少有支持RN端。恰好Taro是基于React技术，想着之前也做过一些react项目，如是抱着好奇深究了一番，采坑了不少，尤其是编译到RN时样式问题。</span></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例0.png" alt="" width="885" height="500" /></p>
+<p><span style="background-color: #ccffcc;"><em><span style="font-size: 12px;">如上图：分别在H5、小程序、RN端运行效果</span></em></span></p>
+<h3 id="一项目简介"><strong>◆&nbsp;</strong><span style="font-family: 'comic sans ms', sans-serif;">Taro引入阿里字体图标Iconfont</span></h3>
+<p><span style="font-size: 12px;">在进行下文介绍之前，先简单介绍下taro字体图标的使用，如果你项目中有引入Taro-UI，直接使用taro-ui图标即可</span></p>
+<p><span style="font-size: 12px;">详情看 <a href="https://taro-ui.jd.com/#/docs/icon" target="_blank">taro-ui图标</a></span></p>
+<p><span style="font-size: 12px;">下载好阿里字体图标后，复制fonts文件夹到项目下，如下图放在：styles目录下，并将iconfont.css复制一份改为iconfont.scss</span></p>
+<p><span style="font-size: 12px;">引入：&nbsp;<span class="cnblogs_code">import './styles/fonts/iconfont.scss'</span>&nbsp;</span></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例1.png" alt="" /></p>
+<p><span style="font-size: 12px;"><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例2.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 12px;">在h5、小程序下 这种写法即可：&nbsp;&nbsp;<span class="cnblogs_code">&lt;Text className="iconfont icon-back"&gt;&lt;/Text&gt;</span>&nbsp;</span></p>
+<p><span style="font-size: 12px;">不过为了兼容RN，只能通过Unicode方式这样写：&nbsp;<span class="cnblogs_code">&lt;Text className="iconfont"&gt;&amp;#xe84c;&lt;/Text&gt;</span>&nbsp;</span></p>
+<p><span style="font-size: 12px;">如果是通过变量传递：&nbsp;<span class="cnblogs_code">let back = '\ue84c' &lt;Text&gt;{back}&lt;/Text&gt;</span>&nbsp;</span></p>
+<p>&nbsp;</p>
+<h3 id="一项目简介"><strong>◆&nbsp;</strong><span style="font-family: 'comic sans ms', sans-serif;">自定义导航栏Navbar</span></h3>
+<p><span style="font-size: 12px;">在项目根目录App.js里面 配置navigationStyle，将其设置为custom，此时就进入自定义导航栏模式</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">class App extends Component {
+    config </span>=<span style="color: #000000;"> {
+        pages: 
+            </span>'pages/index/index'<span style="color: #000000;">,
+            ...
+        ],
+        window: {
+            backgroundTextStyle: </span>'light'<span style="color: #000000;">,
+            navigationBarBackgroundColor: </span>'#fff'<span style="color: #000000;">,
+            navigationBarTitleText: </span>'Taro'<span style="color: #000000;">,
+            navigationBarTextStyle: </span>'black'<span style="color: #000000;">,
+            <span style="background-color: #ffff00;">navigationStyle: </span></span><span style="background-color: #ffff00;">'custom'</span><span style="color: #000000;">
+        },
+        ...
+    }
+    
+    ...
+}</span></pre>
+</div>
+<p><span style="font-size: 12px;">在components目录下新建导航栏Navbar组件</span></p>
+<div class="cnblogs_code">
+<pre><code>import Taro from '@tarojs/taro'<span style="color: #000000;">
+import { View, Text, Input, Image } from </span>'@tarojs/components'<span style="color: #000000;">
+import classNames from </span>"classnames"<span style="color: #000000;">;
+import </span>'./index.scss'<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> class NavBar extends Taro.Component {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 默认配置</span>
+    static defaultProps =<span style="color: #000000;"> {
+        isBack: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+        leftIcon: </span>'\ue84c'<span style="color: #000000;">,
+        title: </span>' '<span style="color: #000000;">,
+        background: </span>'#6190e8'<span style="color: #000000;">,
+        color: </span>'#fff'<span style="color: #000000;">,
+        center: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+        search: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+        searchStyle: </span>''<span style="color: #000000;">,
+        fixed: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+        headerRight: [],
+    }
+    constructor(props) {
+        super(props)
+        </span><span style="color: #0000ff;">this</span>.state =<span style="color: #000000;"> {
+            searchText: </span>''<span style="color: #000000;">,
+        }
+    }
+    
+    ...
+
+    render() {
+        const { isBack, leftIcon, title, background, color, center, search, searchStyle, fixed, height, headerRight } </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.props
+        const { searchText } </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.state
+        
+        let weapp </span>= <span style="color: #0000ff;">false</span>
+        <span style="color: #0000ff;">if</span> (process.env.TARO_ENV === 'weapp'<span style="color: #000000;">) {
+            weapp </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">
+        }
+
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (
+            </span>&lt;View className={classNames('taro__navbar', fixed &amp;&amp; 'taro__navbar--fixed', fixed &amp;&amp; weapp &amp;&amp; 'taro__navbar-weapp--fixed')}&gt;
+                &lt;View className={classNames('taro__navbar-wrap', fixed &amp;&amp; 'taro__navbar-wrap--fixed', weapp &amp;&amp; 'taro__navbar-wrap__weapp')} style={{backgroundColor: background}}&gt;<span style="color: #000000;">
+                    {</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 返回 </span><span style="color: #008000;">*/</span><span style="color: #000000;">}
+                    </span>&lt;View className={classNames('taro__navbar-left__view', isBack &amp;&amp; 'taro__navbar-left__view--isback')}&gt;<span style="color: #000000;">
+                    {isBack </span>&amp;&amp;
+                        &lt;TouchView activeOpacity={.5} onClick={<span style="color: #0000ff;">this</span>.handleNavigateBack}&gt;
+                            &lt;View className="taro__navbar-icon__item"&gt;&lt;Text className="iconfont taro__navbar-iconfont" style={{color: color}}&gt;{leftIcon}&lt;/Text&gt;&lt;/View&gt;
+                        &lt;/TouchView&gt;
+<span style="color: #000000;">                    }
+                    </span>&lt;/View&gt;
+<span style="color: #000000;">                    
+                    {</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 标题 </span><span style="color: #008000;">*/</span><span style="color: #000000;">}
+                    {</span>!search &amp;&amp; center &amp;&amp; !weapp ? &lt;View className="flex1" /&gt; : null}
+                    {search ?<span style="color: #000000;"> 
+                    (
+                        </span>&lt;View className="taro__navbar-search flex1"&gt;
+                            &lt;Input className="taro__navbar-search__input" placeholder="搜索..." onInput={<span style="color: #0000ff;">this</span>.updateInputText} style={{color: color, ...searchStyle}} /&gt;
+                        &lt;/View&gt;
+<span style="color: #000000;">                    )
+                    :
+                    (
+                        </span>&lt;View className={classNames('taro__navbar-title flex1', center &amp;&amp; !weapp &amp;&amp; 'taro__navbar-title--center')}&gt;<span style="color: #000000;">
+                            {title </span>&amp;&amp; &lt;Text className="taro__navbar-title__text" style={{color: color}}&gt;{title}&lt;/Text&gt;}
+                        &lt;/View&gt;
+<span style="color: #000000;">                    )
+                    }
+
+                    {</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 右侧 </span><span style="color: #008000;">*/</span><span style="color: #000000;">}
+                    </span>&lt;View className="taro__navbar-right__view"&gt;<span style="color: #000000;">
+                    {headerRight.map((item, index) </span>=&gt;<span style="color: #000000;"> (
+                        </span>&lt;TouchView activeOpacity={.5} key={index} onClick={()=&gt;item.onClick &amp;&amp; item.onClick(searchText)}&gt;
+                            &lt;View className="taro__navbar-icon__item"&gt;<span style="color: #000000;">
+                                {item.icon </span>&amp;&amp; &lt;Text className="iconfont taro__navbar-iconfont" style={{color: color, ...item.style}}&gt;{item.icon}&lt;/Text&gt;}
+                                {item.text &amp;&amp; &lt;Text className="taro__navbar-iconfont__text" style={{color: color, ...item.style}}&gt;{item.text}&lt;/Text&gt;}
+                                {item.img &amp;&amp; &lt;Image className="taro__navbar-iconfont__img" src={item.img} mode='aspectFit' /&gt;}
+                                {<span style="color: #008000;">/*</span><span style="color: #008000;"> 圆点 </span><span style="color: #008000;">*/</span><span style="color: #000000;">}
+                                {</span>!!item.badge &amp;&amp; &lt;Text className="taro__badge taro__navbar-badge"&gt;{item.badge}&lt;/Text&gt;}
+                                {!!item.dot &amp;&amp; &lt;Text className="taro__badge-dot taro__navbar-badge--dot"&gt;&lt;/Text&gt;}
+                            &lt;/View&gt;
+                        &lt;/TouchView&gt;
+<span style="color: #000000;">                    ))
+                    }
+                    </span>&lt;/View&gt;
+                &lt;/View&gt;
+            &lt;/View&gt;
+<span style="color: #000000;">        );
+    }
+}</span></pre>
+</div>
+<p><span style="font-size: 12px;">在页面引入组件即可：&nbsp;<span class="cnblogs_code">import NavBar from '@components/navbar'</span>&nbsp;<br /></span></p>
+<p><strong><span style="font-size: 12px;">引入方式有两种：</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> index/index.js  首页</span>
+<span style="color: #000000;">
+import NavBar from </span>'@components/navbar'<span style="color: #000000;">
+
+class Index extends Component {
+    config </span>=<span style="color: #000000;"> {
+        navigationBarTitleText: </span>'首页'<span style="color: #000000;">,
+        usingComponents: {
+            </span>'navbar2': '../../components/navbar', <span style="color: #008000;">//</span><span style="color: #008000;"> 书写第三方组件的相对路径</span>
+<span style="color: #000000;">        },
+    }
+    render () {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (
+        </span>&lt;View className='index'&gt;<span style="color: #000000;">
+            { </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 方法一 </span><span style="color: #008000;">*/</span><span style="color: #000000;">  }
+            </span>&lt;NavBar /&gt;
+<span style="color: #000000;">
+            { </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 方法二 </span><span style="color: #008000;">*/</span><span style="color: #000000;">  }
+            </span>&lt;navbar2 /&gt;
+<span style="color: #000000;">
+            ...
+        </span>&lt;/View&gt;
+<span style="color: #000000;">    )
+  }
+<span style="font-size: 14px;">}</span></span></pre>
+</div>
+<p>&nbsp;<span style="font-size: 12px; color: #ff0000; background-color: #ffff99;">支持自定义背景、颜色、左侧图标、标题居中、搜索框，右侧按钮支持图标/文字/图片，还可以设置样式，红点提示、事件处理</span></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例3.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>&lt;NavBar title='Taro标题栏'<span style="color: #000000;"> fixed
+    headerRight</span>=<span style="color: #000000;">{[
+        {icon: </span>'\ue614', style: {color: '#e93b3d'<span style="color: #000000;">}},
+        {img: require(</span>'../../assets/taro.png'), dot: <span style="color: #0000ff;">true</span>, onClick: <span style="color: #0000ff;">this</span><span style="color: #000000;">.handleCallback},
+        {icon: </span>'\ue600', style: {marginRight: 10<span style="color: #000000;">}},
+    ]} 
+</span>/&gt;</pre>
+</div>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例4.png" alt="" /></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例5.png" alt="" /></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例6.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>&lt;NavBar isBack leftIcon={'\ue69f'} title='搜索栏' background='#42b983' color='#fcc'<span style="color: #000000;"> search
+    searchStyle</span>=<span style="color: #000000;">{{
+        backgroundColor:</span>'rgba(255,255,255,.6)', borderRadius: Taro.pxTransform(50), color: '#333'<span style="color: #000000;">
+    }}
+    headerRight</span>=<span style="color: #000000;">{[
+        {icon: </span>'\ue622', style: {color: '#6afff9'<span style="color: #000000;">}},
+        {icon: </span>'\ue63a'<span style="color: #000000;">},
+    ]} 
+</span>/&gt;</pre>
+</div>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例7.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>&lt;NavBar isBack leftIcon={'\ue84f'} title='查找' background='#545454' color='#fff'<span style="color: #000000;">
+    headerRight</span>=<span style="color: #000000;">{[
+        {img: require(</span>'../../assets/default-avatar.png'), dot: <span style="color: #0000ff;">true</span><span style="color: #000000;">},
+        {text: </span>'添加朋友', style: {color: '#15e413'<span style="color: #000000;">}},
+    ]} 
+</span>/&gt;</pre>
+</div>
+<h3 id="一项目简介"><strong>◆&nbsp;</strong><span style="font-family: 'comic sans ms', sans-serif;">自定义底部Tabbar菜单</span></h3>
+<p><span style="font-size: 12px;">如果在App.js里面没有配置tabbar，则可以自定义底部，如下图在三端下效果</span></p>
+<p><img src="./images/Taro多端自定义导航栏Navbar+Tabbar实例8.png" alt="" width="885" height="500" /></p>
+<p><span style="font-size: 12px;">同样在components目录下新建tabbar组件</span></p>
+<div class="cnblogs_code">
+<pre><code>import Taro from '@tarojs/taro'<span style="color: #000000;">
+import { View, Text } from </span>'@tarojs/components'<span style="color: #000000;">
+import classNames from </span>'classnames'<span style="color: #000000;">
+import </span>'./index.scss'<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> class TabBar extends Taro.Component {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 默认参数配置</span>
+    static defaultProps =<span style="color: #000000;"> {
+        current: </span>0<span style="color: #000000;">,
+        background: </span>'#fff'<span style="color: #000000;">,
+        color: </span>'#999'<span style="color: #000000;">,
+        tintColor: </span>'#6190e8'<span style="color: #000000;">,
+        fixed: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+        onClick: () </span>=&gt;<span style="color: #000000;"> {},
+        tabList: []
+    }
+    constructor(props) {
+        super(props)
+        </span><span style="color: #0000ff;">this</span>.state =<span style="color: #000000;"> {
+            updateCurrent: props.current
+        }
+    }
+    ...
+
+    render() {
+        const { background, color, tintColor, fixed } </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.props
+        const { updateCurrent } </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.state
+        
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (
+            </span>&lt;View className={classNames('taro__tabbar', fixed &amp;&amp; 'taro__tabbar--fixed')}&gt;
+                &lt;View className={classNames('taro__tabbar-list', fixed &amp;&amp; 'taro__tabbar-list--fixed')} style={{backgroundColor: background}}&gt;<span style="color: #000000;">
+                    {</span><span style="color: #0000ff;">this</span>.props.tabList.map((item, index) =&gt;<span style="color: #000000;"> (
+                        </span>&lt;View className="taro__tabbar-item taro__tabbar-item--active" key={index} onClick={<span style="color: #0000ff;">this</span>.updateTabbar.bind(<span style="color: #0000ff;">this</span>, index)}&gt;
+                            &lt;View className="taro__tabbar-icon"&gt;
+                                &lt;Text className="iconfont taro__tabbar-iconfont" style={{color: updateCurrent == index ? tintColor : color}}&gt;{item.icon}&lt;/Text&gt;
+                                {<span style="color: #008000;">/*</span><span style="color: #008000;"> 圆点 </span><span style="color: #008000;">*/</span><span style="color: #000000;">}
+                                {</span>!!item.badge &amp;&amp; &lt;Text className="taro__badge taro__tabbar-badge"&gt;{item.badge}&lt;/Text&gt;}
+                                {!!item.dot &amp;&amp; &lt;Text className="taro__badge-dot taro__tabbar-badge--dot"&gt;&lt;/Text&gt;}
+                            &lt;/View&gt;
+                            &lt;Text className="taro__tabbar-title" style={{color: updateCurrent == index ? tintColor : color}}&gt;{item.title}&lt;/Text&gt;
+                        &lt;/View&gt;
+<span style="color: #000000;">                    ))}
+                </span>&lt;/View&gt;
+            &lt;/View&gt;
+<span style="color: #000000;">        );
+    }
+}</span></pre>
+</div>
+<p><span style="font-size: 12px;">自定义tabbar也支持自定义背景、颜色、图标，点击选项事件返回索引值</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;TabBar current={currentTabIndex} background='#f8f8f8' color='#999' tintColor='#6190e8' fixed onClick={<span style="color: #0000ff;">this</span><span style="color: #000000;">.handleTabbar}
+    tabList</span>=<span style="color: #000000;">{[
+        {icon: </span>'\ue627', title: '首页', badge: 8<span style="color: #000000;">},
+        {icon: </span>'\ue61e', title: '商品'<span style="color: #000000;">},
+        {icon: </span>'\ue605', title: '个人中心', dot: <span style="color: #0000ff;">true</span><span style="color: #000000;">},
+    ]}
+</span>/&gt;</pre>
+</div>
+<p><span style="font-size: 12px;">// tabbar事件</span></p>
+<p><span style="font-size: 12px;">handleTabbar = (index) =&gt; {&nbsp;</span><span style="font-size: 12px;">this.setState({currentTabIndex: index})&nbsp;</span><span style="font-size: 12px;">}</span></p>
+<p><span style="font-size: 12px;">emmmm~~~，到这里就介绍差不多了，后续会考虑使用Taro技术开发个h5/小程序/RN端实战项目。<span style="font-family: 'Courier New'; white-space: pre-wrap;">😏</span></span></p>
+<p><strong>最后附上：</strong></p>
+<p><span style="font-size: 12px;">react聊天室实例：<a href="https://www.cnblogs.com/xiaoyan2017/p/11106246.html" target="_blank">https://www.cnblogs.com/xiaoyan2017/p/11106246.html</a></span></p>
+<p><span style="font-size: 12px;">ReactNative仿微信App实例：<a href="https://www.cnblogs.com/xiaoyan2017/p/11441285.html" target="_blank">https://www.cnblogs.com/xiaoyan2017/p/11441285.html</a></span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

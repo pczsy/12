@@ -1,0 +1,93 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于thinkphp5手动抛出Http异常时自定义404页面报错的问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于thinkphp5手动抛出Http异常时自定义404页面报错的问题</center></div><div class='banquan'>原文出处:本文由博客园博主子钦加油提供。<br/>
+原文连接:https://www.cnblogs.com/zmdComeOn/p/10647947.html</div><br>
+    <p>在使用<code>HttpException</code>手动抛出异常时，希望跳转到自定义的错误页面，官方的文章中是这样描述的。</p>
+<p>可以使用<code>\think\exception\HttpException</code>类来抛出异常</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 抛出 HTTP 异常  </span>
+<span style="color: #0000ff;">throw</span> <span style="color: #0000ff;">new</span> \think\<span style="color: #0000ff;">exception</span>\HttpException(404, '异常消息', <span style="color: #0000ff;">null</span>, [参数]);  </pre>
+</div>
+<p>一旦抛出了<code>HttpException</code>异常，可以支持定义单独的异常页面的模板地址，只需要在应用配置文件中增加：</p>
+<div class="cnblogs_code">
+<pre><code>'http_exception_template'    =&gt;<span style="color: #000000;">  [  
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义404错误的重定向页面地址  </span>
+    404 =&gt;  APP_PATH.'404.html',  
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 还可以定义其它的HTTP status  </span>
+    401 =&gt;  APP_PATH.'401.html',<span style="color: #000000;">  
+]  </span></pre>
+</div>
+<p>然而如果你这些都做完了，关闭调试模式，你会发现还是跳转到官方自定义的页面上去了，并且你发现http状态码是<code>500</code>，这是代码有问题啊，我抛出的是<code>404</code>啊。</p>
+<p>然后打开log日志，你会发现果然报错了。</p>
+<div class="cnblogs_code">
+<pre><code>[ error ] [1]Uncaught think\<span style="color: #0000ff;">exception</span>\TemplateNotFoundException: template not exists:view/layout.html in /Applications/MAMP/htdocs/best.shiqidu.com/thinkphp/library/think/Template.php:1082<span style="color: #000000;">  
+Stack trace</span>:  </pre>
+</div>
+<p>这。。。<br />可怎么办。。。</p>
+<p>只能看源码找问题了。</p>
+<p>你会发现这个方法被调用了两次。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*  
+     * 解析模板文件名  
+     * @access private  
+     * @param  string $template 文件名  
+     * @return string|false  
+     </span><span style="color: #008000;">*/</span>  
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">function</span> parseTemplateFile(<span style="color: #800080;">$template</span><span style="color: #000000;">)  
+    {</span>...}  </pre>
+</div>
+<p>第一次时$template模板文件时能找到的。但是第二次也是一个相对路径<code>view/layout</code>，所以报错了，继续顺藤摸瓜，发现这个函数。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*  
+     * 编译模板文件内容  
+     * @access private  
+     * @param string    $content 模板内容  
+     * @param string    $cacheFile 缓存文件名  
+     * @return void  
+     </span><span style="color: #008000;">*/</span>  
+    <span style="color: #0000ff;">private</span> <span style="color: #0000ff;">function</span> compiler(&amp;<span style="color: #800080;">$content</span>, <span style="color: #800080;">$cacheFile</span><span style="color: #000000;">)  
+    {  
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 判断是否启用布局  </span>
+        <span style="color: #0000ff;">if</span> (<span style="color: #800080;">$this</span>-&gt;config['layout_on'<span style="color: #000000;">]) {  
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">false</span> !== <span style="color: #008080;">strpos</span>(<span style="color: #800080;">$content</span>, '{__NOLAYOUT__}'<span style="color: #000000;">)) {  
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 可以单独定义不使用布局  </span>
+                <span style="color: #800080;">$content</span> = <span style="color: #008080;">str_replace</span>('{__NOLAYOUT__}', '', <span style="color: #800080;">$content</span><span style="color: #000000;">);  
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 读取布局模板  </span>
+                <span style="color: #800080;">$layoutFile</span> = <span style="color: #800080;">$this</span>-&gt;parseTemplateFile(<span style="color: #800080;">$this</span>-&gt;config['layout_name'<span style="color: #000000;">]);  
+                </span><span style="color: #0000ff;">if</span> (<span style="color: #800080;">$layoutFile</span><span style="color: #000000;">) {  
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 替换布局的主体内容  </span>
+                    <span style="color: #800080;">$content</span> = <span style="color: #008080;">str_replace</span>(<span style="color: #800080;">$this</span>-&gt;config['layout_item'], <span style="color: #800080;">$content</span>, <span style="color: #008080;">file_get_contents</span>(<span style="color: #800080;">$layoutFile</span><span style="color: #000000;">));  
+                }  
+            }  
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {  
+            </span><span style="color: #800080;">$content</span> = <span style="color: #008080;">str_replace</span>('{__NOLAYOUT__}', '', <span style="color: #800080;">$content</span><span style="color: #000000;">);  
+        }  
+</span>...  </pre>
+</div>
+<p>&nbsp;</p>
+<p>关键就是这里了，如果你没有<code>{__NOLAYOUT__}</code>这个表示的话，它在渲染自定义404页面时会去加载布局文件（如果你在配置文件里开启了布局，如果没开启<code>layout=true</code>，也不会报这个错）。<br />而这个布局文件的路径是一个相对路径，这时如果你抛出异常的地方不是在<code>application</code>的<code>controller</code>里，就找不到布局文件了。所以就报错了。</p>
+<p>怎么解决呢？其实也很简单。给自定义的404页面加上<code>{__NOLAYOUT__}</code>就行了。</p>
+<p><img src="./images/关于thinkphp5手动抛出Http异常时自定义404页面报错的问题0.png" alt="5d4af532dcaeab4d661a2932fcf09552.png" /></p>
+<p>这一点官方文档没有说明，还在坑里的同学可以参考改下。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

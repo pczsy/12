@@ -1,0 +1,51 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于Data URLs svg图片显示出错和浏览器URL hash #' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于Data URLs svg图片显示出错和浏览器URL hash #</center></div><div class='banquan'>原文出处:本文由博客园博主Lger提供。<br/>
+原文连接:https://www.cnblogs.com/lger/p/10717195.html</div><br>
+    <p>在使用生成的<code>svg</code>图作为<code>&lt;img&gt;</code>标签是src值时，发现有部分浏览器显示异常，所以这里记录下</p>
+<p>参考链接</p>
+<blockquote>
+<p>Data URLs<br />
+<a href="http://www.faqs.org/rfcs/rfc2397.html" class="uri">http://www.faqs.org/rfcs/rfc2397.html</a><br />
+<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/data_URIs" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/data_URIs</a><br />
+URL hash<br />
+<a href="http://www.ruanyifeng.com/blog/2011/03/url_hash.html" class="uri">http://www.ruanyifeng.com/blog/2011/03/url_hash.html</a><br />
+<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/URL/hash" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/URL/hash</a></p>
+</blockquote>
+<p>在<code>&lt;img src=&quot;Data URLs&quot;&gt;</code>中，Data URLs格式与显示情况如下：</p>
+<pre><code><code>//1. 部分浏览器不能正常显示
+data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;50&quot; height=&quot;50&quot;&gt;&lt;rect fill=&quot;#795548&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;100%&quot; height=&quot;100%&quot;&gt;&lt;/rect&gt;&lt;text fill=&quot;#FFF&quot; x=&quot;50%&quot; y=&quot;50%&quot; text-anchor=&quot;middle&quot; alignment-baseline=&quot;central&quot; font-size=&quot;16&quot; font-family=&quot;Verdana, Geneva, sans-serif&quot;&gt;jack&lt;/text&gt;&lt;/svg&gt;
+
+//2. 采用base64编码svg，正常显示
+data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+PHJlY3QgZmlsbD0iIzc5NTU0OCIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSI+PC9yZWN0Pjx0ZXh0IGZpbGw9IiNGRkYiIHg9IjUwJSIgeT0iNTAlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBhbGlnbm1lbnQtYmFzZWxpbmU9ImNlbnRyYWwiIGZvbnQtc2l6ZT0iMTYiIGZvbnQtZmFtaWx5PSJWZXJkYW5hLCBHZW5ldmEsIHNhbnMtc2VyaWYiPmphY2s8L3RleHQ+PC9zdmc+
+
+//3. 采用%23转义#，正常显示
+data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;50&quot; height=&quot;50&quot;&gt;&lt;rect fill=&quot;%23795548&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;100%&quot; height=&quot;100%&quot;&gt;&lt;/rect&gt;&lt;text fill=&quot;%23FFF&quot; x=&quot;50%&quot; y=&quot;50%&quot; text-anchor=&quot;middle&quot; alignment-baseline=&quot;central&quot; font-size=&quot;16&quot; font-family=&quot;Verdana, Geneva, sans-serif&quot;&gt;jack&lt;/text&gt;&lt;/svg&gt;
+
+//4. 采用rgb代替hex color，正常显示
+data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;50&quot; height=&quot;50&quot;&gt;&lt;rect fill=&quot;rgb(121,85,72)&quot; x=&quot;0&quot; y=&quot;0&quot; width=&quot;100%&quot; height=&quot;100%&quot;&gt;&lt;/rect&gt;&lt;text fill=&quot;rgb(255,255,255)&quot; x=&quot;50%&quot; y=&quot;50%&quot; text-anchor=&quot;middle&quot; alignment-baseline=&quot;central&quot; font-size=&quot;16&quot; font-family=&quot;Verdana, Geneva, sans-serif&quot;&gt;jack&lt;/text&gt;&lt;/svg&gt;</code></pre>
+<p>上面给出的Data URLs中第一个与其他的不同之处就是包含了URL的敏感字符<code>#</code>，其被作为hash使用，用于浏览器网页内部的网页位置指定标识符，<code>#</code>后面出现的任何字符，都会被浏览器解读为位置标识符。</p>
+<p>这里我用以上链接直接使用浏览器访问，73版谷歌浏览器和66版火狐浏览器对于第一个Data URLs给出的结果都是解析异常，这里我的猜测（意淫）就是这种Data URLs其实是浏览器内部识别了URL标识，其又充当了一台服务器，对当前Data URLs进行解析，之后内部直接给出数据。而它们在处理data:image/svg+xml时将<code>#</code>后面的字符串当做为位置标识符，没有将<code>#</code>后数据提交至浏览器内部解析器（我认为的模拟服务器）中，所以就出现了数据丢失解析异常。</p>
+<p>以上分析纯属个人猜测。反正这里需要注意的就是，采用Data URLs时有可能出现URL特殊字符，最好能够对其进行编码，或者转义。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

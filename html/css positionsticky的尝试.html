@@ -1,0 +1,54 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css positionsticky的尝试' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css positionsticky的尝试</center></div><div class='banquan'>原文出处:本文由博客园博主孑孓子提供。<br/>
+原文连接:https://www.cnblogs.com/handboy/p/12004343.html</div><br>
+    <h2 class="entry-title p-name">前言</h2>
+<p>sticky这种设计效果是经常出现的，比如陶宝右侧的工具栏，当我们向下滚动到它的位置时，它就会黏住顶部跟随滚动，类似position: fixed的效果，只不过它的触发条件是当我们滚动到所在位置时，才触发fixed的效果的：</p>
+<h1 class="entry-title p-name"><a class="u-url url" href="https://javascript.shop/2019/12/css-position-sticky" rel="bookmark"><img class="wp-image-918" src="./images/css positionsticky的尝试0.png" alt="" /></a></h1>
+<p>我们经常的做法是用JavaScript去监听滚动事件然后进行处理，比如会用到类似stickyjs的一些插件&nbsp;<a href="http://stickyjs.com/">http://stickyjs.com/</a>&nbsp;，从2017年左右开始css中的position:sticky就是为了这中设计而诞生的，今天我们来认识一下它。</p>
+<h2>兼容性</h2>
+<p>差不多两年时间了，兼容性还算可以的，对于那种面向技术人员，后台管理人员的项目，我倒是觉得可以用上，毕竟他们只是升级一下浏览器不仅能体验更好的效果，也能降低码农的工作量：</p>
+<p><a href="https://caniuse.com/#search=position%3A%20sticky">https://caniuse.com/#search=position%3A%20sticky</a></p>
+<h1 class="entry-title p-name"><a class="u-url url" href="https://javascript.shop/2019/12/css-position-sticky" rel="bookmark"><img class="wp-image-919" src="./images/css positionsticky的尝试1.png" alt="" /></a></h1>
+<h2>学习使用</h2>
+<p>我们来实现陶宝右侧的效果，就特别简单了，没什么好学的，直接设置就行了：</p>
+<div class="cnblogs_Highlighter">
+<pre><code>.sidebar {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+</pre>
+</div>
+<p>简单例子:&nbsp;<a href="https://jsbin.com/vivixezule/edit?html,css,output">https://jsbin.com/vivixezule/edit?html,css,output</a></p>
+<p>还有一种设计效果，比如叠加效果也能实现，还有很多效果，具体大家可以根据sticky特性自由发挥： 叠加效果：&nbsp;<a href="https://jsbin.com/fegiqoquki/edit?html,css,output">https://jsbin.com/fegiqoquki/edit?html,css,output</a></p>
+<h2>特性</h2>
+<p><code>position:sticky</code>有个非常重要的特性，那就是sticky元素效果完全受制于父级元素们们们。如果你发现你设置了不起效果，可以检查以下两个原因：</p>
+<ol>
+<li>父级元素不能有任何<code>overflow:visible</code>以外的overflow设置，否则没有效果，因为改变了滚动容器（即使没有出现滚动条）。</li>
+<li>父级元素高度过小，根本不够stikcy块的滚动，就会没有效果。</li>
+</ol>
+<h2>唠叨</h2>
+<p>近几年Web开发语言都在互相协作着，这种协作是一种促进，有时候我们总调侃学不动了，一直在变化，可是哪知道这些变化反而解决了我们的痛点，也许你习惯了，觉得不是痛点不去学，但是不能否认你学会之后，你会说以前太痛了，再也不想回去了，就像学会vue，react, angular 等，再回去jquery真的觉得有点痛苦了，但你不想学之前，总觉得jQuery不怎么痛，你习惯了。</p>
+<p>前后端的分离让 JS接替了部分后端语言的工作，比如数据绑定交互等；css接替了部分JS工作，比如动画和各种常见设计效果等，各种语言都在共同协作着，只是为了解决码农痛点，我们能做的就是抽空瞄一眼，试一试，学一学 ，利永远大于弊，学习的时间不仅可以为你大大的节省开发时间，更会让你拥有愉悦的编程体验 🙂</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

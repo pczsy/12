@@ -1,0 +1,103 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/11216540.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-大作业说明">一. 大作业说明</a></li>
+        <li><a href="#二.基本思路">二.基本思路</a></li>
+        <li><a href="#三.视频纹理表面修复uv映射">三.视频纹理表面修复——UV映射</a><ul>
+        <li><a href="#问题描述">3.1 问题描述</a></li>
+        <li><a href="#纹理贴图的基本原理-uv映射">3.2 纹理贴图的基本原理-UV映射</a></li>
+        <li><a href="#关键示例代码">3.3 关键示例代码</a></li>
+        </ul></li>
+        <li><a href="#四.小结">四.小结</a></li>
+        </ul>
+    </div>
+</div>
+<blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/threejs-demo/%E5%B8%A6%E7%9D%80canvas%E5%8E%BB%E6%B5%81%E6%B5%AA%EF%BC%8812%EF%BC%89-demo">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）0.png" /></p>
+<h2 id="一.-大作业说明">一. 大作业说明</h2>
+<p>通读完上一篇博文中提及的教程，觉得应该搞个大作业巩固一下所学的知识，想起刚上映的漫威宇宙第三阶段收官之作<strong>《蜘蛛侠·英雄远征》</strong>，于是决定仿一个<code>MARVEL</code>的片头动画作为<code>three.js</code>的课后练习，使用的版本是<code>R104</code>版本。本节先来解决视频贴图的问题。</p>
+<h2 id="二.基本思路">二.基本思路</h2>
+<p>简易片头动画的实现思路如下，除了正常的舞台元素外，需要背景音乐，使用<code>THREE.AudioLoader</code>就可以从后后台加载音乐，舞台中主要的实体元素是<code>MARVEL</code>这几个字母的立体模型，可以使用<code>THREE.TextGeometry</code>来进行建模（<a href="https://blog.csdn.net/qq_30100043/article/details/75947750">【Three.js绘制字体模型】</a>），它要求先载入字体文件，然后才能实例化，参考官方文档的实现就可以了。有了字体模型以后，还需要一些影片素材贴在字体模型上，<code>THREE.VideoTexture</code>可以解决这个问题（<a href="https://blog.csdn.net/qq_30100043/article/details/80275413">【Three.js使用VideoTexture实现视频Video更新纹理】</a>），它可以将HTML中的<code>&lt;video&gt;</code>标签引入的资源作为表面纹理通过材料实例的<code>map</code>参数与之关联在一起，然后贴在几何体表面，最后要解决的问题就是镜头的变化了，看过漫威电影的同学都知道，片头动画最后一部分的画面先是镜头后退，然后<code>MARVEL</code>几个字母逐渐翻转过来，这个效果的实现方式很多，可以调整相机参数，也可以调整物体参数，建议自己动手时各种方法都尝试一下。为了熟悉更多特性，笔者自己在实现中使用正交相机，通过调整正交相机的视场宽度来模拟镜头后退动画（在透视相机下可以直接调整相机的Z轴坐标实现类似的效果），然后通过设置几何体的位移和旋转来模拟镜头的移动。</p>
+<h2 id="三.视频纹理表面修复uv映射">三.视频纹理表面修复——UV映射</h2>
+<h3 id="问题描述">3.1 问题描述</h3>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）1.png" /></p>
+<p>整个大作业中最难处理的就是视频纹理贴图的部分，所以本篇先来搞定这个知识点。如果使用<code>THREE.js</code>提供的<code>Geometry</code>基本不会遇到什么问题，例如上图中的示例，就将视频素材贴在了立方体的各个面上，然而当你使用其他带有一些自定义性质的几何体实例，比如自己画了一个<code>shape</code>然后拉伸成为<code>拉伸体</code>，或者本次大作业中需要使用的<code>TextGeometry</code>字体模型时。视频贴图就直接失效了。同样尺寸的立方体，如果用<code>THREE.BoxGeometry</code>来生成实例，表面就可以直接贴视频，如果使用<code>shape</code>画一个矩形再拉伸成同样尺寸的实体，视频就无法正常覆盖在模型表面，如下图所示：</p>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）2.png" /></p>
+<p>仔细看你会发现图片边界的地方有发光的条，将细节放大后可以看到下面的场景：</p>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）3.png" /></p>
+<p>可以看到，视频实际上的确是覆盖在立方体表面了，但只是占了很小的一块，所以需要针对这种情况进行模型纹理修复，使视频可以覆盖几何体的单个表面。</p>
+<h3 id="纹理贴图的基本原理-uv映射">3.2 纹理贴图的基本原理-UV映射</h3>
+<p>在<code>Three.js</code>中，几何体是通过<code>点</code>和<code>面</code>的特征构建起来的，如果将一个几何体实例对象在控制台打印出来，就可以看到存储端点坐标信息的<code>vertexs</code>和存储面信息的<code>faces</code>数组。当你构建一个立方体时，会发现它的<code>faces</code>属性数组中有12个面的信息，因为<code>Three.js</code>中默认使用三角面片来构建几何体，一个矩形表面需要用两个三角面片来构建，（你可以将立方体材料<code>material</code>中传入 <code>wireframe:true</code>来看到立方体的线框图），<code>faces</code>数组中每一个面中存储的是构建这个三角面的3个点的位置信息。</p>
+<p>纹理贴图坐标也称为<code>UV</code>坐标，它的贴图原理是这样的，首先将贴图素材x轴和y轴的长度以0-1来标记，那么使用3个坐标范围在[0~1,0~1]的点就可以在图形素材中以<strong>三角形</strong>剪裁出需要的部分，同理使用4个坐标范围在[0~1,0~1]的点，就可以在图形素材中以<strong>四边形</strong>剪裁出需要的部分，以此类推，如下图所示：</p>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）4.png" /></p>
+<p>右图中白色三角形的三个顶点在归一化坐标系中的坐标值已经列出，将<code>[0.2,0.2],[0.2,0.8],[0.7,0.2]</code>这三个坐标点信息填充到对应的<code>UV</code>映射数组中后，<code>Three.js</code>就会用这个三角形区域来对一个三角面进行贴图。由于默认面是三角面，所以我们通过实例化3个<code>THREE.Vector2(x,y)</code>对象来表示从素材中截取的三角形区域，得到了素材后要如何将它与三角面的顶点坐标对应起来呢？这就引出了本节中的关键概念——<strong>UV映射矩阵</strong>。</p>
+<blockquote>
+<p>大部分高大上的概念都离不开一个土掉渣的实现，<code>UV映射矩阵</code>也不例外。</p>
+</blockquote>
+<p>由于贴图素材是三个点，几何体某个三角面也是有三个顶点，如果不限制索引，那么就可能存在很多种贴图结果：</p>
+<p><img src="./images/【带着canvas去流浪（12）】用Three.js制作简易的MARVEL片头动画（上）5.png" /></p>
+<p>为了保证贴图素材的方向，它们之间就有存在一个对应关系，否则最后渲染的纹理可能就是倒着的或者旋转90°的图像，所以<code>UV映射矩阵</code>中存储的依然是上例中右图的三个点，但默认索引和构成几何体指定面的三个顶点的索引相对应，这就唯一限定了截取表面到几何体三角面的贴图样式。</p>
+<h3 id="关键示例代码">3.3 关键示例代码</h3>
+<p>完整的示例可以从附件或开头处的<code>github</code>代码仓中获取，示例是一个<code>express</code>工程，<code>npm install</code>装一下依赖，跑起来之后访问<code>localhost:3333</code>就可以看到。</p>
+<pre><code><code>//重构UV Mapping
+function rebuildUVMapping() {    
+    //在纹理素材上标记关键点
+    let pos = [
+        new THREE.Vector2(0,0.1),
+        new THREE.Vector2(1,0.1),
+        new THREE.Vector2(1,0.9),
+        new THREE.Vector2(0,0.9),
+    ]
+
+    //uv映射的纹理存放在几何体实例的下面这个属性中
+    let uvs = geometry.faceVertexUvs[0];
+
+    //背面
+    //生成网格时材料可以传数组，materialIndex可以为不同面指定不同的材质，本例中对应不同的视频片段
+    geometry.faces[0].materialIndex = 4; 
+    geometry.faces[1].materialIndex = 4;
+    //重构UV映射关系矩阵
+    uvs[0] = [pos[1], pos[0], pos[3]];
+    uvs[1] = [pos[3], pos[2], pos[1]];
+
+    //正面
+    geometry.faces[2].materialIndex = 0;
+    geometry.faces[3].materialIndex = 0;
+    uvs[2] = [pos[3], pos[0], pos[1]];
+    uvs[3] = [pos[1], pos[2], pos[3]];
+
+    //标记uv映射是可更新的
+    geometry.uvsNeedUpdate = true;
+}</code></pre>
+<h2 id="四.小结">四.小结</h2>
+<p>视频纹理是本例中最难的部分了，下一篇中笔者将构建字体模型，并加入镜头转换，完成整个预期的动画，敬请关注，也希望感兴趣的小伙伴一起交流。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,652 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十八) 高级应用 transition组件 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十八) 高级应用 transition组件 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11261494.html</div><br>
+    <p>transition组件可以给任何元素和组件添加进入/离开过渡，但只能给单个组件实行过渡效果(多个元素可以用transition-group组件，下一节再讲)，调用该内置组件时，可以传入如下特性:</p>
+<p>&nbsp;&nbsp;&nbsp; name&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 用于自动生成CSS过渡类名&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 例如:name:'fade'将自动拓展为.fade-enter，.fade-enter-active等<br />&nbsp;&nbsp; &nbsp;appear&nbsp;&nbsp; &nbsp;&nbsp; 是否在初始渲染时使用过渡&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 默认为false<br />&nbsp;&nbsp; &nbsp;css&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; 是否使用 CSS 过渡类。&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 默认为 true。如果设置为 false，将只通过组件事件触发注册的 JavaScript 钩子。<br />&nbsp;&nbsp; &nbsp;mode&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 控制离开/进入的过渡时间序列&nbsp;&nbsp;&nbsp; 可设为"out-in"或"in-out"；默认同时生效<br />&nbsp;&nbsp; &nbsp;type&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 指定过渡事件类型&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 可设为transition或animation，用于侦听过渡何时结束;可以不设置，Vue内部会自动检测出持续时间长的为过渡事件类型<br />&nbsp;&nbsp; &nbsp;duration&nbsp;&nbsp;&nbsp; 定制进入和移出的持续时间 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 以后用到再看</p>
+<p><span style="color: #ff0000;">type表示transition对应的css过渡类里的动画样式既可以用transition也可以用animation来设置动画(可以同时使用)，然后我们可以用指定，Vue内部会自动判断出来<br /></span></p>
+<p>除了以上特性，我们还可以设置如下特性，用于指定过渡的样式:</p>
+<p>&nbsp;&nbsp;&nbsp; appear-class&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 初次渲染时的起始状态&nbsp;&nbsp;&nbsp; ;如果不存在则等于enter-class属性&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #ff0000;">这三个属性得设置了appear为true才生效</span><br />&nbsp;&nbsp; &nbsp;appear-to-class &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; 初次渲染时的结束状态&nbsp;&nbsp;&nbsp; 如果不存在则等于enter-to-class&nbsp;&nbsp; &nbsp;属性<br />&nbsp;&nbsp; &nbsp;appear-active-class&nbsp;&nbsp; 初次渲染时的过渡&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; 如果不存在则等于enter-active-class属性 <br />&nbsp;&nbsp; &nbsp;enter-class&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; 进入过渡时的起始状态&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;enter-to-class&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 进入过渡时的结束状态&nbsp; <br />&nbsp;&nbsp; &nbsp;enter-active-class&nbsp;&nbsp;&nbsp;&nbsp; 进入过渡时的过渡&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;leave-class&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 离开过渡时的起始状态&nbsp;&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;leave-to-class&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 离开过渡时的结束状态&nbsp;&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;leave-active-class&nbsp;&nbsp;&nbsp; 离开过渡时的过渡&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+<p><span style="color: #ff0000;">对于后面六个class,内部会根据name拼凑出对应的class来</span>,例如一个transition的name="fade"，拼凑出来的class名默认分别为:fade-enter、fade-enter-to、fade-enter-active、fade-leave、fade-leave-to、fade-leave-active</p>
+<p>除此之外还可以在transition中绑定自定义事件，所有的自定义事件如下</p>
+<p>&nbsp;&nbsp;&nbsp; before-appear &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; 初次渲染，过渡前的事件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 未指定则等于before-enter事件&nbsp;&nbsp; &nbsp; <br />&nbsp;&nbsp; &nbsp;appear&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 初次渲染开始时的事件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 未指定则等于enter事件&nbsp; <br />&nbsp;&nbsp; &nbsp;after-appear&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; 初次渲染，过渡结束后的事件&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 未指定则等于enter-cancelled事件&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;appear-cancelled&nbsp;&nbsp;&nbsp;&nbsp; 初次渲染未完成又触发隐藏条件而重新渲染时的事件,未指定则等于enter-cancelled事件&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;before-enter &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; 进入过渡前的事件<br />&nbsp;&nbsp; &nbsp;enter &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 进入过渡时的事件 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;after-enter&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 进入过渡结束后的事件<br />&nbsp;&nbsp; &nbsp;enter-cancelled&nbsp;&nbsp; &nbsp; &nbsp; 进入过渡未完成又触发隐藏条件而重新渲染时的事件&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;before-leave&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp; 离开过渡前的事件<br />&nbsp;&nbsp; &nbsp;leave&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 离开时的事件&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; <br />&nbsp;&nbsp; &nbsp;after-leave&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; 离开后的事件<br />&nbsp;&nbsp; &nbsp;leave-cancelled&nbsp;&nbsp; &nbsp;&nbsp; 进入过渡未完成又触发隐藏条件而重新渲染时的事件&nbsp;&nbsp;&nbsp; </p>
+<p>transition相关的所有属性应该都列出来了(应该比官网还多吧，我是从源码里找到的)，我们举一个例子，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .fade-enter,.fade-leave-to</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #f00</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">translateY(20px)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>         <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">.fade-enter和.fade-leave-to一般写在一起，当然也可以分开</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+        .fade-enter-active,.fade-leave-to</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">all 1s linear 500ms</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="show=!show"</span><span style="color: #0000ff;">&gt;</span>按钮<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="fade"</span><span style="color: #ff0000;"> :appear</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> @before-enter</span><span style="color: #0000ff;">="beforeenter"</span><span style="color: #ff0000;">  @enter</span><span style="color: #0000ff;">="enter"</span><span style="color: #ff0000;"> @after-enter</span><span style="color: #0000ff;">="afterenter"</span><span style="color: #ff0000;"> @before-leave</span><span style="color: #0000ff;">="beforeleave"</span><span style="color: #ff0000;"> @leave</span><span style="color: #0000ff;">="leave"</span><span style="color: #ff0000;"> @after-leave</span><span style="color: #0000ff;">="afterleave"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>你好<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>        
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data:{
+                show:</span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">
+            },
+            methods:{
+                beforeenter(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">进入过渡前的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                enter(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">进入过渡开始的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                afterenter(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">进入过渡结束的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                beforeleave(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">离开过渡前的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                leave(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">离开过渡开始的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                afterleave(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">离开过渡结束的事件</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)}
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>    
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>我们调用transition组件时设置了appear特性为true,这样页面加载时动画就开始了，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解0.png" alt="" /></p>
+<p>控制台输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解1.png" alt="" /></p>
+<p>文字从透明到渐显，同时位移也发生了变化，我们点击按钮时又会触发隐藏，继续点击，又会显示，这是因为我们在transition的子节点里使用了v-show指令。</p>
+<p>对于transition组件来说,在下列情形中，可以给任何元素和组件添加进入/离开过渡:</p>
+<p>&nbsp;&nbsp;&nbsp; 条件渲染 (使用 v-if)<br />&nbsp;&nbsp;&nbsp; 条件展示 (使用 v-show)<br />&nbsp;&nbsp;&nbsp; 动态组件<br />&nbsp;&nbsp;&nbsp; 组件根节点</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">用原生DOM模拟transition组件</span></strong></p>
+<hr />
+<p>&nbsp;Vue内部是通过修改transition子节点的class名来实现动画效果的，我们用原生DOM实现一下这个效果,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .trans</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">all 2s linear</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .start</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">translatex(100px)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="con"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>显式<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="hide"</span><span style="color: #0000ff;">&gt;</span>隐藏<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p"</span><span style="color: #0000ff;">&gt;</span>Hello Vue!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> p </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.getElementsByTagName(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)[</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">];
+        document.getElementById(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">con</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">).addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">click</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event){
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">switch</span><span style="background-color: #f5f5f5; color: #000000;">(event.target.name){
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">case</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">show</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:
+                    p.style.display</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">block</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">;
+                    p.classList.add(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">trans</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);
+                    p.classList.remove(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">start</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)        
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">break</span><span style="background-color: #f5f5f5; color: #000000;">;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">case</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">hide</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:                    
+                    p.classList.add(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">trans</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+                    p.classList.add(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">start</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)    
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">break</span><span style="background-color: #f5f5f5; color: #000000;">;
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染的页面如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解2.png" alt="" /></p>
+<p>我们点击隐藏按钮后，Hello Vue!就逐渐隐藏了，然后我们查看DOM，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解3.png" alt="" /></p>
+<p>这个DOM元素还是存在的，只是opacity这个透明度的属性为0，Vue内部的transition隐藏后是一个注释节点，这是怎么实现的，我们能不能也实现出来,当然可以。</p>
+<p><span style="color: #ff0000;">Vue内部通过window.getComputedStyle()这个API接口获取到了transition或animation的结束时间，然后通过绑定transitionend或animationend事件(对应不同的动画结束事件)执行一个回调函数，该回<span style="color: #ff0000;">调</span>函数会将DOM节点设置为一个注释节点(隐藏节点的情况下)</span></p>
+<p>我们继续改一下代码，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .trans</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">all 2s linear</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .start</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">translatex(100px)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="con"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>显式<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="hide"</span><span style="color: #0000ff;">&gt;</span>隐藏<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p"</span><span style="color: #0000ff;">&gt;</span>Hello Vue!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> p             </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.getElementsByTagName(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">p</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)[</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">],
+            tid           </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">,
+            pDom          </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">,
+            CommentDom    </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.createComment(</span><span style="background-color: #f5f5f5; color: #000000;">""</span><span style="background-color: #f5f5f5; color: #000000;">);
+        document.getElementById(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">con</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">).addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">click</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(event){
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">switch</span><span style="background-color: #f5f5f5; color: #000000;">(event.target.name){
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">case</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">show</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:                           
+                    CommentDom.parentNode.replaceChild(p,CommentDom)  
+                    setTimeout(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){p.classList.remove(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">start</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)},</span><span style="background-color: #f5f5f5; color: #000000;">10</span><span style="background-color: #f5f5f5; color: #000000;">)                            
+                    ModifyClass(</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">)
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">break</span><span style="background-color: #f5f5f5; color: #000000;">;
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">case</span> <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">hide</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">:                    
+                    p.classList.add(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">trans</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+                    p.classList.add(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">start</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)    
+                    ModifyClass(</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">)
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">break</span><span style="background-color: #f5f5f5; color: #000000;">;
+            }
+        })
+         
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> ModifyClass(n){    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">s=1:显式过程 s=0:隐藏过程</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> styles </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> window.getComputedStyle(p);
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> transitionDelays </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> styles[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">transitionDelay</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">].split(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">transition的延迟时间        ;比如:["0.5s"]</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> transitionDurations </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> styles[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">transitionDuration</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">].split(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);              </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">transition的动画持续时间    ;比如:"1s"</span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> transitionTimeout </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> getTimeout(transitionDelays, transitionDurations);      </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">transition的获取动画结束的时间，单位ms，比如:1500</span>
+<span style="background-color: #f5f5f5; color: #000000;">            tid </span><span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;"> clearTimeout(tid);
+            tid</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">setTimeout(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+                 </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(n){                   </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果是显式</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    p.classList.remove(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">trans</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+                    p.removeAttribute(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">class</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);
+                }</span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;">{                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果是隐藏</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    p.parentNode.replaceChild(CommentDom,p);
+                }
+            },transitionTimeout)       
+        }
+
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> getTimeout(delays, durations) {                                      </span><span style="background-color: #f5f5f5; color: #ff0000;">//</span><span style="background-color: #f5f5f5; color: #008000;">从Vue源码里拷贝出来的代码的，获取动画完成的总时间，返回ms格式  </span>
+            <span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (delays.length </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;"> durations.length) {
+                delays </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> delays.concat(delays);
+            }
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> Math.max.apply(</span><span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">, durations.map(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (d, i) {
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> toMs(d) </span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;"> toMs(delays[i])
+            }))
+        }
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> toMs(s) {
+            </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> Number(s.slice(</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">)) </span><span style="background-color: #f5f5f5; color: #000000;">*</span> <span style="background-color: #f5f5f5; color: #000000;">1000</span><span style="background-color: #f5f5f5; color: #000000;">
+        }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>    
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;这样当动画结束后改DOM就真的隐藏了,变为了一个注释节点,如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解4.png" alt="" /></p>
+<p>当再次点击时，就会显式出来，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解5.png" alt="" /></p>
+<p>完美,这里遇到个问题，就是当显式的时候直接设置class不会有动画，应该是和重绘有关的吧m所以用了一个setTImeout()来实现。</p>
+<p>Vue也就是把这些原生DOM操作进行了封装，我们现在来看Vue的源码</p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;transition是Vue的内置组件，在执行initGlobalAPI()时extend保存到Vue.options.component(<span style="color: #ff0000;">第5052行</span>)，我们可以打印看看，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解6.png" alt="" /></p>
+<p>Transition组件的格式为:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> Transition = {    <span style="color: #008000;">//</span><span style="color: #008000;">第8012行  transition组件的定义</span>
+  name: 'transition'<span style="color: #000000;">,
+  props: transitionProps,
+  abstract: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+
+  render: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> render (h) {
+      </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+  }
+}</span></pre>
+</div>
+<p>也就是说transition组件定义了自己的render函数。</p>
+<p>以上面的第一个例子为例，执行到transition组件时会执行到它的render函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  render: <span style="color: #0000ff;">function</span> render (h) {         <span style="color: #008000;">//</span><span style="color: #008000;">第8217行  transition组件的render函数，并没有template模板，初始化或更新都会执行到这里</span>
+    <span style="color: #0000ff;">var</span> <span style="color: #0000ff;">this</span>$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">var</span> children = <span style="color: #0000ff;">this</span>.$slots.<span style="color: #0000ff;">default</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">children) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> filter out text nodes (possible whitespaces)</span>
+    children = children.filter(<span style="color: #0000ff;">function</span> (c) { <span style="color: #0000ff;">return</span> c.tag ||<span style="color: #000000;"> isAsyncPlaceholder(c); });
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span> (!children.length) {                     <span style="color: #008000;">//</span><span style="color: #008000;">获取子节点</span>
+      <span style="color: #0000ff;">return</span>                                      <span style="color: #008000;">//</span><span style="color: #008000;">如果没有子节点，则直接返回</span>
+<span style="color: #000000;">    } 
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> warn multiple elements</span>
+    <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; children.length &gt; 1) {      <span style="color: #008000;">//</span><span style="color: #008000;">如果过滤掉空白节点后，children还是不存在，则直接返回</span>
+<span style="color: #000000;">      warn(
+        </span>'&lt;transition&gt; can only be used on a single element. Use ' +
+        '&lt;transition-group&gt; for lists.'<span style="color: #000000;">,
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$parent
+      );
+    }
+
+    </span><span style="color: #0000ff;">var</span> mode = <span style="color: #0000ff;">this</span>.mode;                                             <span style="color: #008000;">//</span><span style="color: #008000;">获取模式</span>
+
+    <span style="color: #008000;">//</span><span style="color: #008000;"> warn invalid mode</span>
+    <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp;<span style="color: #000000;">
+      mode </span>&amp;&amp; mode !== 'in-out' &amp;&amp; mode !== 'out-in'                    <span style="color: #008000;">//</span><span style="color: #008000;">检查mode是否规范只能是in-out或out-in</span>
+<span style="color: #000000;">    ) {
+      warn(
+        </span>'invalid &lt;transition&gt; mode: ' +<span style="color: #000000;"> mode,
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$parent
+      );
+    }
+
+    </span><span style="color: #0000ff;">var</span> rawChild = children[0];                                   <span style="color: #008000;">//</span><span style="color: #008000;">获取所有子节点</span>
+
+    <span style="color: #008000;">//</span><span style="color: #008000;"> if this is a component root node and the component's</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> parent container node also has transition, skip.</span>
+    <span style="color: #0000ff;">if</span> (hasParentTransition(<span style="color: #0000ff;">this</span>.$vnode)) {                         <span style="color: #008000;">//</span><span style="color: #008000;">如果当前的transition是根组件，且调用该组件的时候外层又套了一个transition</span>
+      <span style="color: #0000ff;">return</span> rawChild                                                   <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回rawChild</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> apply transition data to child</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> use getRealChild() to ignore abstract components e.g. keep-alive</span>
+    <span style="color: #0000ff;">var</span> child =<span style="color: #000000;"> getRealChild(rawChild);
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">child) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> rawChild
+    }
+
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">._leaving) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> placeholder(h, rawChild)
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ensure a key that is unique to the vnode type and to this transition</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> component instance. This key will be used to remove pending leaving nodes</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> during entering.</span>
+    <span style="color: #0000ff;">var</span> id = "__transition-" + (<span style="color: #0000ff;">this</span>._uid) + "-";                       <span style="color: #008000;">//</span><span style="color: #008000;">拼凑key，比如:__transition-1   ;this._uid是transition组件实例的_uid，在_init初始化时定义的</span>
+    child.key = child.key == <span style="color: #0000ff;">null</span>
+      ?<span style="color: #000000;"> child.isComment
+        </span>? id + 'comment'<span style="color: #000000;">
+        : id </span>+<span style="color: #000000;"> child.tag
+      : isPrimitive(child.key)
+        </span>? (String(child.key).indexOf(id) === 0 ? child.key : id +<span style="color: #000000;"> child.key)
+        : child.key;
+
+    </span><span style="color: #0000ff;">var</span> data = (child.data || (child.data = {})).transition = extractTransitionData(<span style="color: #0000ff;">this</span>);        <span style="color: #ff0000;">//获取组件上的props和自定义事件,保存到child.data.transition里</span>
+    <span style="color: #0000ff;">var</span> oldRawChild = <span style="color: #0000ff;">this</span><span style="color: #000000;">._vnode;
+    </span><span style="color: #0000ff;">var</span> oldChild =<span style="color: #000000;"> getRealChild(oldRawChild);
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> mark v-show</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> so that the transition module can hand over the control to the directive</span>
+    <span style="color: #0000ff;">if</span> (child.data.directives &amp;&amp; child.data.directives.some(<span style="color: #0000ff;">function</span> (d) { <span style="color: #0000ff;">return</span> d.name === 'show'; })) {      <span style="color: #008000;">//</span><span style="color: #008000;">如果child带有一个v-show指令</span>
+      child.data.show = <span style="color: #0000ff;">true</span>;                                                                                       <span style="color: #008000;">//</span><span style="color: #008000;">则给child.data新增一个show属性，值为true</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+      oldChild </span>&amp;&amp;<span style="color: #000000;">
+      oldChild.data </span>&amp;&amp;
+      !isSameChild(child, oldChild) &amp;&amp;
+      !isAsyncPlaceholder(oldChild) &amp;&amp;
+      <span style="color: #008000;">//</span><span style="color: #008000;"> #6687 component root is a comment node</span>
+      !(oldChild.componentInstance &amp;&amp; oldChild.componentInstance._vnode.isComment)            <span style="color: #008000;">//</span><span style="color: #008000;">这里是更新组件，且子组件改变之后的逻辑</span>
+<span style="color: #000000;">    ) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> replace old child transition data with fresh one</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> important for dynamic transitions!</span>
+      <span style="color: #0000ff;">var</span> oldData = oldChild.data.transition =<span style="color: #000000;"> extend({}, data);
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> handle transition mode</span>
+      <span style="color: #0000ff;">if</span> (mode === 'out-in'<span style="color: #000000;">) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> return placeholder node and queue update when leave finishes</span>
+        <span style="color: #0000ff;">this</span>._leaving = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        mergeVNodeHook(oldData, </span>'afterLeave', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+          </span><span style="color: #0000ff;">this</span>$1._leaving = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+          </span><span style="color: #0000ff;">this</span>$1<span style="color: #000000;">.$forceUpdate();
+        });
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> placeholder(h, rawChild)
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (mode === 'in-out'<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isAsyncPlaceholder(child)) {
+          </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> oldRawChild
+        }
+        </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> delayedLeave;
+        </span><span style="color: #0000ff;">var</span> performLeave = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () { delayedLeave(); };
+        mergeVNodeHook(data, </span>'afterEnter'<span style="color: #000000;">, performLeave);
+        mergeVNodeHook(data, </span>'enterCancelled'<span style="color: #000000;">, performLeave);
+        mergeVNodeHook(oldData, </span>'delayLeave', <span style="color: #0000ff;">function</span> (leave) { delayedLeave =<span style="color: #000000;"> leave; });
+      }
+    }
+
+    </span><span style="color: #0000ff;">return</span> rawChild                                                                                         <span style="color: #008000;">//</span><span style="color: #008000;">返回DOM节点</span>
+  } </pre>
+</div>
+<p>extractTransitionData()可以获取transition组件上的特性等，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> extractTransitionData (comp) {   <span style="color: #008000;">//</span><span style="color: #008000;">第8176行  提取在transition组件上定义的data</span>
+  <span style="color: #0000ff;">var</span> data =<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span> options = comp.$options;                <span style="color: #008000;">//</span><span style="color: #008000;">获取comp组件的$options字段</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> props</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> options.propsData) {        <span style="color: #008000;">//</span><span style="color: #008000;">获取propsData</span>
+    data[key] = comp[key];                        <span style="color: #008000;">//</span><span style="color: #008000;">并保存到data里面 ,例如:{appear: true,name: "fade"}</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> events.</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> extract listeners and pass them directly to the transition methods</span>
+  <span style="color: #0000ff;">var</span> listeners = options._parentListeners;   <span style="color: #008000;">//</span><span style="color: #008000;">获取在transition组件上定义的自定义事件</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key$1 <span style="color: #0000ff;">in</span> listeners) {              <span style="color: #008000;">//</span><span style="color: #008000;">遍历自定义事件</span>
+    data[camelize(key$1)] = listeners[key$1];   <span style="color: #008000;">//</span><span style="color: #008000;">也保存到data上面</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> data
+}</span></pre>
+</div>
+<p>例子里的transition组件执行到返回的值如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解7.png" alt="" /></p>
+<p>也就是说transition返回的是子节点VNode,它只是在子节点VNode的data属性上增加了transition组件相关的信息</p>
+<p>对于v-show指令来说，初次绑定时会执行bind函数(可以看https://www.cnblogs.com/greatdesert/p/11157771.html),如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> show = {        <span style="color: #008000;">//</span><span style="color: #008000;">第8082行 </span>
+  bind: <span style="color: #0000ff;">function</span> bind (el, ref, vnode) {      <span style="color: #008000;">//</span><span style="color: #008000;">初次绑定时执行</span>
+    <span style="color: #0000ff;">var</span> value =<span style="color: #000000;"> ref.value;
+
+    vnode </span>=<span style="color: #000000;"> locateNode(vnode);
+    </span><span style="color: #0000ff;">var</span> transition$$1 = vnode.data &amp;&amp; vnode.data.transition;    <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取transition，如果v-show绑定的标签外层套了一个transition则会把信息保存到该对象里</span>
+    <span style="color: #0000ff;">var</span> originalDisplay = el.__vOriginalDisplay =<span style="color: #000000;">   
+      el.style.display </span>=== 'none' ? '' : el.style.display;      <span style="color: #008000;">//</span><span style="color: #008000;">保存最初的display属性</span>
+    <span style="color: #0000ff;">if</span> (value &amp;&amp; transition$$1) {                               <span style="color: #ff0000;">//如果transition$$1存在的话</span>
+      vnode.data.show = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      enter(vnode, </span><span style="color: #0000ff;">function</span> () {                                   <span style="color: #ff0000;">//</span><span style="color: #008000;">执行enter函数，参数2是个函数，是动画结束的回掉函数</span>
+        el.style.display =<span style="color: #000000;"> originalDisplay;
+      });
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      el.style.display </span>= value ? originalDisplay : 'none'<span style="color: #000000;">;
+    }
+  },</span></pre>
+</div>
+<p>最后会执行enter函数，enter函数也就是动画的入口函数，比较长，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> enter (vnode, toggleDisplay) {             <span style="color: #008000;">//</span><span style="color: #008000;">第7599行  进入动画的回调函数</span>
+  <span style="color: #0000ff;">var</span> el =<span style="color: #000000;"> vnode.elm;
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> call leave callback now</span>
+  <span style="color: #0000ff;">if</span> (isDef(el._leaveCb)) {                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果el._leaveCb存在，则执行它,离开过渡未执行完时如果重新触发了进入过渡，则执行到这里</span>
+    el._leaveCb.cancelled = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    el._leaveCb();
+  }
+
+  </span><span style="color: #0000ff;">var</span> data = resolveTransition(vnode.data.transition);      <span style="color: #ff0000;">//调用resolveTransition解析vnode.data.transition里的css属性</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(data)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>    
+  <span style="color: #0000ff;">if</span> (isDef(el._enterCb) || el.nodeType !== 1<span style="color: #000000;">) {      
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #0000ff;">var</span> css = data.css;                                       <span style="color: #008000;">//</span><span style="color: #008000;">是否使用 CSS 过渡类</span>
+  <span style="color: #0000ff;">var</span> type = data.type;                                     <span style="color: #008000;">//</span><span style="color: #008000;">过滤类型，可以是transition或animation   可以为空，Vue内部会自动检测</span>
+  <span style="color: #0000ff;">var</span> enterClass = data.enterClass;                         <span style="color: #008000;">//</span><span style="color: #008000;">获取进入过渡是的起始、结束和过渡时的状态对应的class</span>
+  <span style="color: #0000ff;">var</span> enterToClass =<span style="color: #000000;"> data.enterToClass;
+  </span><span style="color: #0000ff;">var</span> enterActiveClass =<span style="color: #000000;"> data.enterActiveClass;
+  </span><span style="color: #0000ff;">var</span> appearClass = data.appearClass;                       <span style="color: #008000;">//</span><span style="color: #008000;">获取初次渲染时的过渡，分别是起始、结束和过渡时的状态对应的class</span>
+  <span style="color: #0000ff;">var</span> appearToClass =<span style="color: #000000;"> data.appearToClass;
+  </span><span style="color: #0000ff;">var</span> appearActiveClass =<span style="color: #000000;"> data.appearActiveClass;
+  </span><span style="color: #0000ff;">var</span> beforeEnter = data.beforeEnter;                       <span style="color: #008000;">//</span><span style="color: #008000;">进入过渡前的事件,以下都是相关事件</span>
+  <span style="color: #0000ff;">var</span> enter =<span style="color: #000000;"> data.enter;
+  </span><span style="color: #0000ff;">var</span> afterEnter =<span style="color: #000000;"> data.afterEnter;
+  </span><span style="color: #0000ff;">var</span> enterCancelled =<span style="color: #000000;"> data.enterCancelled;
+  </span><span style="color: #0000ff;">var</span> beforeAppear =<span style="color: #000000;"> data.beforeAppear;
+  </span><span style="color: #0000ff;">var</span> appear =<span style="color: #000000;"> data.appear;
+  </span><span style="color: #0000ff;">var</span> afterAppear =<span style="color: #000000;"> data.afterAppear;
+  </span><span style="color: #0000ff;">var</span> appearCancelled =<span style="color: #000000;"> data.appearCancelled;
+  </span><span style="color: #0000ff;">var</span> duration =<span style="color: #000000;"> data.duration;
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> activeInstance will always be the &lt;transition&gt; component managing this</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> transition. One edge case to check is when the &lt;transition&gt; is placed</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> as the root node of a child component. In that case we need to check</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> &lt;transition&gt;'s parent for appear check.</span>
+  <span style="color: #0000ff;">var</span> context = activeInstance;                           <span style="color: #008000;">//</span><span style="color: #008000;">当前transition组件的Vue实例vm</span>
+  <span style="color: #0000ff;">var</span> transitionNode = activeInstance.$vnode;             <span style="color: #008000;">//</span><span style="color: #008000;">占位符VNode</span>
+  <span style="color: #0000ff;">while</span> (transitionNode &amp;&amp; transitionNode.parent) {       <span style="color: #008000;">//</span><span style="color: #008000;">如果transitoin组件是作为根节点的</span>
+    transitionNode = transitionNode.parent;                   <span style="color: #008000;">//</span><span style="color: #008000;">则修正transitionNode为它的parent</span>
+    context = transitionNode.context;                         <span style="color: #008000;">//</span><span style="color: #008000;">修正context为对应的parent的context</span>
+<span style="color: #000000;">  }
+
+  </span><span style="color: #0000ff;">var</span> isAppear = !context._isMounted || !vnode.isRootInsert;  <span style="color: #008000;">//</span><span style="color: #008000;">当前是否还未初始化 如果transition组件还没有挂载,则设置isAppear为true</span>
+
+  <span style="color: #0000ff;">if</span> (isAppear &amp;&amp; !appear &amp;&amp; appear !== '') {                   <span style="color: #008000;">//</span><span style="color: #008000;">如果appear为false(当前是初始化)，且appear为false(即初始渲染时不使用过渡),或不存在</span>
+    <span style="color: #0000ff;">return</span>                                                         <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回，不做处理</span>
+<span style="color: #000000;">  } 
+
+  </span><span style="color: #0000ff;">var</span> startClass = isAppear &amp;&amp; appearClass                  <span style="color: #008000;">//</span><span style="color: #008000;">进入过渡的起始状态</span>
+    ?<span style="color: #000000;"> appearClass
+    : enterClass;
+  </span><span style="color: #0000ff;">var</span> activeClass = isAppear &amp;&amp; appearActiveClass          <span style="color: #008000;">//</span><span style="color: #008000;">进入过渡时的状态</span>
+    ?<span style="color: #000000;"> appearActiveClass
+    : enterActiveClass; 
+  </span><span style="color: #0000ff;">var</span> toClass = isAppear &amp;&amp; appearToClass                 <span style="color: #008000;">//</span><span style="color: #008000;">进入过渡的结束状态</span>
+    ?<span style="color: #000000;"> appearToClass
+    : enterToClass;
+
+  </span><span style="color: #0000ff;">var</span> beforeEnterHook =<span style="color: #000000;"> isAppear
+    </span>? (beforeAppear ||<span style="color: #000000;"> beforeEnter)
+    : beforeEnter;
+  </span><span style="color: #0000ff;">var</span> enterHook =<span style="color: #000000;"> isAppear
+    </span>? (<span style="color: #0000ff;">typeof</span> appear === 'function' ?<span style="color: #000000;"> appear : enter)
+    : enter;
+  </span><span style="color: #0000ff;">var</span> afterEnterHook =<span style="color: #000000;"> isAppear
+    </span>? (afterAppear ||<span style="color: #000000;"> afterEnter)
+    : afterEnter;
+  </span><span style="color: #0000ff;">var</span> enterCancelledHook =<span style="color: #000000;"> isAppear
+    </span>? (appearCancelled ||<span style="color: #000000;"> enterCancelled)
+    : enterCancelled;
+
+  </span><span style="color: #0000ff;">var</span> explicitEnterDuration =<span style="color: #000000;"> toNumber(
+    isObject(duration)
+      </span>?<span style="color: #000000;"> duration.enter
+      : duration
+  );
+
+  </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; explicitEnterDuration != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+    checkDuration(explicitEnterDuration, </span>'enter'<span style="color: #000000;">, vnode);
+  }
+
+  </span><span style="color: #0000ff;">var</span> expectsCSS = css !== <span style="color: #0000ff;">false</span> &amp;&amp; !isIE9;                     <span style="color: #008000;">//</span><span style="color: #008000;">是否使用 CSS 过渡类 IE9是不支持的</span>
+  <span style="color: #0000ff;">var</span> userWantsControl =<span style="color: #000000;"> getHookArgumentsLength(enterHook);
+
+  </span><span style="color: #0000ff;">var</span> cb = el._enterCb = once(<span style="color: #0000ff;">function</span> () {                     <span style="color: #008000;">//</span><span style="color: #008000;">完成后的回调函数</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (expectsCSS) {
+      removeTransitionClass(el, toClass);
+      removeTransitionClass(el, activeClass);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (cb.cancelled) {
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (expectsCSS) {
+        removeTransitionClass(el, startClass);
+      }
+      enterCancelledHook </span>&amp;&amp;<span style="color: #000000;"> enterCancelledHook(el);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      afterEnterHook </span>&amp;&amp;<span style="color: #000000;"> afterEnterHook(el);
+    }
+    el._enterCb </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+  });
+
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">vnode.data.show) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> remove pending leave element on enter by injecting an insert hook</span>
+    mergeVNodeHook(vnode, 'insert', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+      </span><span style="color: #0000ff;">var</span> parent =<span style="color: #000000;"> el.parentNode;
+      </span><span style="color: #0000ff;">var</span> pendingNode = parent &amp;&amp; parent._pending &amp;&amp;<span style="color: #000000;"> parent._pending[vnode.key];
+      </span><span style="color: #0000ff;">if</span> (pendingNode &amp;&amp;<span style="color: #000000;">
+        pendingNode.tag </span>=== vnode.tag &amp;&amp;<span style="color: #000000;">
+        pendingNode.elm._leaveCb
+      ) {
+        pendingNode.elm._leaveCb();
+      }
+      enterHook </span>&amp;&amp;<span style="color: #000000;"> enterHook(el, cb);
+    });
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> start enter transition</span>
+  beforeEnterHook &amp;&amp; beforeEnterHook(el);               <span style="color: #ff0000;">//如果定义了beforeEnterHook钩子函数，则执行它,例子里的beforeenter会执行这里，输出:进入过渡前的事件</span>
+  <span style="color: #0000ff;">if</span> (expectsCSS) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果expectsCSS为true</span>
+    addTransitionClass(el, startClass);                     <span style="color: #008000;">//</span><span style="color: #008000;">给el元素新增一个class，名为startClass</span>
+    addTransitionClass(el, activeClass);                    <span style="color: #008000;">//</span><span style="color: #008000;">给el元素新增一个class，名为activeClass</span>
+    nextFrame(<span style="color: #0000ff;">function</span> () {                                 <span style="color: #008000;">//</span><span style="color: #008000;">下次浏览器重绘时</span>
+      removeTransitionClass(el, startClass);                  <span style="color: #ff0000;">//移除startClass这个class ;因为有设置了activeClass，所以此时就会开始执行动画了</span>
+      <span style="color: #0000ff;">if</span> (!cb.cancelled) {                                    <span style="color: #008000;">//</span><span style="color: #008000;">如果cb.cancelled为空</span>
+        addTransitionClass(el, toClass);                        <span style="color: #008000;">//</span><span style="color: #008000;">添加toClass这个class</span>
+        <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">userWantsControl) {
+          </span><span style="color: #0000ff;">if</span> (isValidDuration(explicitEnterDuration)) {           <span style="color: #008000;">//</span><span style="color: #008000;">如果用户自定义了动画时间</span>
+<span style="color: #000000;">            setTimeout(cb, explicitEnterDuration);
+          } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            whenTransitionEnds(el, type, cb);                     </span><span style="color: #008000;">//</span><span style="color: #008000;">否则执行默认的whenTransitionEnds()函数(等到动画结束后就会执行cb这个回调函数了)</span>
+<span style="color: #000000;">          }
+        }
+      }
+    });
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (vnode.data.show) {
+    toggleDisplay </span>&amp;&amp;<span style="color: #000000;"> toggleDisplay();
+    enterHook </span>&amp;&amp;<span style="color: #000000;"> enterHook(el, cb);
+  }
+
+  </span><span style="color: #0000ff;">if</span> (!expectsCSS &amp;&amp; !<span style="color: #000000;">userWantsControl) {
+    cb();
+  }
+}</span></pre>
+</div>
+<p>resolveTransition会根据transitioin里的name属性自动拼凑css名，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveTransition (def) {        <span style="color: #008000;">//</span><span style="color: #008000;">第7419行 解析transition</span>
+  <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">def) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore else </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> def === 'object') {          <span style="color: #008000;">//</span><span style="color: #008000;">如果def是一个对象</span>
+    <span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">if</span> (def.css !== <span style="color: #0000ff;">false</span>) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果css不等于false</span>
+      extend(res, autoCssTransition(def.name || 'v'));    <span style="color: #008000;">//</span><span style="color: #008000;">获取class样式</span>
+<span style="color: #000000;">    }
+    extend(res, def);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> def === 'string'<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> autoCssTransition(def)
+  }
+}
+
+</span><span style="color: #0000ff;">var</span> autoCssTransition = cached(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (name) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    enterClass: (name </span>+ "-enter"<span style="color: #000000;">),
+    enterToClass: (name </span>+ "-enter-to"<span style="color: #000000;">),
+    enterActiveClass: (name </span>+ "-enter-active"<span style="color: #000000;">),
+    leaveClass: (name </span>+ "-leave"<span style="color: #000000;">),
+    leaveToClass: (name </span>+ "-leave-to"<span style="color: #000000;">),
+    leaveActiveClass: (name </span>+ "-leave-active"<span style="color: #000000;">)
+  }
+});</span></pre>
+</div>
+<p>例子里执行到这里时返回的如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解8.png" alt="" /></p>
+<p>回到enter函数，最后会执行<span style="color: #000000;">whenTransitionEnds函数，如下:</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> whenTransitionEnds (       <span style="color: #008000;">//</span><span style="color: #008000;">第7500行 工具函数，当el元素的动画执行完毕后就去执行cb函数</span>
+<span style="color: #000000;">  el,
+  expectedType,
+  cb
+) {
+  </span><span style="color: #0000ff;">var</span> ref = getTransitionInfo(el, expectedType);        <span style="color: #ff0000;">//获取动画信息</span>
+  <span style="color: #0000ff;">var</span> type = ref.type;                                  <span style="color: #008000;">//</span><span style="color: #008000;">动画的类型，例如:transition</span>
+  <span style="color: #0000ff;">var</span> timeout = ref.timeout;                            <span style="color: #008000;">//</span><span style="color: #008000;">动画结束时间</span>
+  <span style="color: #0000ff;">var</span> propCount = ref.propCount;                        <span style="color: #008000;">//</span><span style="color: #008000;">如果是transition类型的动画，是否有transform动画存在</span>
+  <span style="color: #0000ff;">if</span> (!type) { <span style="color: #0000ff;">return</span><span style="color: #000000;"> cb() }
+  </span><span style="color: #0000ff;">var</span> event = type === TRANSITION ? transitionEndEvent : animationEndEvent;   <span style="color: #008000;">//</span><span style="color: #008000;">如果是transition动画则设置event为transitionend(transition结束事件)，否则设置为animationend(animate结束事件)</span>
+  <span style="color: #0000ff;">var</span> ended = 0<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span> end = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    el.removeEventListener(event, onEnd);
+    cb();
+  };    
+  </span><span style="color: #0000ff;">var</span> onEnd = <span style="color: #0000ff;">function</span> (e) {                            <span style="color: #008000;">//</span><span style="color: #008000;">动画结束事件</span>
+    <span style="color: #0000ff;">if</span> (e.target ===<span style="color: #000000;"> el) {
+      </span><span style="color: #0000ff;">if</span> (++ended &gt;=<span style="color: #000000;"> propCount) {
+        end();                                            </span><span style="color: #008000;">//</span><span style="color: #008000;">如果所有的动画都执行结束了，则执行end()函数</span>
+<span style="color: #000000;">      }
+    }
+  };
+  setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #0000ff;">if</span> (ended &lt;<span style="color: #000000;"> propCount) {
+      end();
+    }
+  }, timeout </span>+ 1<span style="color: #000000;">);
+  el.addEventListener(event, onEnd);                    </span><span style="color: #008000;">//</span><span style="color: #008000;">在el节点上绑定event事件，当动画结束后会执行onEnd函数</span>
+}</pre>
+</div>
+<p>getTransitionInfo用于获取动画的信息，返回一个对象格式，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> getTransitionInfo (el, expectedType) {     <span style="color: #008000;">//</span><span style="color: #008000;">第7533行 获取el元素上上的transition信息</span>
+  <span style="color: #0000ff;">var</span> styles = window.getComputedStyle(el);             <span style="color: #008000;">//</span><span style="color: #008000;">获取el元素所有最终使用的CSS属性值</span>
+  <span style="color: #0000ff;">var</span> transitionDelays = styles[transitionProp + 'Delay'].split(', ');        <span style="color: #008000;">//</span><span style="color: #008000;">transition的延迟时间        ;比如:["0.5s"]</span>
+  <span style="color: #0000ff;">var</span> transitionDurations = styles[transitionProp + 'Duration'].split(', ');  <span style="color: #008000;">//</span><span style="color: #008000;">动画持续时间</span>
+  <span style="color: #0000ff;">var</span> transitionTimeout = getTimeout(transitionDelays, transitionDurations);  <span style="color: #008000;">//</span><span style="color: #008000;">获取动画结束的时间</span>
+  <span style="color: #0000ff;">var</span> animationDelays = styles[animationProp + 'Delay'].split(', '<span style="color: #000000;">);
+  </span><span style="color: #0000ff;">var</span> animationDurations = styles[animationProp + 'Duration'].split(', '<span style="color: #000000;">);
+  </span><span style="color: #0000ff;">var</span> animationTimeout =<span style="color: #000000;"> getTimeout(animationDelays, animationDurations);
+
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> type;
+  </span><span style="color: #0000ff;">var</span> timeout = 0<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span> propCount = 0<span style="color: #000000;">;
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (expectedType === TRANSITION) {                  <span style="color: #008000;">//</span><span style="color: #008000;">如果expectedType等于TRANSITION(全局变量，等于字符串:'transition')</span>
+    <span style="color: #0000ff;">if</span> (transitionTimeout &gt; 0<span style="color: #000000;">) {
+      type </span>=<span style="color: #000000;"> TRANSITION;
+      timeout </span>=<span style="color: #000000;"> transitionTimeout;
+      propCount </span>=<span style="color: #000000;"> transitionDurations.length;
+    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (expectedType === ANIMATION) {            <span style="color: #008000;">//</span><span style="color: #008000;">如果是animation动画</span>
+    <span style="color: #0000ff;">if</span> (animationTimeout &gt; 0<span style="color: #000000;">) {
+      type </span>=<span style="color: #000000;"> ANIMATION;
+      timeout </span>=<span style="color: #000000;"> animationTimeout;
+      propCount </span>=<span style="color: #000000;"> animationDurations.length;
+    }
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    timeout </span>= Math.max(transitionTimeout, animationTimeout);  <span style="color: #008000;">//</span><span style="color: #008000;">获取两个变量的较大值，保存到timeout里</span>
+    type = timeout &gt; 0
+      ? transitionTimeout &gt; animationTimeout                  <span style="color: #008000;">//</span><span style="color: #008000;">修正类型</span>
+        ?<span style="color: #000000;"> TRANSITION
+        : ANIMATION
+      : </span><span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    propCount </span>=<span style="color: #000000;"> type
+      </span>? type === TRANSITION                                   <span style="color: #008000;">//</span><span style="color: #008000;">动画的个数 transition可以一次性指定多个动画的，用,分隔</span>
+        ?<span style="color: #000000;"> transitionDurations.length
+        : animationDurations.length
+      : </span>0<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">var</span> hasTransform =<span style="color: #000000;">
+    type </span>=== TRANSITION &amp;&amp;<span style="color: #000000;">
+    transformRE.test(styles[transitionProp </span>+ 'Property'<span style="color: #000000;">]);
+  </span><span style="color: #0000ff;">return</span> {                                            <span style="color: #008000;">//</span><span style="color: #008000;">最后返回一个动画相关的对象</span>
+<span style="color: #000000;">    type: type,
+    timeout: timeout,
+    propCount: propCount,
+    hasTransform: hasTransform
+  }
+}</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>例子里返回后的对象信息如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十八) 高级应用 transition组件 详解9.png" alt="" /></p>
+<p>&nbsp;回到whenTransitionEnds函数，等到动画结束时就会执行参数3，也就是enter函数内定义的cb局部函数，该函数最终会移除toClass和activeClass，最后执行afterEnter回掉函数。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

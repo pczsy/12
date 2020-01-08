@@ -1,0 +1,100 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS 外边距(margin)重叠及防止方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS 外边距(margin)重叠及防止方法</center></div><div class='banquan'>原文出处:本文由博客园博主青瑟少年提供。<br/>
+原文连接:https://www.cnblogs.com/webdom/p/10643176.html</div><br>
+    <p>边距重叠解决方案(BFC)</p>
+<p>首先要明确BFC是什么意思，其全英文拼写为 Block Formatting Context 直译为&ldquo;块级格式化上下文&rdquo;</p>
+<p>&nbsp;</p>
+<p>两个或多个块级盒子的垂直相邻边界会重合。结果的边界宽度是相邻边界宽度中最大的值。如果出现负边界，则在最大的正边界中减去绝对值最大的负边界。如果没有正边界，则从零中减去绝对值最大的负边界。注意：相邻的盒子可能并非是由父子关系或同胞关系的元素生成。</p>
+<p>但是边界的重叠也有例外情况：</p>
+<p>1、水平边距永远不会重合。<br />2、在规范文档中，2个或以上的块级盒模型相邻的垂直margin会重叠。最终的margin值计算方法如下：<br />a、全部都为正值，取最大者；<br />b、不全是正值，则都取绝对值，然后用正值减去最大值；<br />c、没有正值，则都取绝对值，然后用0减去最大值。<br />注意：相邻的盒模型可能由DOM元素动态产生并没有相邻或继承关系。<br />3、相邻的盒模型中，如果其中的一个是浮动的（float），垂直margin不会重叠，并且浮动的盒模型和它的子元素之间也是这样。<br />4、设置了overflow属性的元素和它的子元素之间的margin不被重叠（overflow取值为visible除外）。<br />5、设置了绝对定位（position:absolute）的盒模型，垂直margin不会被重叠，并且和他们的子元素之间也是一样。<br />6、设置了display:inline-block的元素，垂直margin不会重叠，甚至和他们的子元素之间也是一样。<br />7、如果一个盒模型的上下margin相邻，这时它的margin可能重叠覆盖（collapse through）它。在这种情况下，元素的位置（position）取决于它的相邻元素的margin是否重叠。<br />a、如果元素的margin和它的父元素的margin-top重叠在一起，盒模型border-top的边界定义和它的父元素相同。<br />b、另外，任意元素的父元素不参与margin的重叠，或者说只有父元素的margin-bottom是参与计算的。如果元素的border-top非零，那么元素的border-top边界位置和原来一样。<br />一个应用了清除操作的元素的margin-top绝不会和它的块级父元素的margin-bottom重叠。<br />注意，那些已经被重叠覆盖的元素的位置对其他已经重叠的元素的位置没有任何影响；只有在对这些元素的子元素定位时，border-top边界位置才是必需的。<br />8、根元素的垂直margin不会被重叠。</p>
+<p>外边距(margin)重叠示例<br />外边距重叠是指两个垂直相邻的块级元素，当上下两个边距相遇时，起外边距会产生重叠现象，且重叠后的外边距，等于其中较大者。<br />图示：</p>
+<p>另一个重叠现象是当一个元素包含在另一个元素之中时，子元素与父元素之间也会产生重叠现象，重叠后的外边距，等于其中最大者：</p>
+<p><img src="./images/CSS 外边距(margin)重叠及防止方法0.png" alt="" /></p>
+<p>同理，如果一个无内容的空元素，其自身上下边距也会产生重叠。</p>
+<p><img src="./images/CSS 外边距(margin)重叠及防止方法1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>外边距重叠的意义</p>
+<p>外边距的重叠只产生在普通流文档的上下外边距之间，这个看起来有点奇怪的规则，其实有其现实意义。设想，当我们上下排列一系列规则的块级元素（如段落P）时，那么块元素之间因为外边距重叠的存在，段落之间就不会产生双倍的距离。</p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">案例：如下图，父元素没有设置margin-top，而子元素设置了margin-top：20px;可以看出，父元素也一起有了边距。</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        *<span style="color: #000000;">{
+            margin:</span>0<span style="color: #000000;">;
+            padding:</span>0<span style="color: #000000;">;
+        }
+        .demo{
+            height:100px;
+            background: #eee;
+        }
+        .parent{
+            height:200px;
+            background: #88f;
+        }
+        .child{
+            height:100px;
+            margin</span>-<span style="color: #000000;">top:20px;
+            background: #0ff;
+            width:200px;
+        }
+    </span>&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;section class="demo"&gt;
+        &lt;h2&gt;此部分是能更容易看出让下面的块的margin-top。&lt;/h2&gt;
+    &lt;/section&gt;
+    &lt;section class = "parent"&gt;
+        &lt;article class="child"&gt;
+            &lt;h2&gt;子元素&lt;/h2&gt;
+            margin-<span style="color: #000000;">top:20px;
+        </span>&lt;/article&gt;
+        &lt;h2&gt;父元素&lt;/h2&gt;
+            没有设置margin-<span style="color: #000000;">top
+    </span>&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p><img src="./images/CSS 外边距(margin)重叠及防止方法2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><em><strong><span style="color: #ff0000;">解决这个办法：父元素设置padding-top:20px 或者设置 overflow:hidden，子元素取消margin-top:20px;</span></strong></em></p>
+<p>&nbsp;</p>
+<p><img src="./images/CSS 外边距(margin)重叠及防止方法3.png" alt="" /></p>
+<p><span style="color: #ff0000;">防止外边距重叠解决方案：</span></p>
+<p><span style="color: #ff0000;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;虽然外边距的重叠有其一定的意义，但有时候我们在设计上却不想让元素之间产生重叠，那么可以有如下几个建议可供参考：</span></p>
+<ol>
+<li><span style="color: #ff0000;">外层元素padding代替</span></li>
+<li><span style="color: #ff0000;">内层元素透明边框 border:1px solid transparent;</span></li>
+<li><span style="color: #ff0000;">内层元素绝对定位 postion:absolute:</span></li>
+<li><span style="color: #ff0000;">外层元素 overflow:hidden;</span></li>
+<li><span style="color: #ff0000;">内层元素 加float:left;或display:inline-block;</span></li>
+<li><span style="color: #ff0000;">内层元素padding:1px;</span></li>
+</ol>
+<p><span style="color: #000000;">以上建议可根据实际情况来采取。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

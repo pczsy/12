@@ -1,0 +1,287 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端最佳实践——DOM操作' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端最佳实践——DOM操作</center></div><div class='banquan'>原文出处:本文由博客园博主认真的四季豆提供。<br/>
+原文连接:https://www.cnblogs.com/wangtaolearning/p/11996037.html</div><br>
+    <h2>1、浏览器渲染原理</h2>
+<p>在讲DOM操作的最佳性能实践之前，先介绍下浏览器的基本渲染原理。</p>
+<p>分为以下四个步骤：</p>
+<ul>
+<li>
+<p>解析HTML(HTML Parser)</p>
+</li>
+<li>
+<p>构建DOM树(DOM Tree)</p>
+</li>
+<li>
+<p>渲染树构建(Render Tree)</p>
+</li>
+<li>
+<p>绘制渲染树(Painting)</p>
+</li>
+</ul>
+<blockquote>
+<p>浏览器请求解析（Parser） HTML 文档，并将各标记逐个转化成 DOM 节点（DOM Tree）。同时也会解析外部 CSS 文件以及样式元素中的样式数据。HTML 中这些带有视觉指令的样式信息将用于创建另一个树结构：呈现树（Render Tree）。呈现树（Render Tree）包含多个带有视觉属性（如颜色和尺寸）的矩形。这些矩形的排列顺序就是它们将在屏幕上显示的顺序。呈现树（Render Tree）构建完毕之后，进入&ldquo;布局&rdquo;处理阶段，也就是为每个节点分配一个应出现在屏幕上的确切坐标。下一个阶段是绘制（Painting） - 浏览器会遍历呈现树（Render Tree），由用户界面后端层将每个节点绘制出来。</p>
+</blockquote>
+<p>需要着重指出的是，这是一个渐进的过程。为达到更好的用户体验，浏览器会力求尽快将内容显示在屏幕上。它不必等到整个 HTML 文档解析完毕之后，就会开始构建呈现树和设置布局。在不断接收和处理来自网络的其余内容的同时，浏览器会将部分内容解析并显示出来。</p>
+<h2 id="2-repaints-and-reflows">2、Repaints and reflows</h2>
+<p>Repaint：可以理解为重绘或重画，当render tree中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，例如改变背景颜色 。则就叫称为重绘。<br />Reflows：可以理解为回流、布局或者重排，当渲染树（render Tree）中的一部分(或全部)因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流（reflow），也就是重新布局（relayout）。</p>
+<p>回流或者重绘何时触发？</p>
+<p>改变用于构建渲染树的任何内容都可能导致重绘或回流，例如：<br />1、添加，删除，更新DOM节点<br />2、用display: none（回流和重绘）或者visibility: hidden隐藏节点（只有重绘，因为没有几何更改）<br />3、添加样式表，调整样式属性<br />4、调整窗口大小，更改字体大小<br />5、页面初始化的渲染<br />6、移动DOM元素<br />。。。</p>
+<p>我们来看几个例子：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>  
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">var</span> bstyle = document.body.style; <span style="color: #008000;">//</span><span style="color: #008000;"> cache</span>
+<span style="color: #008080;"> 3</span>  
+<span style="color: #008080;"> 4</span> bstyle.padding = "20px"; <span style="color: #008000;">//</span><span style="color: #008000;"> reflow, repaint</span>
+<span style="color: #008080;"> 5</span>  
+<span style="color: #008080;"> 6</span> bstyle.border = "10px solid red"; <span style="color: #008000;">//</span><span style="color: #008000;"> another reflow and a repaint</span>
+<span style="color: #008080;"> 7</span>  
+<span style="color: #008080;"> 8</span> bstyle.color = "blue"; <span style="color: #008000;">//</span><span style="color: #008000;"> repaint only, no dimensions changed</span>
+<span style="color: #008080;"> 9</span>  
+<span style="color: #008080;">10</span> bstyle.backgroundColor = "#fad"; <span style="color: #008000;">//</span><span style="color: #008000;"> repaint</span>
+<span style="color: #008080;">11</span>  
+<span style="color: #008080;">12</span> bstyle.fontSize = "2em"; <span style="color: #008000;">//</span><span style="color: #008000;"> reflow, repaint</span>
+<span style="color: #008080;">13</span>  
+<span style="color: #008080;">14</span> <span style="color: #008000;">//</span><span style="color: #008000;"> new DOM element - reflow, repaint</span>
+<span style="color: #008080;">15</span>  
+<span style="color: #008080;">16</span> document.body.appendChild(document.createTextNode('dude!'));</pre>
+</div>
+<p>我们可以想象一下，如果直接在渲染树（render Tree）最后面增加或者删除一个节点，这对于浏览器渲染页面来说无伤大雅，因为只需要在渲染树（render Tree）的末端重绘那一部分变动的节点。但是，如果是在页面的顶部变动一个节点，浏览器需要重新计算渲染树（render Tree），导致渲染树（render Tree）的一部分或全部发生变化。渲染树（render Tree）重新建立后，浏览器会重新绘制页面上受影响的元素。重排的代价比重绘的代价高很多，重绘会影响部分的元素，而重排则有可能影响全部的元素。</p>
+<h2 id="3-dom-"><a name="t2"></a><a name="t2"></a>3、DOM操作最佳实践</h2>
+<p>DOM操作带来的页面 Repaints 和 Reflows 是不可避免的，但可以遵循一些最佳实践来最大限度地减少Repaints 和 Reflows。如下是一些具体的实践方法：</p>
+<h3 id="3-1-dom-"><a name="t3"></a><a name="t3"></a>3.1、合并多次的DOM操作</h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>  
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">//</span><span style="color: #008000;"> bad</span>
+<span style="color: #008080;"> 3</span>  
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">var</span> left = 10<span style="color: #000000;">,
+</span><span style="color: #008080;"> 5</span>  
+<span style="color: #008080;"> 6</span> top = 10<span style="color: #000000;">;
+</span><span style="color: #008080;"> 7</span>  
+<span style="color: #008080;"> 8</span> el.style.left = left + "px"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>  
+<span style="color: #008080;">10</span> el.style.top = top + "px"<span style="color: #000000;">;
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">14</span> <span style="color: #008000;">//</span><span style="color: #008000;"> better</span>
+<span style="color: #008080;">15</span>  
+<span style="color: #008080;">16</span> el.className += " theclassname"<span style="color: #000000;">;
+</span><span style="color: #008080;">17</span>  
+<span style="color: #008080;">18</span> <span style="color: #008000;">//</span><span style="color: #008000;"> better</span>
+<span style="color: #008080;">19</span>  
+<span style="color: #008080;">20</span> el.style.cssText += "; left: " + left + "px; top: " + top + "px;";</pre>
+</div>
+<p>由于与渲染树更改相关的 Repaints and Reflows 是代价非常高，因此现代浏览器针对频繁的 Repaints and Reflows 有性能的优化。 一个策略是浏览器将设置脚本所需更改的队列，并分批执行。 这样，每个需要 Reflows 的几个变化将被组合，并且将仅计算一个 Reflows 。 浏览器可以添加排队的更改，然后在一定时间过去或达到一定数量的更改后刷新队列（并不是所有的浏览器都存在这样的优化。推荐的方式是把DOM操作尽量合并）。但有时脚本可能会阻止浏览器优化 Reflows ，并使其刷新队列并执行所有批量更改。 当您请求如下样式信息时（并非包含全部），会发生这种情况。见下图：</p>
+<blockquote>
+<p>以上所有这些基本上都是请求有关节点的样式信息，浏览器必须提供最新的值。 为了做到这一点，它需要应用所有计划的更改，刷新队列，强行回流。所以在有大批量DOM操作时，应避免获取DOM元素的布局信息，使得浏览器针对大批量DOM操作的优化不被破坏。如果需要这些布局信息，最好是在DOM操作之前就去获取。</p>
+</blockquote>
+<p>&nbsp;</p>
+<div class="hljs-ln-code">
+<div class="hljs-ln-line">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">bad</span>
+<span style="color: #008080;"> 2</span>  
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">var</span> bstyle =<span style="color: #000000;"> document.body.style;
+</span><span style="color: #008080;"> 4</span>  
+<span style="color: #008080;"> 5</span> bodystyle.color = 'red'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>  
+<span style="color: #008080;"> 7</span> tmp =<span style="color: #000000;"> computed.backgroundColor;
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span> bodystyle.color = 'white'<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>  
+<span style="color: #008080;">11</span> tmp =<span style="color: #000000;"> computed.backgroundImage;
+</span><span style="color: #008080;">12</span>  
+<span style="color: #008080;">13</span> bodystyle.color = 'green'<span style="color: #000000;">;
+</span><span style="color: #008080;">14</span>  
+<span style="color: #008080;">15</span> tmp =<span style="color: #000000;"> computed.backgroundAttachment;
+</span><span style="color: #008080;">16</span>  
+<span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> <span style="color: #008000;">//</span><span style="color: #008000;">better</span>
+<span style="color: #008080;">19</span>  
+<span style="color: #008080;">20</span> tmp =<span style="color: #000000;"> computed.backgroundColor;
+</span><span style="color: #008080;">21</span>  
+<span style="color: #008080;">22</span> tmp =<span style="color: #000000;"> computed.backgroundImage;
+</span><span style="color: #008080;">23</span>  
+<span style="color: #008080;">24</span> tmp =<span style="color: #000000;"> computed.backgroundAttachment;
+</span><span style="color: #008080;">25</span>  
+<span style="color: #008080;">26</span>  
+<span style="color: #008080;">27</span> bodystyle.color = 'yellow'<span style="color: #000000;">;
+</span><span style="color: #008080;">28</span>  
+<span style="color: #008080;">29</span> bodystyle.color = 'pink'<span style="color: #000000;">;
+</span><span style="color: #008080;">30</span>  
+<span style="color: #008080;">31</span> bodystyle.color = 'blue';</pre>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<h3 id="3-2-dom-render-tree-"><a name="t4"></a>3.2、让DOM元素脱离渲染树（render Tree）后修改</h3>
+<p>（1）使用文档片段<br />DocumentFragments 是DOM节点。它们不是主DOM树的一部分。通常的用例是创建文档片段，将元素附加到文档片段，然后将文档片段附加到DOM树。在DOM树中，文档片段被其所有的孩子所代替。因为文档片段存在于内存中，并不在DOM树中，所以将子元素插入到文档片段时不会引起页面回流（Reflow）。当然，最后一步把文档片段附加到页面的这一步操作还是会造成回流（Reflow）。</p>
+<p>&nbsp;</p>
+<div class="hljs-ln-numbers">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">var</span> fragment =<span style="color: #000000;"> document.createDocumentFragment();
+</span><span style="color: #008080;">2</span>  
+<span style="color: #008080;">3</span> <span style="color: #008000;">//</span><span style="color: #008000;"> 一些基于fragment的大量DOM操作</span>
+<span style="color: #008080;">4</span>  
+<span style="color: #008080;">5</span> <span style="color: #000000;">...
+</span><span style="color: #008080;">6</span>  
+<span style="color: #008080;">7</span> document.getElementById('myElement').appendChild(fragment);</pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>（2）通过设置DOM元素的display样式为none来隐藏元素<br />原理是先隐藏元素，然后基于元素做DOM操作，经过大量的DOM操作后才把元素显示出来。</p>
+<p>&nbsp;</p>
+<div class="hljs-ln-numbers">&nbsp;
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">var</span> myElement = document.getElementById('myElement'<span style="color: #000000;">);
+</span><span style="color: #008080;">2</span>  
+<span style="color: #008080;">3</span> myElement.style.display = 'none'<span style="color: #000000;">;
+</span><span style="color: #008080;">4</span>  
+<span style="color: #008080;">5</span> <span style="color: #008000;">//</span><span style="color: #008000;"> 一些基于myElement的大量DOM操作</span>
+<span style="color: #008080;">6</span>  
+<span style="color: #008080;">7</span> <span style="color: #000000;">...
+</span><span style="color: #008080;">8</span>  
+<span style="color: #008080;">9</span> myElement.style.display = 'block';</pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>（3）克隆DOM元素到内存中<br />这种方式是把页面上的DOM元素克隆一份到内存中，然后再在内存中操作克隆的元素，操作完成后使用此克隆元素替换页面中原来的DOM元素。</p>
+<div class="hljs-ln-numbers">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">var</span> old = document.getElementById('myElement'<span style="color: #000000;">);
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">var</span> clone = old.cloneNode(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">3</span> <span style="color: #008000;">//</span><span style="color: #008000;"> 一些基于clone的大量DOM操作</span>
+<span style="color: #008080;">4</span> <span style="color: #000000;">...
+</span><span style="color: #008080;">5</span> old.parentNode.replaceChild(clone, old);</pre>
+</div>
+</div>
+<h3>3.3、使用局部变量缓存样式信息</h3>
+<p>获取DOM的样式信息会有性能的损耗，所以如果存在循环调用，最佳的做法是尽量把这些值缓存在局部变量中。</p>
+<div class="hljs-ln-numbers">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>  
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">//</span><span style="color: #008000;"> bad</span>
+<span style="color: #008080;"> 3</span>  
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> resizeAllParagraphsToMatchBlockWidth() {
+</span><span style="color: #008080;"> 5</span>  
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; paragraphs.length; i++<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 7</span>  
+<span style="color: #008080;"> 8</span> paragraphs[i].style.width = box.offsetWidth + 'px'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>  
+<span style="color: #008080;">10</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">11</span>  
+<span style="color: #008080;">12</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">13</span>  
+<span style="color: #008080;">14</span>  
+<span style="color: #008080;">15</span>  
+<span style="color: #008080;">16</span> <span style="color: #008000;">//</span><span style="color: #008000;"> better</span>
+<span style="color: #008080;">17</span>  
+<span style="color: #008080;">18</span> <span style="color: #0000ff;">var</span> width =<span style="color: #000000;"> box.offsetWidth;
+</span><span style="color: #008080;">19</span>  
+<span style="color: #008080;">20</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> resizeAllParagraphsToMatchBlockWidth() {
+</span><span style="color: #008080;">21</span>  
+<span style="color: #008080;">22</span> <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; paragraphs.length; i++<span style="color: #000000;">) {
+</span><span style="color: #008080;">23</span>  
+<span style="color: #008080;">24</span> paragraphs[i].style.width = width + 'px'<span style="color: #000000;">;
+</span><span style="color: #008080;">25</span>  
+<span style="color: #008080;">26</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">27</span>  
+<span style="color: #008080;">28</span> }</pre>
+</div>
+</div>
+<h3 id="3-4-dom-"><a name="t6"></a>3.4、 设置具有动画效果的DOM元素为固定定位</h3>
+<p>使用绝对定位使得该元素在渲染树中成为 body 下的一个直接子节点，因此当它进行动画时，它不会影响太多其他节点。</p>
+<h2 id="4-">4、dom操作性能查看</h2>
+<h4>4.1.1、首先用谷歌浏览器打开如上的链接。按下F12，切换到Performance选项</h4>
+<h4 id="4-1-2-ctrl-e-body-stop-">4.1.2、按下ctrl + E（或者点击小圆点）开始录制，点击 body 区域，待文字变成绿色后点击&ldquo;stop&rdquo;停止录制</h4>
+<h4>4.1.3、选中上图中蓝色（js堆）突然升高的部分，表示刚才点击body的过程，滚动鼠标放大主线程</h4>
+<h4 id="4-1-4-clear-">4.1.4、点击圆点旁边的clear按钮清空，重复上述的操作，直到文字变蓝色停止：</h4>
+<p>&nbsp;</p>
+<h3><a name="t9"></a><a name="t9"></a>4.2、频繁回流造成的影响</h3>
+<p>谷歌文档给的例子，链接地址如下：<a href="https://link.juejin.im/?target=https%3A%2F%2Fwengjq.github.io%2FGithubPage%2FBlog-Demo%2Fanimation.html" rel="nofollow">animation</a>。</p>
+<p>优化前的代码：</p>
+<div class="hljs-ln-code">
+<div class="hljs-ln-line">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">var</span> pos = m.classList.contains('down') ?
+<span style="color: #008080;"> 2</span>  
+<span style="color: #008080;"> 3</span> m.offsetTop + distance : m.offsetTop -<span style="color: #000000;"> distance;
+</span><span style="color: #008080;"> 4</span>  
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">if</span> (pos &lt; 0) pos = 0<span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>  
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">if</span> (pos &gt; maxHeight) pos =<span style="color: #000000;"> maxHeight;
+</span><span style="color: #008080;"> 8</span>  
+<span style="color: #008080;"> 9</span> m.style.top = pos + 'px'<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>  
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">if</span> (m.offsetTop === 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">12</span>  
+<span style="color: #008080;">13</span> m.classList.remove('up'<span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>  
+<span style="color: #008080;">15</span> m.classList.add('down'<span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>  
+<span style="color: #008080;">17</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">18</span>  
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">if</span> (m.offsetTop ===<span style="color: #000000;"> maxHeight) {
+</span><span style="color: #008080;">20</span>  
+<span style="color: #008080;">21</span> m.classList.remove('down'<span style="color: #000000;">);
+</span><span style="color: #008080;">22</span>  
+<span style="color: #008080;">23</span> m.classList.add('up'<span style="color: #000000;">);
+</span><span style="color: #008080;">24</span>  
+<span style="color: #008080;">25</span> }</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+<p>优化后的代码：</p>
+<div class="hljs-ln-code">
+<div class="hljs-ln-line">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">var</span> pos = parseInt(m.style.top.slice(0, m.style.top.indexOf('px'<span style="color: #000000;">)));
+</span><span style="color: #008080;"> 2</span>  
+<span style="color: #008080;"> 3</span> m.classList.contains('down') ? pos += distance : pos -=<span style="color: #000000;"> distance;
+</span><span style="color: #008080;"> 4</span>  
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">if</span> (pos &lt; 0) pos = 0<span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>  
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">if</span> (pos &gt; maxHeight) pos =<span style="color: #000000;"> maxHeight;
+</span><span style="color: #008080;"> 8</span>  
+<span style="color: #008080;"> 9</span> m.style.top = pos + 'px'<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>  
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">if</span> (pos === 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">12</span>  
+<span style="color: #008080;">13</span> m.classList.remove('up'<span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>  
+<span style="color: #008080;">15</span> m.classList.add('down'<span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>  
+<span style="color: #008080;">17</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">18</span>  
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">if</span> (pos ===<span style="color: #000000;"> maxHeight) {
+</span><span style="color: #008080;">20</span>  
+<span style="color: #008080;">21</span> m.classList.remove('down'<span style="color: #000000;">);
+</span><span style="color: #008080;">22</span>  
+<span style="color: #008080;">23</span> m.classList.add('up'<span style="color: #000000;">);
+</span><span style="color: #008080;">24</span>  
+<span style="color: #008080;">25</span> }</pre>
+</div>
+</div>
+</div>
+<p>先节流cpu，然后加多小&ldquo;谷歌&rdquo;图标，直到图标速度明显减慢，再点击&ldquo;Optimize&rdquo;优化按钮，可以明显感受出差距。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

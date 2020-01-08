@@ -1,0 +1,106 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue-cli3使用svg' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue-cli3使用svg</center></div><div class='banquan'>原文出处:本文由博客园博主Barrett_07提供。<br/>
+原文连接:https://www.cnblogs.com/Tianbao/p/11817071.html</div><br>
+    <ul>
+<li><font color="red">(根据网上教程实操，仅作个记录)</font></li>
+<li>执行命令安装插件 <code>npm install svg-sprite-loader --save-dev</code></li>
+<li><p>在<code>vue.config.js</code>中，添加配置</p>
+<pre><code><code>  module.exports = {
+      ...
+      chainWebpack: config =&gt; {
+          // 一个规则里的 基础Loader
+          // svg是个基础loader
+          const svgRule = config.module.rule(&quot;svg&quot;);
+
+          // 清除已有的所有 loader。
+          // 如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
+          svgRule.uses.clear();
+
+          // 添加要替换的 loader
+          svgRule
+          .use(&quot;svg-sprite-loader&quot;)
+          .loader(&quot;svg-sprite-loader&quot;)
+          .options({
+              symbolId: &quot;icon-[name]&quot;
+          });
+      },
+      ...
+  }</code></pre></li>
+<li><p>创建vue公共svg组件<code>svgIcon.vue</code></p>
+<pre><code><code>  &lt;template&gt;
+  &lt;svg :class=&quot;svgClass&quot; aria-hidden=&quot;true&quot;&gt;
+      &lt;use :xlink:href=&quot;iconName&quot; /&gt;
+  &lt;/svg&gt;
+  &lt;/template&gt;
+  &lt;script&gt;
+  export default {
+  name: &quot;svgIcon&quot;,
+
+  props: {
+      iconClass: {
+          type: String,
+          required: true,
+      },
+      className: {
+          type: String,
+          default: &#39;&#39;,
+      },
+  },
+
+  computed: {
+      iconName () {
+          return    `#icon-${this.iconClass}`
+      },
+      svgClass () {
+          if(this.className) {
+              return `svg-icon${this.className}`
+          }else {
+              return &#39;svg-icon&#39;
+          }
+      },
+  },
+  }
+  &lt;/script&gt;
+  &lt;style lang=&quot;scss&quot; scoped&gt;
+  .svg-icon {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+  }
+  &lt;/style&gt;</code></pre></li>
+<li><p>新建<code>svg-icon</code>文件夹，文件夹下包含<code>svg</code>和<code>index.js</code>，分别为svg原文件和引入代码。<code>index.js</code>内容为：</p>
+<pre><code><code>  import Vue from &#39;vue&#39;
+  import svgIcon from &#39;@/components/svgIcon&#39;
+
+  Vue.component(&#39;svg-icon&#39;, svgIcon)   // 挂载在全局
+
+  const requireAll = requireContext =&gt; requireContext.keys().map(requireContext)
+  const req = require.context(&#39;./svg&#39;, false, /\.svg$/)
+  requireAll(req);</code></pre></li>
+<li><p>使用 <code>&lt;svg-icon icon-class=&quot;svgname&quot; /&gt;</code> // svgname必须与<code>/svg-icon/svg/</code>下的svg文件命名一致。</p></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

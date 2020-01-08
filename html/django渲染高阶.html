@@ -1,0 +1,92 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修django渲染高阶' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>django渲染高阶</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11365954.html</div><br>
+    <h1 id="自我总结">08.16自我总结</h1>
+<h1 id="django渲染高阶">django渲染高阶</h1>
+<h2 id="一.利用母版渲染">一.利用母版渲染</h2>
+<h3 id="创建母版文件">1.创建母版文件</h3>
+<p>如:<code>stamper.html</code></p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        {% block css %}
+        {% endblock %} #写css
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    {% block data %}
+    {% endblock %}    #存放内容
+&lt;/body&gt;
+    {% block js %}  #写js
+    {% endblock %}
+&lt;/html&gt;</code></pre>
+<p><code>可以创建无数个block</code></p>
+<h3 id="导入模板">2.导入模板</h3>
+<pre><code><code>{% extends stamper.html %} #母版名称
+{% block css %}
+ #放在原母版的基础上进行渲染
+{% endblock %} #写css</code></pre>
+<h2 id="二.一部分文件渲染">二.一部分文件渲染</h2>
+<h3 id="组件">1.组件</h3>
+<p><code>xx.html</code></p>
+<pre class="python"><code>&lt;form action=&quot;&quot;&gt;
+    &lt;input type=&quot;text&quot; class=&quot;word-input&quot;&gt;
+    &lt;button class=&quot;word-button&quot;&gt; 提交&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<h3 id="导入组件">2.导入组件</h3>
+<pre><code><code>{% include &#39;xx,html&#39; %}</code></pre>
+<p><code>注意</code>:这里导入多个相同的内容会出现多个内容</p>
+<h2 id="三.函数渲染">三.函数渲染</h2>
+<p><code>不建议大家在模板中使用函数， 因为会降低模板的渲染效率， 建议大家在视图处理函数中直接处理， 然后渲染即可</code></p>
+<h3 id="内置函数渲染">1.内置函数渲染</h3>
+<p>使用方法:</p>
+<p>{{后台传输的内容|内置函数}}</p>
+<h3 id="自定义函数渲染">2.自定义函数渲染</h3>
+<p>1.在app中创建templatetags目录</p>
+<p>2.在上述的目录中创建 xxx.py</p>
+<p>3.在xxx.py中</p>
+<pre class="python"><code>from django import template
+
+register = template.Library()
+
+@register.filter
+def my_filter(val, args):
+    return val + args
+
+@register.simple_tag
+def my_upper(val, args, args1):
+    return val + args + args1</code></pre>
+<p>4.在html中</p>
+<pre><code><code>{%load xxx %}
+
+- simple_filter
+{{name | my_filter:&#39;xxxxx&#39;}}
+
+- simple_tag
+{%my_upper &quot;zekai&quot; &quot;sss&quot; &#39;dsadsadsa&#39;%}</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,102 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas教程(三)  绘制曲线' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas教程(三)  绘制曲线</center></div><div class='banquan'>原文出处:本文由博客园博主大树0211号提供。<br/>
+原文连接:https://www.cnblogs.com/cnyball/p/11225131.html</div><br>
+    <p>经过 <strong><a href="https://www.cnblogs.com/cnyball/p/11154930.html">canvas 教程(二) 绘制直线</a></strong> 我们知道了 canvas 的直线是怎么绘制的</p>
+<p>而本次是给大家带来曲线相关的绘制</p>
+<h2 id="绘制圆形">绘制圆形</h2>
+<p>在 canvas 中我们可以使用 arc 方法画一个圆</p>
+<pre><code><code>context.beginPath();
+context.arc(x, y, r, startRadian, endRadian, antclockwise);
+context.closePath();</code></pre>
+<p>我们是第一次用到 beginPath 和 closePath 这两个方法，首先这两个方法故名思意就是开始路径和结束路径，一般都是配合使用的。</p>
+<p>对于 arc 的方法的参数，x 和 y 代表的是圆心的坐标，r 是指圆的半径，startRadian 和 endRadian 是指开始的角度和结束的角度</p>
+<pre><code><code>注意：这里是以弧度为单位的！</code></pre>
+<p>1π 等于 180 度，所以我们这里写的时候一般是写成 <code>度数*Math.PI/180</code>，方便我们一眼看出度数是多少</p>
+<p>而 antclockwise 是指是否是逆时针绘制，<strong>默认是 false</strong></p>
+<p>有朋友会说了，我试了一下，写了这三句没有效果啊，怎么回事？没有效果是肯定的，因为这三句仅仅只是描述了一个路径！并没有绘制！所以我们可以用上<a href="https://www.cnblogs.com/cnyball/p/11154930.html">绘制直线</a>中使用的“描边”<code>stroke</code> 或者“填充”<code>fill</code></p>
+<p>描边三角形：</p>
+<pre><code><code>context.beginPath();
+context.arc(x, y, r, startRadian, endRadian, antclockwise);
+context.closePath();
+context.strokeStyle = &#39;颜色值&#39;;
+context.stroke();
+//描边 填充fill 同理  就不写了</code></pre>
+<h2 id="绘制弧线">绘制弧线</h2>
+<p>弧线是圆的一部分，那么如何绘制一个弧度呢，有朋友就发现了我们刚才的 arc 也有一个弧度，<br />
+只是两个弧度之间的点有连接的一条直线，那么我去掉直线是不是就是弧线了呢？宾果！就是这样，只要你去掉 closePath 就会发现你画了一条弧线了 2333</p>
+<p>好了那么 canvas 其实还有一个画弧线的方法 arcTo(x1,y1,x2,y2,radius);</p>
+<p>我们要通过 arcTo 画一条弧线，需要提供三个点的坐标，<strong>开始点</strong>一般是通过 moveTo 和 lineTo 提供<br />
+x1 和 y1 是<strong>控制点</strong>，x2 和 y2 是<strong>结束点</strong>，radius 则是<strong>圆弧的半径</strong></p>
+<p>arcTo()方法将利用当前端点、端点 1(x1,y1)和端点 2(x2,y2)这三个点所形成的夹角</p>
+<p>然后绘制一段与夹角的两边相切并且半径为 radius 的圆上的弧线</p>
+<p>弧线的起点就是当前端点所在边与圆的切点</p>
+<p>弧线的终点就是端点 2(x2,y2)所在边与圆的切点，并且绘制的弧线是两个切点之间长度最短的那个圆弧。</p>
+<pre><code><code>如果当前端点不是弧线起点，arcTo()方法还将添加一条当前端点到弧线起点的直线线段。</code></pre>
+<p>我画一个图：</p>
+<p><img src="./images/canvas教程(三)  绘制曲线0.png"/></p>
+<p>咳咳，别介意画工，大概就是这样的，开始点是我们的当前的点就是使用 arcTo 之前的点<br />
+下面我写两段代码演示一下起点一致和起点不一致的情况</p>
+<pre><code><code>    context.moveTo(50, 50);
+    context.lineTo(150, 50);
+    ctx.arcTo(200,50, 200,100, 50);
+    ctx.stroke();</code></pre>
+<pre><code><code>    context.moveTo(50, 50);
+    ctx.arcTo(200,50, 200,100, 50);
+    ctx.stroke();</code></pre>
+<p>是不是发现结果是一样的！</p>
+<p>其中区别就细细品味吧，数学知识可以补一补</p>
+<h2 id="绘制贝塞尔曲线">绘制贝塞尔曲线</h2>
+<pre><code><code>百度百科：贝塞尔曲线(Bézier curve)，又称贝兹曲线或贝济埃曲线，是应用于二维图形应用程序的数学曲线。一般的矢量图形软件通过它来精确画出曲线，贝兹曲线由线段与节点组成，节点是可拖动的支点，线段像可伸缩的皮筋，我们在绘图工具上看到的钢笔工具就是来做这种矢量曲线的。贝塞尔曲线是计算机图形学中相当重要的参数曲线，在一些比较成熟的位图软件中也有贝塞尔曲线工具，如PhotoShop等。</code></pre>
+<p>更多的就大家自行搜索吧，由于一次贝塞尔曲线就是直线，这里就不讲了，我们直接讲 canvas 如何绘制二次贝塞尔曲线</p>
+<h4 id="二次贝塞尔曲线">二次贝塞尔曲线</h4>
+<p>cnavas 提供了一个方法 quadraticCurveTo(x1,y1,x2,y2)， 其中参数 x1 和 y1 是<strong>控制点</strong>，x2 和 y2 是<strong>结束点</strong></p>
+<p><strong>起始点</strong>是调用方法之前的点</p>
+<p>动图我不会画，但是我之前网上找到一个:</p>
+<p><img src="./images/canvas教程(三)  绘制曲线1.png"/></p>
+<pre><code><code>context.strokeStyle = &#39;red&#39;;
+context.beginPath();
+context.moveTo(0, 150);
+context.quadraticCurveTo(75, 50, 200, 100);
+context.stroke();
+context.strokeStyle = &#39;green&#39;;
+context.beginPath();
+context.moveTo(75, 50);
+context.lineTo(0, 150);
+context.moveTo(75, 50);
+context.lineTo(200, 100);
+context.stroke();</code></pre>
+<p>代码效果:</p>
+<p><img src="./images/canvas教程(三)  绘制曲线2.png"/></p>
+<h4 id="三次贝塞尔曲线">三次贝塞尔曲线</h4>
+<p>三次贝塞尔曲线的方法则是 bezierCurveTo(x1,y1,x2,y2,x3,y3)</p>
+<p>其中参数 x1、y1，x2、y2 是<strong>控制点</strong>，x3 和 y3 是<strong>结束点</strong><br />
+就是提供多一个控制点！</p>
+<p>画图原理是这样:</p>
+<p><img src="./images/canvas教程(三)  绘制曲线3.png"/></p>
+<p>这个例子就不写了，大家照着二次贝塞尔曲线的例子，练习一下！</p>
+<h2 id="结束">结束</h2>
+<p>本次讲了：<strong>绘制圆形</strong>、<strong>绘制弧线</strong>、<strong>二次贝赛尔曲线</strong>、<strong>三次贝赛尔曲线</strong>，大家学会了多少呢？</p>
+<p>好了，本次的教程就到这里结束了，下次将为大家带来线条和文本的操作</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

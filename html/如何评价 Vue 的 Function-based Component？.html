@@ -1,0 +1,145 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修如何评价 Vue 的 Function-based Component？' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>如何评价 Vue 的 Function-based Component？</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11912276.html</div><br>
+    <p>作者：匿名用户<br />链接：https://www.zhihu.com/question/325397290/answer/708418099<br />来源：知乎<br /><br /></p>
+<div>
+<h3>事实性错误：</h3>
+<blockquote>那 vue 呢？它连 HOC 都没有，render props 更不现实（jsx自带）</blockquote>
+<ol>
+<li>HOC</li>
+
+</ol>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">const</span> DefaultButton =<span style="color: #000000;"> {
+  props: {
+      text: String
+  },
+  template: `</span>&lt;button&gt;{{text}}&lt;/button&gt;<span style="color: #000000;">`
+}
+
+function wrap(comp) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    components: {
+        comp
+    },
+    template: `</span>&lt;comp text=<span style="color: #800000;">"</span><span style="color: #800000;">123</span><span style="color: #800000;">"</span>/&gt;<span style="color: #000000;">`
+  }
+}
+
+</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  components: {
+      TextButton: wrap(DefaultButton)
+  },
+  template: `</span>&lt;text-button  /&gt;<span style="color: #000000;">`
+})</span></pre>
+</div>
+</div>
+<p>2. HOC + render props</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">const</span> DefaultButton =<span style="color: #000000;"> {
+  props: {
+    renderText: Function
+  },
+  render(h) {
+      </span><span style="color: #0000ff;">return</span> h(<span style="color: #800000;">'</span><span style="color: #800000;">button</span><span style="color: #800000;">'</span>, <span style="color: #0000ff;">this</span><span style="color: #000000;">.renderText())
+  }
+}
+
+function wrap(comp) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    render(h) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> h(comp, {
+          attrs: {
+            renderText: () </span>=&gt; <span style="color: #800000;">"</span><span style="color: #800000;">123</span><span style="color: #800000;">"</span><span style="color: #000000;">
+          }
+      })
+    }
+  }
+}
+
+</span><span style="color: #0000ff;">const</span> textButton =<span style="color: #000000;"> wrap(DefaultButton)
+
+</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render(h) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> h(textButton)
+  }
+})</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<blockquote>react 的不可变，纯函数。直接导致 hooks 必须使用 const 关键字，不能是 let，这也是 hooks 的奇迹之一</blockquote>
+<p><code>const</code> keyword 和 "不可变，纯函数" 有什么关系, 若使用 let、var， 是否不能实现hook？</p>
+<h2>请问：</h2>
+<ol>
+<li>Hooks对Fiber更好 -&gt; Hooks是Fiber的产物 -&gt; 没有Fiber就不是Hooks</li>
+</ol>
+<p>请问怎么用逻辑推理出这条链？</p>
+<p>2. 对于你回答中的事实性错误， 你持什么看法？</p>
+<div class="Popover">
+<div id="Popover16-toggle"><a class="UserLink-link" href="//www.zhihu.com/people/766a84590614270ad6e4cc2dd0fbfc12" target="_blank" data-za-detail-view-element_name="User" data-za-detail-view-id="1045">Jasin Yip</a></div>
+</div>
+<p>不知道有没有正确理解你说的&ldquo;移除一个属性&rdquo;：<code class="language-js"><span class="k"><br /></span></code></p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>onst DefaultButton =<span style="color: #000000;"> {
+  props: {
+    renderText: Function
+  },
+  render(h) {
+      </span><span style="color: #0000ff;">return</span> h(<span style="color: #800000;">'</span><span style="color: #800000;">button</span><span style="color: #800000;">'</span>, <span style="color: #0000ff;">this</span><span style="color: #000000;">.renderText())
+  }
+}
+
+function omitRenderText(comp, render) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    render(h) {
+        </span><span style="color: #0000ff;">const</span> { renderText, ...others } = <span style="color: #0000ff;">this</span><span style="color: #000000;">.$attrs
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> h(comp, {
+          attrs: {
+              ...others,
+              renderText: render </span>||<span style="color: #000000;"> renderText
+         }
+      })
+    }
+  }
+}
+
+</span><span style="color: #0000ff;">const</span> textButton = omitRenderText(DefaultButton, () =&gt; <span style="color: #800000;">"</span><span style="color: #800000;">000</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  render(h) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> h(textButton, {
+            attrs: {
+          renderText: () </span>=&gt; <span style="color: #800000;">"</span><span style="color: #800000;">123</span><span style="color: #800000;">"</span><span style="color: #000000;">
+      }
+    })
+  }
+})</span></pre>
+</div>
+<p>如果你觉得这篇文章对你还是有很大帮助的话，不介意的话可以加下我刚刚建立的一个学习交流群，有很多相关资料和学习视频：<a class=" wrap external" href="https://link.zhihu.com/?target=https%3A//jq.qq.com/%3F_wv%3D1027%26k%3D59jir0A" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">907694362</a></p>
+</div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

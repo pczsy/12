@@ -1,0 +1,133 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修从css 3d说到空间坐标轴' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>从css 3d说到空间坐标轴</center></div><div class='banquan'>原文出处:本文由博客园博主陌上兮月提供。<br/>
+原文连接:https://www.cnblogs.com/zhangnan35/p/10709876.html</div><br>
+    <p>　　<span style="font-size: 18px;">有一次我们说到掷骰子那个游戏，当时是用了一个steps属性+雪碧图来制作帧动画，这当然颇为不错，但其实一开始我想的不是这样的，我想的是用真的3d和动画去做，这个方案涉及到不少空间的知识，今天来给大伙好好说说，这css 3d到底怎么玩。</span></p>
+<p>　　<span style="font-size: 18px;">先上效果图：</span></p>
+<p>　　<img src="./images/从css 3d说到空间坐标轴0.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">基本思路：三层结构：<span style="font-size: 18pt;"><strong><span style="color: #ff00ff;">视角容器</span></strong></span>&gt;&gt;<span style="color: #ff6600;"><strong><span style="font-size: 18pt;">载体</span></strong></span>&gt;&gt;<span style="color: #3366ff;"><strong><span style="font-size: 18pt;">具体3d图像</span></strong></span>。</span></p>
+<p>　　<strong><span style="font-size: 14pt;">视角容器</span></strong>：<span style="font-size: 18px;">决定3d的呈现效果，这里的pespective属性接收参数为像素，perspective的值越大，代表&ldquo;<strong>眼睛离观察物越远</strong>&rdquo;，值越小，代表&ldquo;<strong>眼睛越靠近观察物</strong>&rdquo;</span></p>
+<p>　　<span style="font-size: 18px;">缺少perspective属性，将无法调整观测的视角。</span></p>
+<p>　　<img src="./images/从css 3d说到空间坐标轴1.png" alt="" /><img src="./images/从css 3d说到空间坐标轴2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>　　<strong><span style="font-size: 14pt;">载体</span></strong>：<span style="font-size: 18px;">支持承载3d图像</span></p>
+<p>　　<span style="font-size: 18px;">这个载体跟普通的html标签最大的区别在于它多了一个属性:<strong>transform-style:preserve-3d</strong>。表示它支持3d图像显示。</span></p>
+<p>　　<span style="font-size: 18px;">如果缺少了这个属性，进行过3d转换的3d图形们将被压在一个2d平面内，无法呈现出3d效果，因为容器都是扁的，即使内容是3d的也于事无补。</span></p>
+<p>　　</p>
+<p>　　<span style="font-size: 14pt;"><strong>具体3d图像</strong></span>：<span style="font-size: 18px;">从2d到3d的转换</span></p>
+<p>　　<span style="font-size: 18px;">这里的3d图像都是由2d平面图像转换而来，那么如何转换呢。需要用到translateX，translateY，translateZ属性,当然简写也就是translate-3d，还有rotateX,rotateY,rotateZ等到。而translate（平移），rotate（旋转）的具体规则，都是基于下方这幅著名的参考图：三维坐标图进行的。</span></p>
+<p>　　<img src="./images/从css 3d说到空间坐标轴3.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">首先说translate的规则，这个自然不必多说，对照着看就可以了，比如说translateZ(-100px)在这幅图中就相当等于图像往-z轴的方向移了100px，形象一点的说法就是&ldquo;<strong>向屏幕内部凹陷了100px</strong>&rdquo;。translateX，translateY以此类推。</span></p>
+<p><span style="font-size: 18px;">　　难点在rotate，告诉大家一个很简单的判断法则：<span style="font-size: 14pt; color: #ff00ff;"><strong>正向轴对着眼睛，顺时针则旋转角度为正，逆时针则旋转角度为负。</strong></span></span></p>
+<p><span style="font-size: 18px;"><span style="font-size: 14pt; color: #ff00ff;"><strong>　　</strong><span style="font-size: 18px; color: #000000;">或者用左手法则也行：</span><strong>伸出左手，大拇指指向正轴方向，四个手指的指向即是旋转正向，但务必记住是<span style="font-size: 18pt; color: #0000ff;">左手</span>！</strong></span></span></p>
+<p><span style="font-size: 18px;"><span style="font-size: 14pt; color: #ff00ff;"><strong>　　</strong><span style="color: #000000; font-size: 18px;">左手哥镇场：</span></span></span></p>
+<p><span style="font-size: 18px;"><span style="font-size: 14pt; color: #ff00ff;"><span style="color: #000000; font-size: 18px;">　　<img src="./images/从css 3d说到空间坐标轴4.png" alt="" /></span></span></span></p>
+<p><span style="font-size: 18px;">　　就是这么简单，比如现在我们要制作一个3d骰子,首先六个平面图都如上图所示摆在三维坐标系的中心店，他们的大小都跟载体一样，要变成一个骰子，需要做如下变换：</span></p>
+<p><span style="font-size: 18px;">　　<span style="color: #800080;">（注：载体和6个面的长宽均为200px）</span></span></p>
+<p>　　<img src="./images/从css 3d说到空间坐标轴5.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">对照着3d图，大家比划比划就知道怎么回事了。</span></p>
+<p><span style="font-size: 18px;">　&nbsp; 附上全部源码：</span></p>
+<p>　　</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div class="box"&gt;
+    &lt;section class="cube"&gt;
+      &lt;div class="front"&gt;前面&lt;/div&gt;
+      &lt;div class="back"&gt;后面&lt;/div&gt;
+      &lt;div class="left"&gt;左面&lt;/div&gt;
+      &lt;div class="right"&gt;右面&lt;/div&gt;
+      &lt;div class="top"&gt;上面&lt;/div&gt;
+      &lt;div class="bottom"&gt;下面&lt;/div&gt;
+    &lt;/section&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;style lang="less" scoped&gt;<span style="color: #000000;">
+.box {
+  width: </span>100%<span style="color: #000000;">;
+  height: </span>100%<span style="color: #000000;">;
+  perspective: 500px;
+}
+
+.cube {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 100px auto;
+  color: #ff92ff;
+  font</span>-<span style="color: #000000;">size: 36px;
+  font</span>-weight: 100<span style="color: #000000;">;
+  text</span>-<span style="color: #000000;">align: center;
+  line</span>-<span style="color: #000000;">height: 200px;
+  transform</span>-style: preserve-<span style="color: #000000;">3d;
+  transform: rotateX(</span>-50deg) rotateY(-<span style="color: #000000;">50deg) rotateZ(0deg);
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> animation: move 8s infinite linear;</span>
+<span style="color: #000000;">
+  @keyframes move {
+    </span>0%<span style="color: #000000;"> {
+      transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    </span>100%<span style="color: #000000;"> {
+      transform: rotateX(720deg) rotateY(360deg) rotateZ(360deg);
+    }
+  }
+
+  div {
+    position: absolute;
+    width: </span>100%<span style="color: #000000;">;
+    height: </span>100%<span style="color: #000000;">;
+    border: 10px solid #66daff;
+    border</span>-<span style="color: #000000;">radius: 20px;
+    background</span>-color: rgba(51, 51, 51, 0.3<span style="color: #000000;">);
+  }
+
+  .front {
+    transform: translateZ(100px);
+  }
+
+  .back {
+    transform: translateZ(</span>-<span style="color: #000000;">100px) rotateY(180deg);
+  }
+
+  .left {
+    transform: translateX(</span>-100px) rotateY(-<span style="color: #000000;">90deg);
+  }
+
+  .right {
+    transform: translateX(100px) rotateY(90deg);
+  }
+
+  .top {
+    transform: translateY(</span>-<span style="color: #000000;">100px) rotateX(90deg);
+  }
+
+  .bottom {
+    transform: translateY(100px) rotateX(</span>-<span style="color: #000000;">90deg);
+  }
+}
+</span>&lt;/style&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,574 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Web基础了解版08-JSTL' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Web基础了解版08-JSTL</center></div><div class='banquan'>原文出处:本文由博客园博主远离颠倒梦想提供。<br/>
+原文连接:https://www.cnblogs.com/Open-ing/p/12101390.html</div><br>
+    <h2 class="md-end-block md-heading md-focus" style="text-align: center;"><span class="md-plain md-expand">JSTL</span></h2>
+<p>&nbsp;JSP为我们提供了可以自定义标签库(Tag Library)的功能，用来替代代码脚本,Sun公司又定义了一套通用的标签库名为JSTL(JSP Standard Tag Library)，里面定义很多我们开发中常用的方法</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">使用JSTL</span></h3>
+<p><strong>&nbsp;</strong>&nbsp;1.<span class="md-plain">先引入JSTL标签库的jar包类库到WEB-INF/lib目录下</span></p>
+<p><span class="md-plain"><img src="./images/Web基础了解版08-JSTL0.png" alt="" /></span></p>
+<p><span class="md-plain">2.使用taglib指令导入需要的标签库</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">CORE 标签库
+</span><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">c</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/core</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #000000;">
+XML 标签库
+</span><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">x</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/xml</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #000000;">
+FMT 标签库 
+</span><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">fmt</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/fmt</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #000000;">
+SQL 标签库
+</span><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">sql</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/sql</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #000000;">
+FUNCTIONS 标签库
+ </span><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ taglib prefix</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">fn</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> uri</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">http://java.sun.com/jsp/jstl/functions</span><span style="background-color: #f5f5f5; color: #800000;">"</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p>&nbsp;3.<span class="md-plain">使用JSTL</span></p>
+<p>&nbsp;如：<span class="md-plain md-expand">&lt;c:out value="hello"&gt;<span>&lt;<span class="md-plain md-expand">/c:out&gt;</span></span></span></p>
+<p>&nbsp;即：调用前缀为c的标签的out方法，向页面中输出value属性中的字符串。</p>
+<h3>&nbsp;Core标签库</h3>
+<h4 class="md-end-block md-heading md-focus"><span class="md-expand">&lt;<span class="md-plain md-expand">c:out&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span>&lt;<span class="md-plain">c:out&gt;用于计算一个表达式并将结果输出到当前页面。功能类似于JSP表达式&lt;%= %&gt;和EL表达式${}</span></span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">属性</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th><th><span class="td-span"><span class="md-plain">参数类型</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">value</span></span></td>
+<td><span class="td-span"><span class="md-plain">要输出的值</span></span></td>
+<td><span class="td-span"><span class="md-plain">Object</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">default</span></span></td>
+<td><span class="td-span"><span class="md-plain">当value为null时显示的默认值</span></span></td>
+<td><span class="td-span"><span class="md-plain">Object</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">escaXml</span></span></td>
+<td><span class="td-span"><span class="md-plain">是否对特殊字符进行转义</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">boolean</span></span></td>
+</tr>
+</tbody>
+</table>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">c:out </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="${user.name}"</span><span style="color: #ff0000;"> default</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> escapeXml</span><span style="color: #0000ff;">="true"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">c:out</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4 class="md-end-block md-heading md-focus"><span class="md-expand">&lt;<span class="md-plain md-expand">c:set&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span>&lt;<span class="md-plain">c:set&gt;标签 用于 添加 或 修改 域中的属性。</span></span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span>属性</span></span></th><th><span class="td-span"><span>描述</span></span></th><th><span class="td-span"><span>是否必要</span></span></th><th><span class="td-span"><span>默认值</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">value</span></span></td>
+<td><span class="td-span"><span class="md-plain">要存储或修改的值</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">主体的内容</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">target</span></span></td>
+<td><span class="td-span"><span class="md-plain">要修改的域中的对象（必须是JavaBean或者Map）</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">property</span></span></td>
+<td><span class="td-span"><span class="md-plain">指定要修改的对象的属性名</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">var</span></span></td>
+<td><span class="td-span"><span class="md-plain">表示域中存放的属性名</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">scope</span></span></td>
+<td><span class="td-span"><span class="md-plain">var属性的作用域 (page , request , session ,application) ，若不指定则为page</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">page</span></span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;如果指定了target属性，那么property属性也需要被指定。</p>
+<h4 class="md-end-block md-heading"><span>&lt;<span class="md-plain">c:if&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span>&lt;<span class="md-plain">c:if&gt;标签 判断表达式的值，如果表达式的值为 true 则执行其主体内容。</span></span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span>属性</span></span></th><th><span class="td-span"><span>描述</span></span></th><th><span class="td-span"><span>是否必要</span></span></th><th><span class="td-span"><span>默认值</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">test</span></span></td>
+<td><span class="td-span"><span class="md-plain">条件</span></span></td>
+<td><span class="td-span"><span class="md-plain">是</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">var</span></span></td>
+<td><span class="td-span"><span class="md-plain">用于存储条件结果的变量</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">scope</span></span></td>
+<td><span class="td-span"><span class="md-plain">var属性的作用域</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">page</span></span></td>
+</tr>
+</tbody>
+</table>
+<h4 class="md-end-block md-heading"><span>&lt;<span class="md-plain">c:choose&gt;、<span>&lt;<span class="md-plain">c:when&gt;、<span>&lt;<span class="md-plain">c:otherwise&gt;标签</span></span></span></span></span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong></span></p>
+<p class="md-end-block md-p"><span>&lt;<span class="md-plain">c:choose&gt;标签与Java switch语句的功能一样，用于在众多选项中做出选择。</span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">switch语句中有case，而<span>&lt;<span class="md-plain">c:choose&gt;标签中对应有<span>&lt;<span class="md-plain">c:when&gt;，switch语句中有default，而<span>&lt;<span class="md-plain">c:choose&gt;标签中有<span>&lt;<span class="md-plain">c:otherwise&gt;。</span></span></span></span></span></span></span></span></span></p>
+<p class="md-end-block md-p md-focus"><span><strong>属性：</strong></span></p>
+<p class="md-end-block md-p"><span>&lt;<span class="md-plain md-expand">c:choose&gt;标签没有属性。</span></span></p>
+<p class="md-end-block md-p"><span><span class="md-plain md-expand">&lt;<span class="md-plain">c:otherwise&gt;标签没有属性。</span></span></span></p>
+<p class="md-end-block md-p"><span>&lt;<span class="md-plain">c:when&gt;标签只有一个属性，如下：</span></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span>属性</span></span></th><th><span class="td-span"><span>描述</span></span></th><th><span class="td-span"><span>是否必要</span></span></th><th><span class="td-span"><span>默认值</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">test</span></span></td>
+<td><span class="td-span"><span class="md-plain">条件</span></span></td>
+<td><span class="td-span"><span class="md-plain">是</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading md-focus"><span class="md-expand">&lt;<span class="md-plain md-expand">c:forEach&gt;标签</span></span></h3>
+<p class="md-end-block md-p"><span><strong>作用：</strong></span>&lt;<span class="md-plain">c:forEach&gt;标签是迭代一个<strong>集合</strong>中的对象-可以是<strong>数组</strong>，也可以是list，也可以是<strong>map</strong>对象。</span></p>
+<p class="md-end-block md-p"><span><strong>属性</strong><span class="md-plain md-expand">：</span></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span>属性</span></span></th><th><span class="td-span"><span>描述</span></span></th><th><span class="td-span"><span>是否必要</span></span></th><th><span class="td-span"><span>默认值</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">items</span></span></td>
+<td><span class="td-span"><span class="md-plain">要被循环的数据集合-可以使用el表达式</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">begin</span></span></td>
+<td><span class="td-span"><span class="md-plain">开始的索引（0=第一个元素，1=第二个元素）</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">0</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">end</span></span></td>
+<td><span class="td-span"><span class="md-plain">最后一个索引（0=第一个元素，1=第二个元素）</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">Last element</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">step</span></span></td>
+<td><span class="td-span"><span class="md-plain">每一次迭代的步长</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">1</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">var</span></span></td>
+<td><span class="td-span"><span class="md-plain">代表当前条目的变量名称</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span"><span class="md-plain">无</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">varStatus</span></span></td>
+<td><span class="td-span"><span class="md-plain">代表循环状态的变量名称</span></span></td>
+<td><span class="td-span"><span class="md-plain">否</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">无</span></span></td>
+</tr>
+</tbody>
+</table>
+<p class="md-end-block md-p md-focus"><span><strong>varStatus状态：</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain md-expand">作用：指定保存迭代状态的对象的名字，该变量引用的是一个LoopTagStatus类型的对象</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">通过该对象可以获得一些遍历的状态</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">begin 获取begin属性里的值</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">end 获取end属性里的值</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">count 获取当前遍历的个数</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">index 获取当前索引值</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">first 获取是否是第一个元素</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">last 获取是否是最后一个元素</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">current 获取当前遍历的元素对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 class="md-end-block md-heading md-focus"><span class="md-expand">&lt;<span class="md-plain md-expand">c:remove&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span class="md-plain md-expand">用于移除域中的属性</span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">属性</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th><th><span class="td-span"><span class="md-plain">参数类型</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">var</span></span></td>
+<td><span class="td-span"><span class="md-plain">设置要移除的属性的名字</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">scope</span></span></td>
+<td><span class="td-span"><span class="md-plain">设置要移除属性所在的域，若不指定则删除所有域中的对应属性</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">String</span></span></td>
+</tr>
+</tbody>
+</table>
+<h4 class="md-end-block md-heading"><span>&lt;<span class="md-plain">c:url&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span class="md-plain">主要用来重写URL地址</span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">属性</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th><th><span class="td-span"><span class="md-plain">参数类型</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">value</span></span></td>
+<td><span class="td-span"><span class="md-plain">设置要处理的URI地址，注意这里要以/开头</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">var</span></span></td>
+<td><span class="td-span"><span class="md-plain">修改后存储到域对象中的uri属性名</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">scope</span></span></td>
+<td><span class="td-span"><span class="md-plain">l 设置修改后uri存放的域</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">String</span></span></td>
+</tr>
+</tbody>
+</table>
+<h4 class="md-end-block md-heading"><span>&lt;<span class="md-plain">c:redirect&gt;标签</span></span></h4>
+<p class="md-end-block md-p"><span><strong>作用：</strong><span class="md-plain">用于将请求重定向到另一个资源地址</span></span></p>
+<p class="md-end-block md-p"><span><strong>属性：</strong></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">属性</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th><th><span class="td-span"><span class="md-plain">参数类型</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">uri</span></span></td>
+<td><span class="td-span"><span class="md-plain">指定要重定向到的目标地址，注意这里指定绝对路径会自动加上项目名</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">String</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3><span class="md-plain md-expand">JSTL函数</span></h3>
+<p>&nbsp;函数标签库中定义的函数基本上都是对字符串的操作。</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">fn:contains和fn:containsIgnoreCase</span></h3>
+<p><strong>&nbsp;作用</strong>：用于判断字符串中是否包含指定字符串，containsIgnoreCase忽略大小写。</p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">string</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">subString</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">要查找的字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">boolean</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">若String中包含subString则返回true，否则返回false</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:startsWith和fn:endsWith</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：判断一个字符串是否以指定字符开头（startsWith）或结尾（endsWith）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">string</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">prefix 或 suffix</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">要查找的前缀或后缀字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">boolean</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">符合要求返回true，否则返回false</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:indexOf</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：在一个字符串中查找指定字符串，并返回第一个符合的字符串的第一个字符的索引。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">string</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">subString</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">要查找的字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">int</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">若在string中找到subString则返回第一个符合的索引，若没有符合的则返回-1</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:replace</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：将一个字符串替换为另外一个字符串，并返回替换结果</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">beforeSubString</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">被替换的字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">afterSubString</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">要替换的新字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">替换后的字符串</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain md-expand">fn:substring</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：截取字符串</span></p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">beginIndex</span></span></td>
+<td><span class="td-span"><span class="md-plain">int</span></span></td>
+<td><span class="td-span"><span class="md-plain">开始位置索引(包含该位置)</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">endIndex</span></span></td>
+<td><span class="td-span"><span class="md-plain">int</span></span></td>
+<td><span class="td-span"><span class="md-plain">结束位置索引(不包含自身)</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">返回截取的字符串</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain md-expand">fn:substringBefore和fn:substringAfter</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：返回源字符串中指定的子字符串之前（substringBefore）之后（substringAfter）的字符串</span></p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">subString</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">指定str中的一个子串，该串之前或之后的字符串将被返回。</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">返回截取的字符串</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain">fn:split</span></h3>
+<p class="md-end-block md-p"><span class="md-plain md-expand">作用：将一个字符串拆分成字符串数组。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">要被拆分的字符串</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">delimiters</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">指定根据什么内容拆分字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String[]</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">返回拆分后的字符串数组</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:join</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：将数组中所有元素连接成一个字符串</span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String[]</span></span></td>
+<td><span class="td-span"><span class="md-plain">要被连接的字符串数组</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">sparator</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain md-expand">在结果中每个元素之间的分隔符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">拼接之后的结果</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:toLowerCase和fn:toUpperCase</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：将字符串都转换成大写（toUpperCase）或小写（toLowerCase）字符</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">转换为大写或小写的字符串</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain">fn:trim</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：去掉字符串的前后空格</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-plain md-expand">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">str</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span"><span class="md-plain">源字符串</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">String</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">去掉前后空格的结果</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading"><span class="md-plain md-expand">fn:length</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">作用：返回集合或者字符串的长度,此处为方法区别java中的lengh属性</span></p>
+<p class="md-end-block md-p"><span class="md-plain">参数和返回值：</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">参数</span></span></th><th><span class="td-span"><span class="md-plain">类型</span></span></th><th><span class="td-span"><span class="md-plain">作用</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">input</span></span></td>
+<td><span class="td-span"><span class="md-plain">String、集合、数组</span></span></td>
+<td><span class="td-span"><span class="md-plain">要计算长度的目标</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">返回值</span></span></td>
+<td><span class="td-span"><span class="md-plain">int</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">集合或字符串的长度</span></span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

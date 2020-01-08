@@ -1,0 +1,109 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修单行截断和多行截断问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>单行截断和多行截断问题</center></div><div class='banquan'>原文出处:本文由博客园博主迪迪的博客提供。<br/>
+原文连接:https://www.cnblogs.com/yadiblogs/p/10729025.html</div><br>
+    <h1>单行截断：</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">span {
+  display: inline</span>-block; <span style="color: #008000;">//</span><span style="color: #008000;"> 如果不是block元素，还需要设置这个。</span>
+  width: 150px; <span style="color: #008000;">//</span><span style="color: #008000;"> 超出的宽度</span>
+  overflow: hidden; <span style="color: #008000;">//</span><span style="color: #008000;"> 超出隐藏</span>
+  text-overflow: ellipsis; <span style="color: #008000;">//</span><span style="color: #008000;">超出用省略号</span>
+  white-space: nowrap; <span style="color: #008000;">//</span><span style="color: #008000;"> 不换行</span>
+}</pre>
+</div>
+<h1>多行截断：</h1>
+<p>多行截断有好几种方法，</p>
+<p>1： 最简单，使用-webkit-line-clamp ， 当然了，只能用在webkit内核浏览器， 并且不支持自定义点击展开的样式。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">p </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 400px</span>;<span style="color: #ff0000;"> // 超过这个宽度
+  text-overflow</span>:<span style="color: #0000ff;"> ellipsis</span>;<span style="color: #ff0000;"> // 使用省略号
+  display</span>:<span style="color: #0000ff;"> -webkit-box</span>;<span style="color: #ff0000;"> // 必须使用这个
+  overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">// 必须使用，超出隐藏
+  -webkit-line-clamp</span>:<span style="color: #0000ff;"> 4</span>;<span style="color: #ff0000;"> // 必需设置，
+  -webkit-box-orient</span>:<span style="color: #0000ff;"> vertical</span>;<span style="color: #ff0000;"> // 设置里面元素排列顺序
+  text-align</span>:<span style="color: #0000ff;"> justify</span>;<span style="color: #ff0000;"> // 里面问题排列方式
+</span>}</pre>
+</div>
+<p>2: 也是面试中回答的方式，使用伪类。。。这个由于要使用js判断是否超出，因此适用于，你已经知道是大段文字的情景。 但是面试官不是很满意这个方式，呜呜呜(ಥ _ ಥ)</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">p</span>{<span style="color: #ff0000;">
+   position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+   height</span>:<span style="color: #0000ff;"> 36px</span>;<span style="color: #ff0000;"> // 面试官说这个是定死的，所以不灵活。。。感觉很奇怪啊，不是死的话，怎么知道什么情况溢出？
+   overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+   line-height</span>:<span style="color: #0000ff;"> 18px</span>;  
+}<span style="color: #800000;">
+p::after</span>{<span style="color: #ff0000;"> // 这个是一直有省略号，所以需要js判断是否超出，如果超出的话，就加一个class。 
+     content</span>:<span style="color: #0000ff;"> '...'</span>;<span style="color: #ff0000;">
+     position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+     bottom</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+     right</span>:<span style="color: #0000ff;"> 0</span>;
+}</pre>
+</div>
+<p>3：使用float， 挺复杂的，不喜欢float......, 使用float时候，省略号是一个dom节点，因此可以添加事情和样式， 自定义程度高！&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="content"</span><span style="color: #0000ff;">&gt;</span>腾讯成立于1998年11月，是目前中国领先的互联网增值服务提供商之一。成立10多年来，腾讯一直秉承&ldquo;一切以用户价值为依归&rdquo;的经营理念，为亿级海量用户提供稳定优质的各类服务，始终处于稳健发展状态。2004年6月16日，腾讯控股有限公司在香港联交所主板公开上市(股票代号700)。<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="standard"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="more"</span><span style="color: #0000ff;">&gt;</span>...更多<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>其中standard是一个标准，超过它的高度时候，就会显示省略号，container是个容器，超过他的最大高度，就hidden。 三个div都float：right，其中content的margin-left：-standard的宽度，把standard给让出来，让standard出现在左侧。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">        .container</span>{<span style="color: #ff0000;">
+            max-height</span>:<span style="color: #0000ff;"> 54px</span>;<span style="color: #ff0000;"> // 最大高度
+            overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;"> // 超出隐藏
+            line-height</span>:<span style="color: #0000ff;"> 18px</span>;<span style="color: #ff0000;"> // 方便计算几行。。
+            font-size</span>:<span style="color: #0000ff;">12px</span>;
+        }<span style="color: #800000;">
+        .container div</span>{<span style="color: #ff0000;"> // 三个元素都设置float
+            float</span>:<span style="color: #0000ff;"> right</span>;
+        }<span style="color: #800000;">
+        .content</span>{<span style="color: #ff0000;">
+            margin-left</span>:<span style="color: #0000ff;"> -50px</span>;<span style="color: #ff0000;"> // 这是第一个元素，由于他宽度是100%，所以需要给standard位置。
+            width</span>:<span style="color: #0000ff;">100%</span>;<span style="color: #ff0000;">
+            position</span>:<span style="color: #0000ff;">relative</span>;<span style="color: #ff0000;">
+            background</span>:<span style="color: #0000ff;"> hsla(229, 100%, 75%, 0.5)
+        </span>}<span style="color: #800000;">
+        .standard</span>{<span style="color: #ff0000;">
+            width</span>:<span style="color: #0000ff;"> 50px</span>;<span style="color: #ff0000;"> //宽度随意， 需要与上面margin-left一样
+            height</span>:<span style="color: #0000ff;"> 54px</span>;<span style="color: #ff0000;"> // 超出这个高度会出现more元素
+            position</span>:<span style="color: #0000ff;">relative</span>;<span style="color: #ff0000;">
+            color</span>:<span style="color: #0000ff;">transparent</span>;<span style="color: #ff0000;">
+            background</span>:<span style="color: #0000ff;"> hsla(334, 100%, 75%, 0.5)</span>;
+        }<span style="color: #800000;">
+        .more</span>{<span style="color: #ff0000;">  
+            width</span>:<span style="color: #0000ff;">50px</span>;<span style="color: #ff0000;"> // 这个元素可自定义，宽度
+            height</span>:<span style="color: #0000ff;">18px</span>;<span style="color: #ff0000;">
+            position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+            left</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;"> // 确定位置,
+            transform</span>:<span style="color: #0000ff;"> translate(-100%,-100%)</span>;<span style="color: #ff0000;">// 确定位置
+            background</span>:<span style="color: #0000ff;"> linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 20%, #fff)</span>;<span style="color: #ff0000;"> // 这是使用渐变，因为more元素会覆盖住content元素。
+        </span>}</pre>
+</div>
+<p>总结： 可以直接使用float方法，方便自定义样式及监听事件，并且兼容性好，是暂时最完美的解决方案。就是略复杂，不过网上有可以直接拿来用哦~</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>最后一个挺复杂的，看了半天，感觉网上很多，可以直接拿来用， 不需要特别理解透彻，毕竟过不了几年，应该就会有内置属性了。。。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

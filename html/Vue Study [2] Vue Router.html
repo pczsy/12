@@ -1,0 +1,575 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue Study [2] Vue Router' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue Study [2] Vue Router</center></div><div class='banquan'>原文出处:本文由博客园博主.Net框架学苑提供。<br/>
+原文连接:https://www.cnblogs.com/letyouknowdotnet/p/10964316.html</div><br>
+    <div class="postBody">
+            <div id="cnblogs_post_body" class="blogpost-body "><h3 id="description">Description</h3>
+<p>The article for vue router.<br>
+Original post link:<a href="https://www.cnblogs.com/markjiang7m2/p/10796020.html" class="uri">https://www.cnblogs.com/markjiang7m2/p/10796020.html</a><br>
+Source code:<a href="https://gitee.com/Sevenm2/Vue.Web/tree/master/Vue.Router" target="_blank">https://gitee.com/Sevenm2/Vue.Web/tree/master/Vue.Router</a></p>
+<h3 id="start">Start</h3>
+<p>Actually we should only remember 3 points for vue router.</p>
+<ol>
+<li><code>&lt;router-link&gt;</code>. For user to click.</li>
+<li><code>&lt;router-view&gt;</code>. To show the related content.</li>
+<li>router index.js. Declare which content will be show when user click a link.</li>
+</ol>
+<p><code>&lt;router-link&gt;</code> &amp; <code>&lt;router-view&gt;</code> is a pair of tags for vue router. They are always used together.</p>
+<h3 id="router-link">router-link</h3>
+<p><code>&lt;router-link&gt;</code> will be compiled into <code>&lt;a&gt;</code> when we build the project.<br>
+There is an important property <code>to</code> in <code>&lt;router-link&gt;</code>. It will tell the website which path will be redirected to when user click this link.</p>
+<p>Html in App.vue</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span> &gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/rating"</span>&gt;</span>Rating<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/seller"</span>&gt;</span>Seller<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>  
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></code></pre>
+<p>It shows that when user click the <code>Home</code> link, the website will redirect to path <code>/</code>, and <code>Food</code> link for path <code>/food</code>, the same as <code>Rating</code>, <code>Seller</code>.<br>
+Actually it will be compiled as below.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/"</span> &gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/rating"</span>&gt;</span>Rating<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/seller"</span>&gt;</span>Seller<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>  
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span></code></pre>
+<h3 id="router-view">router-view</h3>
+<p>When website redirect to a path, such as <code>/food</code>, we may want to show something different in somewhere in the page. So we should add the <code>&lt;router-view&gt;</code> tag to the place which we want to show the related content.</p>
+<p>Html in App.vue</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span> &gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/rating"</span>&gt;</span>Rating<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/seller"</span>&gt;</span>Seller<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>  
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">router-view</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-view</span>&gt;</span></code></pre>
+<p>So if the related content is <code>&lt;div&gt;Food content&lt;/div&gt;</code>, it will show in html as below.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/"</span> &gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/rating"</span>&gt;</span>Rating<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"#/seller"</span>&gt;</span>Seller<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span> 
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Food content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<h3 id="router-index.js">router index.js</h3>
+<p>As above, we say that <code>&lt;router-view&gt;</code> tag will be replaced by the related content, but what is the <strong>related</strong> content?<br>
+The route rule will be declared in the router index.js file. We can find this file in the path <code>src\router\index.js</code> as below.<br>
+<img src="./images/Vue Study [2] Vue Router0.png" alt="router_index"></p>
+<p>In the index.js file, I have declared the rule.</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>
+<span class="hljs-keyword">import</span> Router <span class="hljs-keyword">from</span> <span class="hljs-string">'vue-router'</span>
+
+Vue.use(Router)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">routes</span>: [ 
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+      <span class="hljs-attr">component</span>: { <span class="hljs-attr">template</span>: <span class="hljs-string">'&lt;div&gt;Food content&lt;/div&gt;'</span> }
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/seller'</span>,
+      <span class="hljs-attr">component</span>: { <span class="hljs-attr">template</span>: <span class="hljs-string">'&lt;div&gt;Seller content&lt;/div&gt;'</span> }
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/rating'</span>,
+      <span class="hljs-attr">component</span>: { <span class="hljs-attr">template</span>: <span class="hljs-string">'&lt;div&gt;Rating content&lt;/div&gt;'</span> }
+    }
+  ]
+})</code></pre>
+<p>As above, path <code>/food</code> related content is <code>&lt;div&gt;Food content&lt;/div&gt;</code>.<br>
+The result will be shown as below.</p>
+<p>Path <code>/</code><br>
+We can see that the tag <code>&lt;router-view&gt;</code> is replaced as empty currently.<br>
+<img src="./images/Vue Study [2] Vue Router1.png" alt="demo1_home.png"><br>
+<img src="./images/Vue Study [2] Vue Router2.png" alt="demo1_homehtml.png"></p>
+<p>Path <code>/food</code><br>
+We can see that the tag <code>&lt;router-view&gt;</code> is replaced by <code>&lt;div&gt;Food content&lt;/div&gt;</code> currently.<br>
+<img src="./images/Vue Study [2] Vue Router3.png" alt="demo1_food.png"><br>
+<img src="./images/Vue Study [2] Vue Router4.png" alt="demo1_foodhtml.png"></p>
+<p>In our actual development, we always have a lot of content to show in the tag <code>&lt;router-view&gt;</code>, so vue support to declare an individual component.<br>
+<img src="./images/Vue Study [2] Vue Router5.png" alt="router_component"></p>
+<p>food.vue</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Food content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- more other contents  --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-string">'food'</span>
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>And then we can import these components in router index.js</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>
+<span class="hljs-keyword">import</span> Router <span class="hljs-keyword">from</span> <span class="hljs-string">'vue-router'</span>
+<span class="hljs-keyword">import</span> food <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/food'</span>
+<span class="hljs-keyword">import</span> seller <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/seller'</span>
+<span class="hljs-keyword">import</span> rating <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/rating'</span>
+
+Vue.use(Router)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">routes</span>: [ 
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+      <span class="hljs-attr">component</span>: food
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/seller'</span>,
+      <span class="hljs-attr">component</span>: seller
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/rating'</span>,
+      <span class="hljs-attr">component</span>: rating
+    }
+  ]
+})</code></pre>
+<h3 id="dynamic-route-matching">Dynamic Route Matching</h3>
+<p>Based on the above 3 route points, we can do some more extensions.<br>
+If our different paths are based on a parameter, such as an id, we can use a colon <code>:</code> to declare just one route in the index.js</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">import</span> Vue <span class="hljs-keyword">from</span> <span class="hljs-string">'vue'</span>
+<span class="hljs-keyword">import</span> Router <span class="hljs-keyword">from</span> <span class="hljs-string">'vue-router'</span>
+<span class="hljs-keyword">import</span> food <span class="hljs-keyword">from</span> <span class="hljs-string">'@/components/food'</span>
+
+Vue.use(Router)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">routes</span>: [ 
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/:id'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+      <span class="hljs-attr">component</span>: food
+    }
+  ]
+})</code></pre>
+<p>And in the component, we can use <code>this.$route.params</code> to get the parameter's value.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{$route.params.id}} content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-keyword">this</span>.$route.params.id
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p><img src="./images/Vue Study [2] Vue Router6.png" alt="demo1_seller"></p>
+<h3 id="nested-routes">Nested Routes</h3>
+<p>Sometimes, we may want to show some differences with different path based on <strong>food</strong> component. Then we should use the nested routes.<br>
+Firstly, I add a <strong>subfood</strong> component with a parameter.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"subcontent"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Sub Food content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{$route.params.id}}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-string">'subfood'</span>
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>Secondly, we add links in <strong>food</strong> component, so that we can visit the <strong>subfood</strong> component.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Food content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"subnavbar"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood1"</span>&gt;</span>SubFood1<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood2"</span>&gt;</span>SubFood2<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood3"</span>&gt;</span>SubFood3<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">router-view</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-view</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>And in the router index.js, we should a <strong>children</strong> property in <code>/food</code> section.</p>
+<pre class="js"><code class="hljs javascript">{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+    <span class="hljs-attr">component</span>: food,
+    <span class="hljs-attr">children</span>:[
+    {
+        <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+        <span class="hljs-attr">component</span>: subfood
+    }
+    ]
+}</code></pre>
+<p>The result is as below.<br>
+<img src="./images/Vue Study [2] Vue Router7.png" alt="demo2_food"></p>
+<p><img src="./images/Vue Study [2] Vue Router8.png" alt="demo2_subfood"></p>
+<p>In this case, maybe some of you will think that as the <strong>subfood</strong> path includ <code>/food</code>, so its content will show in <strong>food</strong> component's <code>&lt;router-view&gt;</code>.<br>
+However, all results are because of the router index.js declaration. We can make an example as below.</p>
+<p>Delcare the <strong>subfood</strong> path in root.</p>
+<pre class="js"><code class="hljs javascript">{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+    <span class="hljs-attr">component</span>: food
+},
+{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/seller'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'seller'</span>,
+    <span class="hljs-attr">component</span>: seller
+},
+{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/rating'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'rating'</span>,
+    <span class="hljs-attr">component</span>: rating
+},
+{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+    <span class="hljs-attr">component</span>: subfood
+}</code></pre>
+<p>We can see that the <strong>subfood</strong> component is shown in the root's <code>&lt;router-view&gt;</code>.<br>
+<strong>The sub component will be shown in its parent component's <code>&lt;router-view&gt;</code>. If the component path is declared in root, it will be shown in the root's <code>&lt;router-view&gt;</code></strong><br>
+<img src="./images/Vue Study [2] Vue Router9.png" alt="demo3_subfood"></p>
+<h3 id="named-routes">Named Routes</h3>
+<p>We can add a <strong>name</strong> property in router index.js.</p>
+<pre class="js"><code class="hljs javascript">{
+<span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+<span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+<span class="hljs-attr">component</span>: food,
+<span class="hljs-attr">children</span>:[
+{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+    <span class="hljs-attr">component</span>: subfood
+}
+]
+}</code></pre>
+<p>Then we can use the named routes in <code>&lt;router-link&gt;</code>. Remember, we should a colon <code>:</code> before <code>to</code> property.<br>
+The below syntax are the same result.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">:to</span>=<span class="hljs-string">"{name: 'food'}"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></code></pre>
+<p>If there is an parameter in the path.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">:to</span>=<span class="hljs-string">"{ name: 'food', params: { id: subfood1 }}"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span></code></pre>
+<h3 id="named-views">Named Views</h3>
+<p>Sometimes we need to show multiple contents in the same time. Then we should add a <strong>name</strong> property for different <code>&lt;/router-view&gt;</code>.<br>
+Firstly, I add a <strong>subextend</strong> component.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"subcontent"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>Sub Extend content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{{$route.params.id}}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'subextend'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-string">'subextend'</span>
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>Secondly, add a <code>&lt;/router-view&gt;</code> in <strong>food</strong> component.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"subnavbar"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood1"</span>&gt;</span>SubFood1<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood2"</span>&gt;</span>SubFood2<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food/subfood3"</span>&gt;</span>SubFood3<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span> 
+    <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">router-view</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-view</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">router-view</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"ex"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-view</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>The next is router index.js. As there are multiple components, we should use property <strong>components</strong>, pls. noted the <strong>s</strong>.<br>
+The <strong>default</strong> component will be shown in <code>&lt;/router-view&gt;</code> without <strong>name</strong> property and the <strong>ex</strong> component will be shown in <code>&lt;/router-view&gt;</code> with <strong>name</strong> property value as "ex".</p>
+<pre class="js"><code class="hljs javascript">{
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+    <span class="hljs-attr">component</span>: food,
+    <span class="hljs-attr">children</span>:[
+    {
+        <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+        <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+        <span class="hljs-attr">components</span>: {
+        <span class="hljs-attr">default</span>: subfood,
+        <span class="hljs-attr">ex</span>: subextend
+        }
+    }
+    ]
+}</code></pre>
+<p>The result is as below.<br>
+<img src="./images/Vue Study [2] Vue Router10.png" alt="demo4_subfood"></p>
+<h3 id="redirect-in-js">Redirect in js</h3>
+<p>Sometimes we should do some logic judgement in js and then we could determine which path we could redirect to. We can use <code>this.$router.push()</code> to do this in js.</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">this</span>.$router.push({ <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>, <span class="hljs-attr">params</span>: { <span class="hljs-attr">id</span>: <span class="hljs-string">"subfood1"</span> }});
+<span class="hljs-keyword">this</span>.$router.push(<span class="hljs-string">"/food/subfood1"</span>);</code></pre>
+<h3 id="error-page">404 Error Page</h3>
+<p>When user want to access a Url which is not nonexistent, then we should redirect to a 404 page.</p>
+<p>First, we add a <strong>404</strong> component.</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>404 Error<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'error404'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-string">'404'</span>
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>Then add the route in router index.js. As we should catch all unknown Url, we should declare the route in root.</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">routes</span>: [ 
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'*'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'error404'</span>,
+      <span class="hljs-attr">component</span>: error404
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+      <span class="hljs-attr">component</span>: food
+    }
+    ...
+  ]
+})</code></pre>
+<p>Then we run the application and have a look.<br>
+<img src="./images/Vue Study [2] Vue Router11.png" alt="demo5_404"></p>
+<p>We will find that when we access the root path, we get a 404 view. It is not the result we want.<br>
+It is because we donot declare the root view in router index.js. Let me to add it.<br>
+I add a <strong>home</strong> component and then declare it as the root view.</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">routes</span>: [ 
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'*'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'error404'</span>,
+      <span class="hljs-attr">component</span>: error404
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'home'</span>,
+      <span class="hljs-attr">component</span>: home
+    },
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+      <span class="hljs-attr">component</span>: food
+    }
+    ...
+  ]
+})</code></pre>
+<p>Then have a look.<br>
+<img src="./images/Vue Study [2] Vue Router12.png" alt="demo5_home"></p>
+<p>It shows correctly now. When we access an unknown Url, the website will show the 404 view.<br>
+<img src="./images/Vue Study [2] Vue Router13.png" alt="demo6_404"></p>
+<p>Maybe someone will say why the page will still show the menu in top. We should know that the elements in App.vue will always be shown. If we just want to show 404 view when we access an unknown page, we should move the menu elements into <strong>home</strong> component, and declare the menu components as children in <strong>home</strong> path.</p>
+<p>home.vue</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"content"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">nav</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'navbar'</span>&gt;</span> 
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/"</span> &gt;</span>Home<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/food"</span> &gt;</span>Food<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/rating"</span>&gt;</span>Rating<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span>  <span class="hljs-attr">to</span>=<span class="hljs-string">"/seller"</span>&gt;</span>Seller<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>  
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">router-view</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">router-view</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">nav</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">name</span>: <span class="hljs-string">'home'</span>,
+  data () {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">msg</span>: <span class="hljs-string">'home'</span>
+    }
+  }
+}
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>router index.js</p>
+<pre class="js"><code class="hljs javascript">{
+<span class="hljs-attr">path</span>: <span class="hljs-string">'/'</span>,
+<span class="hljs-attr">name</span>: <span class="hljs-string">'home'</span>,
+<span class="hljs-attr">component</span>: home,
+<span class="hljs-attr">children</span>:[
+  {
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+    <span class="hljs-attr">component</span>: food,
+    <span class="hljs-attr">children</span>:[
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+      <span class="hljs-attr">components</span>: {
+        <span class="hljs-attr">default</span>: subfood,
+        <span class="hljs-attr">ex</span>: subextend
+      }
+    }
+  ]
+  },
+  ...
+]
+}</code></pre>
+<p>Then the website will only show 404 view when we access an unknown Url.<br>
+<img src="./images/Vue Study [2] Vue Router14.png" alt="demo7_404"></p>
+<h3 id="alias">Alias</h3>
+<p>As above, when we access the root path, it shows nothing in the RouterView. Actually sometimes we should show something, such as dashboard in the root path. How can we do this?<br>
+There is a property <code>Alias</code> in router. More uage description can be found in <a href="https://router.vuejs.org/guide/essentials/redirect-and-alias.html#alias" target="_blank">Vue</a>.</p>
+<p>Here we could only focus on the definition.<br>
+<strong>An alias of <code>/a</code> as <code>/b</code> means when the user visits <code>/b</code>, the URL remains <code>/b</code>, but it will be matched as if the user is visiting <code>/a</code>.</strong><br>
+We know that a path begin with <code>/</code> means an absolute path, without <code>/</code> means a relative path. So we can declare a child in <strong>home</strong> view and set <code>alias</code> as <code>''</code> or <code>/</code>. It means when we access <code>/</code>, we are actually accessing <code>/food</code>.</p>
+<pre class="js"><code class="hljs javascript">{
+<span class="hljs-attr">path</span>: <span class="hljs-string">'/'</span>,
+<span class="hljs-attr">name</span>: <span class="hljs-string">'home'</span>,
+<span class="hljs-attr">component</span>: home,
+<span class="hljs-attr">children</span>:[
+  {
+    <span class="hljs-attr">path</span>: <span class="hljs-string">'/food'</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'food'</span>,
+    <span class="hljs-attr">alias</span>: <span class="hljs-string">'/'</span>,
+    <span class="hljs-attr">component</span>: food,
+    <span class="hljs-attr">children</span>:[
+    {
+      <span class="hljs-attr">path</span>: <span class="hljs-string">'/food/:id'</span>,
+      <span class="hljs-attr">name</span>: <span class="hljs-string">'subfood'</span>,
+      <span class="hljs-attr">components</span>: {
+        <span class="hljs-attr">default</span>: subfood,
+        <span class="hljs-attr">ex</span>: subextend
+      }
+    }
+  ]
+  },
+  ...
+]
+}</code></pre>
+<p><img src="./images/Vue Study [2] Vue Router15.png" alt="demo8_alias"></p>
+<h3 id="html5-history-mode">HTML5 History Mode</h3>
+<p>Maybe you have found that all our Urls are including <code>#</code>. It's not a good link with <code>#</code>. Is there any way to remove this char? Sure. The HTML5 History Mode will help us. More uage description can be found in <a href="https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations" target="_blank">Vue</a>.</p>
+<p>We can set <strong>mode</strong> value as <code>history</code> in router index.js and then run the application. We can get a Url without <code>#</code>.</p>
+<pre class="js"><code class="hljs javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">new</span> Router({
+  <span class="hljs-attr">mode</span>: <span class="hljs-string">'history'</span>,
+  <span class="hljs-attr">routes</span>: [ 
+    ...
+  ]
+})</code></pre>
+<p><img src="./images/Vue Study [2] Vue Router16.png" alt="demo9_mode"></p>
+<h3 id="build-setup-command-line">Build Setup command line</h3>
+<pre class="bash"><code class="hljs"><span class="hljs-comment"># install dependencies</span>
+npm install
+
+<span class="hljs-comment"># serve with hot reload at localhost:8080</span>
+npm run dev
+
+<span class="hljs-comment"># build for production with minification</span>
+npm run build
+
+<span class="hljs-comment"># build for production and view the bundle analyzer report</span>
+npm run build --report
+
+<span class="hljs-comment"># run unit tests</span>
+npm run unit
+
+<span class="hljs-comment"># run e2e tests</span>
+npm run e2e
+
+<span class="hljs-comment"># run all tests</span>
+npm <span class="hljs-built_in">test</span></code></pre>
+</div><div id="MySignature" style="display: block;"><table style="background: rgba(255, 255, 246, 0.64); border-collapse: unset; border: 1px dashed rgb(224, 224, 224); padding: 10px 10px 10px 10px; font-family: 微软雅黑; font-size: 13px">
+    <tbody><tr><td>
+        <b>作者：</b>markjiang7m2 <br>
+        <b>出处：</b><a href="https://www.cnblogs.com/markjiang7m2/" target="_blank">https://www.cnblogs.com/markjiang7m2/</a> <br>
+        本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。 <br>
+    </td>
+    <td align="right">
+        <div id="qr_bg"></div>
+    </td>
+</tr>
+<tr><td><div><img src="./images/Vue Study [2] Vue Router17.png"></div></td>
+    </tr>
+</tbody></table></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="https://www.cnblogs.com/markjiang7m2/category/1454260.html" target="_blank">vue</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a id="green_channel_digg" onclick="DiggIt(10796020,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+            <a id="green_channel_follow">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;">收藏该文</a>
+    <a id="green_channel_weibo" title="分享至新浪微博" onclick="ShareToTsina()"><img src="//common.cnblogs.com/images/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" title="分享至微信" onclick="shareOnWechat()"><img src="//common.cnblogs.com/images/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/markjiang7m2/" target="_blank"><img src="//pic.cnblogs.com/face/1674499/20190428143400.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/markjiang7m2/">markjiang7m2</a><br>
+            <a href="https://home.cnblogs.com/u/markjiang7m2/followees">关注 - 0</a><br>
+            <a href="https://home.cnblogs.com/u/markjiang7m2/followers">粉丝 - 6</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a onclick="unfollow('e8eae4ab-81de-4c60-e1fd-08d6cab4827b');return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(10796020,'Digg')">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(10796020,'Bury')">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="https://www.cnblogs.com/markjiang7m2/p/10783456.html" class="p_n_p_prefix">« </a> 上一篇：<a href="https://www.cnblogs.com/markjiang7m2/p/10783456.html" title="发布于2019-04-28 13:29">Vue Study [1]: Vue Setup</a><br><a href="https://www.cnblogs.com/markjiang7m2/p/10823844.html" class="p_n_p_prefix">» </a> 下一篇：<a href="https://www.cnblogs.com/markjiang7m2/p/10823844.html" title="发布于2019-05-07 10:17">How to download a file with plus symbol(+) filename in IIS?</a><br></div>
+</div>
+
+
+        </div>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

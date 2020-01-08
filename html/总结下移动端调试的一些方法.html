@@ -1,0 +1,95 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修总结下移动端调试的一些方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>总结下移动端调试的一些方法</center></div><div class='banquan'>原文出处:本文由博客园博主赵sir阿提供。<br/>
+原文连接:https://www.cnblogs.com/zqw111/p/11295513.html</div><br>
+    <p>说起网站调试，pc页面和h5页面，假如电脑上能够重现的，都不在话下，调试起来都蛮简单。仅仅需要fiddler一个抓包工具，把线上压缩代码替换成本地无压缩代码就可以了。具体步骤我后面可以详细介绍。但是，仅仅是某款手机重现，其他手机没有问题的情况下如何调试？hybrid页面如何调试呢？这篇文章简单总结下我常用的调试方法。</p>
+<h2>一、chrome的inspect调试方法</h2>
+<p>这个调试仅仅是针对安卓系统，可以调试hybrid,也可以调试h5，但是IOS系统就无能为力了。我很喜欢用这种方式调试android手机。用inspect可以在chrome中模拟一个手机中的webview，你可以在chrome中调试你手机中的代码。</p>
+<p>步骤如下：</p>
+<h3>1、android手机通过数据线连接pc,打开android手机的&ldquo;允许调试&rdquo;功能（usb调试）</h3>
+<p>一般是在手机的开发者工具里面，有的手机连续点击几次版本号可以出现，具体可以网上搜索一下。 如下图：</p>
+<p><img src="./images/总结下移动端调试的一些方法0.png" alt="enter image description here" /></p>
+<p>点击允许USB调试:</p>
+<p><img src="./images/总结下移动端调试的一些方法1.png" alt="enter image description here" /></p>
+<p>(有些手机链接不上，需要安装一些驱动，可以下载PP助手，安装手机驱动，pp助手链接成功，chrome应该就可以链接成功了！)</p>
+<h3>2 . chrome地址栏里面输入&ldquo;https://www.jkys120.com"</h3>
+<h3>3 . 手机（h5或者app扫描打开指定页面）看到如下画面就可以真机调试了：</h3>
+<p><img src="./images/总结下移动端调试的一些方法2.png" alt="enter image description here" /></p>
+<h2>二、vConsole或者eruda调试</h2>
+<p>这两种方式都是通过js代码注入来完成的。</p>
+<p>vConsole如下图：&nbsp;<img src="./images/总结下移动端调试的一些方法3.png" alt="enter image description here" /></p>
+<p>vConsole 说明文档：<a href="https://github.com/Tencent/vConsole" target="_blank"><br /></a></p>
+<p>引入方式可以如下：</p>
+<pre><code><code><span class="pun">(<span class="kwd">function<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+    <span class="kwd">if<span class="pln"> <span class="pun">(!/<span class="pln">vconsole<span class="pun">=<span class="kwd">true<span class="pun">/.<span class="pln">test<span class="pun">(<span class="pln">window<span class="pun">.<span class="pln">location<span class="pun">)<span class="pln"> <span class="pun">)<span class="pln"> <span class="kwd">return<span class="pun">;<span class="com">//判断浏览器有误参数<span class="pln">
+    <span class="kwd">var<span class="pln"> script <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">createElement<span class="pun">(<span class="str">'script'<span class="pun">);<span class="pln">
+    script<span class="pun">.<span class="pln">src <span class="pun">=<span class="pln"> <span class="str">"//pages.c-ctrip.com/amsweb/tools/vconsole.min.js"<span class="pun">;<span class="pln">
+    document<span class="pun">.<span class="pln">body<span class="pun">.<span class="pln">appendChild<span class="pun">(<span class="pln">script<span class="pun">);<span class="pln">
+    script<span class="pun">.<span class="pln">onload <span class="pun">=<span class="pln"> <span class="kwd">function<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+       <span class="kwd">var<span class="pln"> vConsole <span class="pun">=<span class="pln"> <span class="kwd">new<span class="pln"> <span class="typ">VConsole<span class="pun">();<span class="pln">
+      console<span class="pun">.<span class="pln">log<span class="pun">(<span class="str">'Hello world'<span class="pun">);<span class="pln">
+    <span class="pun">}<span class="pln">
+<span class="pun">})();</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>eruda调试如下图：</p>
+<p><img src="./images/总结下移动端调试的一些方法4.png" alt="enter image description here" /></p>
+<p>eruda 说明文档</p>
+<pre><code><code><span class="pun">(<span class="kwd">function<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+    <span class="kwd">if<span class="pln"> <span class="pun">(!/<span class="pln">eruda<span class="pun">=<span class="kwd">true<span class="pun">/.<span class="pln">test<span class="pun">(<span class="pln">window<span class="pun">.<span class="pln">location<span class="pun">)<span class="pln"> <span class="pun">)<span class="pln"> <span class="kwd">return<span class="pun">;<span class="com">//判断浏览器有误参数<span class="pln">
+    <span class="kwd">var<span class="pln"> script <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">createElement<span class="pun">(<span class="str">'script'<span class="pun">);<span class="pln">
+    script<span class="pun">.<span class="pln">src <span class="pun">=<span class="pln"> <span class="str">"//pages.c-ctrip.com/amsweb/tools/eruda.min.js"<span class="pun">;<span class="pln">
+    document<span class="pun">.<span class="pln">body<span class="pun">.<span class="pln">appendChild<span class="pun">(<span class="pln">script<span class="pun">);<span class="pln">
+    script<span class="pun">.<span class="pln">onload <span class="pun">=<span class="pln"> <span class="kwd">function<span class="pun">()<span class="pln"> <span class="pun">{<span class="pln">
+        eruda<span class="pun">.<span class="pln">init<span class="pun">()<span class="pln">
+    <span class="pun">}<span class="pln">
+<span class="pun">})();</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h2>三、fiddler抓包（http,https)</h2>
+<p>对于fiddler抓包抓http的，很简单，手机设置代理。 fiddler设置端口号</p>
+<p><img src="./images/总结下移动端调试的一些方法5.png" alt="enter image description here" /></p>
+<p>对于http的调试一般没有问题，问题是对于https的调试</p>
+<p>首先要勾选忽略错误</p>
+<p><img src="./images/总结下移动端调试的一些方法6.png" alt="enter image description here" /></p>
+<p>然后下载证书</p>
+<p><img src="./images/总结下移动端调试的一些方法7.png" alt="enter image description here" /></p>
+<p>手机中安装证书。</p>
+<p>(备注：android手机可能直接点击 FiddlerRoot.cer 没反应，或者提示无法安装，那么就需要从存储设备安装。)</p>
+<p><strong>小米安装步骤是：</strong></p>
+<p>【设置】-&gt;【更多设置】-&gt;【系统安全】-&gt;【从存储设备安装】&rarr;选择证书安装即可</p>
+<p>不同手机不一样。可以网上查下。</p>
+<h2>四、spy-debugger调试</h2>
+<p>这个不可以调试hybrid页面（js等读取手机本地的文件的hybrid页面非app直连h5），但是可以远程调试任何手机浏览器页面，支持HTTP/HTTPS(可以调试app 直连h5页面，就是app里面嵌套的h5)</p>
+<p>具体使用步骤如文档：<a href="https://github.com/wuchangming/spy-debugger%E3%80%82" target="_blank"><br /></a></p>
+<p>第一步：手机和PC保持在同一网络下（比如同时连到一个Wi-Fi下）</p>
+<p>第二步：命令行输入spy-debugger，按命令行提示用浏览器打开相应地址。</p>
+<p>第三步：设置手机的HTTP代理，代理IP地址设置为PC的IP地址，端口为spy-debugger的启动端口(默认端口：9888)。</p>
+<p>Android设置代理步骤：设置 - WLAN - 长按选中网络 - 修改网络 - 高级 - 代理设置 - 手动</p>
+<p>iOS设置代理步骤：设置 - 无线局域网 - 选中网络 - HTTP代理手动</p>
+<p>第四步：手机安装证书。</p>
+<p>第五步：用手机浏览器访问你要调试的页面即可。</p>
+<p>这种方式主要是调试微信，或者百度或者app中直连的h5页面，调试起来很方便。</p>
+<h2>五、 IOS中页面调试</h2>
+<p>ios页面调试最好用mac电脑</p>
+<p>1：打开iphone手机的开发者模式，流程是：【设置】-&gt;【Safari】-&gt;【高级】-&gt;开启【Web检查器】</p>
+<p>2：打开Mac上Safari的开发者模式，流程是【Safari】-&gt;【偏好设置】-&gt;【高级】&rarr;【在菜单栏中显示&ldquo;开发&rdquo;菜单】勾选</p>
+<p>3：用数据线将iphone手机和mac连接起来，在电脑的safari中按照流程执行：【开发】-&gt;【xxx的iphone】&rarr;【你的网站】</p>
+<p>4 ：这样你就能在mac上面调试用iphone的safari打开的网页了</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

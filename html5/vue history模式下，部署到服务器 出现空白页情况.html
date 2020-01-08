@@ -1,0 +1,86 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue history模式下，部署到服务器 出现空白页情况' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue history模式下，部署到服务器 出现空白页情况</center></div><div class='banquan'>原文出处:本文由博客园博主Lemoncool提供。<br/>
+原文连接:https://www.cnblogs.com/lemoncool/p/11271925.html</div><br>
+    <div>
+<ul>
+<li><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;</span><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">问题描述：</span></li>
+</ul>
+</div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">　&nbsp; vue搭建的项目，路由一直用的hash模式，所以url中都会带有一个&ldquo;#&rdquo;号。现在想要去掉&ldquo;#&rdquo;，于是使用history模式 { mode: 'history' }，代码如下：</span></div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'Microsoft YaHei'; font-size: 13px;">import Vue from 'vue'<span style="color: #000000;">;
+import App from </span>'./App'<span style="color: #000000;">;
+import routers from </span>'./router'<span style="color: #000000;">;
+import VueRouter from </span>'vue-router'<span style="color: #000000;">;
+ 
+Vue.use(VueRouter);
+ 
+const router </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> VueRouter({
+  mode: </span>'history'<span style="color: #000000;">,
+  routes: routers
+});
+ 
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> eslint-disable no-new </span><span style="color: #008000;">*/</span>
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  el: </span>'#app'<span style="color: #000000;">,
+  router,
+  components: {App},
+  template: </span>'&lt;App/&gt;'<span style="color: #000000;">
+});</span></span></pre>
+</div>
+</div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;</span></div>
+<div>
+<ul>
+<li><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;mode: 'history'，使用这个模式，在开发阶段一切都是正常的，访问地址是localhost:8888，以上没什么错误，一切都好用。url里也没有#了。<strong>可是打包之后，访问项目会发现页面一片空白的情况。不是404，不报错，只是空白！！</strong></span></li>
+</ul>
+</div>
+<div>
+<ul>
+<li><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">解决办法如下：</span></li>
+</ul>
+</div>
+<div><ol>
+<li><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">很多项目都放在了服务器根目录下面，访问后的url就是：http://123.com，这是一种解决办法</span></li>
+<li><span style="font-family: 'Microsoft YaHei';">假如我的项目没有放在服务器根目录下，放在了服务器的nice/app下，那么打开地址是：http://123.com/nice/app</span></li>
+</ol></div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;　　　</span><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">那么这里问题就来了，我们配的路由中并没有nice/app，所以无法找到路径中的组件，所以也就无法渲染了。这就是导致空白的原因!</span></div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;</span></div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">　　　此时只需要修改router中的index.js，给路由中加一个base的属性，值为 &lsquo;/nice/app/&rsquo;就可以了。代码：</span></div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">const router = <span style="color: #0000ff;">new</span><span style="color: #000000;"> VueRouter({
+  mode: </span>'history'<span style="color: #000000;">,
+ <span style="color: #ff0000;"><strong> base: </strong></span></span><span style="color: #ff0000;"><strong>'/nice/app/'</strong></span><span style="color: #000000;"><span style="color: #ff0000;"><strong>,</strong></span>
+  routes: routers
+});</span></span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">　　</span><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">记住这个base，base值两边一定要有"/"，不要写成&ldquo;nice/app&rdquo;、&ldquo;/nice/app&rdquo;或者&ldquo;nice/app/&rdquo;。</span></div>
+<div>&nbsp;</div>
+<div><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">&nbsp;&nbsp; &nbsp;　<strong>其次，这个文件夹是服务器放项目的文件夹，不是你本地项目的文件夹位置！！</strong></span></div>
+<div>&nbsp;</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,194 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue项目中引入iconfont' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue项目中引入iconfont</center></div><div class='banquan'>原文出处:本文由博客园博主Tusi博客提供。<br/>
+原文连接:https://www.cnblogs.com/wenbinjiang/p/11165762.html</div><br>
+    <h1 id="背景">背景</h1>
+<p>对于前端而言，图标的发展可谓日新月异。从<code>img</code>标签，到雪碧图，再到字体图标，<code>svg</code>，甚至<code>svg</code>也有了类似于雪碧图的方案<code>svg-sprite-loader</code>。雪碧图没有什么好讲的了，只是简单地利用了<code>background-position</code>来做图标定位。今天咱们先聊聊怎么使用字体图标和<code>svg</code>图标。其实字体图标也不陌生了，<code>bootstrap</code>，<code>font-awesome</code>，<code>element-ui</code>等<code>UI</code>库都基本标配了字体图标。</p>
+<h1 id="简单说下原理">简单说下原理</h1>
+<p><code>unicode</code>预留了<code>E000-F8FF</code>范围作为私有保留区域，这个区间的<code>unicode</code>码非常适合做字体图标，前端根据<code>unicode</code>码就能显示对应的图标。</p>
+<h1 id="vue项目引入iconfont">vue项目引入iconfont</h1>
+<h2 id="在iconfont新建项目">1. 在iconfont新建项目</h2>
+<p><img src="./images/vue项目中引入iconfont0.png" alt="iconfont新建项目" /></p>
+<p>注：这里修正一下，前缀应该是<code>test-icon-</code>。</p>
+<h2 id="添加图标至项目">2. 添加图标至项目</h2>
+<p><img src="./images/vue项目中引入iconfont1.png" alt="添加图标至项目" /></p>
+<h2 id="使用iconfont">3. 使用iconfont</h2>
+<h3 id="unicode方式不推荐">Unicode方式（不推荐）</h3>
+<h4 id="在线使用">在线使用</h4>
+<ul>
+<li><code>index.scss</code>中引入在线字体</li>
+</ul>
+<pre><code><code>@font-face {
+    font-family: &#39;iconfont&#39;;  /* project id 1254715 */
+    src: url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.eot&#39;);
+    src: url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.eot?#iefix&#39;) format(&#39;embedded-opentype&#39;),
+    url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.woff2&#39;) format(&#39;woff2&#39;),
+    url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.woff&#39;) format(&#39;woff&#39;),
+    url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.ttf&#39;) format(&#39;truetype&#39;),
+    url(&#39;//at.alicdn.com/t/font_1254715_s1khj1whikd.svg#iconfont&#39;) format(&#39;svg&#39;);
+}</code></pre>
+<ul>
+<li><p>页面中使用</p>
+<p>使用时很不友好，使用的是<code>unicode</code>码表示，使用图标还必须去<code>iconfont</code>项目去查询下<code>unicode</code>码。</p></li>
+</ul>
+<pre><code><code>&lt;template&gt;
+    &lt;div&gt;
+        &lt;i class=&quot;iconfont&quot;&gt;&amp;#xe7ee;&lt;/i&gt;
+        &lt;i class=&quot;iconfont&quot;&gt;&amp;#xe7ed;&lt;/i&gt;
+        &lt;i class=&quot;iconfont&quot;&gt;&amp;#xe7ec;&lt;/i&gt;
+        &lt;i class=&quot;iconfont&quot;&gt;&amp;#xe7eb;&lt;/i&gt;
+    &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+<p>效果图如下：</p>
+<p><img src="./images/vue项目中引入iconfont2.png" alt="iconfont效果图" /></p>
+<h4 id="本地使用">本地使用</h4>
+<p>有时候网络不是那么给力的，或者是内网环境，那么就不要考虑用在线引用的方式了。</p>
+<ol>
+<li>本地使用需要先将字体库下载并放到项目中。</li>
+</ol>
+<p><img src="./images/vue项目中引入iconfont3.png" alt="iconfont项目下载" /></p>
+<ol>
+<li><p>在全局样式文件中定义如下代码</p>
+<pre><code><code>@font-face {
+  font-family: &quot;iconfont&quot;;
+  src: url(&#39;../fonts/iconfont.eot&#39;); /* IE9*/
+  src: url(&#39;../fonts/iconfont.eot#iefix&#39;) format(&#39;embedded-opentype&#39;), /* IE6-IE8 */
+  url(&#39;../fonts/iconfont.woff&#39;) format(&#39;woff&#39;), /* chrome, firefox */
+  url(&#39;../fonts/iconfont.woff2&#39;) format(&#39;woff2&#39;), /* chrome, firefox */
+  url(&#39;../fonts/iconfont.ttf&#39;) format(&#39;truetype&#39;), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url(&#39;../assets/fonts/iconfont.svg#iconfont&#39;) format(&#39;svg&#39;); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: &quot;iconfont&quot; !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}</code></pre></li>
+</ol>
+<p><img src="./images/vue项目中引入iconfont4.png" alt="unicode方式本地引用iconfont" /></p>
+<ol>
+<li><p>使用方式</p>
+<p>与在线引用方式是一样的，都是使用<code>unicode</code>码去展示图标。</p>
+<pre><code><code>&lt;template&gt;
+    &lt;i class=&quot;iconfont&quot;&gt;&amp;#xe7ee;&lt;/i&gt;
+&lt;/template&gt;</code></pre></li>
+</ol>
+<h4 id="总结">总结</h4>
+<ul>
+<li>兼容性最好，支持<code>ie6+</code>，及所有现代浏览器。</li>
+<li>支持按字体的方式去动态调整图标大小，颜色等等。</li>
+<li>但是因为是字体，所以不支持多色。只能使用平台里单色的图标，就算项目里有多色图标也会自动去色。</li>
+</ul>
+<h3 id="font-class方式较友好">Font class方式（较友好）</h3>
+<p>一种更友好的封装，类似于<code>font-awesome</code>，我们只要使用<code>class</code>，就可以调用图标了。其原理就是利用<code>before</code>伪元素来显示图标。</p>
+<h4 id="在线使用-1">在线使用</h4>
+<p>超级简单，只要在线生成代码，引用在线的<code>css</code>文件即可使用。</p>
+<p><img src="./images/vue项目中引入iconfont5.png" alt="复制在线fontclass的css文件路径" /></p>
+<p>在<code>index.html</code>中引用它。</p>
+<pre class="html"><code>&lt;link rel=&quot;stylesheet&quot; href=&quot;//at.alicdn.com/t/font_1261797_48wm20jf8z.css&quot;&gt;</code></pre>
+<p>项目中就可以使用字体图标了。</p>
+<pre class="html"><code>&lt;template&gt;
+    &lt;i class=&quot;iconfont cl-icon-fold&quot;&gt;&lt;/i&gt;
+    &lt;i class=&quot;iconfont cl-icon-delete-solid&quot;&gt;&lt;/i&gt;
+&lt;/template&gt;</code></pre>
+<h4 id="本地使用-1">本地使用</h4>
+<p>与<code>unicode</code>方式类似，下载代码到本地。因为我是用<code>scss</code>管理样式的，需要在下载的代码中提取出关键部分。除了引用字体库，还要将其中的<code>iconfont.css</code>中定义的<code>before</code>伪元素全部复制到自己的<code>scss</code>文件中。</p>
+<pre><code><code>@font-face {
+  font-family: &quot;iconfont&quot;;
+  src: url(&#39;../fonts/iconfont.eot&#39;); /* IE9*/
+  src: url(&#39;../fonts/iconfont.eot#iefix&#39;) format(&#39;embedded-opentype&#39;), /* IE6-IE8 */
+  url(&#39;../fonts/iconfont.woff&#39;) format(&#39;woff&#39;), /* chrome, firefox */
+  url(&#39;../fonts/iconfont.woff2&#39;) format(&#39;woff2&#39;), /* chrome, firefox */
+  url(&#39;../fonts/iconfont.ttf&#39;) format(&#39;truetype&#39;), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url(&#39;../assets/fonts/iconfont.svg#iconfont&#39;) format(&#39;svg&#39;); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: &quot;iconfont&quot; !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 列了一部分举例
+.cl-icon-user:before {
+  content: &quot;\e64b&quot;;
+}
+
+.cl-icon-video:before {
+  content: &quot;\e66b&quot;;
+}
+
+.cl-icon-pause:before {
+  content: &quot;\e7bd&quot;;
+}
+
+.cl-icon-orgnazation:before {
+  content: &quot;\e61b&quot;;
+}</code></pre>
+<h4 id="总结-1">总结</h4>
+<ul>
+<li>兼容性良好，支持<code>ie8+</code>，及所有现代浏览器。</li>
+<li>相比于<code>unicode</code>语意明确，书写更直观。可以很容易分辨这个<code>icon</code>是什么。</li>
+<li>因为使用<code>class</code>来定义图标，所以当要替换图标时，只需要修改<code>class</code>里面的<code>unicode</code>引用。</li>
+<li>不过因为本质上还是使用的字体，所以多色图标还是不支持的。</li>
+</ul>
+<h4 id="建议">建议</h4>
+<p>由于加了新的图标需要重新在<code>iconfont.cn</code>重新生成代码，所以这种方式也不算很方便，但是相对于<code>unicode</code>还是高级不少。根据我的经验，建议在调试时，不要每次图标更新，就下载到本地更换。应该先使用在线使用的方式，调试完毕确认无误后，再下载到本地使用，这样对于效率提升有很大帮助。</p>
+<h3 id="symbol方式支持多色图标">symbol方式（支持多色图标）</h3>
+<p><code>svg</code>的<code>symbol</code>提供了类似于雪碧图的功能，让<code>svg</code>的使用变得更简单，也可以满足做图标系统的需求。可以参考<a href="https://www.zhangxinxu.com/wordpress/2014/07/introduce-svg-sprite-technology/">张大大博客</a>了解更多关于<code>svg symbol</code>的知识。</p>
+<h4 id="在线使用-2">在线使用</h4>
+<p>首先在<code>iconfont</code>项目中选择<code>symbol</code>方式，并在线生成<code>js</code>代码</p>
+<p><img src="./images/vue项目中引入iconfont6.png" alt="在线svg symbol代码" /></p>
+<p>然后在<code>index.html</code>中引入这个js文件</p>
+<pre class="html"><code>&lt;script src=&quot;//at.alicdn.com/t/font_1254715_oewlgci0ut.js&quot;&gt;&lt;/script&gt;</code></pre>
+<p>这个<code>js</code>的作用是在文档中生成<code>svg symbol</code></p>
+<p><img src="./images/vue项目中引入iconfont7.png" alt="1562638406124" /></p>
+<p>最后就可以在页面中通过<code>use</code>标签使用<code>svg</code>图标了。<code>xlink:href</code>的值设置为对应的<code>symbol</code>的<code>id</code>即可。</p>
+<pre class="html"><code>&lt;svg aria-hidden=&quot;true&quot;&gt;
+    &lt;use xlink:href=&quot;#test-icon-word-ext&quot;&gt;&lt;/use&gt; 
+&lt;/svg&gt;</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/vue项目中引入iconfont8.png" alt="多色svg效果图" /></p>
+<p>多色图标还是酷！</p>
+<h4 id="本地使用-2">本地使用</h4>
+<p>本地使用也是一样的道理，主要是依赖这个在线生成的<code>js</code>文件，将在线<code>js</code>文件的链接在浏览器空标签中打开，就可以得到其内容，然后复制内容，自己命名一个<code>js</code>文件，并把它放在本地项目静态资源目录下，引用即可。</p>
+<p><img src="./images/vue项目中引入iconfont9.png" alt="symbol的js文件" /></p>
+<pre class="html"><code>&lt;script src=&quot;./static/js/symbols.js&quot;&gt;&lt;/script&gt;</code></pre>
+<h4 id="图标自动管理必看">图标自动管理（必看）</h4>
+<p>即使使用了<code>symbol</code>方式，当设计小姐姐新增图标时，我们还是无法避免重新生成图标代码。那么有没有更优雅的解决方案呢？答案是有的。<code>svg-sprite-loader</code> + <code>require.context</code>。</p>
+<p><code>svg-sprite-loader</code>网上已经有太多文章了。</p>
+<p>关于<code>require.context</code>，我倒是有一点自己的理解。请查看<a href="http://blog.wbjiang.cn/article/169">一张图带你了解webpack的require.context</a>。</p>
+<h4 id="总结-2">总结</h4>
+<ul>
+<li>支持多色图标了，不再受单色限制。</li>
+<li>支持丰富的<code>css</code>属性进行定制。</li>
+<li>兼容性较差，支持 <code>ie9+</code>,及现代浏览器。</li>
+<li>浏览器渲染<code>svg</code>的性能一般，还不如<code>png</code>。</li>
+</ul>
+<p><a href="http://blog.wbjiang.cn/article/170">首发链接</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

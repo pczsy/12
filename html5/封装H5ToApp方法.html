@@ -1,0 +1,152 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修封装H5ToApp方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>封装H5ToApp方法</center></div><div class='banquan'>原文出处:本文由博客园博主紫色水杯提供。<br/>
+原文连接:https://www.cnblogs.com/focusHots/p/11654901.html</div><br>
+    <p>　　方法一：</p>
+<p>　　　　新建个 Android studio 项目,用 webview 指定访问你的页面</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 方法二：</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;使用工具&nbsp;cordova&nbsp; 附上地址：http://cordova.axuer.com/docs/zh-cn/latest/guide/platforms/android/index.html</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 方法三：</p>
+<p>　　　　ionic 结合 cordova&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; 方法四：</p>
+<p>　　　　ApiCloud</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;https://www.jianshu.com/p/c45148134082</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;方法五：</p>
+<p>　　可参考&nbsp;文档（https://reactnative.cn/docs/signed-apk-android/）</p>
+<p>　　　　1.生成私有秘钥</p>
+<p>　　　&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;①根目录下打开终端，执行命令：</p>
+<div>
+<p><strong>&nbsp;&nbsp;&nbsp;</strong><em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<strong>keytool -genkey -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize2048-validity10000</strong></em></p>
+<p><em><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ②根据提示输入口令: 同时记住&nbsp;密钥库口令&nbsp;</strong></em></p>
+<p><em><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;③生成密钥库文件&nbsp; &nbsp;&nbsp;根目录下生成一个 my-release-key.keystore 的文件，直接拿到android/app</strong></em></p>
+<p><em><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2.设置 gradle 变量：<br />　　　　　　</strong></em>①在android/gradle.properties中加入代码：</p>
+<div>
+<div>
+<p>&nbsp;&nbsp;&nbsp;<em>&nbsp;　　　　　　<strong>MYAPP_RELEASE_STORE_FILE=my-release-key.keystore<br /></strong></em></p>
+<p><em><strong>&nbsp;&nbsp;&nbsp;&nbsp;　　　　　　MYAPP_RELEASE_KEY_ALIAS=my-key-alias</strong></em></p>
+<p><em><strong>&nbsp;&nbsp;&nbsp;&nbsp;　　　　　　MYAPP_RELEASE_STORE_PASSWORD=******</strong></em></p>
+<p><em><strong>&nbsp;&nbsp;&nbsp;&nbsp;　　　　　　MYAPP_RELEASE_KEY_PASSWORD=******</strong></em></p>
+<p>　　　　　　　其中******换成&nbsp;<strong>密钥库口令</strong></p>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+<p><em><strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 3.添加签名配置：</strong></em></p>
+<p><em><strong>　　　　　　</strong></em>①在android/app/build.gradle添加代码：</p>
+<div>
+<p>&nbsp; &nbsp;&nbsp;　　　　　　　　android {</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;　　　　　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp;</p>
+<p>&nbsp;&nbsp;　　　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defaultConfig {</p>
+<p>　　　　　　　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;....&nbsp;</p>
+<p>　　　　　　　　　　&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }&nbsp;</p>
+<p>　　　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<em><strong>signingConfigs {<br /></strong></em></p>
+<p><em><strong>&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;　　　　　&nbsp; &nbsp; &nbsp;release {</strong></em></p>
+<p><em><strong>&nbsp; &nbsp;&nbsp;　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;storeFile file(MYAPP_RELEASE_STORE_FILE)</strong></em></p>
+<p><em><strong>&nbsp;　　 &nbsp; &nbsp;　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;storePassword MYAPP_RELEASE_STORE_PASSWORD</strong></em></p>
+<p><em><strong>&nbsp; &nbsp; 　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keyAlias MYAPP_RELEASE_KEY_ALIAS</strong></em></p>
+<p><em><strong>&nbsp;　　　　　　 &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keyPassword MYAPP_RELEASE_KEY_PASSWORD</strong></em></p>
+<p><em><strong>　　　　　　&nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</strong></em></p>
+<p><em><strong>　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</strong></em></p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;splits {</p>
+<p>&nbsp;　　　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;....&nbsp; &nbsp;</p>
+<p>&nbsp;&nbsp;　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;</p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buildTypes {&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>&nbsp;　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;release {</p>
+<p>　　　　&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;<strong><em>&nbsp;signingConfig signingConfigs.release</em></strong></p>
+<p>&nbsp;&nbsp;　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp; &nbsp;&nbsp;</p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.....&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>　　　　&nbsp;&nbsp;&nbsp;&nbsp;}</p>
+
+
+
+
+
+
+
+
+</div>
+<p><em><strong>　　&nbsp; &nbsp; &nbsp;4.生成发行 APK 包　　　　</strong></em></p>
+<p><em><strong>　　　　　　①终端cd到android目录下　　</strong></em></p>
+<p><em><strong>　　　　　　　　　　</strong></em><em>gradlew clean</em>&nbsp;（不clean也能打包，但是安装后容易造成APP闪退的问题）</p>
+<p><em>　　　　　　　　　　gradlew assembleRelease</em></p>
+<p><em>　　　　　　</em>需要注意的是每次打包之前最好删除android和android/app文件下的build包，清除之前的缓存。</p>
+<div>
+<p>　　　　　　②success之后生成的apk文件位于android/app/build/outputs/apk/release/app-release.apk。</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 问题解决一：</p>
+<p>　　　　　　现象：<span style="font-size: 15px;"><a href="http://dditblog.com/itshare_657.html">ANDROID打包错误ERROR:EXECUTION FAILED FOR TASK &acute;:APP:LINTVITALRELEASE&acute;.</a></span></p>
+<p><span style="font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 13px;"> 解决办法：在app的build.gradle里的android{}中添加如下代码</span></span></p>
+<p><span style="font-size: 15px;"><span style="font-size: 13px;">　　　　　　　　</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">android {
+    compileSdkVersion </span><span style="color: #800080;">23</span><span style="color: #000000;">
+    buildToolsVersion &acute;</span><span style="color: #800080;">25.0</span>.<span style="color: #800080;">0</span><span style="color: #000000;">&acute;
+
+    defaultConfig {
+        applicationId </span><span style="color: #800000;">"</span><span style="color: #800000;">com.luzhiyao.sgongdoocar</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        minSdkVersion </span><span style="color: #800080;">14</span><span style="color: #000000;">
+        targetSdkVersion </span><span style="color: #800080;">23</span><span style="color: #000000;">
+        versionCode </span><span style="color: #800080;">5</span><span style="color: #000000;">
+        versionName </span><span style="color: #800000;">"</span><span style="color: #800000;">1.1.0</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    }
+    buildTypes {
+        release {
+            minifyEnabled </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+            proguardFiles getDefaultProguardFile(&acute;proguard</span>-android.txt&acute;), &acute;proguard-<span style="color: #000000;">rules.pro&acute;
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">添加此处代码即可</span>
+<span style="color: #000000;">    lintOptions {
+        checkReleaseBuilds </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+        abortOnError </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+    }
+}</span></pre>
+</div>
+<p>再次打包 结果如下：<img src="./images/封装H5ToApp方法0.png" alt="" /></p>
+<p>　　　　　　问题二：npm WARN checkPermissions Missing write access to D:\react-native-workspace\react-native\react-nativ</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;解决办法：（<span style="color: #ff0000;">待验证</span>）</p>
+<p>　　　　　　　　删除掉 C:\Users\dd\AppData\Roaming\npm-cache\</p>
+<p>　　　　　　　　　　　 C:\Users\dd\AppData\Roaming\npm\&nbsp; 两个文件夹&nbsp; 重新执行 npm install -g</p>
+<p>　　　　　　关闭自动唤起的 Metro Server ，在项目根目录手动运行：<code>react-native start --root 项项目绝对路径/rn_temp&nbsp;</code>react-native start --root 项项目绝对路径/rn_temp</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

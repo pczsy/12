@@ -1,0 +1,52 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修小程序自定义tabbar custom-tab-bar 6s出不来解决方案，cover-view不兼容' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>小程序自定义tabbar custom-tab-bar 6s出不来解决方案，cover-view不兼容</center></div><div class='banquan'>原文出处:本文由博客园博主曾经的水哥提供。<br/>
+原文连接:https://www.cnblogs.com/cengjingdeshuige/p/11771774.html</div><br>
+    <p>1.从微信小程序的官网扣下来的demo，实际测试中，发现6s ios10 系统不兼容，里面的内容出不来</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cover-view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="tab-bar"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cover-view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="tab-bar-border"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">cover-view</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cover-view </span><span style="color: #ff0000;">wx:for</span><span style="color: #0000ff;">="{{list}}"</span><span style="color: #ff0000;"> wx:key</span><span style="color: #0000ff;">="index"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="tab-bar-item"</span><span style="color: #ff0000;"> data-path</span><span style="color: #0000ff;">="{{item.pagePath}}"</span><span style="color: #ff0000;"> data-index</span><span style="color: #0000ff;">="{{index}}"</span><span style="color: #ff0000;"> bindtap</span><span style="color: #0000ff;">="switchTab"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cover-image </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="{{item.checked ? item.selectedIconPath : item.iconPath}}"</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">cover-image</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cover-view </span><span style="color: #0000ff;">&gt;</span>{{item.text}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">cover-view</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">cover-view</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">cover-view</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>2.实际效果如下： 底部的tabbar没出来</p>
+<p><img src="./images/小程序自定义tabbar custom-tab-bar 6s出不来解决方案，cover-view不兼容0.png" alt="" width="169" height="300" /></p>
+<p>3.把&nbsp;cover-view 改成 view&nbsp; 把&nbsp;&nbsp;cover-image 改成 image 标签</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;view class="tab-bar"&gt;
+  &lt;view class="tab-bar-border"&gt;&lt;/view&gt;
+  &lt;view wx:for="{{list}}" wx:key="index" class="tab-bar-item" data-path="{{item.pagePath}}" data-index="{{index}}" bindtap="switchTab"&gt;
+    &lt;image src="{{item.checked ? item.selectedIconPath : item.iconPath}}" &gt;&lt;/image&gt;
+    &lt;view &gt;{{item.text}}&lt;/view&gt;
+  &lt;/view&gt;
+&lt;/view&gt;
+</pre>
+</div>
+<p>4. 记得把你的css 样式也改一下啊&nbsp; 默认的&nbsp; class 有cover-view cover-image</p>
+<p>5.现在的效果如下</p>
+<p><img src="./images/小程序自定义tabbar custom-tab-bar 6s出不来解决方案，cover-view不兼容1.png" alt="" width="225" height="300" /></p>
+<p><img src="./images/小程序自定义tabbar custom-tab-bar 6s出不来解决方案，cover-view不兼容2.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

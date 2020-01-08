@@ -1,0 +1,36 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修默认值操作符（Freemarker的空值处理）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>默认值操作符（Freemarker的空值处理）</center></div><div class='banquan'>原文出处:本文由博客园博主幂次方提供。<br/>
+原文连接:https://www.cnblogs.com/lzghyh/p/11908280.html</div><br>
+    <p>默认值操作符：<br />	　　　使用形式例如： <br />		　　　　<strong><span style="color: #ff0000;">userName!default_expr </span></strong><br /><strong><span style="color: #ff0000;">		　　　　或 userName! </span></strong><br /><strong><span style="color: #ff0000;">		　　　　或 (userName)!default_expr </span></strong><br /><strong><span style="color: #ff0000;">		　　　　或 (userName)!</span></strong><br /><strong><span style="color: #ff0000;">	　　　　这个操作符允许你为可能不存在的变量指定一个默认值(default_expr),'!'后没有参数默认返回一个空。</span></strong></p>
+<p><br />	　　　　例如，假设下面展示的代码中没有名为 mouse 的变量：<br />　　　　　　${mouse!"No mouse."}<br />　　　　　　&lt;#assign mouse="Jerry"&gt;<br />　　　　　　${mouse!"No mouse."}<br />　　　　　　将会输出：</p>
+<p>　　　　　　No mouse.<br />　　　　　　Jerry</p>
+<p>　　　　如果默认值被省略了，那么结果将会是空串，空序列或空哈希表。 (这是 FreeMarker 允许多类型值的体现)请注意，如果想让默认值为 0 或 false，则不能省略它。例如：</p>
+<p>　　　　${mouse!})<br />　　　　&lt;#assign mouse = "Jerry"&gt;<br />　　　　(${mouse!})<br />　　　　将会输出：</p>
+<p>　　　　()<br />　　　　(Jerry)</p>
+<p>　　　　默认值可以是任何类型的表达式，也可以不必是字符串。 也可以这么写：hits!0 或 colors!["red", "green", "blue"]。 默认值表达式的复杂程度没有</p>
+<p>　　严格限制，还可以这么来写： cargo.weight!(item.weight * itemCount + 10)。</p>
+<p>　　　<span style="color: #ff0000;"><strong>用于非顶层变量时，默认值操作符可以有两种使用方式：</strong></span><br /><span style="color: #ff0000;"><strong>	　　　1.	product.color!"red"</strong></span><br /><span style="color: #ff0000;"><strong>	　　　2. (product.color)!"red"</strong></span><br /><span style="color: #ff0000;"><strong>	　　　两种使用方式区别：</strong></span><br /><span style="color: #ff0000;"><strong>	　　　第一种方式，当product为null,这会解析出错（java中的空指针）,只有当product有值，color为null时能显示默认值 "red" 而不会报错，</strong></span><br /><span style="color: #ff0000;"><strong>	　　　第二种方式：当product为null或者product存在而color为null,都能显示默认值"red"而不会报错</strong></span><br />	<br />	　　　本例和上例写法的重要区别在于用括号时，就允许其中表达式的任意部分可以未定义。而没有括号时，仅允许表达式的最后部分可以不被定义。</p>
+<p>　　　警告!<br />　　　如果在 !后面有复合表达式， 如 1 + x，通常 使用括号，如 ${x!(1 + y)} 或 ${(x!1) + y)}，这样就根据你的意图来确定优先级。 由于FreeMarker 2.3.x 版本的源码中的小失误所以必须这么来做。 ! (作为默认值操作) 右侧的优先级非常低。 这就意味着 ${x!1 + y} 会被 FreeMarker 误解为 ${x!(1 + y)}，而真实的意义是 ${(x!1) + y}。 这个源码错误在FreeMarker 2.4中会得到修正。 在编程中注意这个错误，要么就使用FreeMarker 2.4！</p>
+<p>因为语法的含糊 &lt;@something a=x! b=y /&gt; 将会解释为 &lt;@something a=x!(b=y) /&gt;，那就是说 b=y 将会被视为是比较运算，然后结果作为 x的默认值，而不是想要的参数 b。 为了避免这种情况，如下编写代码即可： &lt;@something a=(x!) b=y /&gt;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

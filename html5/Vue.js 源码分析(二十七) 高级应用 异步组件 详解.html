@@ -1,0 +1,384 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十七) 高级应用 异步组件 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十七) 高级应用 异步组件 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11244251.html</div><br>
+    <p>当我们的项目足够大，使用的组件就会很多，此时如果一次性加载所有的组件是比较花费时间的。一开始就把所有的组件都加载是没必要的一笔开销，此时可以用异步组件来优化一下。</p>
+<p><span style="color: #ff0000;"><span style="color: #ff0000;">异步组件</span>简单的说就是只有等到在页面里显示该组件的时候才会从服务器加载，不显式的话就不会加载，这样即可提高客户端的访问速度也可以降低对服务器的请求次数，可谓优化的一个利器。</span></p>
+<p>异步组件常用有3种异步组件的实现:<span style="color: #ff0000;">工厂函数、Promise加载和高级异步组件。</span></p>
+<p>注:一般的项目都是在vue-router的路由里面创建vue-router实例时通过routes属性指定路由的，其实在vue里面也可以实现。</p>
+<p>OK，开干，先搭建一个环境，我们先用Vue-li3搭建一个脚手架 ,默认的配置搭建完后在浏览器输入:http://localhost:8080即可打开页面，默认部分如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解0.png" alt="" /></p>
+<p>页面下部分显式的就不截图了，然后点击about可以切换路由，为了测试我们对异步组件的分析，我们把main.js和app.js和/src/components/HelloWorld.vue进行改写,如下:</p>
+<p>对于/src/components/HelloWorld.vue组件，为了我们测试更方便，直接更改为:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div class="hello"&gt;
+    &lt;p&gt;Hello World!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre>
+</div>
+<p><span style="color: #ff0000;">只显示Hello World!就好了，对于main.js文件，修改如下:</span></p>
+<p>修改前的内容为:</p>
+<div class="cnblogs_code">
+<pre><code>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+import router from </span>'./router'<span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span>
+
+<span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  router,
+  render: h </span>=&gt;<span style="color: #000000;"> h(App)
+}).$mount(</span>'#app')</pre>
+</div>
+<p>修改为:</p>
+<div class="cnblogs_code">
+<pre><code>import Vue from 'vue'<br />import App from './App.vue'<br />import router from './router'<br /><br />Vue.config.productionTip = false<br /><br />import helloworld&nbsp; from './components/HelloWorld.vue'<br />Vue.component('HelloWorld',helloworld)<br /><br />new Vue({<br />&nbsp; router,<br />&nbsp; render: h =&gt; h(App)<br />}).$mount('#app')<br /><br /></pre>
+</div>
+<p><span style="color: #ff0000;">修改后HelloWorld作为一个全局的组件形式存在。然后修改app.vue文件</span></p>
+<p>修改前的内容为:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div id="app"&gt;
+    &lt;div id="nav"&gt;
+      &lt;router-link to="/"&gt;Home&lt;/router-link&gt; |
+      &lt;router-link to="/about"&gt;About&lt;/router-link&gt;
+    &lt;/div&gt;
+    &lt;router-view/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre>
+</div>
+<p>我们把它修改为:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div id="app"&gt;
+    &lt;button @click="show=true"&gt;Test&lt;/button&gt;
+    &lt;HelloWorld v-<span style="color: #0000ff;">if</span>="show"&gt;&lt;/HelloWorld&gt;      
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;<span style="color: #000000;">
+  export </span><span style="color: #0000ff;">default</span><span style="color: #000000;">{
+    data(){
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;">{
+        show:</span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+      }
+    }
+  }
+</span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;渲染后的页面为:</p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>当我们点击Test这个按钮时，Hello World组件就会显式出来，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解2.png" alt="" /></p>
+<p>这里我们定义的Vue.component('HelloWorld',helloworld)是一个常规组件，非异步组件，下面我们通过修改main.js来模拟不同的异步组件例子，然后通过代码去看看它的实现原理</p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 25pt;">一:工厂函数</span></strong></p>
+<p>Vue.js允许将组件定义为一个工厂函数，动态的解析组件，Vue.js只在组件需要渲染时触发工厂函数，并且把结果缓存起来，用于后面的再次渲染。</p>
+<p>例如我们把main.js修改成这样:</p>
+<div class="cnblogs_code">
+<pre><code>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+import router from </span>'./router'<span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">
+
+Vue.component(</span>'HelloWorld',<span style="color: #0000ff;">function</span><span style="color: #000000;">(resolve,reject){     　　<span style="color: #339966;">//重写HelloWorld组件的定义</span>
+    require([</span>'./components/HelloWorld'],<span style="color: #0000ff;">function</span><span style="color: #000000;">(res){
+        resolve(res)
+    })
+})
+
+</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  router,
+  render: h </span>=&gt;<span style="color: #000000;"> h(App)
+}).$mount(</span>'#app')</pre>
+</div>
+<p>只有当我们点击Test这个按钮时这个组件才会加载进来</p>
+<p><span style="font-size: 18pt;">源码分析</span></p>
+<hr />
+<p>当组件执行_render函数转换成虚拟VNode时遇到组件时会执行createComponent()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createComponent (      <span style="color: #008000;">//</span><span style="color: #008000;">第4184行  创建组件Vnode     </span>
+  Ctor,                                     <span style="color: #008000;">//</span><span style="color: #008000;">Ctor:组件的构造函数</span>
+  data,                                     <span style="color: #008000;">//</span><span style="color: #008000;">data:数组 </span>
+  context,                                  <span style="color: #008000;">//</span><span style="color: #008000;">context:Vue实例</span>
+  children,                                 <span style="color: #008000;">//</span><span style="color: #008000;">child:组件的子节点</span>
+<span style="color: #000000;">  tag
+) {
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(Ctor)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #0000ff;">var</span> baseCtor =<span style="color: #000000;"> context.$options._base;
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> plain options object: turn it into a constructor</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isObject(Ctor)) {
+    Ctor </span>=<span style="color: #000000;"> baseCtor.extend(Ctor);
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> if at this stage it's not a constructor or an async component factory,</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> reject.</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> Ctor !== 'function'<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">if</span> (process.env.NODE_ENV !== 'production'<span style="color: #000000;">) {
+      warn((</span>"Invalid Component definition: " +<span style="color: #000000;"> (String(Ctor))), context);
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> async component</span>
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> asyncFactory;
+  </span><span style="color: #0000ff;">if</span> (isUndef(Ctor.cid)) {                    <span style="color: #ff0000;">//如果Ctor.cid为空，那么Ctor就是一个函数，表明这是一个异步组件</span>
+    asyncFactory = Ctor;                                                <span style="color: #008000;">//</span><span style="color: #008000;">获取异步组件的函数</span>
+    Ctor = resolveAsyncComponent(asyncFactory, baseCtor, context);      <span style="color: #ff0000;">//执行resolveAsyncComponent()函数</span>
+    <span style="color: #0000ff;">if</span> (Ctor === undefined) {                                           <span style="color: #ff0000;">//如果Ctor是个空的,调用该函数返回一个空的注释节点</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> return a placeholder node for async component, which is rendered</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> as a comment node but preserves all the raw information for the node.</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> the information will be used for async server-rendering and hydration.</span>
+      <span style="color: #0000ff;">return</span> createAsyncPlaceholder(                                    
+<span style="color: #000000;">        asyncFactory, 
+        data,
+        context,
+        children,
+        tag
+      )
+    }
+  }
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">return</span><span style="color: #000000;"> vnode
+}</span></pre>
+</div>
+<p>对于一个组件来说，比如Vue.component(component-name,obj|func)，组件的值可以是一个对象，也可以是一个函数，如果是对象，则注册时会执行Vue.extend()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">if</span> (type === 'component' &amp;&amp;<span style="color: #000000;"> isPlainObject(definition)) {    <span style="color: #ff0000;">//第4866行 注册组件时，如果组件是个对象，则执行Vue.extend()</span>
+    definition.name </span>= definition.name ||<span style="color: #000000;"> id;
+    definition </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.options._base.extend(definition);
+}</span></pre>
+</div>
+<p>去构造子组件的基础构造函数，此时会在构造函数上新增一个cid属性(在4789行),所以我们这里通过cid来判断该组件是否为一个函数。</p>
+<p>回到主线，接着执行resolveAsyncComponent()函数，工厂函数相关的如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveAsyncComponent (      <span style="color: #008000;">//</span><span style="color: #008000;">第2283行  异步组件   factory:异步组件的函数 baseCtor:大Vue  context:当前的Vue实例</span>
+<span style="color: #000000;">  factory,
+  baseCtor,
+  context
+) {
+  </span><span style="color: #0000ff;">if</span> (isTrue(factory.error) &amp;&amp;<span style="color: #000000;"> isDef(factory.errorComp)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.errorComp
+  }
+
+  </span><span style="color: #0000ff;">if</span> (isDef(factory.resolved)) {                          <span style="color: #008000;">//</span><span style="color: #ff0000;">工厂函数异步组件第二次执行这里时会返回factory.resolved</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.resolved
+  }
+
+  </span><span style="color: #0000ff;">if</span> (isTrue(factory.loading) &amp;&amp;<span style="color: #000000;"> isDef(factory.loadingComp)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.loadingComp
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(factory.contexts)) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> already pending</span>
+<span style="color: #000000;">    factory.contexts.push(context);
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">var</span> contexts = factory.contexts = [context];               <span style="color: #0000ff;"> //将context作为数组保存到contexts里，也就是当前Vue实例</span>
+    <span style="color: #0000ff;">var</span> sync = <span style="color: #0000ff;">true</span><span style="color: #000000;">;  
+
+    </span><span style="color: #0000ff;">var</span> forceRender = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {　　　　　　　　　　　　　　　　<span style="color: #0000ff;">//遍历contexts里的所有元素 </span>                                        <span style="color: #000000;"><span style="color: #0000ff;">下一个tick执行到这里</span></span>
+      </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0, l = contexts.length; i &lt; l; i++<span style="color: #000000;">) {　　　　　　<span style="color: #0000ff;">//依次调用该元素的$forceUpdate()方法 该方法会强制渲染一次</span>
+        contexts[i].$forceUpdate();
+      }
+    };
+
+    </span><span style="color: #0000ff;">var</span> resolve = once(<span style="color: #0000ff;">function</span> (res) {                         <span style="color: #008000;">//</span><span style="color: #008000;">定义一个resolve函数</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> cache resolved</span>
+      factory.resolved =<span style="color: #000000;"> ensureCtor(res, baseCtor);
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> invoke callbacks only if this is not a synchronous resolve</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> (async resolves are shimmed as synchronous during SSR)</span>
+      <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">sync) {
+        forceRender();
+      }
+    });
+
+    </span><span style="color: #0000ff;">var</span> reject = once(<span style="color: #0000ff;">function</span> (reason) {                       <span style="color: #008000;">//</span><span style="color: #008000;">定义一个reject函数</span>
+      "development" !== 'production' &amp;&amp;<span style="color: #000000;"> warn(
+        </span>"Failed to resolve async component: " + (String(factory)) +<span style="color: #000000;">
+        (reason </span>? ("\nReason: " + reason) : ''<span style="color: #000000;">)
+      );
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(factory.errorComp)) {
+        factory.error </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        forceRender();
+      }
+    });
+
+    </span><span style="color: #0000ff;">var</span> res = factory(resolve, reject);                       <span style="color: #008000;">//</span><span style="color: #008000;">执行factory()函数</span>
+
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isObject(res)) {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">高级组件的逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+
+    sync </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> return in case resolved synchronously</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.loading
+      </span>?<span style="color: #000000;"> factory.loadingComp
+      : factory.resolved
+  }
+}</span></pre>
+</div>
+<p>resolveAsyncComponent内部会定义一个resolve和reject函数，然后执行factory()函数，factory()就是我们在main.js里给HelloWorld组件定义的函数，函数内会执行require函数，由于require()是个异步操作，所以resolveAsyncComponent就会返回undefined</p>
+<p>回到resolveAsyncComponent，我们给factory()函数的执行下一个断点，如下:</p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解3.png" alt="" /></p>
+<p>可以看到返回一个undefined，最后resolveAsyncComponent()也会返回undefined，回到createComponent()函数，由于返回的是undefined，则会执行createAsyncPlaceholder()去创建一个注释节点，渲染后对应的DOM节点树如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解4.png" alt="" /></p>
+<p><span style="color: #ff0000;">可以看到对于工厂函数来说，组件完全加载时对应的DOM节点是一个注释节点</span></p>
+<p>在下一个tick等require()加载成功后就会执行resolve(res)函数,也就是在resolveAsyncComponent()内定义的resolve函数,</p>
+<p><span style="color: #ff0000;">resolve函数会将结果保存到工厂函数的resolved属性里(也就是组件的定义)然后执行的forceRender()函数，也就是上面标记的蓝色的注释对应的代码</span></p>
+<p>再次重新渲染执行到resolveAsyncComponent的时候此时局部变量factory.resolved存在了，就直接返回该变量， 如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解5.png" alt="" /></p>
+<p>此时就会走组件的常规逻辑，进行渲染组件了。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 25pt;">二:Promise加载</span></strong></p>
+<p>Promise()比较简单，可以认为是工厂函数扩展成语法糖的知识，他主要是可以很好的配合webpack的语法糖，webpack的import的语法糖就是返回一个promise对象，Vue实际上做异步组件也是为了配合Webpack的语法糖来实现Promise()的趋势。</p>
+<p>例如我们把main.js改成如下的:</p>
+<div class="cnblogs_code">
+<pre><code>import Vue from 'vue'<span style="color: #000000;">
+import App from </span>'./App.vue'<span style="color: #000000;">
+import router from </span>'./router'<span style="color: #000000;">
+
+Vue.config.productionTip </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">
+
+Vue.component(</span>'HelloWorld',()=&gt;import('./components/HelloWorld'<span style="color: #000000;">))
+
+</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  router,
+  render: h </span>=&gt;<span style="color: #000000;"> h(App)
+}).$mount(</span>'#app')</pre>
+</div>
+<p>和工厂函数一样,也会执行两次resolveAsyncComponent，下一个tick的逻辑是一样的，不一样的是触发resolve()的逻辑不通，如下:</p>
+<p><span style="font-size: 18pt;">源码分析</span></p>
+<hr />
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveAsyncComponent (          <span style="color: #008000;">//</span><span style="color: #008000;">异步组件</span>
+<span style="color: #000000;">  factory,  
+  baseCtor,
+  context
+) {
+  </span><span style="color: #0000ff;">if</span> (isTrue(factory.error) &amp;&amp;<span style="color: #000000;"> isDef(factory.errorComp)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.errorComp
+  }
+
+  </span><span style="color: #0000ff;">if</span> (isDef(factory.resolved)) {                              <span style="color: #008000;">//</span><span style="color: #008000;">第一次执行到这里时factory.resolved也不存在</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.resolved
+  }
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">var</span> res = factory(resolve, reject);                       <span style="color: #008000;">//</span><span style="color: #008000;">我们这里返回一个含有then的对象</span>
+
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isObject(res)) {                                      
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> res.then === 'function') {                      <span style="color: #008000;">//</span><span style="color: #008000;">如果res是一个函数，即Promise()方式加载时</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> () =&gt; Promise</span>
+        <span style="color: #0000ff;">if</span> (isUndef(factory.resolved)) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果factory.resolved不存在</span>
+          res.then(resolve, reject);                                  <span style="color: #008000;">//</span><span style="color: #008000;">用then方法指定resolve和reject的回调函数</span>
+<span style="color: #000000;">        }
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isDef(res.component) &amp;&amp; <span style="color: #0000ff;">typeof</span> res.component.then === 'function'<span style="color: #000000;">) {
+        </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+      }
+    }
+
+    sync </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> return in case resolved synchronously</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.loading
+      </span>?<span style="color: #000000;"> factory.loadingComp
+      : factory.resolved
+  }
+}</span></pre>
+</div>
+<p>例子里执行到factory()后返回的res对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十七) 高级应用 异步组件 详解6.png" alt="" /></p>
+<p>等到加载成功后就会执行resolve了，后面的步骤和工厂函数的流程是一样的。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 25pt;">三:高级异步组件</span></strong></p>
+<p>高级异步组件可以定义更多的状态，比如加载该组件的超时时间、加载过程中显式的组件、出错时显式的组件、延迟时间等</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>高级异步组件也是定义一个函数，返回值是一个对象，对象的每个属性在官网说得挺详细的了，如下，连接::<a href="https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81" target="_blank">https://cn.vuejs.org/v2/guide/components-dynamic-async.html#%E5%A4%84%E7%90%86%E5%8A%A0%E8%BD%BD%E7%8A%B6%E6%80%81</a></p>
+<p>对于高级异步组件来说，他和promise()方法加载的逻辑是一样的，不同的是多了几个属性，如下:</p>
+<p><span style="font-size: 18pt;">源码分析</span></p>
+<hr />
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveAsyncComponent (        <span style="color: #008000;">//</span><span style="color: #008000;">第2283行  异步组件</span>
+<span style="color: #000000;">  factory,
+  baseCtor,
+  context
+) {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isObject(res)) {
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> res.then === 'function') {                       <span style="color: #008000;">//</span><span style="color: #008000;">promise的分支</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> () =&gt; Promise</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(factory.resolved)) {
+          res.then(resolve, reject);
+        }
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isDef(res.component) &amp;&amp; <span style="color: #0000ff;">typeof</span> res.component.then === 'function') {   <span style="color: #008000;">//</span><span style="color: #008000;">高级异步组件的分支</span>
+        res.component.then(resolve, reject);                    <span style="color: #008000;">//</span><span style="color: #ff0000;">还是调用res.component.then(resolve, reject); 进行处理的，不同的是多了下面的代码</span>
+
+        <span style="color: #0000ff;">if</span> (isDef(res.error)) {                                               <span style="color: #008000;">//</span><span style="color: #008000;">失败时的模块</span>
+          factory.errorComp =<span style="color: #000000;"> ensureCtor(res.error, baseCtor);
+        }
+
+        </span><span style="color: #0000ff;">if</span> (isDef(res.loading)) {                                              <span style="color: #008000;">//</span><span style="color: #008000;">如果有设置加载时的模块</span>
+          factory.loadingComp =<span style="color: #000000;"> ensureCtor(res.loading, baseCtor);
+          </span><span style="color: #0000ff;">if</span> (res.delay === 0) {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果等待时间为0</span>
+            factory.loading = <span style="color: #0000ff;">true</span>;                                                 <span style="color: #008000;">//</span><span style="color: #008000;">直接设置factory.loading为true</span>
+          } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+              </span><span style="color: #0000ff;">if</span> (isUndef(factory.resolved) &amp;&amp;<span style="color: #000000;"> isUndef(factory.error)) {
+                factory.loading </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                forceRender();
+              }
+            }, res.delay </span>|| 200<span style="color: #000000;">);
+          }
+        }
+
+        </span><span style="color: #0000ff;">if</span> (isDef(res.timeout)) {                                           <span style="color: #008000;">//</span><span style="color: #008000;">超时时间</span>
+          setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(factory.resolved)) {
+              reject(
+                process.env.NODE_ENV </span>!== 'production'
+                  ? ("timeout (" + (res.timeout) + "ms)"<span style="color: #000000;">)
+                  : </span><span style="color: #0000ff;">null</span><span style="color: #000000;">
+              );
+            }
+          }, res.timeout);
+        }
+      }
+    }
+
+    sync </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> return in case resolved synchronously</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> factory.loading
+      </span>?<span style="color: #000000;"> factory.loadingComp
+      : factory.resolved
+  }
+}</span></pre>
+</div>
+<p>OK，搞定，流程就这样吧</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

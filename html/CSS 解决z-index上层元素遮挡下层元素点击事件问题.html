@@ -1,0 +1,93 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS 解决z-index上层元素遮挡下层元素点击事件问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS 解决z-index上层元素遮挡下层元素点击事件问题</center></div><div class='banquan'>原文出处:本文由博客园博主授客提供。<br/>
+原文连接:https://www.cnblogs.com/shouke/p/12018403.html</div><br>
+    <p align="center"><span style="font-family: 'courier new', courier; font-size: 16px;"><strong>解决</strong><strong>z-index</strong><strong>上层元素遮挡下层元素点击事件问题</strong></span></p>
+<p align="right"><span style="font-family: 'courier new', courier; font-size: 16px;"><strong>by:</strong><strong>授客</strong><strong>&nbsp;QQ</strong><strong>：</strong><strong>1033553122</strong></span></p>
+<h2><span style="font-family: 'courier new', courier; font-size: 16px;">开发环境</span></h2>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;"><strong>Win 10</strong></span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">element-ui&nbsp; "2.8.2"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">Vue 2.9.6</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<h2><span style="font-family: 'courier new', courier; font-size: 16px;">需求描述</span></h2>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">如下，有以下界面，其中右侧边时一个ElementUI Dialog模态对话框，希望在对话框上执行点击操作时，不会点击到被对话框遮挡的页面的按钮，同时，也希望可以点击对话框区域外的其它页面元素</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;<img src="./images/CSS 解决z-index上层元素遮挡下层元素点击事件问题0.png" alt="" />&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">html元素结构如下</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;<img src="./images/CSS 解决z-index上层元素遮挡下层元素点击事件问题1.png" alt="" />&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;<img src="./images/CSS 解决z-index上层元素遮挡下层元素点击事件问题2.png" alt="" /></span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<h2><span style="font-family: 'courier new', courier; font-size: 16px;">解决方案</span></h2>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">为被遮挡元素上层使用z-index属性的元素添加以下样式：</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">pointer-events: none;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">这样点击事件就能穿透上层元素，可点击到被遮挡元素，但是此时，上层元素无法响应点击事件</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">然后为被遮挡元素添加以下样式，让上层元素可以响应点击事件(仅让被遮挡元素自身可以响应点击事件)：</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">pointer-events: auto;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<h2><span style="font-family: 'courier new', courier; font-size: 16px;">代码实现</span></h2>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&lt;template&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&lt;!--&nbsp;用例详情组件&nbsp;--&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&lt;div&nbsp;class="case-dialog-div"&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;el-dialog</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ref="caseDialog"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:title="caseDialogTitle"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:visible="caseDialogVisible"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:fullscreen="fullscreen"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:modal="false"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:close-on-click-modal="false"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:before-close="beforeClose"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;custom-class="case-dialog-class"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@close="onCloseDialog"</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...略</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/el-dialog&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&lt;/template&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&lt;style&nbsp;lang="scss"&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">//&nbsp;修改dialog&nbsp;body样式//该样式不能放置.case-dialog-div下，否则&nbsp;全屏&nbsp;功能不起作用</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">.case-dialog-class&nbsp;{</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;position:&nbsp;fixed;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;pointer-events:&nbsp;auto;&nbsp;//&nbsp;dialog本身区域不让&ldquo;穿透点击&rdquo;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;display:&nbsp;block;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;height:&nbsp;100%;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;width:&nbsp;50%;&nbsp;//&nbsp;width:&nbsp;959px;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;right:&nbsp;0px;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;margin-top:&nbsp;0px&nbsp;!important;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;padding:&nbsp;10px&nbsp;!important;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;overflow:&nbsp;auto;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">}</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">.case-dialog-div&nbsp;{</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;.el-dialog__wrapper&nbsp;{</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pointer-events:&nbsp;none;&nbsp;//&nbsp;可点击dialog区域外的html元素</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;}</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;&nbsp;&nbsp;&nbsp;...略</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">}</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&lt;/style&gt;</span></p>
+<p><span style="font-family: 'courier new', courier; font-size: 16px;">&nbsp;</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

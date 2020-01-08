@@ -1,0 +1,156 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修JavaScript prototype原型用法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>JavaScript prototype原型用法</center></div><div class='banquan'>原文出处:本文由博客园博主web小哥提供。<br/>
+原文连接:https://www.cnblogs.com/jc2182/p/11248968.html</div><br>
+    <h2>JavaScript对象原型</h2>
+<p>所有JavaScript对象都从原型继承属性和方法。</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;js&lt;/title&gt;
+&lt;body&gt;
+
+&lt;h2&gt;JavaScript 对象&lt;/h2&gt;
+
+&lt;p id="demo"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function<span> Person(first, last, age, eye) {
+   this<span>.firstName <span>=<span> first;
+   this<span>.lastName <span>=<span> last;
+   this<span>.age <span>=<span> age;
+   this<span>.eyeColor <span>=<span> eye;
+}
+
+var<span> myFather <span>= new<span> Person(<span>"<span>John<span>"<span>, <span>"<span>Doe<span>"<span>, <span>50<span>, <span>"<span>blue<span>"<span>);
+var<span> myMother <span>= new<span> Person(<span>"<span>Sally<span>"<span>, <span>"<span>Rally<span>"<span>, <span>48<span>, <span>"<span>green<span>"<span>);
+
+document.getElementById(<span>"<span>demo<span>"<span>).innerHTML <span>=
+<span>"<span>My father is <span>" <span>+<span> myFather.age <span>+ <span>"<span>. My mother is <span>" <span>+<span> myMother.age;
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>我们还了解到，您无法向现有对象构造函数添加新属性：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;JavaScript对象&lt;/title&gt;
+&lt;body&gt;
+
+&lt;h2&gt;JavaScript对象&lt;/h2&gt;
+
+&lt;p&gt;您无法向构造函数添加新属性。&lt;/p&gt;
+
+&lt;p id="demo"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function<span> Person(first, last, age, eye) {
+   this<span>.firstName <span>=<span> first;
+   this<span>.lastName <span>=<span> last;
+   this<span>.age <span>=<span> age;
+   this<span>.eyeColor <span>=<span> eye;
+}
+
+Person.nationality <span>= <span>"<span>English<span>"<span>;
+
+var<span> myFather <span>= new<span> Person(<span>"<span>John<span>"<span>, <span>"<span>Doe<span>"<span>, <span>50<span>, <span>"<span>blue<span>"<span>);
+var<span> myMother <span>= new<span> Person(<span>"<span>Sally<span>"<span>, <span>"<span>Rally<span>"<span>, <span>48<span>, <span>"<span>green<span>"<span>);
+
+document.getElementById(<span>"<span>demo<span>"<span>).innerHTML <span>=
+<span>"<span>The nationality of my father is <span>" <span>+<span> myFather.nationality;
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p><br /><strong>要向构造函数添加新属性，必须将其添加到构造函数：</strong></p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title&gt;JavaScript对象&lt;/title&gt;
+&lt;body&gt;
+
+&lt;h2&gt; JavaScript对象&lt;/h2&gt;
+
+&lt;p id="demo"&gt;&lt;/p&gt;
+
+&lt;script&gt;
+function<span> Person(first, last, age, eye) {
+   this<span>.firstName <span>=<span> first;
+   this<span>.lastName <span>=<span> last;
+   this<span>.age <span>=<span> age;
+   this<span>.eyeColor <span>=<span> eye;
+   this<span>.nationality <span>= <span>"<span>English<span>"<span>;
+}
+
+var<span> myFather <span>= new<span> Person(<span>"<span>John<span>"<span>, <span>"<span>Doe<span>"<span>, <span>50<span>, <span>"<span>blue<span>"<span>);
+var<span> myMother <span>= new<span> Person(<span>"<span>Sally<span>"<span>, <span>"<span>Rally<span>"<span>, <span>48<span>, <span>"<span>green<span>"<span>);
+
+document.getElementById(<span>"<span>demo<span>"<span>).innerHTML <span>=
+<span>"<span>我父亲的国籍是 <span>" <span>+<span> myFather.nationality <span>+ <span>"<span>. 我母亲的国籍是： <span>" <span>+<span> myMother.nationality;
+&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>原型继承</h3>
+<p>所有JavaScript对象都从原型继承属性和方法：</p>
+<p>Object.prototype位于原型继承链的顶部：Date对象，Array对象和Person对象继承自Object.prototype。</p>
+<p>* Date 对象继承自 Date.prototype<br />* Array 对象继承自 Array.prototype<br />* Person 对象继承自 Person.prototype</p>
+<p># 向对象添加属性和方法</p>
+<p>有时，您希望向给定类型的所有现有对象添加新属性（或方法）。有时您想要向对象构造函数添加新属性（或方法）。</p>
+<h3>使用**原型**属性</h3>
+<p>JavaScript prototype属性允许您向对象构造函数添加新属性：</p>
+<div class="cnblogs_code">
+<pre><code><span>function Person(first, last, age, eyecolor) {
+  this.firstName = first;
+  this.lastName = last;
+  this.age = age;
+  this.eyeColor = eyecolor;
+}
+Person.prototype.nationality = "English";</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>JavaScript prototype属性还允许您向对象构造函数添加新方法：</p>
+<div class="cnblogs_code">
+<pre><code>function<span> Person(first, last, age, eyecolor) {
+   this.firstName =<span> first;
+   this.lastName =<span> last;
+   this.age =<span> age;
+   this.eyeColor =<span> eyecolor;
+}
+Person.prototype.name = function<span>() {
+   return this.firstName + " " + this<span>.lastName;
+};</span></span></span></span></span></span></span></pre>
+</div>
+<p><a href="https://www.jc2182.com/javascript-obj-define/1642.html" rel="nofollow">更好的原型对象的文章</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

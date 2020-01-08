@@ -1,0 +1,49 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修移动端使用rem.js,解决rem.js 行内元素占位问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>移动端使用rem.js,解决rem.js 行内元素占位问题</center></div><div class='banquan'>原文出处:本文由博客园博主张小中提供。<br/>
+原文连接:https://www.cnblogs.com/zjz666/p/11091153.html</div><br>
+    <p><span style="font-size: 18px;"><strong>父级元素：</strong></span></p>
+<p>letter-spacing: -0.5em;font-size: 0;</p>
+<p><br /><span style="font-size: 18px;"><strong>子级元素：</strong></span></p>
+<p>letter-spacing: normal;  display: inline-block;   vertical-align: top;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18px;">即可解决。</span></strong></p>
+<p><strong><span style="font-size: 18px;">问题剖析：</span></strong></p>
+<p>以input元素为例子：因为input元素是行内块元素，所以它所在的行会形成一个行框。然后行框的高度是和line-height属性相关的，line-height的说明如下：</p>
+<p>On a block container element whose content is composed of inline-level elements, 'line-height' specifies the minimal height of 	line boxes within the element. The minimum height consists of a minimum height above the baseline and a minimum depth 	below it, exactly as if each line box starts with a zero-width inline box with the element's font and line height properties. We 	call that imaginary box a "strut."</p>
+<p>&nbsp;</p>
+<p>line-height定义的是行的最小高度，当行内包含行内元素的时候，每个行内元素会生成一个行内框，然后行内元素根据vertical-align属性对齐元素，然后取所有这些框的最高上边界和最低下边界，最高上边界和最低下边界之间的高度组成了实际的行高。</p>
+<p>&nbsp;</p>
+<p>那么规范又是如何保证line-height定义的是行的最小高度的呢？</p>
+<p>其实，参与行框形成的元素，除了这些实际存在的行内元素，还存在一个strut元素，这是一个假想的具有块元素的字号和行高的零宽元素，这个元素会参与最后实际的行高。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;"><strong>现在，我们来看这个问题：</strong></span></p>
+<p>你这个页面运行之后，会在html元素上添加一个font-size属性，没有具体看这个大小和什么相关，我运行代码以后的结果是font-size: 50px;，下面以font-size: 50px;来进行说明。</p>
+<p>因为font-size属性是可以继承的，所以你的div元素的font-size也是50px；因为line-height的默认值是normal，规范推荐的normal值是字体大小的1.0到1.2之间，和浏览器实现有关，我们这里假设用的1.0；</p>
+<p>第一个元素是p元素，是块级元素，不会生成行框，和line-height没有关系；</p>
+<p>第二个元素是input元素，input元素是行内块元素，行内块元素生成的行内框是元素上外边界到下外边界（margin的上边界到下边界），然后strut这个假想元素生成了一个高为font-size * line-height = 50px * 1 = 50px的行内框，这两个行内框按照基线对齐的方式进行排列，然后取这两个行内框的最高上边界和最低下边界就是最后的行框。因为input元素生成的行内框远远没有50px，所以最后取得应该是strut的上边界和下边界，所以这个行框是50px，所以导致中间有"所谓"大段的空白。</p>
+<p>&nbsp;</p>
+<p>综上，你可以设置div的font-size: 0px;这样假想的strut元素形成的行内框就不会高于input元素生成的行内框了。</p>
+<p>或者设置input元素display: block;，这样input元素就是块级元素了，块级元素是不涉及行框的。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

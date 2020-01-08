@@ -1,0 +1,93 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端常见的适配方式的方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端常见的适配方式的方法</center></div><div class='banquan'>原文出处:本文由博客园博主阿萨姆✌️提供。<br/>
+原文连接:https://www.cnblogs.com/ray123/p/10890745.html</div><br>
+    <p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;"><strong>作为一个真正的前端工作者适配是一个老生常谈的问题，那么今天给大家总结一下在工作当中常用做适配的方式。</strong></span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 14px;"><strong>一、固定布局（pc端）（静态布局）</strong></span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 14px;">以像素作为页面的基本单位，不管设备和浏览器宽度，只设计一套尺寸</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 14px;"><strong>二、根据不同</strong></span><strong><span style="font-size: 14px;">根据不同的分辨率，加载不同的CSS样式文件（可切换的固定布局）<strong>自适应布局</strong></span></strong></p>
+<p>&nbsp;</p>
+<p>1、&lt;script&gt;<br />    // 分辨率大于等于1680，大部分为1920的情况下，调用此css<br />    if(window.screen.width &gt;= 1680){<br />        document.write('&lt;link rel="stylesheet" href="css/index_1920.css"&gt;');<br />    }<br />    // 分辨率再在1600-1680的情况下，调用此css<br />    else if(window.screen.width &gt;= 1600){<br />        document.write('&lt;link rel="stylesheet" href="css/index_1600.css"&gt;');<br />    }<br />    // 分辨率小于1600的情况下，调用此css<br />    else{<br />        document.write('&lt;link rel="stylesheet" href="css/index.css"&gt;');<br />    }<br />&lt;/script&gt;</p>
+<p><strong>注意：注意这里的js一定要写在<code>&lt;head&gt;&lt;/head&gt;</code>标签里面，这样在加载页面内容之前，可以提前把css样式表加载出来</strong></p>
+<p><strong>2、媒体查询</strong></p>
+<p>媒体查询可以让我们根据设备显示器的特性（如视口宽度、屏幕比例、设备方向：横向或纵向）为其设定CSS样式，媒体查询由媒体类型和一个或多个检测媒体特性的条件表达式组成。</p>
+<p><strong>link元素中的CSS媒体查询</strong></p>
+<p>&lt;link rel="stylesheet" media="(max-width: 800px)" href="example.css" /&gt;</p>
+<p><strong>css3</strong></p>
+<p>必须设置&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
+<p>viewport：视口</p>
+<p>width=device-width:就将布局视口设置成了理想的视口。</p>
+<p>initial-scale：[0,10]&nbsp;&nbsp;初始缩放比例，1表示不缩放</p>
+<p>maximum-scale：[0,10]&nbsp;&nbsp;最小缩放比例</p>
+<p>maximum-scale:&nbsp;[0,10]&nbsp;&nbsp;最大缩放比例</p>
+<p>user-scalable:&nbsp;yes／no&nbsp;&nbsp;是否允许手动缩放页面，默认值为yes</p>
+<p>语法：</p>
+<p>@media&nbsp;<em>mediatype&nbsp;</em>and|not|only<em>&nbsp;(media feature)</em>&nbsp;{<em><br />&nbsp;&nbsp;&nbsp; CSS-Code;<br /></em>}</p>
+<p>第一种方法是css2媒体查询用法，最大的弊端是他会增加页面http的请求次数，增加了页面负担，</p>
+<p>我们一般用第二种方法CSS3把样式都写在一个文件里面才是最佳的方法。</p>
+<p><span style="color: #ff6600; font-size: 18px;"><strong>但是媒体查询的缺点也很明显，如果在浏览器大小改变时，需要改变的样式太多，那么多套样式代码会很繁琐。</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>三、rem布局（<strong>弹性布局</strong>）移动端</strong></span></p>
+<p><span style="font-size: 14px;">rem(font size of the root element)是指相对于根元素 (html)的字体大小的单位。</span></p>
+<p><strong>1、媒体查询结合rem布局</strong></p>
+<p>媒体查询动态修改根元素的大小，使得<span class="hljs-selector-tag">rem 一直在跟着变化，响应式就成功了</span><strong><span class="hljs-selector-tag">。</span></strong></p>
+<p><strong><span class="hljs-selector-tag">为什么使用<strong>媒体查询结合rem布局</strong></span></strong></p>
+<p><span class="hljs-selector-tag">一个物体在一个超大空间中显得很小，但是在小的空间存放不下，为使得页面布局不管在什么设备上都是正常，协调的情况，就会采用媒体查询 + rem，来根据不同的设备去相应的改变元素的大小。</span></p>
+<p><span class="hljs-selector-tag"><strong>媒体查询结合rem布局的缺点</strong></span></p>
+<p><span class="hljs-selector-tag">&nbsp; 计算起来太繁琐</span></p>
+<p><strong><span class="hljs-selector-tag">2、flexble.js和rem布局：</span></strong></p>
+<p>用法：首先在页面导入flexible.js导入&lt;script src="js/flexible.js"&gt;&lt;/script&gt;去掉mete标签（禁止缩放）的设置</p>
+<p>当设计图为750px；从设计图量出header为88px；</p>
+<p>css设计为header的height 88/100=0.88rem;</p>
+<p><strong><span class="hljs-selector-tag">3、rem+VW布局</span></strong></p>
+<p><span class="hljs-selector-tag">必须设置&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</span></p>
+<p><span class="hljs-selector-tag">为了方便计算可把html中font-size设置成100px；但是100px固定大小不会自动适配。所以把100px转换成vw&nbsp;&nbsp;</span></p>
+<p><span class="hljs-selector-tag">100px=?vw等于他的视口宽度</span></p>
+<p><span class="hljs-selector-tag">假如：设备：640px&nbsp; dpr：2&nbsp; &nbsp;320px</span></p>
+<p>因为 100vw=320px</p>
+<p>所以 1vw=3.2px；</p>
+<p>所以 100px=31.25vw</p>
+<p>假如 设备750px dpr为2 375px</p>
+<p>因为 100vw=375px；</p>
+<p>所以 1vw=3.75px；</p>
+<p>所以 100px=26.67vw</p>
+<p>当设备640px ：31.25vw</p>
+<p>当设备750px ：26.67vw</p>
+<p><strong><span style="color: #ff0000; font-size: 18px;">注意文字要单独设置单位为px，否则文字为100px太大，要用媒体查询的方式改变文字大小。</span></strong></p>
+<p class="best-text mb-10"><span style="font-size: 18px; color: #ff6600;"><strong>优点：理想状态是所有屏幕的高宽比和最初的设计高宽比一样，或者相差不多，完美适应。</strong></span></p>
+<p class="best-text mb-10"><span style="font-size: 18px; color: #ff6600;"><strong>缺点：这种rem+js只不过是宽度自适应，高度没有做到自适应，一些对高度，或者元素间距要求比较高的设计，则这种布局没有太大的意义。如果只是宽度自适应，更推荐响应式设计。</strong></span></p>
+<p><strong><span class="hljs-selector-tag">四、百分比布局&nbsp; (<strong><strong>流式布局)</strong></strong></span></strong></p>
+<p>以百分比作为页面的基本单位，可以适应一定范围内所有的尺寸的设备屏幕及浏览器宽度，并能完美利用有效空间展现最佳效果</p>
+<p><strong>五、混合式布局</strong></p>
+<p>同弹性布局类似，可以适应一定范围内所有尺寸的设备屏幕及浏览器宽度，并能完美利用有效空间展现最佳效果；只是混合像素、和百分比两种单位作为页面单位</p>
+<p><strong>六、响应式布局</strong></p>
+<p class="best-text mb-10">1、布局特点：每个屏幕分辨率下面会有一个布局样式，即元素位置和大小都会变。</p>
+<p class="best-text mb-10">2、设计方法：媒体查询+流式布局。通常使用&nbsp;@media 媒体查询&nbsp;和网格系统 (Grid System) 配合相对布局单位进行布局，实际上就是综合响应式、流动等上述技术通过 CSS 给单一网页不同设备返回不同样式的技术统称。</p>
+<p class="best-text mb-10">优点：适应pc和移动端，如果足够耐心，效果完美</p>
+<p class="best-text mb-10">缺点：（1）媒体查询是有限的，也就是可以枚举出来的，只能适应主流的宽高。（2）要匹配足够多的屏幕大小，工作量不小，设计也需要多个版本。</p>
+<div class="cnblogs_code"><img id="code_img_opened_6b2c7bbf-3a4d-44ca-876e-ec9afdbc8a9d" class="code_img_opened" src="./images/前端常见的适配方式的方法0.png" alt="" />响应式页面在头部会加上这一段代码：
+<pre><code>&lt;meta name="applicable-device" content="pc,mobile"&gt;
+&lt;meta http-equiv="Cache-Control" content="no-transform "&gt;</pre>
+</div>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

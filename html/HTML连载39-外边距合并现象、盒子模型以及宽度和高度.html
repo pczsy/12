@@ -1,0 +1,146 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML连载39-外边距合并现象、盒子模型以及宽度和高度' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML连载39-外边距合并现象、盒子模型以及宽度和高度</center></div><div class='banquan'>原文出处:本文由博客园博主心悦君兮君不知-睿提供。<br/>
+原文连接:https://www.cnblogs.com/ruigege0000/p/11588415.html</div><br>
+    <p>一、 在默认布局的垂直方向上，默认情况下外边距是是不会叠加的，会出现合并现象，谁的外边距较大，就听谁的；但是在水平方向就不会出现这种状况，我们举个例子</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">       span{
+
+            display: inline-block;
+
+            width:100px;
+
+            height:100px;
+
+            border:1px solid red;
+
+        }
+
+        div{
+
+            width:100px;
+
+            height:100px;
+
+            border:1px solid green;
+
+        }
+
+        /*我们让span的两个盒子，相距100px*/
+
+        .hezi1{
+
+            margin-right:50px
+
+        }
+
+        .hezi2{
+
+            margin-left: 50px;
+
+        }
+
+        .box1{
+
+            margin-bottom:50px;
+
+        }
+
+        .box2{
+
+            margin-top:50px;
+
+        }
+
+..........省略代码..........
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hezi1"</span><span style="color: #0000ff;">&gt;</span>我是span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hezi2"</span><span style="color: #0000ff;">&gt;</span>我是span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box1"</span><span style="color: #0000ff;">&gt;</span>我是span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box2"</span><span style="color: #0000ff;">&gt;</span>我是span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载39-外边距合并现象、盒子模型以及宽度和高度0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>二、盒子模型</p>
+<p>1.什么是盒子模型</p>
+<p>答：CSS盒子模型仅仅一个比较形象地比喻，HTML中所有的标签都是盒子，我们现实生活中的物品大多都是有位置区域划分的​。</p>
+<p>​注意：在HTML中所有的标签都是可以设置​：宽度高度、内边距、边框、外边距</p>
+<p>2.​举例：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        span,a,b,strong</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> inline-block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">150px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">150px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2px dotted red</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+........省略代码..........
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>我是span<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>我是一个超链接<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">b</span><span style="color: #0000ff;">&gt;</span>我是加粗<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">b</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">strong</span><span style="color: #0000ff;">&gt;</span>我是强调<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">strong</span><span style="color: #0000ff;">&gt;</span>
+
+ </pre>
+</div>
+<p><img src="./images/HTML连载39-外边距合并现象、盒子模型以及宽度和高度1.png" alt="" /></p>
+<p>释义：通过谷歌开发者工具，我们可以查看，每个标签所属的区域，它们之间的数字，都是严格按照定义来的，F12下的有指导模型。</p>
+<p>2.盒子模型的宽度和高度</p>
+<p>（1）内容的宽度和高度：width\height设置的宽度和高度</p>
+<p>（2）元素的宽度和高度​：边框加内边距加内容的宽度和高度</p>
+<p>（3）元素空间的宽度和高度：外边距加边框加内边距加内容的宽度和高度</p>
+<p>&nbsp;</p>
+<p>三、源码：</p>
+<p>d109_margin_merge.html</p>
+<p>d110_box_model.html</p>
+<p>地址:</p>
+<p>https://github.com/ruigege66/HTML_learning/blob/master/d109_margin_merge.html</p>
+<p>https://github.com/ruigege66/HTML_learning/blob/master/d110_box_model.html</p>
+<p>2.CSDN：https://blog.csdn.net/weixin_44630050（心悦君兮君不知-睿）</p>
+<p>3.博客园：https://www.cnblogs.com/ruigege0000/</p>
+<p>4.欢迎关注微信公众号：傅里叶变换，个人账号，仅用于技术交流，后台回复&ldquo;礼包&rdquo;获取Java大数据学习视频礼包</p>
+<p>&nbsp;<img src="./images/HTML连载39-外边距合并现象、盒子模型以及宽度和高度2.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

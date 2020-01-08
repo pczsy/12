@@ -1,0 +1,75 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修三级联动小案例' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>三级联动小案例</center></div><div class='banquan'>原文出处:本文由博客园博主野鹤亦闲云提供。<br/>
+原文连接:https://www.cnblogs.com/xiaoyaolang/p/11896810.html</div><br>
+    <p>此小案例适合数据较少的类似三级联动的小效果，省市区三级联动参见&nbsp;<a title="省市区（县）三级联动" href="https://www.cnblogs.com/xiaoyaolang/p/11896484.html">https://www.cnblogs.com/xiaoyaolang/p/11896484.html</a></p>
+<div class="cnblogs_Highlighter">
+<pre><code>	&lt;body&gt;
+		&lt;select name="" id="prov"&gt;
+			&lt;option value=""&gt;请选择省&lt;/option&gt;
+		&lt;/select&gt;
+		&lt;select name="" id="city"&gt;
+			&lt;option value=""&gt;请选择市&lt;/option&gt;
+			&lt;option value=""&gt;请先选择省&lt;/option&gt;
+		&lt;/select&gt;
+		&lt;select name="" id="county"&gt;
+			&lt;option value=""&gt;请选择县&lt;/option&gt;
+			&lt;option value=""&gt;请先选择市&lt;/option&gt;
+		&lt;/select&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+&lt;script src="jquery-1.8.1.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+	var provArr = ["辽宁","山西","河北"];
+	//              0      1     2
+	var cityArr = [["沈阳","大连","铁岭"],["大同","太原"],["邯郸","石家庄","唐山","雄安"]];
+	//                 0    1     2       0       1        0      1       2       3     
+	var countyArr = [[["s1","s2"],["d1"],["昌图","莲花乡"]],[["t1","t2"],["y1"]],[["h1"],["s1","s2"],["tangshan1"],["xiongan1"]]];
+	//                00            01       02              10          11      20        21
+	//页面加载后 将省的数组信息 添加到页面上
+	for(var i = 0; i &lt; provArr.length; i++){
+		$("#prov").append($("&lt;option value="+i+"&gt;"+provArr[i]+"&lt;/option&gt;"));
+	}
+	$("#prov").change(function(){//点击省把市添加进来
+		$("#city")[0].length = 1;
+		var index = $(this).val();//省的下标  0-1
+		var cityAry = cityArr[index];
+		for(var i = 0; i &lt; cityAry.length; i++){
+			$("#city").append($("&lt;option value="+index+"-"+i+"&gt;"+cityAry[i]+"&lt;/option&gt;"));
+		}
+	})
+	$("#city").change(function(){
+		$("#county")[0].length = 1;
+		var index = $(this).val();//0-0  0-1  0-2
+		var proIndex = index.split("-")[0];//省的下标
+		var cityIndex = index.split("-")[1];//城市的下标
+		var countyAry = countyArr[proIndex][cityIndex];
+		for(var i = 0; i &lt; countyAry.length; i++){
+			$("#county").append($("&lt;option&gt;"+countyAry[i]+"&lt;/option&gt;"));	
+		}
+	})
+&lt;/script&gt;
+</pre>
+</div>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

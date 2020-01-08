@@ -1,0 +1,55 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修小程序如何实现rem' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>小程序如何实现rem</center></div><div class='banquan'>原文出处:本文由博客园博主菜工提供。<br/>
+原文连接:https://www.cnblogs.com/caijt/p/11843243.html</div><br>
+    <p>最近在学习小程序，要把html的代码转换成小程序界面，其中就遇到了rem的转换问题，但小程序不太兼容rem，不是不能用rem，而是没办法设置根元素的font-size，因为rem是相对于根元素的font-size，而小程序的根元素font-size一直是16px。既然我设置了page{ font-size:1px }也不起作用，那要怎么实现rem呢</p>
+<p>这里我用css变量来实现伪rem，定义一个css变量<strong><span style="color: #ff0000;">--app-rem-size</span></strong>，然后在各个屏幕尺寸中定义<span style="color: #ff0000;"><strong>--app-rem-size</strong></span>大小值；</p>
+<p>以下是app.wxss文件</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">page</span>{<span style="color: #ff0000;">
+    --app-rem-size</span>:<span style="color: #0000ff;">10px</span>;<span style="color: #ff0000;">
+　　font-size</span>:<span style="color: #0000ff;">calc(var(--app-rem-size)*1.2)</span>;
+
+}<span style="color: #800000;">
+@media screen and (min-width: 320px) and (max-width: 359px) </span>{<span style="color: #ff0000;">
+     page {
+         --app-rem-size</span>:<span style="color: #0000ff;"> 10px</span>;
+     }<span style="color: #800000;">
+}
+@media screen and (min-width: 360px) and (max-width: 413px) </span>{<span style="color: #ff0000;">
+     page {
+         --app-rem-size</span>:<span style="color: #0000ff;"> 12px</span>;
+     }<span style="color: #800000;">
+}
+
+@media screen and (min-width: 414px) </span>{<span style="color: #ff0000;">
+    page {
+        --app-rem-size</span>:<span style="color: #0000ff;"> 14px</span>;
+     }<span style="color: #800000;">
+}
+
+        </span></pre>
+</div>
+<div style="color: #000000; font-family: Consolas; font-weight: normal; font-size: 12px; line-height: 18px; white-space: pre;">&nbsp;</div>
+<div>然后在我需要用到rem的地方，比如 height:calc(var(--app-rem-size)*2) 这样使用，虽然有点麻烦，但也是没办法中的办法了。</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

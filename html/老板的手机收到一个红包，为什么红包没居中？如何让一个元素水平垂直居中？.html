@@ -1,0 +1,325 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修老板的手机收到一个红包，为什么红包没居中？如何让一个元素水平垂直居中？' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>老板的手机收到一个红包，为什么红包没居中？如何让一个元素水平垂直居中？</center></div><div class='banquan'>原文出处:本文由博客园博主千古壹号提供。<br/>
+原文连接:https://www.cnblogs.com/qianguyihao/p/11823496.html</div><br>
+    <p><img src="./images/老板的手机收到一个红包，为什么红包没居中？如何让一个元素水平垂直居中？0.png" /></p>
+<blockquote>
+<p>本文的最新内容将在<a href="https://github.com/qianguyihao/Web/tree/master/03-CSS%E8%BF%9B%E9%98%B6">GitHub</a>上实时更新。欢迎在GitHub上关注我，一起入门和进阶前端。</p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>老板的手机收到一个红包，为什么红包没居中？</p>
+<p>如何让一个子元素在父容器里<strong>水平垂直居中</strong>？这个问题必考，在实战开发中，也应用得非常多。</p>
+<p>你也许能顺手写出好几种实现方法。但大部分人的写法不够规范，经不起千锤百炼。换句话说：这些人也就面试的时候夸夸其谈，但真的上战场的时候，他们不敢这么写，也不知道怎么写最靠谱。</p>
+<p>这篇文章中，我们来列出几种常见的写法，最终你会明白，哪种写法是最优雅的。</p>
+<p>当然，我还会拿出实际应用中的真实场景来举例，让你感受一下<strong>标准垂直居中的魅力</strong>。</p>
+<h2 id="如何让一个行内元素文字图片等水平垂直居中">如何让一个行内元素（文字、图片等）水平垂直居中</h2>
+<blockquote>
+<p>行内元素的居中问题比较简单。</p>
+</blockquote>
+<h3 id="行内元素水平居中">行内元素水平居中</h3>
+<p>给父容器设置：</p>
+<pre><code><code>    text-align: center;
+</code></pre>
+<h3 id="行内元素垂直居中">行内元素垂直居中</h3>
+<p>让<strong>文字的行高</strong> 等于 <strong>盒子的高度</strong>，可以让单行文本垂直居中。比如：</p>
+<pre class="css"><code>    .father {
+        height: 20px;
+        line-height: 20px;
+    }</code></pre>
+<h2 id="如何让一个块级元素水平垂直居中">如何让一个块级元素水平垂直居中</h2>
+<blockquote>
+<p>这一段是本文的核心。如何让一个块级的子元素在父容器里水平垂直居中？有好几种写法。我们一起来看看。</p>
+</blockquote>
+<h3 id="margin-auto-的问题">margin: auto 的问题</h3>
+<p>在 CSS 中对元素进行水平居中是非常简单的：如果它是一个行内元素，就对它的父容器应用 <code>text-align: center</code>；如果它是一个块级元素，就对它自身应用 <code>margin: auto</code>或者 <code>margin: 0 auto</code>。</p>
+<p>在这里，<code>margin: auto</code>相当于<code>margin: auto auto auto auto</code>。<code>margin: 0 auto</code>相当于<code>margin: 0 auto 0 auto</code>，四个值分别对应上右下左。其计算值取决于<strong>剩余空间</strong>。</p>
+<p>但是，如果要对一个元素垂直居中，<code>margin: auto</code>就行不通了。</p>
+<p>比如下面这段代码：</p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        .father{
+            height: 500px;
+            background: pink;
+        }
+        .son {
+            width: 300px;
+            height: 200px;
+            background: red;
+
+            margin: auto;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>上面的代码中，父元素和子元素都是定宽高的，即便在这种情况下，我给子元素设置 <code>margin: auto</code>，子元素依然没有垂直居中。</p>
+<p>那还有没有比较好的通用的做法呢？</p>
+<h3 id="方式一绝对定位-margin需要指定子元素的宽高不推荐">方式一：绝对定位 + margin（需要指定子元素的宽高，不推荐）</h3>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .father{
+            position: relative;
+            min-height: 500px;
+            background: pink;
+        }
+        .son {
+            position: absolute;
+            width: 200px;
+            height: 100px;
+            background: red;
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -100px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;子元素的内容&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><strong>代码解释</strong>：我们先让子元素的左上角居中，然后向上移动宽度的一半(50px)，就达到了垂直居中的效果；水平居中的原理类似。</p>
+<p><strong>不足之处</strong>：要求指定子元素的宽高，才能写出 <code>margin-top</code> 和 <code>margin-left</code> 的属性值。</p>
+<p>但是，在通常情况下，对那些需要居中的元素来说，其宽高往往是由其内容来决定的，不建议固定宽高。</p>
+<h3 id="方式二绝对定位-translate无需指定子元素的宽高推荐">方式二：绝对定位 + translate（无需指定子元素的宽高，推荐）</h3>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .father{
+            position: relative;
+            min-height: 500px;
+            background: pink;
+        }
+        .son {
+            position: absolute;
+            background: red;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;子元素的内容&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>这种写法，在没有指定子元素宽高的情况下，也能让其在父容器中垂直居中。因为 translate() 函数中使用百分比值时，是以这个元素自身的宽度和高度为基准进行换算和移动的（<strong>动态计算宽高</strong>）。</p>
+<h3 id="方式3flex-布局待改进">方式3：flex 布局（待改进）</h3>
+<p>将父容器设置为 Flex 布局，再给父容器加个属性<code>justify-content: center</code>，这样的话，子元素就能水平居中了；再给父容器加个属性 <code>align-items: center</code>，这样的话，子元素就能垂直居中了。</p>
+<p>代码举例：</p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .father{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: pink;
+        }
+        .son {
+            background: red;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;子元素的内容&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>上面这种写法，不足之处在于：给父容器设置属性<code>justify-content: center</code>和<code>align-items: center</code>之后，导致父容器里的所有子元素们都垂直居中了（如果父容器里有多个子元素的话）。可我明明想让指定的<strong>某个子元素</strong>居中，要怎么改进呢？</p>
+<h3 id="方式4-flex-布局-margin-auto推荐">方式4： flex 布局 + margin: auto（推荐）</h3>
+<p>我们只需写两行声明即可：先给父容器设置 <code>display: flex</code>，再给指定的子元素设置我们再熟悉不过的 <code>margin: auto</code>，即可让这个指定的子元素在<strong>剩余空间</strong>里，水平垂直居中。大功告成。</p>
+<p>代码举例：</p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .father{
+            display: flex;
+            min-height: 100vh;
+            background: pink;
+        }
+        .son {
+            margin: auto;
+            background: red;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;子元素的内容，想水平垂直居中&lt;/div&gt;
+        &lt;div class=&quot;son2&quot;&gt;这个元素不想水平垂直居中&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;script&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>请注意，当我们给父容器使用 Flex 布局 时，子元素的<code>margin: auto</code>不仅能让其在水平方向上居中，<strong>垂直方向上也是居中的</strong>。</p>
+<p>参考文章：<a href="https://www.cnblogs.com/coco1s/p/10910588.html">探秘 flex 上下文中神奇的自动 margin</a></p>
+<h2 id="垂直居中的典型应用场景红包幕帘弹窗">垂直居中的典型应用场景：红包幕帘/弹窗</h2>
+<h3 id="问题引入">问题引入</h3>
+<p>就拿“弹窗”这一点来说，现在大家的弹窗都是各种样式、各种布局满天飞。不过进公司后，新人在第一次写弹窗之前，都会问一个问题：“弹窗这么通用的东西，没有一个规范吗？”说完之后，又默默写自己的有个性的弹窗去了。</p>
+<p>建议大家在写弹窗的时候，无论如何，一定要<strong>严格采用</strong>水平居中、垂直居中的写法。</p>
+<p>千万不要用 <code>margin-top</code> 这种距离屏幕顶部的距离来计算弹窗的位置，太搓了。不要让领导觉得：“你们写了这么久的前端代码，连个弹窗都搞不定？”</p>
+<h3 id="移动端红包幕帘弹窗-居中的规范写法非常标准">移动端，红包幕帘/弹窗 居中的规范写法（非常标准）</h3>
+<p>移动端场景，这里提供一个 红包幕帘/弹窗 的居中写法。注意，是严格居中，非常标准。为什么是移动端？你有见过PC网页端给你送红包的么？</p>
+<p>在实战开发中，下面的这段代码，可以直接拿去用。注释详细，贴心无比。</p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot; /&gt;
+        &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+        &lt;title&gt;Document&lt;/title&gt;
+        &lt;style&gt;
+            /* 整个弹窗组件 */
+            .component_popup {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+            }
+
+            /* 遮罩背景 */
+            .popup_mask {
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+            }
+
+            /* 弹窗区域（内容 + close）：严格居中 */
+            .popup_content {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            /* 弹窗的内容部分 */
+            .content_box {
+                width: 15.45rem;
+                height: 19.32rem;
+                background: url(http://img.smyhvae.com/20191010_1500_red-packet.png) no-repeat;
+                background-size: 15.45rem 19.32rem;
+            }
+
+            /* 弹窗的close图标 */
+            .content_close {
+                width: 1.25em;
+                height: 1.25em;
+                background: url(http://img.smyhvae.com/20191010_1500_close.png) no-repeat;
+                background-size: 1.25rem 1.25rem;
+                margin: 0 auto;
+                margin-top: 0.5rem;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div class=&quot;content&quot;&gt;默认文档流中的页面主体&lt;/div&gt;
+
+        &lt;div class=&quot;component_popup&quot;&gt;
+            &lt;div class=&quot;popup_mask&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;popup_content&quot;&gt;
+                &lt;div class=&quot;content_box&quot;&gt;&lt;/div&gt;
+                &lt;div class=&quot;content_close&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>实现效果：</p>
+<p><img src="./images/老板的手机收到一个红包，为什么红包没居中？如何让一个元素水平垂直居中？1.png" /></p>
+<p><strong>补充</strong>：</p>
+<p>1、如果你的页面中，有很多弹窗，建议将弹窗封装成一个抽象组件。</p>
+<p>2、任何弹窗，都需要解决“滚动穿透”的问题，本文篇幅有限，请自行查阅。</p>
+<h2 id="最后一段">最后一段</h2>
+<p>有些实现方式虽然简单，但必须要经得起千锤百炼。我们要做到<strong>敬畏每一行代码</strong>，不能浮于表面。团队开发，要的不是个性，而是<strong>标准和规范</strong>。</p>
+<h2 id="参考链接">参考链接</h2>
+<ul>
+<li><p><a href="https://www.zhihu.com/question/21644198/answer/22392394">为什么「margin:auto」可以让块级元素水平居中？</a></p></li>
+<li><p><a href="https://jscode.me/t/topic/1936">七种方式实现垂直居中</a></p></li>
+<li><p><a href="http://www.zhangxinxu.com/wordpress/2013/11/margin-auto-absolute-%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D-%E6%B0%B4%E5%B9%B3%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD/">margin:auto实现绝对定位元素的水平垂直居中</a></p></li>
+</ul>
+<h2 id="我的公众号">我的公众号</h2>
+<p>想学习<strong>代码之外的技能</strong>？不妨关注我的微信公众号：<strong>千古壹号</strong>（id：<code>qianguyihao</code>）。</p>
+<p>扫一扫，你将发现另一个全新的世界，而这将是一场美丽的意外：</p>
+<p><img src="./images/老板的手机收到一个红包，为什么红包没居中？如何让一个元素水平垂直居中？2.png" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

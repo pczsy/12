@@ -1,0 +1,290 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修九宫格抽奖逻辑梳理' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>九宫格抽奖逻辑梳理</center></div><div class='banquan'>原文出处:本文由博客园博主下落香樟树提供。<br/>
+原文连接:https://www.cnblogs.com/zxk5211/p/web_29.html</div><br>
+    <h2 id="一页面布局">一、页面布局</h2>
+<p>​ <strong>默认九宫格图</strong>                                                                     <strong>九宫格占位图</strong></p>
+<h4 id="原图.png-奖品拼接图.png"><img src="data:image/png;base64,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" alt="原图.png" />                                <img src="data:image/png;base64,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" alt="奖品拼接图.png" /></h4>
+<p>HTML页面代码：</p>
+<pre><code><code>&lt;!-- center为九宫格区域 --&gt;
+&lt;div class=&quot;center&quot;&gt;
+    &lt;!-- box为九个格子，DOM拼接区域 --&gt;
+    &lt;ul id=&quot;box&quot;&gt;
+        &lt;!-- li中下标从0开始，0-8共九个格子 --&gt;
+        &lt;li class=&quot;prize jp-0 active&quot;&gt;
+            &lt;!-- 动态获取奖品图标和文字描述 --&gt;
+            &lt;img src=&quot;&quot; draggable=&quot;false&quot;&gt;
+            &lt;p&gt;xxxx&lt;/p&gt;
+        &lt;/li&gt;
+        &lt;li&gt;1&lt;/li&gt;
+        &lt;li&gt;2&lt;/li&gt;
+        &lt;li&gt;3&lt;/li&gt;
+        &lt;!-- 其中下标为4的格子是最中心的按钮 --&gt;
+        &lt;li class=&quot;no-price&quot; id=&quot;drawBtn&quot;&gt;
+            &lt;div&gt;开始抽奖&lt;/div&gt;
+        &lt;/li&gt;
+        &lt;li&gt;5&lt;/li&gt;
+        &lt;li&gt;6&lt;/li&gt;
+        &lt;li&gt;7&lt;/li&gt;
+        &lt;li&gt;8&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+<h2 id="二页面样式">二、页面样式</h2>
+<p>九宫格布局相关CSS页面样式：</p>
+<pre class="css"><code>.center ul {
+    box-sizing: border-box;
+    padding: 15px;
+    width: 100%;
+    height: 100%;
+}
+
+ul li {
+    float: left;
+    box-sizing: border-box;
+    width: 195px;
+    height: 195px;
+    background: #fff;
+    border-radius: 6px;
+    text-align: center;
+}
+
+ul li:nth-child(2),
+ul li:nth-child(8) {
+    margin: 0 15px;
+}
+
+ul li:nth-child(4),
+ul li:nth-child(6) {
+    margin: 15px 0;
+}
+
+ul li:nth-child(5) {
+    cursor: pointer;
+    margin: 15px;
+    background: #f86f05;
+}
+
+ul li:nth-child(5):hover {
+    opacity: 0.8;
+}
+
+ul li &gt; img {
+    margin-top: 20px;
+    width: 104px;
+    height: 104px;
+}
+
+ul li &gt; p {
+    line-height: 40px;
+    font-size: 28px;
+    color: #ff9f00;
+}
+
+ul li.no-price {
+    padding: 15px 0;
+}
+
+ul li.no-price div {
+    padding: 10px 16px;
+    line-height: 60px;
+    font-size: 54px;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+ul li.no-price p.tips {
+    line-height: 30px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+#box li.active {
+    background: #fcff76;
+}</code></pre>
+<h2 id="三代码逻辑">三、代码逻辑</h2>
+<p>Luck幸运抽奖函数方法：</p>
+<pre class="javascript"><code>// 抽奖动画效果
+var luck = {
+    index: -1, //当前转动到哪,起点位置
+    count: 0, //共有多少个位置
+    timer: 0, //setTimeout的ID,用clearTimeout清除
+    speed: 20, //初始化转动速度
+    times: 0, //转动次数
+    cycle: 25, //转动基本次数:即转动多少次之后进入抽奖环节
+    prize: -1, //中奖位置
+    init: function(id) {
+        if ($(&quot;#&quot; + id).find(&quot;.prize&quot;).length &gt; 0) {
+            $luck = $(&quot;#&quot; + id);
+            $units = $luck.find(&quot;.prize&quot;);
+            this.obj = $luck;
+            this.count = $units.length;
+            $luck.find(&quot;.jp-&quot; + this.index).addClass(&quot;active&quot;);
+        }
+    },
+    roll: function() {
+        var index = this.index;
+        var count = this.count;
+        var luck = this.obj;
+        $(luck)
+            .find(&quot;.jp-&quot; + index)
+            .removeClass(&quot;active&quot;);
+        index += 1;
+        if (index &gt; count - 1) index = 0;
+        $(luck)
+            .find(&quot;.jp-&quot; + index)
+            .addClass(&quot;active&quot;);
+        this.index = index;
+        return false;
+    },
+    stop: function(index) {
+        this.prize = index;
+        return false;
+    }
+};</code></pre>
+<p>奖品列表DOM拼接：</p>
+<pre class="javascript"><code>/* 奖品列表排序 */
+let sortList = function(data, el) {
+    var str = &quot;&quot;,
+        sortArr = [];
+    for (let i = 0, len = data.length; i &lt; len; i++) {
+        let tmp = data[i];
+        if (i == 3) {
+            sortArr[
+                i
+            ] = `&lt;li class=&quot;prize jp-7&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        } else if (i == 4) {
+            sortArr[
+                i
+            ] = `&lt;li class=&quot;no-price&quot; id=&quot;drawBtn&quot;&gt;&lt;div&gt;开始抽奖&lt;/div&gt;&lt;p class=&quot;tips&quot;&gt;注：奖品以最终实物为准&lt;/p&gt;&lt;/li&gt;`;
+            sortArr[5] = `&lt;li class=&quot;prize jp-3&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        } else if (i == 5) {
+            sortArr[6] = `&lt;li class=&quot;prize jp-6&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        } else if (i == 6) {
+            sortArr[7] = `&lt;li class=&quot;prize jp-5&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        } else if (i == 7) {
+            sortArr[8] = `&lt;li class=&quot;prize jp-4&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        } else {
+            sortArr[
+                i
+            ] = `&lt;li class=&quot;prize jp-${i}&quot; data-gid=&quot;${tmp.goodGid}&quot;&gt;&lt;img src=&quot;${tmp.pic}&quot; draggable=&quot;false&quot;&gt;&lt;p&gt;${tmp.name}&lt;/p&gt;&lt;/li&gt;`;
+        }
+    }
+    $(&quot;#&quot; + el).html(sortArr.join(&quot;&quot;));
+    // 在拼接完页面之后再初始化抽奖逻辑函数，否则获取不到li的DOM节点列表
+    luck.init(&quot;box&quot;);
+};</code></pre>
+<p>时间、速度、中奖编号&amp;中奖奖品下标控制：</p>
+<pre class="javascript"><code>/* 时间、速度、中奖编号控制 */
+function roll() {
+    luck.times += 1;
+    luck.roll();
+    if (luck.times &gt; luck.cycle + 10 &amp;&amp; luck.prize == luck.index) {
+        clearTimeout(luck.timer);
+        luck.prize = -1;
+        luck.times = 0;
+        click = false;
+    } else {
+        if (luck.times &lt; luck.cycle) {
+            luck.speed -= 20;
+        } else if (luck.times == luck.cycle) {
+            // 奖品位置下标
+            if (prizeInfo.index != &quot;&quot;) {
+                luck.prize = prizeInfo.index;
+            }
+        } else {
+            if (
+                luck.times &gt; luck.cycle + 10 &amp;&amp;
+                ((luck.prize == 0 &amp;&amp; luck.index == 7) ||
+                    luck.prize == luck.index + 1)
+            ) {
+                luck.speed += 110;
+            } else {
+                luck.speed += 20;
+            }
+        }
+        if (luck.speed &lt; 40) luck.speed = 40;
+        luck.timer = setTimeout(roll, luck.speed);
+    }
+    return false;
+}
+// 初始化点击事件为false，防止多次点击造成动画累积
+var click = false;</code></pre>
+<p>点击抽奖实现：</p>
+<pre class="javascript"><code>/* 点击抽奖 */
+$(&quot;#box&quot;).on(&quot;click&quot;, &quot;li#drawBtn&quot;, function() {
+    if (click) {
+        return false;
+    } else {
+        $.post(`api`, { genre: 3, type: 2 }, function(res) {
+            if (res.code == 1) {
+                let data = res.result_data;
+                let gId = data.goodGid,
+                    pIndex = &quot;&quot;;
+                $(&quot;#prizeImg&quot;).attr(&quot;src&quot;, data.pic);
+                $(&quot;#prizeTips&quot;).html(data.name);
+                let arr = prizeList;
+                for (let i = 0, len = arr.length; i &lt; len; i++) {
+                    let goodGid = arr[i][&quot;goodGid&quot;];
+                    if (gId == goodGid) {
+                        switch (i) {
+                            case 3:
+                                prizeInfo.index = 7;
+                                break;
+                            case 4:
+                                prizeInfo.index = 3;
+                                break;
+                            case 5:
+                                prizeInfo.index = 6;
+                                break;
+                            case 6:
+                                prizeInfo.index = 5;
+                                break;
+                            case 7:
+                                prizeInfo.index = 4;
+                                break;
+                            default:
+                                prizeInfo.index = i;
+                                break;
+                        }
+                        break;
+                    }
+                }
+                // 抽奖
+                luck.speed = 100;
+                roll();
+                click = true;
+                let timer = setTimeout(function() {
+                    clearTimeout(timer);
+                    $(&quot;#mask&quot;).fadeIn();
+                }, 4000);
+                return false;
+            } else {
+                alert(res.message);
+            }
+        });
+    }
+});</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

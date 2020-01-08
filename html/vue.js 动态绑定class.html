@@ -1,0 +1,129 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue.js 动态绑定class' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue.js 动态绑定class</center></div><div class='banquan'>原文出处:本文由博客园博主179朱柏铭提供。<br/>
+原文连接:https://www.cnblogs.com/zhu573514187/p/11088424.html</div><br>
+    <h4>1. 数据绑定</h4>
+<p>vue 指令以&nbsp;<em>v-</em>&nbsp;前缀标示，数据绑定的指令&nbsp;<em>v-bind:属性名</em>, 简写为&nbsp;<em>:属性名</em>, 简单的数据绑定例子如下：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;a v-bind:href="http://www.cnblogs.com/"&gt;博客园首页&lt;/a&gt;
+
+简写：
+&lt;a :href="http://www.cnblogs.com/"&gt;博客园首页&lt;/a&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<h4>2. 动态绑定class</h4>
+<p>vue 的分隔符默认是&nbsp;{{ }}, 在分隔符里面的字符串会被认为是数据变量，可以通过&nbsp;class="{{ className }}"&nbsp;方式设置class，但是vue不推荐这种方式与&nbsp;v-bind:class&nbsp;的方式混用，二者只能选其一。v-bind:class 虽然与class属性里绑定变量的方式不能共存，却可以与原生的class特性共存， 一个DOM标签中允许同时出现原生class和v-bind:class。</p>
+<p>2.1 v-bind:class 支持string类型，不建议这样使用，因为string值是固定不变的，无法实现动态改变class的需求</p>
+<div class="cnblogs_code">
+<pre><code>HTML代码：
+&lt;div :class=" 'classA classB' "&gt;Demo1&lt;/div&gt;</pre>
+<pre><code>渲染后的HTML:<br />&lt;div class="classA classB"&gt;Demo1&lt;/div&gt;</pre>
+</div>
+<p>2.2 v-bind:class 支持数据变量，当变量值改变时，将同时更新class。v-bind:class指令的值限定为绑定表达式，如javascript表达式</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+<pre><code>HTML代码：
+&lt;div :class="classA"&gt;Demo2&lt;/div&gt;
+
+Javascript代码：
+data: {
+  classA: 'class-a'  //当classA改变时将更新class
+}</pre>
+<pre><code>渲染后的HTML:<br />&lt;div class="class-a"&gt;Demo2&lt;/div&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+</div>
+<p>写在指令中的值会被视作表达式，如javascript表达式，因此v-bind:class接受三目运算：</p>
+<div class="cnblogs_code">
+<pre><code>HTML代码：
+&lt;div :class="classA ? 'class-a' : 'class-b' "&gt;Demo3&lt;/div&gt;
+
+渲染后的HTML:
+&lt;div class="class-a"&gt;Demo3&lt;/div&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>2.3 v-bind:class 支持对象，对象改变时会动态更新class</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+<pre><code>HTML代码：
+&lt;div :class="{ 'class-a': isA, 'class-b': isB}"&gt;Demo4&lt;/div&gt;<br />
+Javascript代码：
+data: {
+  isA: false,  //当isA改变时，将更新class
+  isB: true    //当isB改变时，将更新class
+}</pre>
+<pre><code>渲染后的HTML:<br />&lt;div class="class-b"&gt;Demo4&lt;/div&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+</div>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+<pre><code>HTML代码：
+&lt;div :class="objectClass"&gt;Demo5&lt;/div&gt;
+
+Javascript代码：
+data: {
+  objectClass: {
+    class-a: true,
+    class-b: false
+  }
+}
+
+渲染后的HTML:
+&lt;div class="class-a"&gt;Demo5&lt;/div&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+</div>
+<p>2.4: v-bind:class支持数组, 数组里的变量改变时，会动态更新class列表</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+<pre><code>HTML代码：
+&lt;div :class="[classA, classB]"&gt;Demo6&lt;/div&gt;
+
+Javascript代码：
+data: {
+  classA: 'class-a',
+  classB: 'class-b'
+}
+
+渲染后的HTML:
+&lt;div class="class-a class-b"&gt;Demo6&lt;/div&gt;</pre>
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+</div>
+<p>数组中可以包含object类型，数组中的object对象改变，也会更新class列表</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code_toolbar"><span class="cnblogs_code_copy"><a title="复制代码"><img src="./images/vue.js 动态绑定class0.png" alt="复制代码" /></a></span></div>
+<pre><code>HTML代码：
+&lt;div :class="[classA, classB]"&gt;Demo7&lt;/div&gt;
+
+Javascript代码：
+data: {
+  classA: 'class-a',
+  objectClass: {
+    classB: 'class-b',  // classB 的值为class-b, 则将classB的值添加到class列表
+    classC: false,    // classC值为false,将不添加classC
+    classD: true    // classD 值为true，classC将被直接添加到class列表
+}
+}
+
+渲染后的HTML:
+&lt;div class="class-a class-b classD"&gt;Demo7&lt;/div&gt;</pre>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

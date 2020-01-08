@@ -1,0 +1,243 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修转      echarts 的使用时遇到的坑 初始化和销毁，亲测有效！' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>转      echarts 的使用时遇到的坑 初始化和销毁，亲测有效！</center></div><div class='banquan'>原文出处:本文由博客园博主程序饲养员的自我修养提供。<br/>
+原文连接:https://www.cnblogs.com/zxy-come-on/p/11083962.html</div><br>
+    <p>纵观ECharts图表实例化的API，主要有一下几个相关的实例化方法：</p>
+<p>1、setOption(Object option,{boolean = true} notMerge)</p>
+<p>参数：</p>
+<p>1）、Object类型的参数 option，表示图表数据结构 ，形如：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="keyword">var</code>&nbsp;<code class="plain">option&nbsp; = {</code></span></span></div>
+<div class="line alt2"><code>2.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">title: {</code></span></span></div>
+<div class="line alt1"><code>3.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">text: </code><code class="string">"我的第一个ECharts图表示例"</code></span></span></div>
+<div class="line alt2"><code>4.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">},</code></span></span></div>
+<div class="line alt1"><code>5.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">tooltip: {</code></span></span></div>
+<div class="line alt2"><code>6.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">trigger: </code><code class="string">'axis'</code></span></span></div>
+<div class="line alt1"><code>7.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">}</code></span></span></div>
+<div class="line alt2"><code>8.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">};</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>2）、boolean notMerge，表示是否合并option。默认为false，可以不设置。</p>
+<p>描述：</p>
+<p>万能接口，配置图表实例任何可配置选项（详见option），多次调用时option选项是默认是合并（merge）的，如果不需求，可以通过notMerger参数为true阻止与上次option的合并。</p>
+<p>2、getOption()</p>
+<p>描述：</p>
+<p>返回内部持有的当前显示option克隆</p>
+<p>3、setSeries(Array series,{boolean=}notMerge)</p>
+<p>参数：</p>
+<p>1）、Array类型的series序列数据，形如：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>01.</code><span class="content"><span class="block"><code class="keyword">var</code>&nbsp;<code class="plain">Array seriesList = </code><code class="keyword">new</code>&nbsp;<code class="plain">Array();</code></span></span></div>
+<div class="line alt2"><code>02.</code><span class="content">&nbsp;</span></div>
+<div class="line alt1"><code>03.</code><span class="content"><span class="block"><code class="keyword">var</code>&nbsp;<code class="plain">seriesObj = </code><code class="keyword">new</code>&nbsp;<code class="plain">seriesObj();</code></span></span></div>
+<div class="line alt2"><code>04.</code><span class="content"><span class="block"><code class="plain">seriesObj.name = </code><code class="string">"蒸发量"</code><code class="plain">;</code></span></span></div>
+<div class="line alt1"><code>05.</code><span class="content"><span class="block"><code class="plain">seriesObj.type = </code><code class="string">"line"</code><code class="plain">;</code></span></span></div>
+<div class="line alt2"><code>06.</code><span class="content"><span class="block"><code class="plain">seriesObj.data = [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3];</code></span></span></div>
+<div class="line alt1"><code>07.</code><span class="content">&nbsp;</span></div>
+<div class="line alt2"><code>08.</code><span class="content"><span class="block"><code class="comments">//设置series</code></span></span></div>
+<div class="line alt1"><code>09.</code><span class="content"><span class="block"><code class="plain">myChart.setSeries(seriesList,</code><code class="keyword">false</code><code class="plain">);</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>2）、boolean notMerge 表示是否合并series，默认为false，可以不设置。</p>
+<p>描述：</p>
+<p>数据接口，驱动图表生成的数据内容，效果等同调用setOption({series:{...}})</p>
+<p>4、getSeries()</p>
+<p>描述：</p>
+<p>返回内部持有的当前显示series克隆，效果同return getOption().series</p>
+<p>5、addData(....)</p>
+<p>参数：</p>
+<p>1）、单组数据参数</p>
+<p>11）、{number} seriesIdx ：表示给哪一条series添加数据，series脚标从0开始；</p>
+<p>12）、{number | Object} data；</p>
+<p>13）、{boolean=} isHead ；</p>
+<p>14）、{boolean=} dataGrow；</p>
+<p>15）、{string=} additionData；</p>
+<p>2）、多组数据参数</p>
+<p>其实就是多个单组数据的形成的集合或者数组{Array} params</p>
+<p>描述：</p>
+<p>动态数据接口</p>
+<p>seriesIdx 系列索引&nbsp;</p>
+<p>data 增加数据&nbsp;</p>
+<p>isHead 是否队头加入，默认，不指定或false时为队尾插入&nbsp;</p>
+<p>dataGrow 是否增长数据队列长度，默认，不指定或false时移出目标数组对位数据&nbsp;</p>
+<p>additionData 是否增加类目轴(饼图为图例)数据，附加操作同isHead和dataGrow&nbsp;</p>
+<p>多组数据添加时参数为：&nbsp;</p>
+<p>params == [[seriesIdx, data, isHead, dataGrow, additionData], [...]]</p>
+<p>6、on(string eventName,function eventListner)</p>
+<p>描述：</p>
+<p>事件绑定，支持事件有：REFRESH，RESTORE，CLICK，HOVER，DATA_CHANGED，MAGIC_TYPE_CHANGED，DATA_VIEW_CHANGED，DATA_ZOOM，DATA_RANGE，LEGEND_SELECTED，MAP_SELECTED</p>
+<p>示例代码形如：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="comments">//ECharts图表的click事件监听</code></span></span></div>
+<div class="line alt2"><code>2.</code><span class="content"><span class="block"><code class="plain">myChart.on(</code><code class="string">"click"</code><code class="plain">, </code><code class="keyword">function</code>&nbsp;<code class="plain">() {</code></span></span></div>
+<div class="line alt1"><code>3.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">alert(</code><code class="string">"你点击我了!"</code><code class="plain">);</code></span></span></div>
+<div class="line alt2"><code>4.</code><span class="content"><span class="block"><code class="plain">});</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>7、un(string eventName,function eventListner)</p>
+<p>描述：</p>
+<p>解除某个事件的绑定，示例代码形如：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.un(</code><code class="string">"click"</code><code class="plain">, </code><code class="keyword">function</code>&nbsp;<code class="plain">() {</code></span></span></div>
+<div class="line alt2"><code>2.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">alert(</code><code class="string">"悲剧，你注销我了!"</code><code class="plain">);</code></span></span></div>
+<div class="line alt1"><code>3.</code><span class="content"><span class="block"><code class="plain">});</code></span></span></div>
+</div>
+</div>
+<p>8、showLoading(Object loadingOption)</p>
+<p>描述：</p>
+<p>过渡控制（详见loadingOption），显示loading（读取中）代码片段形如：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>01.</code><span class="content"><span class="block"><code class="comments">//图表显示提示信息</code></span></span></div>
+<div class="line alt2"><code>02.</code><span class="content"><span class="block"><code class="plain">myChart.showLoading({</code></span></span></div>
+<div class="line alt1"><code>03.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">text: </code><code class="string">"图表数据正在努力加载..."</code><code class="plain">,</code></span></span></div>
+<div class="line alt2"><code>04.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">x: </code><code class="string">"center"</code><code class="plain">,</code></span></span></div>
+<div class="line alt1"><code>05.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">y: </code><code class="string">"center"</code><code class="plain">,</code></span></span></div>
+<div class="line alt2"><code>06.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">textStyle: {</code></span></span></div>
+<div class="line alt1"><code>07.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">color:</code><code class="string">"red"</code><code class="plain">,</code></span></span></div>
+<div class="line alt2"><code>08.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">fontSize:14</code></span></span></div>
+<div class="line alt1"><code>09.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">},</code></span></span></div>
+<div class="line alt2"><code>10.</code><span class="content"><code class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><span class="block"><code class="plain">effect:</code><code class="string">"spin"</code></span></span></div>
+<div class="line alt1"><code>11.</code><span class="content"><span class="block"><code class="plain">});</code></span></span></div>
+</div>
+</div>
+<p>注意：</p>
+<p>&nbsp;</p>
+<p>9、hideLoading()</p>
+<p>描述：</p>
+<p>隐藏图表数据加载过度提示信息，示例代码：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.hideLoading();</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>10、getZrender()</p>
+<p>描述：</p>
+<p>获取当前图表所用ZRender实例，可用于添加额外图形或进行深度定制，zrender接口详见<a href="http://ecomfe.github.io/zrender/doc/doc.html#zrenderInstance" rel="nofollow" target="_blank">ZRender</a>&nbsp;示例代码如下所示：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">nyChart.getZrender();</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>11、getDataURL(string imgType)</p>
+<p>描述：</p>
+<p>获取当前图表的Base64图片dataURL，imgType 图片类型，支持png|jpeg，默认为png</p>
+<p>示例代码如下所示：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="keyword">var</code>&nbsp;<code class="plain">imgUrl = myChart.getDataURL(</code><code class="string">"png"</code><code class="plain">);</code></span></span></div>
+</div>
+</div>
+<p>12、getImage(string imgType)</p>
+<p>描述：</p>
+<p>获取一个当前图表的img，imgType 图片类型，支持png|jpeg，默认为png，示例代码片段：</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="comments">//前端导出图表图片</code></span></span></div>
+<div class="line alt2"><code>2.</code><span class="content"><span class="block"><code class="keyword">var</code>&nbsp;<code class="plain">imgObj = myChart.getImage(</code><code class="string">"jpeg"</code><code class="plain">);</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>主要是拿到一个图片对象，然后获取其outerHTML属性就是一个图表image的html完整标签，我们可以使用其直接显示在页面上。</p>
+<p>13、resize()</p>
+<p>描述：</p>
+<p>ECharts没有绑定resize事件，显示区域大小发生改变内部并不知道，</p>
+<p>使用方可以根据自己的需求绑定关心的事件，主动调用resize达到区域更新的效果。</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.resize();</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>14、refresh()</p>
+<p>描述：</p>
+<p>刷新图表，图例选择、数据区域缩放，拖拽状态均保持。</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.refresh();</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>15、restore()</p>
+<p>描述：</p>
+<p>还原图表，各种状态均被清除，还原为最初展现时的状态。</p>
+<p>16、clear()</p>
+<p>描述：</p>
+<p>清空绘画内容，清空后实例可用，因为并非释放示例的资源，释放资源我们需要dispose()</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><span style="background-color: #ff0000; color: #888888; font-size: 15px;"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.clear();</code></span></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>17、dispose()</p>
+<p>描述：</p>
+<p>释放图表实例，释放后实例不再可用。</p>
+<p>&nbsp;</p>
+<div class="syntaxhighlighter">
+<div class="bar">&nbsp;</div>
+<div class="lines">
+<div class="line alt1"><code>1.</code><span class="content"><span class="block"><code class="plain">myChart.dispose();</code></span></span></div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>目前ECharts图表的实例化主要包含当前十七个相关方法，后期不保证有补充的节奏，就目前来说，这十七个已经够用了的。</p>
+<p>注意：</p>
+<p>1、以上方法的使用前提都是需要获得ECharts初始化对象过后才可以进行，否则会产生报错现象。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>此文来源于：<a href="https://blog.csdn.net/Uncle_long/article/details/80483175">https://blog.csdn.net/Uncle_long/article/details/80483175</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

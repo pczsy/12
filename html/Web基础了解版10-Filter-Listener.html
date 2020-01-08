@@ -1,0 +1,425 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Web基础了解版10-Filter-Listener' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Web基础了解版10-Filter-Listener</center></div><div class='banquan'>原文出处:本文由博客园博主远离颠倒梦想提供。<br/>
+原文连接:https://www.cnblogs.com/Open-ing/p/12126415.html</div><br>
+    <h2 style="text-align: center;">Filter</h2>
+<p>对于WEB应用来说，过滤器是一个驻留在服务器中的WEB组件，他可以截取客户端和WEB资源之间的请求和响应信息。</p>
+<p>在一个WEB应用中可以部署多个过滤器，多个过滤器就组成了一个过滤器链，请求和响应必须在经过多个过滤器后才能到达目标</p>
+<p>当配置多个Filter以后就有一个执行顺序的问题，实际执行顺序是按照在web.xml文件中servlet-mapping的顺序决定的，如果顺序越靠前越先被调用。</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版10-Filter-Listener0.png" alt="" /></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">Filter接口</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">Filter是一个接口。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">Filter是Java Web三大组件之一。（JavaWeb三大组件分别是：Servlet小程序、Filter过滤器、Listener监听器）</span></p>
+</li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：1.检查用户访问权限</span></p>
+</li>
+</ul>
+<p class="md-end-block md-p"><span class="md-plain">　　&nbsp; &nbsp;</span><span class="md-plain md-expand">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2.设置请求响应编码，解决乱码问题</span></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">主要API</span></h3>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">Filter</span></h4>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">init(FilterConfig)方法用于初始化Filter</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>doFilter</strong>(ServletRequest,ServletResponse,FilterChain)作用和service()方法类似，是过滤请求和响应的主要方法。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">destroy()用于在Filter对象被销毁前做一些收尾工作。如：释放资源等。</span></p>
+</li>
+</ul>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">FilterConfig</span></h4>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">FilterConfig对象在服务器调用init()方法时传递进来。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">getFilterName() 获取Filter的名字</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">getServletContext() 获取ServletContext对象（即application）</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">getInitParameter(String) 获取Filter的初始化参数</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">getInitParameterNames() 获取所有初始化参数的名字</span></p>
+</li>
+</ul>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">FilterChain</span></h4>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">FilterChain对象是在doFilter()方法被调用时作为参数传递进来的。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand"><strong>doFilter</strong>(ServletRequest,ServletResponse)方法用于调用Filter链上的下一个过滤器，如果当前过滤器为最后一个过滤器则将请求发送到目标资源。</span></p>
+</li>
+</ul>
+<p><strong><span class="md-plain">web.xml文件中的Filter配置</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">filter-mapping</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Filter的名字 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">filter-name</span><span style="color: #0000ff;">&gt;</span>Filter1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">filter-name</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> Filter1的过滤地址,表示过滤http://127.0.0.1:8080/day17/admin/user.jsp</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>/admin/user.jsp<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">url-pattern</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">filter-mapping</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>除此之外在filter-mapping还有一个子标签dispatcher，该标签用来指定需要Filter处理的请求类型</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 用户直接访问资源时，会调用Filter </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>REQUEST<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 通过转发访问时，会调用Filter </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>FORWARD<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 通过动态包含获取时，会调用Filter </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>INCLUDE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 当通过异常处理访问页面时，会调用Filter </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span>ERROR<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dispatcher</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这四种情况可以设置一个，也可以同时设置多个，如果不设置那么默认为REQUEST</p>
+<h3><strong><span class="md-plain">Filter生命周期</span></strong></h3>
+<ol class="ol-list" start="">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">先执行Filter的构造方法</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">然后执行Filter的init()方法，对象创建后，马上就被调用，对Filter做一些初始化操作</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">执行Filter的doFilter()方法，每次访问目标资源，只要匹配过滤的地址，就会调用。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">执行Filter的destroy()方法，服务器停止时调用，用来释放资源。</span></p>
+</li>
+</ol>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">FilterConfig类</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">作用：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取Filter在web.xml文件中配置的名称</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取Filter在web.xml文件中配置的初始化参数</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">通过FilterConfig类获取ServletContext对象实例</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 获取Filter的名称</span>
+String filterName =<span style="color: #000000;"> filterConfig.getFilterName();</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取初始化参数。username的值</span>
+String username = filterConfig.getInitParameter("username"<span style="color: #000000;">);</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取ServletContext的对象实例 </span>
+ServletContext ctx = filterConfig.getServletContext();</pre>
+</div>
+<p>&nbsp;</p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">FilterChain过滤器链</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">FilterChain是整个Filter过滤器的调用者。Filter与Filter之间的传递，或者Filter与请求资源之间的传递都靠FilterChain.doFilter方法。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">一般Filter.doFilter中的代码分为三段：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">第一段是FilterChain.doFilter之前的代码。一般用来做请求的拦截，检查用户访问的权限，访问日记的记录。参数编码的设置等等操作。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">第二段是FilterChain.doFilter方法。此方法可以将代码的执行传递到下一个Filter中。或者是传递到用户最终访问的资源中。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">第三段是FilterChain.doFilter之后的代码。主要用过做一些日志操作。我们很少会在第三段中做太多复杂的操作。</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">在每一个Filter类的doFilter方法中，一定要调用chain.doFilter方法，除非你想要阻止用户继续往下面访问。否则一定要调用FilterChain的doFilter方法。</span></p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">Filter的拦截路径</span></h3>
+<p>主要有以下两种</p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">第一种：通过filter-mapping的url-pattern来配置（与Servlet的url-pattern的规则相同）</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>精确匹配：/路径/资源名</strong></span></p>
+<p class="md-end-block md-p"><span class="md-plain">比如：/index.html、/hello/index.jsp 、 /client/LoginServlet 等，只有在请求地址完全一样时才会调用Filter</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>目录匹配：/路径名/*</strong></span></p>
+<p class="md-end-block md-p"><span class="md-plain">比如1：/abc/* 表示可以拦截abc目录下的所有资源，甚至是abc目录下的其他目录。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">比如2：/* 表示只要访问项目根目录下的资源就会调用Filter</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>后缀名匹配：*.后缀名</strong></span></p>
+<p class="md-end-block md-p"><span class="md-plain">比如：*.jsp 表示拦截所有后缀为jsp文件资源</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">第二种：通过filter-mapping中的servlet-name来指定要过滤的Servlet</span></p>
+</li>
+</ul>
+<pre><code>在Filter的filter-mapping中增加了一个servlet-name标签，将该标签的值设置成Servlet的名字，在访问Servlet时就会调用该过滤器过滤请求。</pre>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">filter-mapping</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">filter-name</span><span style="color: #0000ff;">&gt;</span>HelloFilter<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">filter-name</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>HelloServlet<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">servlet-name</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">filter-mapping</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2 style="text-align: center;">Listener</h2>
+<p>Listener用于监听JavaWeb程序中的事件，当事件被触发时，监听器中的指定方法将会被调用。</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">监听对象的创建与销毁</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>ServletContextListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听ServletContext对象的创建与销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void contextInitialized ( ServletContextEvent sce )：ServletContext创建时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void contextDestroyed ( ServletContextEvent sce )：ServletContext销毁时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">ServletContextEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：public ServletContext getServletContext ()：获取ServletContext对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>HttpSessionListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听HttpSession对象的创建与销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">public void sessionCreated ( HttpSessionEvent se )：HttpSession对象创建时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">public void sessionDestroyed ( HttpSessionEvent se )：HttpSession对象销毁时调用</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">HttpSessionEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：public HttpSession getSession ()：获取当前HttpSession对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>ServletRequestListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听ServletRequest对象的创建与销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">public void requestInitialized ( ServletRequestEvent sre )：ServletRequest对象创建时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">public void requestDestroyed ( ServletRequestEvent sre )：ServletRequest对象销毁时调用</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">ServletRequestEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public ServletRequest getServletRequest ()：获取当前的ServletRequest对象。</span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">public ServletContext getServletContext ()：获取当前项目的ServletContext对象。</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>三种创建与销毁的监听器使用起来基本一致。</p>
+<p>在web.xml文件中注册监听器</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">listener</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">listener-class</span><span style="color: #0000ff;">&gt;</span>com.web.listener.MyServletContextListener<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">listener-class</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">listener</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">监听对象的属性变化</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>ServletContextAttributeListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听ServletContext中属性的创建、修改和销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeAdded(ServletContextAttributeEvent scab)：向ServletContext中添加属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeRemoved(ServletContextAttributeEvent scab)：从ServletContext中移除属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeReplaced(ServletContextAttributeEvent scab)：当ServletContext中的属性被修改时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">ServletContextAttributeEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public String getName() ：获取修改或添加的属性名</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public Object getValue()：获取被修改或添加的属性值</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public ServletContext getServletContext ()：获取当前WEB应用的ServletContext对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>HttpSessionAttributeListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听HttpSession中属性的创建、修改和销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeAdded ( HttpSessionBindingEvent se )：向HttpSession中添加属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeRemoved(HttpSessionBindingEvent se)：从HttpSession中移除属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeReplaced(HttpSessionBindingEvent se)：当HttpSession中的属性被修改时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">HttpSessionBindingEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public String getName() ：获取修改或添加的属性名</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public Object getValue()：获取被修改或添加的属性值</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public HttpSession getSession ()：获取当前的HttpSession对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>ServletRequestAttributeListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听ServletRequest中属性的创建、修改和销毁</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeAdded (ServletRequestAttributeEvent srae ):向ServletRequest中添加属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeRemoved(ServletRequestAttributeEvent srae):从ServletRequest中移除属性时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void attributeReplaced(ServletRequestAttributeEvent srae)：当ServletRequest中的属性被修改时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">ServletRequestAttributeEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public String getName()：获取修改或添加的属性名</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public Object getValue()：获取被修改或添加的属性值</span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">public ServletRequest getServletRequest () ：获取当前的ServletRequest对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">监听Session内的对象</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>HttpSessionBindingListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听某个对象在session域中的创建与移除。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void valueBound(HttpSessionBindingEvent event)：该类的实例被放到Session域中时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void valueUnbound(HttpSessionBindingEvent event)：该类的实例从Session中移除时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">HttpSessionBindingEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public HttpSession getSession ()：获取HttpSession对象</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public String getName()：获取操作的属性名</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public Object getValue()：获取操作的属性值</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">使用：要监听哪一个类，直接使该类实现HttpSessionBindingListener接口即可。</span></p>
+</li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>HttpSessionActivationListener</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：监听某个对象在session中的序列化与反序列化。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">方法：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void sessionWillPassivate(HttpSessionEvent se)：该类实例和Session一起钝化到硬盘时调用</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public void sessionDidActivate(HttpSessionEvent se)：该类实例和Session一起活化到内存时调用</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">HttpSessionEvent对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">作用：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public HttpSession getSession ()：获取HttpSession对象</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">使用：要监听哪一个类，直接使该类实现HttpSessionActivationListener接口即可。</span></p>
+</li>
+</ul>
+<p class="md-end-block md-p"><span class="md-plain">注意：为被监听类对象可以正常序列化到硬盘上，还需要让该类实现java.io.Serializable接口</span></p>
+<p><span class="md-plain">&nbsp;</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,134 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修H5移动端弹幕动画实现' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>H5移动端弹幕动画实现</center></div><div class='banquan'>原文出处:本文由博客园博主Ashley-小博客提供。<br/>
+原文连接:https://www.cnblogs.com/Ashley77/p/11281297.html</div><br>
+    <h2>思路</h2>
+<ol>
+<li>把单个内容编辑好，计算自身宽度，确定初始位置</li>
+<li>移动的距离是屏幕宽度</li>
+<li>
+<p>js动态的添加css动画函数，将高度、动画移动时间、动画延迟时间都用随机数控制</p>
+</li>
+</ol>
+<p>代码：</p>
+<h3>html骨架结构</h3>
+<p>(以三个为例，如果觉得界面太长不友好，也可以js动态的生成)</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="cute-barrage"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="barrage-div"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="http://kw1-1253445850.file.myqcloud.com/static/image/stimg_7656dc02eb1cd13adbacbdd2695dc3a8.jpg"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>一月一度的花呗还款期到啦<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>哈哈哈<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="barrage-div"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="http://kw1-1253445850.file.myqcloud.com/static/image/stimg_632fecdcb52417cb8ab89fa283e07281.jpg"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>坐等发工资<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>呵呵呵<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="barrage-div"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="../../static/cutePresent/resource/avatar.png"</span><span style="color: #0000ff;">/&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>变有钱变有钱<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>耶耶耶<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3>css样式</h3>
+<p><code>.cute-barrage</code>是确定展示范围和位置，宽度为100%，高度自定，横向超出部分隐藏<br /><code>.barrage-div</code><span class="Apple-converted-space">&nbsp;内容部分，长度由内容决定，确定相对父级的位置</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">html,body</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;">100%</span>;
+}<span style="color: #800000;">
+.cute-barrage</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 4rem</span>;  <span style="color: #008000;">/*</span><span style="color: #008000;">确定弹幕长度</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 1.5rem</span>;   <span style="color: #008000;">/*</span><span style="color: #008000;">确定弹幕高度</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    overflow-x</span>:<span style="color: #0000ff;"> hidden</span>;  <span style="color: #008000;">/*</span><span style="color: #008000;">横向超出部分隐藏</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    .barrage-div{
+        position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+        top</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+        right</span>:<span style="color: #0000ff;"> -100%</span>;  <span style="color: #008000;">/*</span><span style="color: #008000;">保证一开始在界面外侧，从右向左就是right，从左向右就是left</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;"> 0.6rem</span>;<span style="color: #ff0000;">
+        background-color</span>:<span style="color: #0000ff;"> rgba(255, 255, 255, 0.9)</span>;<span style="color: #ff0000;">
+        border-radius</span>:<span style="color: #0000ff;"> 2rem</span>;<span style="color: #ff0000;">
+        white-space</span>:<span style="color: #0000ff;"> nowrap</span>;   <span style="color: #008000;">/*</span><span style="color: #008000;">确保内容在一行显示，不然移动到最后会折行</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+        img{
+            width</span>:<span style="color: #0000ff;"> 0.5rem</span>;<span style="color: #ff0000;">
+            height</span>:<span style="color: #0000ff;"> 0.5rem</span>;<span style="color: #ff0000;">
+            vertical-align</span>:<span style="color: #0000ff;"> middle</span>;<span style="color: #ff0000;">  //内联块元素，居中对齐
+            padding-left</span>:<span style="color: #0000ff;"> 0.05rem</span>;<span style="color: #ff0000;">
+            border-radius</span>:<span style="color: #0000ff;"> 50%</span>;
+        }<span style="color: #800000;">
+        span</span>{<span style="color: #ff0000;">
+            font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+            padding</span>:<span style="color: #0000ff;"> 0 0.1rem</span>;<span style="color: #ff0000;">
+            line-height</span>:<span style="color: #0000ff;"> 0.6rem</span>;<span style="color: #ff0000;">    //内联块元素，居中对齐四个缺一不可
+            height</span>:<span style="color: #0000ff;"> 0.6rem</span>;<span style="color: #ff0000;">      //内联块元素，居中对齐四个缺一不可
+            display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">       //内联块元素，居中对齐四个缺一不可
+            vertical-align</span>:<span style="color: #0000ff;"> middle</span>;<span style="color: #ff0000;">      //内联块元素，居中对齐四个缺一不可
+            i{
+                color</span>:<span style="color: #0000ff;"> #fe5453</span>;<span style="color: #ff0000;">
+                font-weight</span>:<span style="color: #0000ff;"> 700</span>;
+            }<span style="color: #800000;">
+        }
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>js动态动画实现(zepto.js)</h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">弹幕</span>
+<span style="color: #0000ff;">var</span> winWidth = $(window).width();  <span style="color: #008000;">//</span><span style="color: #008000;">获取屏幕宽度</span>
+$(".barrage-div").each(<span style="color: #0000ff;">function</span>(index,value){   <span style="color: #008000;">//</span><span style="color: #008000;">遍历每条弹幕</span>
+    <span style="color: #0000ff;">var</span> width = $(value).width();   <span style="color: #008000;">//</span><span style="color: #008000;">获取当前弹幕的宽度</span>
+    <span style="color: #0000ff;">var</span> topRandom = Math.floor(Math.random() * 3) + 'rem';  <span style="color: #008000;">//</span><span style="color: #008000;">获取0,1,2的随机数  可根据情况改变</span>
+    $(value).css({"right":-width,"top":topRandom});  <span style="color: #008000;">//</span><span style="color: #008000;">将弹幕移动到屏幕外面，正好超出的位置</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;">拼写动画帧函数，记得每个ani要进行区分，宽度从自己的负宽度移动一整个屏幕的距离    </span>
+    <span style="color: #0000ff;">var</span> keyframes =<span style="color: #000000;"> `\    
+        @keyframes ani${index}{   
+            form{
+                right:${</span>-<span style="color: #000000;">width}px;
+            }
+            to{
+                right:${winWidth}px;
+            }
+        }\    
+        @</span>-webkit-<span style="color: #000000;">keyframes ani${index}{
+            form{
+                right:${</span>-<span style="color: #000000;">width}px;
+            }
+            to{
+                right:${winWidth}px;
+            }
+        }`;      
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">添加到页面的head标签里面</span>
+    $("&lt;style&gt;").attr("type","text/css").html(keyframes).appendTo($("head"<span style="color: #000000;">));      
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">定义动画速度列表</span>
+    <span style="color: #0000ff;">var</span> aniList = [3,5,7,9,11<span style="color: #000000;">];
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">取数组的随机数，0,1,2,3,4</span>
+    <span style="color: #0000ff;">var</span> aniTime =Math.floor(Math.random() * 5<span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">给当全前弹幕添加animation的css</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;">延迟的时间用每个的*1.5倍，这个可变</span>
+    $(value).css({"animation":`ani${index} ${aniList[aniTime]}s linear ${index * 1.5}s`,"-webkit-animation":`ani${index} ${aniList[aniTime]}s linear ${index * 1.5<span style="color: #000000;">}s`});
+})</span></pre>
+</div>
+<p>大功告成啦~</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

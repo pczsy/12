@@ -1,0 +1,517 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修学生选课系统v1.0' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>学生选课系统v1.0</center></div><div class='banquan'>原文出处:本文由博客园博主一粒盐提供。<br/>
+原文连接:https://www.cnblogs.com/weixiao1717/p/12068630.html</div><br>
+    <p>最近两天写了下老师课上留的作业：学生选课系统。感觉自己写的特别麻烦，思路特别不清晰，平常自己总会偷懒，一些太麻烦细节的功能就不去实现了，用简单的功能来替代，直到自己这回写完这个系统(但自己写的比较low，只有后台功能，前台几乎没有)，发现一些功能虽然繁琐，但多写几次就不会感到麻烦，反而自己的思维会变得更清楚。</p>
+<p>系统：三种用户：管理员，教师，学生。管理员来添加教师和学生，教师可以添加自己的课程，查看选课学生的信息，修改个人信息，学生可以实现选课，浏览课程信息，修改个人信息等。</p>
+<p>主要思路：通过将用户的账号和密码同数据库相应的数据进行比对验证登陆，用户登陆时选择自己的身份。将学生，老师，课程，选课信息分别储存在数据库中。人数达到上限后改变课程的状态。重复选课后台给出提示（这个写的不太好，应在前台告知客户），不添加数据到数据库中。</p>
+<p>这里只给出核心的代码（Dao层），其余可以自己比较简单。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">package</span><span style="color: #000000;"> dao;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Connection;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.PreparedStatement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.ResultSet;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.SQLException;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.sql.Statement;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.ArrayList;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> java.util.List;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> javax.servlet.http.HttpServletRequest;
+
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> util.DButil;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> bean.De;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> bean.Lesson;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> bean.Student;
+</span><span style="color: #0000ff;">import</span><span style="color: #000000;"> bean.Teacher;
+
+</span><span style="color: #0000ff;">public</span> <span style="color: #0000ff;">class</span><span style="color: #000000;"> Function {
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 验证用户是否存在</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">boolean</span><span style="color: #000000;"> search(String stunumber, String code, String id, HttpServletRequest request) {
+        </span><span style="color: #0000ff;">int</span> temp = 0<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        String sql </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Statement sta </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (id.contentEquals("老师"<span style="color: #000000;">)) {
+            sql </span>= "select * from teacher"<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            sql </span>= "select * from student"<span style="color: #000000;">;
+        }
+
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            sta </span>=<span style="color: #000000;"> conn.createStatement();
+            ResultSet res </span>=<span style="color: #000000;"> sta.executeQuery(sql);
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (res.next()) {
+                String pn </span>= res.getString("num"<span style="color: #000000;">);
+                String name </span>= res.getString("name"<span style="color: #000000;">);
+                request.setAttribute(</span>"na"<span style="color: #000000;">, name);
+                </span><span style="color: #0000ff;">if</span> (stunumber.equals(pn) &amp;&amp; code.equals("123"<span style="color: #000000;">)) {
+                    temp </span>= 1<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+            res.close();
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            e.printStackTrace();
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            DButil.close(sta, conn);
+        }
+        </span><span style="color: #0000ff;">if</span> (temp == 0<span style="color: #000000;">)
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span>
+            <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 增加老师数据</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addT(String stunumber, String name, String sex, String college, String department)
+            </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "INSERT INTO TEACHER(num,name,sex,college,job) VALUES('" + stunumber + "','" + name + "','" +<span style="color: #000000;"> sex
+                </span>+ "','" + college + "','" + department + "')"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 增加学生数据</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span><span style="color: #000000;"> addS(String stunumber, String name, String sex, String college, String department)
+            </span><span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "INSERT INTO STUDENT(num,name,sex,class,major) VALUES('" + stunumber + "','" + name + "','" +<span style="color: #000000;"> sex
+                </span>+ "','" + college + "','" + department + "')"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 增加课程信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> addC(String stunumber, String name, String sex, String college) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "INSERT INTO kecheng(number,name,people,teacher) VALUES('" + stunumber + "','" + name + "','" +<span style="color: #000000;"> sex
+                </span>+ "','" + college + "')"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 修改老师信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> updataT(String name, String sex, String college, String de) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+
+        String sql </span>= "update teacher set sex='" + sex + "',college='" + college + "',job='" + de + "' where name='"
+                + name + "'"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 修改学生数据</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> updataS(String name, String sex, String college, String de) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+
+        String sql </span>= "update student set sex='" + sex + "',class='" + college + "',major='" + de + "' where name='"
+                + name + "'"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回全部课程信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> List&lt;De&gt; getDe_1() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        List</span>&lt;De&gt; list = <span style="color: #0000ff;">new</span> ArrayList&lt;De&gt;<span style="color: #000000;">();
+        String sql </span>= "select * from kecheng "<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                De vol </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> De();
+                vol.setNumber(rs.getString(</span>"number"<span style="color: #000000;">));
+                vol.setName(rs.getString(</span>"name"<span style="color: #000000;">));
+                vol.setPeople(rs.getInt(</span>"people"<span style="color: #000000;">));
+                vol.setTeacher(rs.getString(</span>"teacher"<span style="color: #000000;">));
+                list.add(vol);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回可选课程信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> List&lt;De&gt; getDe() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        List</span>&lt;De&gt; list = <span style="color: #0000ff;">new</span> ArrayList&lt;De&gt;<span style="color: #000000;">();
+        String sql </span>= "select * from kecheng where status='0' "<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                De vol </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> De();
+                vol.setNumber(rs.getString(</span>"number"<span style="color: #000000;">));
+                vol.setName(rs.getString(</span>"name"<span style="color: #000000;">));
+                vol.setPeople(rs.getInt(</span>"people"<span style="color: #000000;">));
+                vol.setTeacher(rs.getString(</span>"teacher"<span style="color: #000000;">));
+                list.add(vol);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回老师详细信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Teacher getTeacheer(String name) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Teacher te </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Teacher();
+        String sql </span>= "select * from Teacher where name='" + name + "' "<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            Statement st </span>=<span style="color: #000000;"> conn.createStatement();
+            ResultSet rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                te.setNum(rs.getString(</span>"num"<span style="color: #000000;">));
+                te.setName(rs.getString(</span>"name"<span style="color: #000000;">));
+                te.setSex(rs.getString(</span>"sex"<span style="color: #000000;">));
+                te.setCollege(rs.getString(</span>"college"<span style="color: #000000;">));
+                te.setJob(rs.getString(</span>"job"<span style="color: #000000;">));
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> te;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 学生选课信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> stu_lesson(String s_name, String le_number) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String lesson_number </span>=<span style="color: #000000;"> le_number;
+        String lesson_name </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String teacher_name </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String teacher_number </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String stu_name </span>=<span style="color: #000000;"> s_name;
+        String stu_num </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Connection conn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> a = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">boolean</span> temp = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            String sql </span>= "select * from chooseke  where lesson_num='" + le_number + "' and stu_name='" + s_name + "' "<span style="color: #000000;">;
+            conn </span>=<span style="color: #000000;"> DButil.getConn();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                temp </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            }
+            </span><span style="color: #0000ff;">if</span> (temp == <span style="color: #0000ff;">true</span><span style="color: #000000;">) {
+                sql </span>= "select * from kecheng where number='" + le_number + "' "<span style="color: #000000;">;
+                rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                    lesson_name </span>= rs.getString("name"<span style="color: #000000;">);
+                    teacher_name </span>= rs.getString("teacher"<span style="color: #000000;">);
+                }
+
+                sql </span>= "select * from teacher where name='" + teacher_name + "' "<span style="color: #000000;">;
+                rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+                <span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                    teacher_number </span>= rs.getString("num"<span style="color: #000000;">);
+                }
+
+                sql </span>= "select * from student where name='" + stu_name + "' "<span style="color: #000000;">;
+                rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+                <span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                    stu_num </span>= rs.getString("num"<span style="color: #000000;">);
+                }
+
+                sql </span>= "select * from kecheng where name='" + lesson_name + "' "<span style="color: #000000;">;
+                rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                    a </span>= rs.getInt("people"<span style="color: #000000;">);
+                }
+
+                sql </span>= "select * from chooseke where lesson_name='" + lesson_name + "' "<span style="color: #000000;">;
+                rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+                </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                    count</span>++<span style="color: #000000;">;
+                    System.out.println(count);
+                }
+
+                </span><span style="color: #0000ff;">if</span> (count &lt;<span style="color: #000000;"> a) {
+                    sql </span>= "INSERT INTO CHOOSEKE(lesson_num,lesson_name,teacher_num,teacher_name,stu_number,stu_name) VALUES('"
+                            + lesson_number + "','" + lesson_name + "','" + teacher_number + "','" +<span style="color: #000000;"> teacher_name
+                            </span>+ "','" + stu_num + "','" + stu_name + "')"<span style="color: #000000;">;
+                    conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                    PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+                    preparedStatement.executeUpdate();
+                    conn.commit();
+                    </span><span style="color: #0000ff;">if</span> ((a - count) == 1<span style="color: #000000;">) {
+                        sql </span>= "update kecheng set status='-1' where name='" + lesson_name + "' "<span style="color: #000000;">;
+                        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+                        preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+                        preparedStatement.executeUpdate();
+                        conn.commit();
+                    }
+                } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                    System.out.println(</span>"人数已达上限，不可选"<span style="color: #000000;">);
+                }
+            }
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                System.out.println(</span>"与已选课冲突"<span style="color: #000000;">);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回课程详细信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> getLesson(String le_name, HttpServletRequest req) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+
+        String lesson_name </span>=<span style="color: #000000;"> le_name;
+        String lesson_number </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String teacher_name </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        String teacher_number </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Connection conn </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        Lesson les </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Lesson();
+        </span><span style="color: #0000ff;">int</span> a = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">int</span> count = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+
+            String sql </span>= "select * from kecheng where name='" + le_name + "' "<span style="color: #000000;">;
+            conn </span>=<span style="color: #000000;"> DButil.getConn();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                lesson_number </span>= rs.getString("number"<span style="color: #000000;">);
+                teacher_name </span>= rs.getString("teacher"<span style="color: #000000;">);
+                a </span>= rs.getInt("people"<span style="color: #000000;">);
+            }
+
+            sql </span>= "select * from teacher where name='" + teacher_name + "' "<span style="color: #000000;">;
+            rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                teacher_number </span>= rs.getString("num"<span style="color: #000000;">);
+            }
+
+            sql </span>= "select * from chooseke where lesson_num='" + lesson_number + "' "<span style="color: #000000;">;
+            rs </span>=<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                count</span>++<span style="color: #000000;">;
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+
+        les.setLesson_number(lesson_number);
+        les.setLesson_name(lesson_name);
+        les.setTeacher_number(teacher_number);
+        les.setTeacher_name(teacher_name);
+        les.setPe_num(count);
+        les.setMessage(a);
+        req.setAttribute(</span>"les"<span style="color: #000000;">, les);
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回老师对应的课程</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> List&lt;De&gt; getTeacher_lesson(String name) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        List</span>&lt;De&gt; list = <span style="color: #0000ff;">new</span> ArrayList&lt;De&gt;<span style="color: #000000;">();
+        String sql </span>= "select * from kecheng where teacher='" + name + "' "<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                De vol </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> De();
+                vol.setNumber(rs.getString(</span>"number"<span style="color: #000000;">));
+                vol.setName(rs.getString(</span>"name"<span style="color: #000000;">));
+                list.add(vol);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回选择该课程学生的信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> List&lt;Student&gt; getStu(String number) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        List</span>&lt;Student&gt; list = <span style="color: #0000ff;">new</span> ArrayList&lt;Student&gt;<span style="color: #000000;">();
+        String sql </span>= "select * from chooseke where lesson_num= '" + number + "'"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">while</span><span style="color: #000000;"> (rs.next()) {
+                Student sd </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Student();
+                sd.setName(rs.getString(</span>"stu_name"<span style="color: #000000;">));
+                sd.setNum(rs.getString(</span>"stu_number"<span style="color: #000000;">));
+                list.add(sd);
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> list;
+    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 返回单个学生的详细信息</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> Student get_Stu(String number) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        Student sd </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Student();
+        String sql </span>= "select * from student where num= '" + number + "'"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 连接对象coon调用createStatement()方法，创建一个执行SQL语句的对象st</span>
+            Statement st =<span style="color: #000000;"> conn.createStatement();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行SQL语句中的对象st调用executeQuery()方法，执行查询语句，将查询到的结果返回到一个结果集中</span>
+            ResultSet rs =<span style="color: #000000;"> st.executeQuery(sql);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 遍历结果集对象</span>
+            <span style="color: #0000ff;">if</span><span style="color: #000000;"> (rs.next()) {
+                sd.setNum(rs.getString(</span>"num"<span style="color: #000000;">));
+                sd.setName(rs.getString(</span>"name"<span style="color: #000000;">));
+                sd.setSex(rs.getString(</span>"sex"<span style="color: #000000;">));
+                sd.setCla(rs.getString(</span>"class"<span style="color: #000000;">));
+                sd.setMajor(rs.getString(</span>"major"<span style="color: #000000;">));
+            }
+        } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (Exception e) {
+            System.out.println(e.getMessage());
+        } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+            </span><span style="color: #0000ff;">if</span> (conn != <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                conn.close();
+            }
+        }
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> sd;
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 删除数据
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> delete(String stunumber) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "DELETE FROM STUMANAGE WHERE STUMANAGE.stunumber = '" + stunumber + "'"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        preparedStatement.executeUpdate();
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 查找数据
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> query() <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "SELECT * FROM STUMANAGE"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行查询语句并返回结果集</span>
+        ResultSet resultSet =<span style="color: #000000;"> preparedStatement.executeQuery();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (resultSet.next()) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注意：这里要与数据库里的字段对应</span>
+            String stunumber = resultSet.getString("stunumber"<span style="color: #000000;">);
+            String Code </span>= resultSet.getString("code"<span style="color: #000000;">);
+            System.out.println(stunumber </span>+ " " +<span style="color: #000000;"> Code);
+        }
+        conn.commit();
+        conn.close();
+    }
+
+    </span><span style="color: #008000;">/**</span><span style="color: #008000;">
+     * 查找特定数据
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">public</span> <span style="color: #0000ff;">static</span> <span style="color: #0000ff;">void</span> query(String stu) <span style="color: #0000ff;">throws</span><span style="color: #000000;"> SQLException {
+        String sql </span>= "SELECT * FROM STUMANAGE"<span style="color: #000000;">;
+        Connection conn </span>=<span style="color: #000000;"> DButil.getConn();
+        conn.setAutoCommit(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+        PreparedStatement preparedStatement </span>=<span style="color: #000000;"> conn.prepareStatement(sql);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 执行查询语句并返回结果集</span>
+        ResultSet resultSet =<span style="color: #000000;"> preparedStatement.executeQuery();
+        </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (resultSet.next()) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 注意：这里要与数据库里的字段对应</span>
+            String stunumber = resultSet.getString("stunumber"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (stu.contentEquals(stunumber)) {
+
+            }
+        }
+        conn.commit();
+        conn.close();
+    }
+}</span></pre>
+</div>
+<p>通过这次的练习，自己的思维逻辑变得更清楚，对类的思想理解更为透彻，同时自己对jstl便签使用的也更加熟练，也认识到了el表达式的方便，但自己也发现了自己的好多问题，比如自己在上述代码中主要用的</p>
+<p>是Statement，而不是PreparedStatement，这会有数据库漏洞，自己还发现在用MySQL数据库时，在一个函数中只能连接数据库一次，不可多次连接关闭，只能通过不断地SQL语句进行一系列操作，还有对于一些request中放置的attribute属性要注意其消亡时间。</p>
+<p>自己的系统还有很多地方完善，自己对于web知识掌握还很浅显，自己还需要长期的努力。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

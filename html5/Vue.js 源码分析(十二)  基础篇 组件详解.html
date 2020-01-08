@@ -1,0 +1,446 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十二)  基础篇 组件详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十二)  基础篇 组件详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11088574.html</div><br>
+    <p>组件是可复用的Vue实例,一个组件本质上是一个拥有预定义选项的一个Vue实例,组件和组件之间通过一些属性进行联系。</p>
+<p>组件有两种注册方式，分别是全局注册和局部注册，前者通过Vue.component()注册，后者是在创建Vue实例的时候在components属性里指定，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #ff0000;">title</span><span style="color: #0000ff;">="Hello Wrold"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hello</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">hello</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test"</span><span style="color: #0000ff;">&gt;</span>测试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">child</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{                     </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">全局注册</span>
+<span style="background-color: #f5f5f5; color: #000000;">            props:[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">title</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">],
+            template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;{{title}}&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            components:{
+                hello:{template:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;Hello Vue&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">} </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">局部组件</span>
+<span style="background-color: #f5f5f5; color: #000000;">            },
+            methods:{
+                test:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+                    console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$children)                           
+                    console.log(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$children[</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">].$parent </span><span style="background-color: #f5f5f5; color: #000000;">===</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">)        
+                }
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染DOM为:</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解0.png" alt="" /></p>
+<p>其中Hello World是全局注册的组件渲染出来的，而Hello Vue是局部组件渲染出来的。</p>
+<p>我们在测试按钮上绑定了一个事件，点击按钮后输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解1.png" alt="" /></p>
+<p>可以看到Vue实例的$children属性是个数组，对应的是当前实例引用的所有组件的实例，其中$children[0]是全局组件<span style="color: #000000;">child的实例</span>,而children[1]是局部组件<span style="color: #000000;">hello</span>的实例。</p>
+<p><span style="color: #000000;">而this.$children[1].$parent ===this输出为true则表示对于组件实例来说，它的$parent指向的父组件实例，也就是例子里的根组件实例。</span></p>
+<p><span style="color: #ff0000;">Vue内部就是通过$children和$parent属性实现了父组件和子组件之间的关联的。</span></p>
+<p><span style="color: #000000;">组件是可以无限复用的，比如:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #ff0000;">title</span><span style="color: #0000ff;">="Hello Wrold"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #ff0000;">title</span><span style="color: #0000ff;">="Hello Vue"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #ff0000;">title</span><span style="color: #0000ff;">="Hello Rose"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">child</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{                   
+            props:[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">title</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">],
+            template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;{{title}}&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">})
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染为:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解2.png" alt="" /></p>
+<p><span style="color: #ff0000;">注:</span><span style="color: #ff0000;">对于组件来说，需要把data属性设为一个函数，内部返回一个数据对象，因为如果只返回一个对象，当组件复用时，不同的组件引用的data为同一个对象，这点和根Vue实例不同的，可以看官网的例子:<span style="color: #ff0000;"><a href="https://cn.vuejs.org/v2/guide/components.html#data-%E5%BF%85%E9%A1%BB%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0" target="_blank"><span style="color: #ff0000;">点我点我</span></a></span></span></p>
+<p>例1:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">child</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{    
+            data:{title:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">},
+            template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;{{title}}&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">})
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>运行时浏览器报错了，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解3.png" alt="" /></p>
+<p>报错的内部实现:Vue注册组件时会先执行Vue.extend()，然后执行mergeOptions合并一些属性，执行到data属性的合并策略时会做判断，如下:</p>
+<div class="cnblogs_code">
+<pre><code>strats.data = <span style="color: #0000ff;">function</span> (              <span style="color: #008000;">//</span><span style="color: #008000;">data的合并策略          第1196行</span>
+<span style="color: #000000;">  parentVal,
+  childVal,
+  vm
+) {
+  </span><span style="color: #0000ff;">if</span> (!vm) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果vm不存在，对于组件来说是不存在的</span>
+    <span style="color: #0000ff;">if</span> (childVal &amp;&amp; <span style="color: #0000ff;">typeof</span> childVal !== 'function') {     <span style="color: #008000;">//</span><span style="color: #008000;">如果值不是一个函数，则报错</span>
+      "development" !== 'production' &amp;&amp;<span style="color: #000000;"> warn(
+        </span>'The "data" option should be a function ' +
+        'that returns a per-instance value in component ' +
+        'definitions.'<span style="color: #000000;">,
+        vm
+      );
+
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> parentVal
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mergeDataOrFn(parentVal, childVal)
+  }
+
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mergeDataOrFn(parentVal, childVal, vm)
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><span style="color: #000000;">&nbsp;<span style="font-size: 18pt;">源码分析</span></span></span></p>
+<hr />
+<p>以这个例子为例:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">child </span><span style="color: #ff0000;">title</span><span style="color: #0000ff;">="Hello Wrold"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">child</span><span style="color: #0000ff;">&gt;</span> 
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">child</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{
+            props:[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">title</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">],
+            template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;{{title}}&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,})
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>Vue内部会执行initGlobalAPI()函数给大Vue增加一些静态方法，其中会执行一个initAssetRegisters函数，该函数会给Vue的原型增加一个Vue.component、Vue.directive和Vue.filter函数函数，分别用于注册组件、指令和过滤器，如下</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initAssetRegisters (Vue) {       <span style="color: #008000;">//</span><span style="color: #008000;">初始化component、directive和filter函数 第4850行</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;">*
+   * Create asset registration methods.
+   </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  ASSET_TYPES.forEach(</span><span style="color: #0000ff;">function</span> (type) {     <span style="color: #008000;">//</span><span style="color: #008000;">遍历//ASSET_TYPES数组 ASSET_TYPES是一个数组，定义在339行，等于:['component','directive','filter']</span>
+    Vue[type] = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (
+      id,
+      definition
+    ) {
+      </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">definition) {
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.options[type + 's'<span style="color: #000000;">][id]
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; type === 'component'<span style="color: #000000;">) {
+          validateComponentName(id);
+        }
+        </span><span style="color: #0000ff;">if</span> (type === 'component' &amp;&amp; isPlainObject(definition)) {      <span style="color: #008000;">//</span><span style="color: #008000;">如果是个组件</span>
+          definition.name = definition.name ||<span style="color: #000000;"> id;
+          definition </span>= <span style="color: #0000ff;">this</span>.options._base.extend(definition);           <span style="color: #008000;">//</span><span style="color: #008000;">则执行Vue.extend()函数     ;this.options._base等于大Vue，定义在5050行</span>
+<span style="color: #000000;">        }
+        </span><span style="color: #0000ff;">if</span> (type === 'directive' &amp;&amp; <span style="color: #0000ff;">typeof</span> definition === 'function'<span style="color: #000000;">) {
+          definition </span>=<span style="color: #000000;"> { bind: definition, update: definition };
+        }
+        </span><span style="color: #0000ff;">this</span>.options[type + 's'][id] =<span style="color: #000000;"> definition; 　　　　　　　　　　<span style="color: #ff0000;">//将definition保存到this.options[type + 's']里，例如组件保存到this.options['component']里面
+        </span></span><span style="color: #0000ff;">return</span><span style="color: #000000;"> definition
+      }
+    };
+  });
+}</span></pre>
+</div>
+<p>Vue.extend()将使用基础Vue构造器，创建一个&ldquo;子类&rdquo;。参数是一个包含组件选项的对象，也就是注册组件时传入的对象，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.extend = <span style="color: #0000ff;">function</span> (extendOptions) {       <span style="color: #008000;">//</span><span style="color: #008000;">初始化Vue.extend函数  第4770行</span>
+    extendOptions = extendOptions ||<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">var</span> Super = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> SuperId =<span style="color: #000000;"> Super.cid;
+    </span><span style="color: #0000ff;">var</span> cachedCtors = extendOptions._Ctor || (extendOptions._Ctor =<span style="color: #000000;"> {});
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (cachedCtors[SuperId]) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cachedCtors[SuperId]
+    }
+
+    </span><span style="color: #0000ff;">var</span> name = extendOptions.name ||<span style="color: #000000;"> Super.options.name;
+    </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp;<span style="color: #000000;"> name) {
+      validateComponentName(name);
+    }
+
+    </span><span style="color: #0000ff;">var</span> Sub = <span style="color: #0000ff;">function</span> VueComponent (options) {             <span style="color: #008000;">//</span><span style="color: #008000;">定义组件的构造函数,函数最后会返回该函数</span>
+      <span style="color: #0000ff;">this</span><span style="color: #000000;">._init(options);
+    };
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">中间进行一些数据的合并</span><span style="color: #008000;">*/</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> cache constructor</span>
+    cachedCtors[SuperId] =<span style="color: #000000;"> Sub;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> Sub
+  };
+}</span></pre>
+</div>
+<p>以例子为例，当加载完后，我们在控制台输入console.log(Vue.options["components"])，输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解4.png" alt="" /></p>
+<p>可以看到child组件的构造函数被保存到Vue.options["components"]["child&ldquo;]里面了。其他三个KeepAlive、Transition和TransitionGroup是Vue的内部组件</p>
+<p>当vue加载时会执行模板生成的render函数，例子里的render函数等于:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解5.png" alt="" /></p>
+<p>执行_c('child',{attrs:{"title":"Hello Wrold"}})函数时会执行vm.$createElement()函数，也就是Vue内部的createElement函数，如下</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createElement (      <span style="color: #008000;">//</span><span style="color: #008000;">创建vNode 第4335行</span>
+<span style="color: #000000;">  context,
+  tag,
+  data,
+  children,
+  normalizationType,
+  alwaysNormalize
+) {
+  </span><span style="color: #0000ff;">if</span> (Array.isArray(data) || isPrimitive(data)) {     <span style="color: #008000;">//</span><span style="color: #008000;">如果data是个数组或者是基本类型</span>
+    normalizationType =<span style="color: #000000;"> children;
+    children </span>= data;                                      <span style="color: #008000;">//</span><span style="color: #008000;">修正data为children</span>
+    data = undefined;                                     <span style="color: #008000;">//</span><span style="color: #008000;">修正data为undefined</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isTrue(alwaysNormalize)) {
+    normalizationType </span>=<span style="color: #000000;"> ALWAYS_NORMALIZE;
+  }
+  </span><span style="color: #0000ff;">return</span> _createElement(context, tag, data, children, normalizationType)    <span style="color: #008000;">//</span><span style="color: #008000;">再调用_createElement</span>
+<span style="color: #000000;">}
+
+</span><span style="color: #0000ff;">function</span> _createElement (     <span style="color: #008000;">//</span><span style="color: #008000;">创建vNode</span>
+  context,                       <span style="color: #008000;">//</span><span style="color: #008000;">context:Vue对象</span>
+  tag,                           <span style="color: #008000;">//</span><span style="color: #008000;">tag:标签名或组件名</span>
+<span style="color: #000000;">  data,
+  children,
+  normalizationType
+) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> tag === 'string') {      <span style="color: #008000;">//</span><span style="color: #008000;">如果tag是个字符串</span>
+    <span style="color: #0000ff;">var</span><span style="color: #000000;"> Ctor;
+    ns </span>= (context.$vnode &amp;&amp; context.$vnode.ns) ||<span style="color: #000000;"> config.getTagNamespace(tag);
+    </span><span style="color: #0000ff;">if</span> (config.isReservedTag(tag)) {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果tag是平台内置的标签</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> platform built-in elements</span>
+      vnode = <span style="color: #0000ff;">new</span> VNode(                                                                <span style="color: #008000;">//</span><span style="color: #008000;">调用new VNode()去实例化一个VNode</span>
+<span style="color: #000000;">        config.parsePlatformTagName(tag), data, children,   
+        undefined, undefined, context
+      );
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {   <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">如果该节点名对应一个组件</span>，挂载组件时，如果某个节点是个组件，则会执行到这里</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> component  </span>
+      vnode = createComponent(Ctor, data, context, children, tag);                    <span style="color: #008000;">//</span><span style="color: #008000;">创建组件Vnode</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> unknown or unlisted namespaced elements</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> check at runtime because it may get assigned a namespace when its</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> parent normalizes children</span>
+      vnode = <span style="color: #0000ff;">new</span><span style="color: #000000;"> VNode(
+        tag, data, children,
+        undefined, undefined, context
+      );
+    }
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> direct component options / constructor</span>
+    vnode =<span style="color: #000000;"> createComponent(tag, data, context, children);
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (Array.isArray(vnode)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vnode
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(vnode)) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(ns)) { applyNS(vnode, ns); }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(data)) { registerDeepBindings(data); }
+    </span><span style="color: #0000ff;">return</span> vnode                                                                    <span style="color: #008000;">//</span><span style="color: #008000;">最后返回VNode</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> createEmptyVNode()
+  }
+}</span></pre>
+</div>
+<pre><code>resolveAsset()用于获取资源，也就是获取组件的构造函数(在上面Vue.extend里面定义的构造函数)，定义如下:</pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveAsset (       <span style="color: #008000;">//</span><span style="color: #008000;">获取资源 第1498行</span>
+<span style="color: #000000;">  options,
+  type,
+  id,
+  warnMissing
+) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> id !== 'string'<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> assets =<span style="color: #000000;"> options[type];
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> check local registration variations first</span>
+  <span style="color: #0000ff;">if</span> (hasOwn(assets, id)) { <span style="color: #0000ff;">return</span> assets[id] }                        <span style="color: #008000;">//</span><span style="color: #008000;">先从当前实例上找id</span>
+  <span style="color: #0000ff;">var</span> camelizedId =<span style="color: #000000;"> camelize(id);
+  </span><span style="color: #0000ff;">if</span> (hasOwn(assets, camelizedId)) { <span style="color: #0000ff;">return</span> assets[camelizedId] }     <span style="color: #008000;">//</span><span style="color: #008000;">将id转化为驼峰式后再找</span>
+  <span style="color: #0000ff;">var</span> PascalCaseId =<span style="color: #000000;"> capitalize(camelizedId);
+  </span><span style="color: #0000ff;">if</span> (hasOwn(assets, PascalCaseId)) { <span style="color: #0000ff;">return</span> assets[PascalCaseId] }   <span style="color: #008000;">//</span><span style="color: #008000;">如果还没找到则尝试将首字母大写查找</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> fallback to prototype chain</span>
+  <span style="color: #0000ff;">var</span> res = assets[id] || assets[camelizedId] || assets[PascalCaseId];  <span style="color: #008000;">//</span><span style="color: #008000;">最后通过原型来查找</span>
+  <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; warnMissing &amp;&amp; !<span style="color: #000000;">res) {
+    warn(
+      </span>'Failed to resolve ' + type.slice(0, -1) + ': ' +<span style="color: #000000;"> id,
+      options
+    );
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+}</span></pre>
+</div>
+<p>例子里执行到这里时就可以获取到在Vue.extend()里定义的Sub函数了，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解6.png" alt="" /></p>
+<p>我们点击这个函数时会跳转到Sub函数，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解7.png" alt="" /></p>
+<p>回到_createElement函数，获取到组件的构造函数后就会执行createComponent()创建组件的Vnode，<span style="color: #ff0000;">这一步对于组件来说很重要，它会对组件的data、options、props、自定义事件、钩子函数、原生事件、异步组件分别做一步处理</span>，对于组件的实例化来说，最重要的是安装钩子吧，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createComponent (      <span style="color: #008000;">//</span><span style="color: #008000;">创建组件Vnode 第4182行 Ctor:组件的构造函数  data:数组 context:Vue实例  child:组件的子节点</span>
+<span style="color: #000000;">  Ctor,
+  data,
+  context,
+  children,
+  tag
+) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> install component management hooks onto the placeholder node</span>
+  installComponentHooks(data);                <span style="color: #008000;">//</span><span style="color: #008000;">安装一些组件的管理钩子</span>
+
+  <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>  
+  <span style="color: #0000ff;">var</span> vnode = <span style="color: #0000ff;">new</span><span style="color: #000000;"> VNode(
+    (</span>"vue-component-" + (Ctor.cid) + (name ? ("-" + name) : ''<span style="color: #000000;">)),
+    data, undefined, undefined, undefined, context,
+    { Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children },
+    asyncFactory
+  );                                          </span><span style="color: #008000;">//</span><span style="color: #008000;">创建组件Vnode</span>
+  <span style="color: #0000ff;">return</span> vnode                                <span style="color: #008000;">//</span><span style="color: #008000;">最后返回vnode</span>
+}</pre>
+</div>
+<p>installComponentHooks()会给组件安装一些管理钩子，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> installComponentHooks (data) {         <span style="color: #008000;">//</span><span style="color: #008000;">安装组件的钩子 第4307行</span>
+  <span style="color: #0000ff;">var</span> hooks = data.hook || (data.hook = {});        <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取组件的data.hook属性，如果没有则初始化为空对象</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; hooksToMerge.length; i++) {   <span style="color: #008000;">//</span><span style="color: #008000;">遍历hooksToMerge里的钩子,保存到hooks对应的key里面</span>
+    <span style="color: #0000ff;">var</span> key =<span style="color: #000000;"> hooksToMerge[i];
+    hooks[key] </span>=<span style="color: #000000;"> componentVNodeHooks[key];
+  }
+}</span></pre>
+</div>
+<p><span style="color: #000000;">componentVNodeHooks</span>保存了组件的钩子，总共有四个:init、prepatch、insert和destroy，对应组件的四个不同的时期，以例子为例执行完后data.hook等于如下:</p>
+<p><img src="./images/Vue.js 源码分析(十二)  基础篇 组件详解8.png" alt="" /></p>
+<p>最后将虚拟VNode渲染为真实DOM节点的时候会执行n createelm()函数，该函数会优先执行createComponent()函数去创建组件,如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> createComponent (vnode, insertedVnodeQueue, parentElm, refElm) {     <span style="color: #008000;">//</span><span style="color: #008000;">创建组件节点 第5590行   <span style="color: #ff0000;">;注:这是patch()函数内的createComponent()函数，而不是全局的createComponent()函数</span></span>
+    <span style="color: #0000ff;">var</span> i = vnode.data;                                                               <span style="color: #008000;">//</span><span style="color: #008000;">获取vnode的data属性</span>
+    <span style="color: #0000ff;">if</span> (isDef(i)) {                                                                   <span style="color: #008000;">//</span><span style="color: #008000;">如果存在data属性(组件vnode肯定存在这个属性，普通vnode有可能存在)</span>
+      <span style="color: #0000ff;">var</span> isReactivated = isDef(vnode.componentInstance) &amp;&amp; i.keepAlive;              <span style="color: #008000;">//</span><span style="color: #008000;">这是keepAlive逻辑，可以先忽略</span>
+      <span style="color: #0000ff;">if</span> (isDef(i = i.hook) &amp;&amp; isDef(i = i.init)) {                                   <span style="color: #008000;">//</span><span style="color: #008000;">如果data里定义了hook方法，且存在init方法</span>
+        i(vnode, <span style="color: #0000ff;">false</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> hydrating </span><span style="color: #008000;">*/</span><span style="color: #000000;">, parentElm, refElm);
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> after calling the init hook, if the vnode is a child component</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> it should've created a child instance and mounted it. the child</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> component also has set the placeholder vnode's elm.</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> in that case we can just return the element and be done.</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(vnode.componentInstance)) {
+        initComponent(vnode, insertedVnodeQueue);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isTrue(isReactivated)) {
+          reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">
+      }
+    }
+  }</span></pre>
+</div>
+<p>createComponent会去执行组件的init()钩子函数：</p>
+<div class="cnblogs_code">
+<pre><code>  init: <span style="color: #0000ff;">function</span> init (         <span style="color: #008000;">//</span><span style="color: #008000;">组件的安装 第4110行</span>
+    vnode,                        <span style="color: #008000;">//</span><span style="color: #008000;">vnode:组件的占位符VNode</span>
+    hydrating,                    <span style="color: #008000;">//</span><span style="color: #008000;">parentElm:真实的父节点引用</span>
+    parentElm,                    <span style="color: #008000;">//</span><span style="color: #008000;">refElm:参考节点</span>
+<span style="color: #000000;">    refElm
+  ) {
+    </span><span style="color: #0000ff;">if</span> (                                                        <span style="color: #008000;">//</span><span style="color: #008000;">这是KeepAlive逻辑</span>
+      vnode.componentInstance &amp;&amp;
+      !vnode.componentInstance._isDestroyed &amp;&amp;<span style="color: #000000;">
+      vnode.data.keepAlive
+    ) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> kept-alive components, treat as a patch</span>
+      <span style="color: #0000ff;">var</span> mountedNode = vnode; <span style="color: #008000;">//</span><span style="color: #008000;"> work around flow</span>
+<span style="color: #000000;">      componentVNodeHooks.prepatch(mountedNode, mountedNode);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">var</span> child = vnode.componentInstance = createComponentInstanceForVnode(      <span style="color: #008000;">//</span><span style="color: #008000;">调用该方法返回子组件的Vue实例，并保存到vnode.componentInstance属性上</span>
+<span style="color: #000000;">        vnode,
+        activeInstance,
+        parentElm,
+        refElm
+      );
+      child.$mount(hydrating </span>?<span style="color: #000000;"> vnode.elm : undefined, hydrating);
+    }
+  },</span></pre>
+</div>
+<p>createComponentInstanceForVnode会创建组件的实例，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createComponentInstanceForVnode (      <span style="color: #008000;">//</span><span style="color: #008000;">第4285行 创建组件实例 vnode:占位符VNode parent父Vue实例 parentElm:真实的DOM节点  refElm:参考节点</span>
+  vnode, <span style="color: #008000;">//</span><span style="color: #008000;"> we know it's MountedComponentVNode but flow doesn't</span>
+  parent, <span style="color: #008000;">//</span><span style="color: #008000;"> activeInstance in lifecycle state</span>
+<span style="color: #000000;">  parentElm,
+  refElm
+) {
+  </span><span style="color: #0000ff;">var</span> options =<span style="color: #000000;"> {
+    _isComponent: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+    parent: parent,
+    _parentVnode: vnode,
+    _parentElm: parentElm </span>|| <span style="color: #0000ff;">null</span><span style="color: #000000;">,
+    _refElm: refElm </span>|| <span style="color: #0000ff;">null</span><span style="color: #000000;">
+  };
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> check inline-template render functions</span>
+  <span style="color: #0000ff;">var</span> inlineTemplate = vnode.data.inlineTemplate;               <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取inlineTemplate属性，定义组件时如果指定了inline-template特性，则组件内的子节点都是该组件的模板</span>
+  <span style="color: #0000ff;">if</span> (isDef(inlineTemplate)) {                                  <span style="color: #008000;">//</span><span style="color: #008000;">如果inlineTemplate存在,我们这里是不存在的</span>
+    options.render =<span style="color: #000000;"> inlineTemplate.render; 
+    options.staticRenderFns </span>=<span style="color: #000000;"> inlineTemplate.staticRenderFns;
+  }
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> vnode.componentOptions.Ctor(options)               <span style="color: #008000;">//</span><span style="color: #008000;">调用组件的构造函数(Vue.extend()里面定义的)返回子组件的实例，也就是Vue.extend()里定义的Sub函数</span>
+}</pre>
+</div>
+<p>最后Vue.extend()里的Sub函数会执行_init方法对Vue做初始化，初始化的过程中会定义组件实例的$parent和父组件的$children属性，从而实现父组件和子组件的互连,组件的大致流程就是这样子</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,176 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue  设计一个倒计时秒杀的组件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue  设计一个倒计时秒杀的组件</center></div><div class='banquan'>原文出处:本文由博客园博主老伴提供。<br/>
+原文连接:https://www.cnblogs.com/manIteresting/p/10659660.html</div><br>
+    <p>简介：</p>
+<p>倒计时秒杀组件在电商网站中层出不穷&nbsp; 不过思路万变不离其踪，我自己根据其他资料设计了一个vue版的</p>
+<p>核心思路：1、时间不能是本地客户端的时间&nbsp; 必须是服务器的时间这里用一个settimeout代替&nbsp;以为时间必须统一&nbsp;&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2、开始时间，结束时间通过父组件传入，当服务器时间在这个开始时间和结束时间的范围内&nbsp; 参加活动按钮可以点击，并且参加过活动以后不能再参加，</p>
+<p>　　　　　3、在组件创建的时候&nbsp;同步得到现在时间服务时间差，并且在这里边设置定时器，每秒都做判断看秒杀是否开始和结束，</p>
+<p>　　　　　4、在更新时间的函数中是否开始和结束，</p>
+<p>　　　　　5、在computed钩子中监听disable&nbsp;确定按钮是否可点击</p>
+<p>　　　　　6、参加过活动在updated中停止定时器的计时，页面销毁的时候也停止计时</p>
+<p>　　　　下边是代码</p>
+<p>　　　　<span style="font-family: 'Microsoft YaHei'; font-size: 18px;"><strong>子组件</strong></span><span style="font-family: 'Microsoft YaHei'; font-size: 18px;"><strong>　　</strong></span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div&gt;
+        &lt;button @click="handleClick" :disabled="disabled"&gt;<span style="color: #000000;">
+            {{btnText}}
+        </span>&lt;/button&gt;
+        &lt;span&gt;{{tip}}&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+
+    import moment from </span>'moment'<span style="color: #000000;">
+
+    export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+        name: </span>"Spike"<span style="color: #000000;">,
+        props: {
+            startTime: {
+                required: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+                validator: (val) </span>=&gt;<span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> moment.isMoment(val)
+                }
+            },
+            endTime: {
+                required: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+                validator: (val) </span>=&gt;<span style="color: #000000;"> {
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> moment.isMoment(val)
+                }
+            }
+        },
+        data() {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                start: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+                end: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+                done: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+                tip: </span>''<span style="color: #000000;">,
+                timeGap: </span>0<span style="color: #000000;">,
+                btnText:</span>""<span style="color: #000000;">
+            }
+        },
+            computed: {
+            disabled() {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">当三个异号的时候disable返回真，不可点击，</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 初始化通过this.updateState确定disable的状态</span>
+                <span style="color: #0000ff;">return</span> !(<span style="color: #0000ff;">this</span>.start &amp;&amp; !<span style="color: #0000ff;">this</span>.end &amp;&amp; !<span style="color: #0000ff;">this</span><span style="color: #000000;">.done);
+            }
+        },
+        async created() {
+            const serverTime</span>=await <span style="color: #0000ff;">this</span><span style="color: #000000;">.getServerTime();
+            </span><span style="color: #0000ff;">this</span>.timeGap=Date.now()-serverTime;<span style="color: #008000;">//</span><span style="color: #008000;">当前时间和服务器时间差</span>
+            <span style="color: #0000ff;">this</span><span style="color: #000000;">.updateState();
+            </span><span style="color: #0000ff;">this</span>.timeInterval=setInterval(()=&gt;<span style="color: #000000;">{
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.updateState()
+            },</span>1000<span style="color: #000000;">)
+        },
+        updated(){
+            </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.end||<span style="color: #0000ff;">this</span><span style="color: #000000;">.done){
+                clearInterval(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.timeInterval)
+            }
+        },
+        methods: {
+            handleClick() {
+                alert(</span>"提交成功"<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">this</span>.done=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">this</span>.btnText="已参加过活动"<span style="color: #000000;">
+            },
+            getServerTime() {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">模拟服务器时间</span>
+                <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((resolve, reject) =&gt;<span style="color: #000000;"> {
+                    setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;">当前时间慢10秒就是服务器时间</span>
+                        resolve(<span style="color: #0000ff;">new</span> Date(Date.now() -10 * 1000).getTime())<span style="color: #008000;">//</span><span style="color: #008000;">跟本地时间差</span>
+                    }, 0<span style="color: #000000;">)
+                })
+            },
+            updateState() {
+                const now </span>= moment(<span style="color: #0000ff;">new</span> Date(Date.now() - <span style="color: #0000ff;">this</span>.timeGap));<span style="color: #008000;">//</span><span style="color: #008000;">当前服务器时间</span>
+                const diffStart=<span style="color: #0000ff;">this</span>.startTime.diff(now);<span style="color: #008000;">//</span><span style="color: #008000;">开始时间和服务器时间之差</span>
+                const diffEnd=<span style="color: #0000ff;">this</span>.endTime.diff(now);<span style="color: #008000;">//</span><span style="color: #008000;">结束时间和服务器时间之差</span>
+                <span style="color: #0000ff;">if</span>(diffStart&lt;0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.start=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">this</span>.tip="秒杀已开始"<span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">this</span>.btnText="参加"<span style="color: #000000;">
+                }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                    </span><span style="color: #0000ff;">this</span>.tip=`距离秒杀开始还剩${Math.ceil(diffStart/1000)}秒`;
+                    <span style="color: #0000ff;">this</span>.btnText="活动未开始"<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span>(diffEnd&lt;=0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.end=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                    </span><span style="color: #0000ff;">if</span>( !<span style="color: #0000ff;">this</span>.btnText==="已参加过活动"||<span style="color: #0000ff;">this</span>.btnText==="参加"<span style="color: #000000;">){
+                        </span><span style="color: #0000ff;">this</span>.tip="秒杀已结束"<span style="color: #000000;">;
+                        </span><span style="color: #0000ff;">this</span>.btnText="活动已结束"<span style="color: #000000;">;
+                    }
+                }
+            }
+        },
+        beforeDestroy() {
+            clearInterval(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.timeInterval)
+        }
+    }
+</span>&lt;/script&gt;
+
+&lt;style scoped&gt;<span style="color: #000000;">
+    button[disabled]{
+        cursor: not</span>-<span style="color: #000000;">allowed;
+    }
+</span>&lt;/style&gt;</pre>
+</div>
+<p><span style="font-size: 18px;"><strong>父组件</strong></span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div&gt;
+        &lt;h1 style="color: red"&gt;设计一个秒杀倒计时的组件&lt;/h1&gt;
+        &lt;Spike :startTime="startTime" :endTime="endTime"&gt;&lt;/Spike&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+    import Spike from </span>'./Spike'<span style="color: #000000;">
+    import moment from </span>'moment'<span style="color: #000000;">
+    export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+        name: </span>"index"<span style="color: #000000;">,
+        components:{
+            Spike
+        },
+        data(){
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">{
+                endTime:moment(</span><span style="color: #0000ff;">new</span> Date(Date.now()+10*1000<span style="color: #000000;">)),
+                startTime:moment(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Date(Date.now()))
+            }
+        }
+    }
+</span>&lt;/script&gt;
+
+&lt;style scoped&gt;
+
+&lt;/style&gt;</pre>
+</div>
+<p>用到moment的这个关于时间操作的库</p>
+<pre><code></pre>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

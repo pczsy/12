@@ -1,0 +1,217 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于 JS this' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于 JS this</center></div><div class='banquan'>原文出处:本文由博客园博主gaobowen提供。<br/>
+原文连接:https://www.cnblogs.com/gaobw/p/11807098.html</div><br>
+    <h1 id="关于-js-this">关于 JS this</h1>
+<p><span id="mdjtop"></span></p>
+<ul>
+<li><a href="#j1">1. this 与 普通函数</a></li>
+<li><a href="#j2">2. this 与 bind、call、apply</a></li>
+<li><a href="#j3">3. this 与 箭头函数</a></li>
+<li><a href="#j4">4. this 与 return</a>
+<ul>
+<li><a href="#j4j1">4.1 返回 引用对象</a></li>
+<li><a href="#j4j2">4.2 返回 function对象</a></li>
+<li><a href="#j4j3">4.3 返回 数字，值对象</a></li>
+<li><a href="#j4j4">4.4 返回 undefined</a></li>
+<li><a href="#j4j5">4.5 返回 null</a></li>
+</ul></li>
+</ul>
+<p><span id="j1"></span></p>
+<h2 id="this-与-普通函数">1. this 与 普通函数</h2>
+<p>普通函数 this 永远指向它的调用对象</p>
+<pre><code><code>var obj = {
+    a:10,
+    b:{
+        a:20,
+        fn:function(){
+            console.log(this.a);
+        }
+    }
+}
+obj.b.fn(); //=&gt; 20</code></pre>
+<p>对象 b 调用 fn 函数 this.a 为 20。</p>
+<pre><code><code>var obj2 = {
+    a:10,
+    b:{
+        fn:function(){
+            console.log(this.a);
+        }
+    }
+}
+obj2.b.fn(); //=&gt; undefined</code></pre>
+<p>对象 b 中无 a 字段， this.a 为 undefined。</p>
+<pre><code><code>var obj3 = {
+    a:10,
+    b:{
+        a:20,
+        fn:function(){
+            console.log(this);
+            console.log(this.a);
+        }
+    }
+}
+var j = obj3.b.fn;
+j(); //=&gt; window, undefined</code></pre>
+<p>这里直接获取里fn对象，没有通过对象去调用。非严格模式下，this 默认指向全局对象window。</p>
+<pre><code><code>var obj4 = {
+    a:10,
+    b:{
+        a:20,
+        fn:function(){
+            &quot;use strict&quot;;
+            console.log(this);
+            console.log(this.a);
+        }
+    }
+}
+var g = obj4.b.fn;
+g(); //=&gt; undefined, TypeError: Cannot read property &#39;a&#39; of undefined</code></pre>
+<p>而严格模式下， this 为 undefined。</p>
+<p><span id="j2"></span></p>
+<h2 id="this-与-bindcallapply">2. this 与 bind、call、apply</h2>
+<p>function.bind(thisArg[, arg1[, arg2[, ...]]]) 最简单的用法是创建一个函数，不论怎么调用，这个函数都有同样的 this 值。<br />
+function.call(thisArg, arg1, arg2, ...)、function.apply(thisArg, [argsArray]) call、apply 的作用类似都是为调用函数指定this。</p>
+<pre><code><code>function fn() {
+    return this.user;
+}
+
+console.log(fn.call({ user: &quot;li&quot; })); //=&gt; li
+
+console.log(fn.apply({ user: &quot;wang&quot; })); //=&gt; wang
+
+var bfn = fn.bind({ user: &quot;gao&quot; });
+console.log(bfn()); //=&gt; gao
+
+
+console.log(bfn.call({ user: &quot;liu&quot; })); //=&gt; gao
+
+console.log(bfn.apply({ user: &quot;liu&quot; })); //=&gt; gao
+
+console.log(bfn.bind({ user: &quot;liu&quot; })()); //=&gt; gao
+
+var obj = { user: &#39;zhang&#39;, f: fn, g: bfn };
+console.log(obj.f(), obj.g()); //=&gt;  zhang, gao</code></pre>
+<p>对 bind 产生的函数使用，再使用 call、apply、bind, 指向的 this 仍然是初次bind的值。</p>
+<pre><code><code>function list() {
+    return Array.prototype.slice.call(arguments);
+}
+console.log(list(1, 2, 3)); //=&gt; [1, 2, 3]
+
+function list2(){
+    if(arguments){
+        arguments.__proto__.slice = Array.prototype.slice;
+        return arguments.slice();
+    }
+}
+console.log(list2(4, 5, 6)); //=&gt; [4, 5, 6]
+
+var leading37List = list.bind(null, 37);
+console.log(leading37List()); //=&gt; [37]
+console.log(leading37List(1, 2, 3)); //=&gt; [37, 1, 2, 3]</code></pre>
+<p>在函数代码中，特殊对象 arguments 无需明确指出参数名，就能访问它们。arguments 自带 length 属性, Array.prototype.slice.call(arguments) 可以理解成 arguments.slice()</p>
+<p><span id="j3"></span></p>
+<h2 id="this-与-箭头函数">3. this 与 箭头函数</h2>
+<p>由于箭头函数不绑定this，它会捕获其所在（即定义的位置）上下文的this值， 作为自己的this值。</p>
+<pre><code><code>var obj = {
+    a: 10,
+    b: function () {
+        console.log(this.a, this)
+    },
+    c: () =&gt; console.log(this.a, this),
+}
+obj.b(); //=&gt; 10, Object{...}
+obj.c(); //=&gt; undefined, window{...} 
+
+obj.c.apply({ a: &#39;apply&#39; }); //=&gt; undefined, window{...} 
+obj.c.call({ a: &#39;call&#39; }); //=&gt; undefined, window{...} 
+obj.c.bind({ a: &#39;bind&#39; })(); //=&gt; undefined, window{...} </code></pre>
+<p>call() 、 apply() 、 bind() 方法对于箭头函数来说只是传入参数，对它的 this 毫无影响。</p>
+<pre><code><code>function fn() {
+    this.a = 20;
+    this.b = () =&gt; console.log(this.a, this);
+}
+console.log((new fn()).b()) //=&gt; 20, fn {a: 20, b: ƒ}</code></pre>
+<p>箭头函数不会创建自己的this，它只会从自己的作用域链的上一层继承this。</p>
+<pre><code><code>var lam = (...r) =&gt; { 
+    console.log(r); 
+}
+lam(1,2,3); //=&gt; Array : [1, 2, 3]</code></pre>
+<p>箭头函数没有arguments,取而代之用rest参数…解决。</p>
+<pre><code><code>var B = ()=&gt;{
+  value:1;
+}
+var b = new B(); //=&gt; TypeError: B is not a constructor</code></pre>
+<p>箭头函数作为匿名函数,没有构造函数,不能使用new。</p>
+<p><span id="j4"></span></p>
+<h2 id="this-与-return">4. this 与 return</h2>
+<p>如果返回值是 <strong>引用类型</strong> 对象，那么this指向的就是那个返回的对象；<br />
+如果返回值是 <strong>非引用类型</strong> 对象那么this还是指向函数的实例。</p>
+<p><span id="j4j1"></span></p>
+<h3 id="返回引用对象">4.1 返回引用对象</h3>
+<pre><code><code>function fn()  
+{  
+    this.user = &#39;123&#39;;  
+    return {};  
+}
+var a = new fn;  
+console.log(a.user); //=&gt; undefined</code></pre>
+<p><span id="j4j2"></span></p>
+<h3 id="返回function对象">4.2 返回function对象</h3>
+<pre><code><code>function fn()  
+{  
+    this.user = &#39;123&#39;;  
+    return function(){};
+}
+var a = new fn;  
+console.log(a.user); //=&gt; undefined</code></pre>
+<p><span id="j4j3"></span></p>
+<h3 id="返回数字值对象">4.3 返回数字，值对象</h3>
+<pre><code><code>function fn()  
+{  
+    this.user = &#39;123&#39;;  
+    return 123;
+}
+var a = new fn;  
+console.log(a.user); //=&gt; 123</code></pre>
+<p><span id="j4j4"></span></p>
+<h3 id="返回undefined">4.4 返回undefined</h3>
+<pre><code><code>function fn()  
+{  
+    this.user = &#39;123&#39;;  
+    return undefined;
+}
+var a = new fn;  
+console.log(a.user); //=&gt; 123</code></pre>
+<p><span id="j4j5"></span></p>
+<h3 id="返回null">4.5 返回null</h3>
+<pre><code><code>function fn()  
+{  
+    this.user = &#39;123&#39;;  
+    return null;
+}
+var a = new fn;  
+console.log(a.user); //=&gt; 123</code></pre>
+<p><a href="#mdjtop">返回目录</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

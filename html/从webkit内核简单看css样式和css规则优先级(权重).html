@@ -1,0 +1,351 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修从webkit内核简单看css样式和css规则优先级(权重)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>从webkit内核简单看css样式和css规则优先级(权重)</center></div><div class='banquan'>原文出处:本文由博客园博主peterzhangsnail提供。<br/>
+原文连接:https://www.cnblogs.com/peterzhangsnail/p/11053115.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#webkit中样式相关类及类间关系">webkit中样式相关类及类间关系</a></li>
+        <li><a href="#样式规则匹配">样式规则匹配</a></li>
+        <li><a href="#权重优先级计算">权重(优先级)计算</a></li>
+        <li><a href="#权重相同时的覆盖原则">权重相同时的覆盖原则</a></li>
+        </ul>
+    </div>
+</div>
+<h1 id="webkit中样式相关类及类间关系">webkit中样式相关类及类间关系</h1>
+<p>资料来源: 《webkit技术内幕》</p>
+<p><img src="./images/从webkit内核简单看css样式和css规则优先级(权重)0.png" /></p>
+<p><strong>结构相关类:</strong></p>
+<p>1.StyleRuleBase类: 单个的样式规则(选择器+规则体)</p>
+<p>2.StyleSheetContents类: 样式规则集,其成员-m_childRules是一个StyleRuleBase实例的列表,是1:n的数量关系</p>
+<p>3.CSSStyleSheet类: 成员-m_contents是一个StyleSheetContents实例,是1:1的数量关系</p>
+<p>4.DocumentStyleSheetCollection类: 多种来源的CSSStyleSheet实例(用户样式表,网页作者样式表,默认样式表)的归类列表</p>
+<p>5.Document类:</p>
+<ul>
+<li>成员-m_styleSheetCollection: DocumentStyleSheetCollection的实例,数量关系1:1</li>
+<li>成员-m_styleResover: 匹配css规则的相关类StyleSheetResover的实例,数量关系1:1</li>
+</ul>
+<p><strong>规则匹配处理相关类:</strong></p>
+<p>1.RuleSet类: 单个css样式表经css解释器之后的结果集,并且按照关键选择器的类型分类</p>
+<ul>
+<li>成员-m_idRules: 该样式表中的id类型规则</li>
+<li>成员-m_classRules: 该样式表中的class类型规则</li>
+<li>成员-m_tagRules: 该样式表中的标签类型规则</li>
+<li>成员-m_features: 该样式表中的其他特征类型规则</li>
+</ul>
+<p>2.DocumentRuleSets类: 各种来源的样式表的合并(用户样式表/作者样式表/默认样式表)</p>
+<ul>
+<li>成员-m_authorStyle: Ruleset对象的列表,代表作者样式表</li>
+<li>成员-m_userStyle: Ruleset对象的列表,代表用户样式表</li>
+</ul>
+<p>3.StyleSheetResover类: 规则匹配的主要负责类</p>
+<ul>
+<li>成员-m_ruleSets: DocumentRuleSets类的实例</li>
+</ul>
+<hr />
+<h1 id="样式规则匹配">样式规则匹配</h1>
+<p><img src="./images/从webkit内核简单看css样式和css规则优先级(权重)1.png" /></p>
+<p><strong>样式规则匹配大致过程</strong></p>
+<p>1.StyleResover类以ElementRuleCollector类为工具,为指定的元素匹配规则,并将匹配结果保存到RenderStyle对象中,RenderStyle对象由负责该元素渲染的RenderObject对象管理和使用</p>
+<p>2.匹配的输入: StyleResover类中保存的css解释器的解释和分类完毕的样式规则</p>
+<p>3.匹配用到的工具类: ElementRuleCollector类</p>
+<p>4.被匹配对象: 指定html元素</p>
+<p>5.匹配结果: 保存至RenderStyle对象并被RenderObject用于元素渲染</p>
+<p><strong>规则匹配的详细过程</strong></p>
+<p><img src="./images/从webkit内核简单看css样式和css规则优先级(权重)2.png" /></p>
+<p><strong>说明:</strong></p>
+<p>1.关键选择器: 样式规则的选择器字符串中的最右边选择器,它是样式规则在解释后分类的依据</p>
+<p>2.匹配过程:</p>
+<ul>
+<li>matchAllRules: 匹配规则的最外层函数,包含匹配默认,用户和作者样式并收集和排序已匹配规则</li>
+<li>matchUARules: 匹配默认样式</li>
+<li>matchUserRules: 匹配用户样式</li>
+<li>matchAuthorRules: 匹配作者样式</li>
+</ul>
+<p>3.作者样式匹配详细过程:(默认样式,用户样式的匹配类似)</p>
+<p><strong>匹配规则: <span style="color:red;text-decoration:underline;">从右向左</span>依次匹配选择器</strong></p>
+<p>前面我们已经知道解释之后的样式规则是分类存放在对象中的,而为当前元素匹配规则时,也是按id,class,tag,feature顺序依次匹配.</p>
+<p>下面我们用伪代码来解释匹配的详细过程:(伪代码<span style="color:red;font-weight:bolder">不是真正合理的和实际的</span>代码)</p>
+<p><strong>1.重要参数</strong></p>
+<pre><code><code>//参数e: 指代被匹配的元素
+//重要的变量
+var Result=[]; //用于保存完全匹配的结果集</code></pre>
+<p><strong>2.工具函数</strong></p>
+<pre><code><code>function firstMatch(property,ruleSet){
+    //将元素的id/class/tag/feature与idRules/classRules/tagRules/featureRules匹配
+    //将匹配到的规则以数组返回,未匹配到返回空.
+}
+
+function getS(rule){
+    //获取单条rule规则的选择器数组
+}
+
+function Match(s,e){
+    //将选择器s与元素e匹配
+    //如果成功匹配则返回true,否则返回false
+}
+
+function leftMatch(rule,e){ //第一次匹配过后,用于处理结果集中单条规则的匹配的函数(调用Match函数)
+    var s = getS(rule); //获取单条规则的选择器数组
+
+    for(var i=s.length-1;i&gt;=0;i--){ //从右到左依次将选择器与元素e匹配
+        
+        var flag = Match(s[i],e);
+        if(!flag){ //一旦某次匹配失败,函数直接返回
+            return;
+        }
+    }
+    push(Result,rule); //仅当所有选择器都匹配成功,即完全匹配时,才将该条rule添加到Result
+}
+
+function ruleMatch(firstmatch,e){ //第一次匹配后的处理函数(调用leftMatch函数)
+    if(firstmatch为空){ //第一次匹配为空,直接返回
+        return;
+    }
+
+    for(var i=0;i&lt;=firstMatch.length-1;i++){
+
+        leftMatch(firstMatch[i],e); //第一次匹配不为空,对每条匹配到的规则调用leftMatch
+
+    }
+}</code></pre>
+<p><strong>3.id,class,tag,feature匹配的函数及调用顺序</strong></p>
+<pre><code><code>//匹配idRules的函数
+function idMatch(idRules,e){
+    var firstmatch = firstMatch(e.id,idRules);
+    ruleMatch(firstmatch,e);
+}
+
+//匹配classRules的函数
+function classMatch(classRules,e){
+    var firstmatch = firstMatch(e.class,classRules);
+    ruleMatch(firstmatch,e);
+}
+
+//匹配tagRules的函数
+function tagMatch(tagRules,e){
+    var firstmatch = firstMatch(e.tag,tagRules);
+    ruleMatch(firstmatch,e);
+}
+
+
+//匹配featureRules的函数
+function featureMatch(featureRules,e){
+    var firstmatch = firstMatch(e.feature,featureRules);
+    ruleMatch(firstmatch,e);
+}
+
+//函数调用顺序
+idMatch(idRules,e);
+classMatch(classRules,e);
+tagMatch(tagRules,e);
+featureMatch(featureRules,e);</code></pre>
+<p><strong>4.说明</strong></p>
+<ul>
+<li>firstMatch(property,ruleSet)函数: 代表按关键选择器的四种分类进行的第一次匹配,并返回匹配到的结果集(规则的数组)</li>
+<li>Match(s,e)函数: 代表第一次分类匹配后,对结果集内的单条规则中的单个选择器与元素的匹配</li>
+<li>leftMatch(rule,e)函数: 代表第一次分类匹配后,对结果集内的单条规则的所有选择器(从右至左)与元素的匹配</li>
+<li>ruleMatch(firstmatch,e)函数 : 代表第一次分类匹配后,完成接下来所有的匹配任务.</li>
+<li>元素的内联样式是不经过上述匹配过程的,因为它本身就是专为该元素定义的样式.</li>
+</ul>
+<hr />
+<h1 id="权重优先级计算">权重(优先级)计算</h1>
+<p>1.选择器字符串的权重(specifishity)</p>
+<p>(1)css中的权重模型(I-S-A-B-C)</p>
+<p>其中:</p>
+<p>I: 指代该规则是否为!important规则</p>
+<p>S: 指代该规则是否为内联样式规则</p>
+<p>A-B-C: 为内核定义的三类简单选择器</p>
+<ul>
+<li><p>基础部分: A-B-C模型(以webkit为例)</p>
+<p>浏览器内核用一个32位二进制数来表示某css规则的权重值,其基础部分的A-B-C模型是指权重计算的三类增量.</p>
+<ul>
+<li>A: id选择器,增量为0x10000</li>
+<li>B: 类选择器,属性选择器和伪类选择器,增量为0x100</li>
+<li>C: 元素选择器和伪元素选择器,增量为1</li>
+</ul>
+<p>说明:</p>
+<ul>
+<li>上述三类增量的定义位于webkit内核中的<a href="https://github.com/WebKit/webkit/blob/master/Source/WebCore/css/CSSSelector.h">CSSSelector.h</a>头文件中</li>
+<li>关于I和S,取值只有0和1,不属于增量模型,我们可以假定为该32位二进制数的最高位和次高位.</li>
+<li>**通用选择器(*)**,选择器组合符(+,&gt;,~,空格,||)不影响权重值</li>
+<li>取反伪类 <strong>:not()</strong>
+<ul>
+<li>在selector level 3标准(现行标准)中,<strong>:not()</strong>只接受一个简单选择器为参数,其本身不影响权重,其权重为其参数的权重</li>
+<li>在selector level 4草案中, <strong>:not()</strong>接受一个选择器列表为参数,其本身不影响权重,其权重为选择器列表中权重最高的参数的权重.</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>2.CSS规则权重的计算:</p>
+<ul>
+<li>选择器字符串中:
+<ul>
+<li>每出现一个C类简单选择器,权重值增1</li>
+<li>每出现一个B类简单选择器,权重值增0x100</li>
+<li>每出现一个A类简单选择器,权重值增0x10000</li>
+<li>如果是元素的内联规则,次高位置1(笔者假设)</li>
+<li>如果是!important规则,最高位置1(笔者假设)</li>
+</ul></li>
+<li>意义: 高权重值的规则将覆盖低权重规则中的相同属性的值(也就是:设置相同属性的值,高权重有效,地权重失效)</li>
+</ul>
+<p>2.涉及到作者样式,用户样式,默认样式三种样式来源时的权重规则</p>
+<ul>
+<li>作者样式/网页作者样式(author style sheets): 网页作者规定的样式(网页样式的主要来源)</li>
+<li>用户样式(user style sheets): 用户自定义的个性样式(各大浏览器都在自行废除中)</li>
+<li>默认样式/浏览器样式(user agent style sheet): 用户代理的默认样式(一般用于前两种都未涉及到的元素的样式)</li>
+</ul>
+<p>一般,网页开发者和大多数用户考虑到的只有作者样式表和默认样式表(例如:用选择器*去掉默认样式中的元素margin和padding),而默认样式表中不含任何内联样式和!important样式.但是如果我们考虑上用户样式,权重规则可能会有一点不和谐的地方:(优先级从大到小)</p>
+<p>用户样式!important规则 &gt; 作者样式!important规则 &gt; 内联样式 &gt; 作者样式普通规则 &gt; 用户样式普通规则</p>
+<p>上面的优先级链中不包含内联!important规则,是因为一般的!important规则的目的就是为了以外部样式覆盖内联样式.</p>
+<p>可见, 在普通规则和!important规则上, 两种样式表的权重情况是不同的.</p>
+<ul>
+<li>一般规则: 作者样式 优先于 用户样式</li>
+<li>!important规则: 用户样式 优先于 作者样式</li>
+</ul>
+<p>可能正是这样的不和谐,才使得各大浏览器都在逐渐废除用户样式吧.但是用户样式的实现可以借助浏览器插件间接实现,不过那又是另外一个故事了.</p>
+<hr />
+<h1 id="权重相同时的覆盖原则">权重相同时的覆盖原则</h1>
+<p>前面说到: 相同属性设置时,高权重覆盖低权重.那么如果两条规则的权重相同时如何决定哪个有效哪个无效呢?</p>
+<p>首先,这里的权重相同有两层含义:</p>
+<ul>
+<li>基础的基于A-B-C模型的权重计算结果相同</li>
+<li>在是否为内联样式或!important规则上的表现也相同</li>
+</ul>
+<p>那么,权重相同的情况有下面几种:</p>
+<p>1.同一外部样式表中的同权重规则</p>
+<p>2.不同样式表中的同权重规则(两部分)</p>
+<ul>
+<li>两样式表A和B均是通过link或style引入</li>
+<li>样式表A通过@import规则导入样式表B</li>
+<li>样式表A,B均是通过link或style引入,但样式表C是B通过@import导入</li>
+</ul>
+<p>3.元素class属性为多个值,且各个值同权重时</p>
+<p><a href="http://www.ayqy.net/doc/css2-1/cascade.html#cascading-order">css2.1规范</a>指出: 如果两个声明的权重,来源都相同,<strong>后指定的生效</strong>. 通过@import引入的样式表中的规则<strong>被认为位于父样式表自身的所有规则之前</strong>.</p>
+<p>而我们讨论同权重规则的覆盖,就是对这个<strong>后指定</strong>的理解与解读:</p>
+<ul>
+<li>对于1情况,后指定意为靠后的(后面的覆盖前面的)</li>
+<li>对于2情况
+<ul>
+<li>A,B均是link/style引入: 后指定,意思是导入样式表的link/style标签在html文档中相对靠后的位置</li>
+<li>A通过@import规则导入B: 相对于B,A为后指定</li>
+<li>A,B是link/style引入,B通过@import导入C
+<ul>
+<li>在html文档中,A的link比B的link靠前: 同权重规则优先级为B&gt;C&gt;A</li>
+<li>在html文档中,B的link比A的link靠前: 同权重规则优先级为A&gt;B&gt;C</li>
+</ul></li>
+</ul></li>
+<li>对于3情况: 经过测试,各个class值的先后顺序不影响覆盖顺序,覆盖顺序的判断仍按照上面两个步骤.</li>
+</ul>
+<p>下面是一些测试代码:</p>
+<pre class="css"><code>/*测试1: 同一样式表内同权重规则+覆盖规则与class内值先后顺序无关*/
+/*html部分:
+    &lt;div class=&quot;a b&quot;&gt;&lt;/div&gt;
+*/
+div{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+
+.b {
+    background-color: blue;
+}
+
+.a {
+    background-color: red;
+}
+/*测试结果: 红色*/</code></pre>
+<pre class="css"><code>/*测试2: 不同样式表,相同权重规则*/
+/*test1:&lt;link&gt;位于&lt;style&gt;之前*/
+/*html部分:
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;csstest2.css&quot;&gt;
+    &lt;div class=&quot;a&quot;&gt;&lt;/div&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+        .a{
+            background-color: red;
+        }
+    &lt;/style&gt;
+*/
+div{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+.a {
+    background-color: blue;
+}
+/*测试结果: 红色*/
+
+/*test2:link位于style之后*/
+/*html部分:
+    &lt;div class=&quot;a&quot;&gt;&lt;/div&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+        .a{
+            background-color: red;
+        }
+    &lt;/style&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;csstest2.css&quot;&gt;
+*/
+div{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+.a {
+    background-color: blue;
+}
+/*测试结果: 蓝色*/
+
+
+/*test3: ABC覆盖规则*/
+/*html部分:
+    &lt;div class=&quot;a&quot;&gt;&lt;/div&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+        .a{
+            background-color: blue;
+        }
+    &lt;/style&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;csstest2.css&quot;&gt;
+*/
+/*csstest3.css内容
+@charset utf-8;
+.a {
+    background-color:yellow;
+}
+*/
+@import &quot;csstest3.css&quot;; /*必须注释掉前面所有的测试内容,否则违反了@import的使用规则*/
+div{
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+}
+.a {
+    background-color: red;
+}
+/*测试结果:
+不作注释: 红色
+注释csstest2.css: 黄色
+注释csstest2.css和csstest3.css: 蓝色
+*/</code></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,160 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修负边距与双飞翼布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>负边距与双飞翼布局</center></div><div class='banquan'>原文出处:本文由博客园博主量子凉茶提供。<br/>
+原文连接:https://www.cnblogs.com/zoiyin/p/wings_layout.html</div><br>
+    <h1 id="负边距与双飞翼布局">负边距与双飞翼布局</h1>
+<h3 id="负边距">负边距</h3>
+<p>当设置top和left方向的负边距时，元素本身向指定方向移动。当设置bottom和right方向的负边距时，元素本身不移动，处于元素后方的元素向前流动，覆盖其上。</p>
+<h3 id="圣杯布局">圣杯布局</h3>
+<p>圣杯布局是一个三栏布局，左右定宽，中间自适应。</p>
+<h4 id="html布局">HTML布局</h4>
+<pre><code><code>  &lt;header&gt;Header&lt;/header&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;main&lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;Left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;Right&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;footer&gt;Footer&lt;/footer&gt;</code></pre>
+<p>得到如图所示的三个div。<br />
+<img src="./images/负边距与双飞翼布局0.png" /></p>
+<h4 id="css设置">CSS设置</h4>
+<p>下面就开始最这三个div进行操作。</p>
+<ol>
+<li>首先要设置中间的div宽度为100%，让其能够自适应。左右的div设置固定宽度，并且让他们浮动起来，不然无法跟main出现在同一行。<br />
+</li>
+</ol>
+<pre class="css"><code>.main {
+  width: 100%;
+  float: left;
+}
+
+.left {
+  width: 100px;
+  float: left;
+}
+
+.right {
+  width: 200px;
+  float: left;
+}</code></pre>
+<p>这时我们得到如下图所示的内容，因为main占据了100%的宽度，left和right只能在main下面显示。<br />
+<img src="./images/负边距与双飞翼布局1.png" /></p>
+<ol>
+<li>现在我们使用上面提到的负边距技巧，将left和right与main放在同一行。当left的<code>margin-left</code>等于其本身宽度时，它将往上挪，如果设置为100%，那么就等于挪动到最开始的位置。所以我们将left的<code>margin-left</code>设置为-100%，right的<code>margin-left</code>设置为-200px，那么就可以将两者与main放到同一行。<br />
+</li>
+</ol>
+<pre class="css"><code>.main {
+  width: 100%;
+  float: left;
+}
+
+.left {
+  width: 100px;
+  float: left;
+  margin-left: -100%;
+}
+
+.right {
+  width: 200px;
+  float: left;
+  margin-left: -200px;
+}</code></pre>
+<p>得到结果如下图。<br />
+<img src="./images/负边距与双飞翼布局2.png" /></p>
+<p>但是，我们发现main已经被left和right覆盖了一部分，这会对显示内容造成影响。圣杯布局采用的解决办法是，使用padding，将整体的显示区域缩小，留出left和right的空间。然后，再用相对定位，把left和right分别左移和右移。</p>
+<ol>
+<li>使用padding将整体收缩。再将left和right移出去。</li>
+</ol>
+<pre class="css"><code>.box {
+  padding-left: 100px;
+  padding-right: 200px;
+}</code></pre>
+<p><img src="./images/负边距与双飞翼布局3.png" /></p>
+<p>跟着用相对定位relative将left和right移出去。</p>
+<pre class="css"><code>.left {
+  width: 100px;
+  float: left;
+  margin-left: -100%;
+  position: relative;
+  right: 100px;
+}
+
+.right {
+  width: 200px;
+  float: left;
+  margin-left: -200px;
+  position: relative;
+  left: 200px;
+}</code></pre>
+<p>得到最终结果。<br />
+<img src="./images/负边距与双飞翼布局4.png" /></p>
+<h3 id="双飞翼布局">双飞翼布局</h3>
+<p>双飞翼布局是圣杯布局的一个改进，主要不同在于上面的第三步。首先用一个div将main的内容包裹，然后设置main内容div的左右边距为left和right的宽度。这样，也可以达到令main的内容显示区域避开left和right范围的作用。<br />
+HTML代码如下，用一个div包裹main的内容。</p>
+<h4 id="html布局-1">HTML布局</h4>
+<pre><code><code>  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;main&quot;&gt;
+      &lt;div class=&quot;main-content&quot;&gt;Main&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;left&quot;&gt;Left&lt;/div&gt;
+    &lt;div class=&quot;right&quot;&gt;Right&lt;/div&gt;
+  &lt;/div&gt;</code></pre>
+<p>CSS代码如下，不需设置padding，也不需要使用相对布局。</p>
+<h4 id="css设置-1">CSS设置</h4>
+<pre class="css"><code>.box {
+  /* padding-left: 100px;
+  padding-right: 200px; */
+}
+
+.main {
+  width: 100%;
+  float: left;
+}
+
+.main-content {
+  margin-left: 100px;
+  margin-right: 200px;
+}
+
+.left {
+  width: 100px;
+  float: left;
+  margin-left: -100%;
+  /* position: relative;
+  right: 100px; */
+}
+
+.right {
+  width: 200px;
+  float: left;
+  margin-left: -200px;
+  /* position: relative;
+  left: 200px; */
+}</code></pre>
+<h1 id="参考连接">参考连接</h1>
+<ol>
+<li><a href="https://www.cnblogs.com/tinyphp/p/4742922.html">圣杯布局的实现过程 - tinyphp - 博客园</a></li>
+<li><a href="https://www.cnblogs.com/tinyphp/p/4743674.html">双飞翼布局和圣杯布局的对比 - tinyphp - 博客园</a></li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

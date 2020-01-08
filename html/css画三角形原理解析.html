@@ -1,0 +1,156 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css画三角形原理解析' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css画三角形原理解析</center></div><div class='banquan'>原文出处:本文由博客园博主TenFly提供。<br/>
+原文连接:https://www.cnblogs.com/tenfly/p/11647357.html</div><br>
+    <div class="cnblogs_code">
+<p>&lt;div id="div1"&gt;&lt;/div&gt;<br />&lt;div id="div2"&gt;&lt;/div&gt;<br />&lt;div id="div3"&gt;&lt;/div&gt;<br />&lt;div id="div4"&gt;&lt;/div&gt;<br />&lt;div id="div5"&gt;&lt;/div&gt;<br />&lt;div id="div6"&gt;&lt;/div&gt;</p>
+<pre><code><span style="color: #0000ff;">&nbsp;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#div1 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid transparent</span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid transparent</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;">80px solid red
+</span>}</pre>
+</div>
+<p><img src="./images/css画三角形原理解析0.png" alt="" width="677" height="77" /></p>
+<p>ps : transparent为设置透明</p>
+<p>为了探究css画三角形的原理，先来实验一下，试试单边</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#div1 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;
+}<span style="color: #800000;">
+#div2 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid </span>;
+}<span style="color: #800000;">
+#div3 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid </span>;
+}<span style="color: #800000;">
+#div4 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid </span>;
+}</pre>
+</div>
+<p>发现没有显示，再来试试两条边</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#div1 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}<span style="color: #800000;">
+#div2 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}<span style="color: #800000;">
+#div3 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}<span style="color: #800000;">
+#div4 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}<span style="color: #800000;">
+#div5 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}<span style="color: #800000;">
+#div6 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}</pre>
+</div>
+<p><img src="./images/css画三角形原理解析1.png" alt="" width="687" height="203" /></p>
+<p>&nbsp;发现只有相邻边才会显示，相对边不显示，然后试试三边/四边发现都能显示</p>
+<p>为什么设置宽高为0时就会呈三角形？如果设置宽高呢？</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#div1 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 20px</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">20px</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid red</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid green</span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid yellow</span>;
+}</pre>
+</div>
+<p><img src="./images/css画三角形原理解析2.png" alt="" width="710" height="90" /></p>
+<p>为了更清晰的地对比，再来看一看</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#div1 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 20px</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">20px</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid red</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid green</span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid yellow</span>;
+}<span style="color: #800000;">
+#div2 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-right</span>:<span style="color: #0000ff;"> 40px solid red</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid green</span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid yellow</span>;
+}<span style="color: #800000;">
+#div3 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid red</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 40px solid green</span>;
+}<span style="color: #800000;">
+#div4 </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;"> 
+  height</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 40px solid </span>;<span style="color: #ff0000;">
+  border-left</span>:<span style="color: #0000ff;"> 40px solid red</span>;
+}</pre>
+</div>
+<p><img src="./images/css画三角形原理解析3.png" alt="" width="706" height="244" /></p>
+<p>从下往上解读:</p>
+<p>　　1、当宽高为0时，只有两条边，即可以看作朝指定方向缩进、对应宽高的矩形（div4，左上缩进，宽（border-left）40px,，高（border-top）40px），</p>
+<p>　　2、当宽高为0时，只有三条边，即可看做全部组合的、朝指定方向缩进、对应宽高的矩形</p>
+<p>　　（ div3，[左上缩进，宽（border-left）40px,，高（border-top）40px]，[左下缩进，宽（border-left）40px,，高（border-bottom）40px]，[上下缩进，对应边不显示] ），靠左拼接</p>
+<p>　　3、当宽高为0时，有四条边，即可看做全部组合的、朝指定方向缩进、对应宽高的矩形</p>
+<p>　　（ div2，{ [左上缩进，不再重复......]，[右上缩进，......] 靠上拼接}，{&nbsp;[右上缩进，......]，[右下缩进，......] 靠右拼接}，{&nbsp;[右下缩进，......]，[左下缩进，......] 靠下拼接}，{&nbsp;[左下缩进，不再重复......]，[左上缩进，......] 靠左拼接}&nbsp;）&nbsp;</p>
+<p>&nbsp;　　4、当宽高不为0时，根据盒子模型，border在外围，会被元素撑开</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

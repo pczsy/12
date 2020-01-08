@@ -1,0 +1,131 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(五) 基础篇 方法 methods属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(五) 基础篇 方法 methods属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11038026.html</div><br>
+    <p>&nbsp;methods中定义了Vue实例的方法，官网是这样介绍的:</p>
+<p><img src="./images/Vue.js 源码分析(五) 基础篇 方法 methods属性详解0.png" alt="" /></p>
+<p>例如::</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"&gt;&lt;/script&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;{{message}}&lt;button @click="ChangeMessage"&gt;测试按钮&lt;/button&gt;&lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app'<span style="color: #000000;">,
+            data:{message:</span>"Hello World!"<span style="color: #000000;">},
+            methods:{
+                ChangeMessage:</span><span style="color: #0000ff;">function</span>(){<span style="color: #0000ff;">this</span>.message="Hello Vue!"<span style="color: #000000;">;}
+            }
+        })
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>显示的样式为:</p>
+<p><img src="./images/Vue.js 源码分析(五) 基础篇 方法 methods属性详解1.png" alt="" /></p>
+<p>当我们点击按钮后变为了:</p>
+<p><img src="./images/Vue.js 源码分析(五) 基础篇 方法 methods属性详解2.png" alt="" /></p>
+<p>methods方法中的上下文为当前实例，也就是this为当前实例。</p>
+<p>&nbsp;<span style="color: #ff0000;">注:<strong>不应该使用箭头函数来定义 method 函数</strong> (例如ChangeMessage:()=&gt;this.message="Hello Vue")。理由是箭头函数绑定了父级作用域的上下文，所以 <code>this</code> 将不会按照期望指向 Vue 实例，<code>this.message</code> 将是 undefined。</span></p>
+<p><span style="color: #000000;">&nbsp;<span style="font-size: 18pt;">源码分析</span></span></p>
+<hr />
+<p>&nbsp;<span style="color: #000000;"> Vue实例后会先执行_init()进行初始化(4579行)时，会执行initState()进行初始化,如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initState (vm) { <span style="color: #008000;">//</span><span style="color: #008000;">第3303行</span>
+  vm._watchers =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> opts =<span style="color: #000000;"> vm.$options;
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.props) { initProps(vm, opts.props); }
+  </span><span style="color: #0000ff;">if</span> (opts.methods) { initMethods(vm, opts.methods); }        <span style="color: #008000;">//</span><span style="color: #008000;">如果定义了methods，则调用initMethods初始化data</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.data) {              
+    initData(vm);                 
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    observe(vm._data </span>= {}, <span style="color: #0000ff;">true</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> asRootData </span><span style="color: #008000;">*/</span><span style="color: #000000;">);
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.computed) { initComputed(vm, opts.computed); }
+  </span><span style="color: #0000ff;">if</span> (opts.watch &amp;&amp; opts.watch !==<span style="color: #000000;"> nativeWatch) {
+    initWatch(vm, opts.watch);
+  }
+}</span></pre>
+</div>
+<p>&nbsp;initMethods()定义如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> initMethods (vm, methods) { 　　<span style="color: #339966;">//第3513行
+  </span></span><span style="color: #0000ff;">var</span> props =<span style="color: #000000;"> vm.$options.props;
+  </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> methods) {                 <span style="color: #008000;">//</span><span style="color: #008000;">遍历methods对象,key是每个键，比如例子里的ChangeMessage</span>
+<span style="color: #000000;">    {
+      </span><span style="color: #0000ff;">if</span> (methods[key] == <span style="color: #0000ff;">null</span><span style="color: #000000;">) { 　　　　　　　　<span style="color: #339966;">//如果值为null，则报错</span>
+        warn(
+          </span>"Method \"" + key + "\" has an undefined value in the component definition. " +
+          "Did you reference the function correctly?"<span style="color: #000000;">,
+          vm
+        );
+      } 
+      </span><span style="color: #0000ff;">if</span> (props &amp;&amp;<span style="color: #000000;"> hasOwn(props, key)) { 　　　　<span style="color: #339966;">//如果props中有同名属性，则报错</span>
+        warn(
+          (</span>"Method \"" + key + "\" has already been defined as a prop."<span style="color: #000000;">),
+          vm
+        );
+      }
+      </span><span style="color: #0000ff;">if</span> ((key <span style="color: #0000ff;">in</span> vm) &amp;&amp;<span style="color: #000000;"> isReserved(key)) { 　　<span style="color: #339966;">//如果key是以$或_开头则，也报错</span>
+        warn(
+          </span>"Method \"" + key + "\" conflicts with an existing Vue instance method. " +
+          "Avoid defining component methods that start with _ or $."<span style="color: #000000;">
+        );
+      }
+    }
+    vm[key] </span>= methods[key] == <span style="color: #0000ff;">null</span> ? noop : bind(methods[key], vm);             <span style="color: #008000;">//</span><span style="color: #008000;">如果key对应的值不是null，则执行bind()函数</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>执行bind()函数，参数1为对应的函数体，参数2是当前的Vue实例，bind()函数定义在第196行，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> polyfillBind (fn, ctx) {            <span style="color: #008000;">//</span><span style="color: #008000;">当Function的原型上不存在bind()函数时，自定义一个函数实现同样的功能，用apply()或call()来实现</span>
+  <span style="color: #0000ff;">function</span><span style="color: #000000;"> boundFn (a) {
+    </span><span style="color: #0000ff;">var</span> l =<span style="color: #000000;"> arguments.length;
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> l
+      </span>? l &gt; 1
+        ?<span style="color: #000000;"> fn.apply(ctx, arguments)
+        : fn.call(ctx, a)
+      : fn.call(ctx)
+  }
+
+  boundFn._length </span>=<span style="color: #000000;"> fn.length;
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> boundFn
+}
+
+</span><span style="color: #0000ff;">function</span> nativeBind (fn, ctx) {             <span style="color: #008000;">//</span><span style="color: #008000;">调用Function的原型上的bind()方法，上下文闻ctx</span>
+  <span style="color: #0000ff;">return</span><span style="color: #000000;"> fn.bind(ctx)
+}
+
+</span><span style="color: #0000ff;">var</span> bind = Function.prototype.bind             <span style="color: #008000;">//</span><span style="color: #008000;">如果Function的原型上有bind方法，则调用该方法，否则用自定义的polyfillBind()方法</span>
+  ?<span style="color: #000000;"> nativeBind
+  : polyfillBind;</span></pre>
+</div>
+<p>相比较其它API，method的实现是比较简单的。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

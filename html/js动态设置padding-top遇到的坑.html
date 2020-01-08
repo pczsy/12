@@ -1,0 +1,39 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修js动态设置padding-top遇到的坑' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>js动态设置padding-top遇到的坑</center></div><div class='banquan'>原文出处:本文由博客园博主蓓蕾心晴提供。<br/>
+原文连接:https://www.cnblogs.com/beileixinqing/p/11151484.html</div><br>
+    <p>我想通过js动态设置元素padding-top的百分比值：以下几种都是无法设置成功的:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> setAttribute设置padding-top并且转换为百分比</span>
+<span style="text-decoration: line-through;">imageBox.setAttribute('padding-top',`${(imageHeight)*100}%<span style="color: #000000; text-decoration: line-through;">`);
+</span></span><span style="color: #008000;">//</span><span style="color: #008000;">setAttribute设置padding-top使用percentage</span>
+<span style="text-decoration: line-through;">imageBox.setAttribute('padding-top',`percentage(${imageHeight<span style="color: #000000; text-decoration: line-through;">})`);
+</span></span><span style="color: #008000;">//</span><span style="color: #008000;"> style属性直接设置 使用percentage</span>
+imageBox.style.paddingTop = `percentage${imageHeight}`;</pre>
+</div>
+<p>成功实现的方式：</p>
+<div class="cnblogs_code">
+<pre><code>imageBox.style.paddingTop = `${imageHeight}%`;</pre>
+</div>
+<pre><code><br />percentage这个百分比用法在css中是起作用的，在js中设置css样式的时候还是尽量少用，会出现设置不成功的问题，还是需要转换成真正的百分比。<br /><br />一楼小伙伴提醒的很对，确实基础没掌握好，上面两行是不可行的。设置css样式应该使用setProperty()。</pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

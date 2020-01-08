@@ -1,0 +1,115 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修webpack' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>webpack</center></div><div class='banquan'>原文出处:本文由博客园博主Eddy`Blog提供。<br/>
+原文连接:https://www.cnblogs.com/it-xiong/p/11065404.html</div><br>
+    <p><span style="font-size: 18px;"><strong>注：</strong></span></p>
+<p>** 先来说下前端为什么需要学习webpack吧！**</p>
+<p>因为现在SPA流行，javascript的依赖包，less,scss.sass样式文件的编译。</p>
+<p>更重要的是前端现在三大主流Vue.js 、React.js和AngluarJs都和webpack紧紧相连了。</p>
+<p>说实话，现在不会一点webpack，那和三大框架还是有点距离了。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18px;">webopack 到底是什么？</span></strong></p>
+<p><strong><span style="font-size: 18px;"><img src="./images/webpack0.png" alt="" /></span></strong></p>
+<p><img src="./images/webpack1.png" alt="" /></p>
+<p><span style="font-size: 14px;">简单来说，就是一个模块打包机。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18px;">安装webpackji</span></strong></p>
+<p><span style="font-size: 14px;">安装webpack 首先你先要安装nodejs,这里我就不多做解释了，直接去nodejs 官网下载安装包，傻瓜式安装就可以了。</span></p>
+<p>nodejs自带包管理工具=》npm</p>
+<p>现在Ctrl = R 打开cmd命令工具，</p>
+<div class="cnblogs_code">
+<pre><code><span class="pln">$ </span>npm -v</pre>
+</div>
+<p>查看 npm 版本然后在输入下面指令，全局安装webpack</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:csharp;gutter:true;">$ npm install -g webpack
+</pre>
+</div>
+<p>npm下载国外的包会很慢很慢</p>
+<p>解决办法： 使用淘宝镜像。</p>
+<p>你可以使用我们定制的&nbsp;<a href="https://github.com/cnpm/cnpm">cnpm</a>&nbsp;(gzip 压缩支持) 命令行工具代替默认的&nbsp;<code>npm</code>:</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:csharp;gutter:true;">$ npm install -g cnpm --registry=https://registry.npm.taobao.org</pre>
+</div>
+<p>速度就上去了，或者你也可以用yarn。</p>
+<p>官网不推荐全局安装webpack。</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>直接上手一个DEMO，让你先爽一把。</strong></span></p>
+<p>创建文件夹： webpack_demo</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:csharp;gutter:true;">$ cd webpack_demo</pre>
+</div>
+<p>切换到路径到webpack_demo。</p>
+<p>然后在文件夹下面创建两个子文件夹 src 和 dist，</p>
+<p>src: 生产环境存放；</p>
+<p>dist: 生产环境存放的（webpack打包后存放文件的）</p>
+<p>然后再在dist文件夹下面创建index.html文件，里面追下面内容：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;
+    &lt;title&gt;webpack&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="title"&gt;&lt;/div&gt;
+    &lt;script src="./main.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;然后再在src文件夹下面创建entrance.js文件，入口文件。</p>
+<p>在其追加：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">document.querySelector('#title').innerHTML = 'hello webpack！'</pre>
+</div>
+<p>需要编译的文件都弄好了。</p>
+<p>在项目需要使用npm之前，先初始化项目，生成 package.json。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">$ npm init</pre>
+</div>
+<p>没有什么特别要求的就一直回车就可以了，</p>
+<p>现在在webpack_demo项目内安装webpack。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">$ npm install webpack --save
+</pre>
+</div>
+<p>这样在项目内部就安装了webpack。</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">$ webpack -v</pre>
+</div>
+<p>&nbsp;运行上面命令就可以查看安装的webpack版本了</p>
+<p>运行下面命令进行打包</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">$ webpack src/entrance.js</pre>
+</div>
+<ul>
+<li>{entery file}:入口文件的路径，本文中就是src/entrance.js的路径；</li>
+<li>{destination for bundled file}:填写打包后存放的路径。这个参数可以不填，会自动在dist下面生成main.js</li>
+<li>注意：在命令行中是不需要写{ }的。</li>
+</ul>
+<p>&nbsp;运行完上面的命令，你会发现项目已经打包好了。你直接打开dist的html 就可以看到：</p>
+<p><br /><img src="./images/webpack2.png" alt="" /></p>
+<p>是不是觉得很爽，后面我会继续为大家更新完成的，关注我可以及时关注更新！</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

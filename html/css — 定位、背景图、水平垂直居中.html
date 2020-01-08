@@ -1,0 +1,442 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css — 定位、背景图、水平垂直居中' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css — 定位、背景图、水平垂直居中</center></div><div class='banquan'>原文出处:本文由博客园博主一直努力的小羊提供。<br/>
+原文连接:https://www.cnblogs.com/yangjie0906/p/11405198.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#定位">1. 定位</a></li>
+        <li><a href="#背景图">2. 背景图</a></li>
+        <li><a href="#水平垂直居中">3. 水平垂直居中</a></li>
+        </ul>
+    </div>
+</div>
+<h3 id="定位">1. 定位</h3>
+<p>position:static | relative | absolute | fixed;</p>
+<p>static 静态定位</p>
+<p>relative 相对</p>
+<p>absolute 绝对</p>
+<p>fixed 固定</p>
+<h4 id="静态定位">1.1 静态定位</h4>
+<p>静态定位意味着“元素默认显示文档流的位置”。没有任何变化。</p>
+<h4 id="相对定位-relative">1.2 相对定位 relative</h4>
+<p>1.特征：</p>
+<ul>
+<li>给一个标准文档流下的盒子单纯的设置相对定位，与普通的盒子没有任何区别</li>
+<li>留“坑”，会影响页面布局</li>
+</ul>
+<p>2.作用：</p>
+<ul>
+<li>1.用于微调元素</li>
+<li>2.做“子绝父相”布局方案的参考</li>
+</ul>
+<p>3.参考点：</p>
+<ul>
+<li>以原来的盒子为参考点</li>
+</ul>
+<p>4.相对定位的值：top 、bottom 、left 、right</p>
+<pre><code><code>&lt;style&gt;
+    .box {
+        width: 500px;
+        height: 600px;
+        border: 1px solid #000;
+    }
+
+    .box .a {
+        width: 200px;
+        height: 200px;
+        background-color: red;
+    }
+
+    .box .b {
+        width: 200px;
+        height: 200px;
+        background-color: green;
+        position: relative;
+        top: 30px;
+        left: 50px;
+    }
+
+    .box .c {
+        width: 200px;
+        height: 200px;
+        background-color: blue;
+    }
+&lt;/style&gt;
+
+&lt;body&gt;
+&lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;a&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;b&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;c&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<h4 id="绝对定位-absolute">1.3 绝对定位 absolute</h4>
+<p>1.参考点：</p>
+<p>判断是否有定位（相对定位，绝对定位，固定定位）的祖先盒子进行定位：</p>
+<ul>
+<li>1.如果没有定位的祖先盒子，以body为参考点</li>
+<li>2.如果单独设置了一个盒子为绝对定位：
+<ul>
+<li>1.以top描述，它的参考点是以body的（0，0）为参考点</li>
+<li>2.以bottom描述，它的参考点是以浏览器的左下角为参考点</li>
+</ul></li>
+</ul>
+<p>2.子绝父相</p>
+<p>以最近的父辈元素的左上角为参考点进行定位</p>
+<p>3.特征：</p>
+<ul>
+<li>1.脱标</li>
+<li>2.压盖</li>
+<li>3.子绝父相</li>
+</ul>
+<pre><code><code>&lt;style&gt;
+    .box {
+
+        width: 500px;
+        height: 600px;
+        border: 1px solid #000;
+        position: relative;
+        float: right;
+    }
+
+    .box .a {
+        width: 200px;
+        height: 200px;
+        background-color: red;
+    }
+
+    .box .b {
+        width: 200px;
+        height: 200px;
+        background-color: green;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+
+    .box .c {
+        width: 300px;
+        height: 200px;
+        background-color: blue;
+    }
+&lt;/style&gt;</code></pre>
+<p>浮动和绝对定位的特征：</p>
+<pre><code><code>&lt;style&gt;
+    /*span {*/
+    /*background-color: red;*/
+    /*!*float: left;*!*/
+    /*position: absolute;*/
+    /*width: 200px;*/
+    /*height: 60px;*/
+    /*}*/
+    .container{
+        width: 1226px;
+        height: 100px;
+        margin: 0 auto;
+        background-color: #000;
+    }
+    .logo{
+        width: 55px;
+        height: 55px;
+        background-color: #ff6700;
+        float: left;
+        margin-top: 20px;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;span&gt;
+        mjj
+    &lt;/span&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;div class=&quot;logo&quot;&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/body&gt;</code></pre>
+<h4 id="固定定位-fixed">1.4 固定定位 fixed</h4>
+<p>它跟绝对定位基本相似，只有一个主要区别：绝对定位固定元素是相对于html根元素或其最近的定位祖先元素，而固定定位固定元素则是相对于浏览器视口本身。这意味着你可以创建固定的有用的网页效果，比如固定导航栏、回到顶部按钮，小广告等。</p>
+<p>1.特征：</p>
+<ul>
+<li>1.脱标</li>
+<li>2.固定不变</li>
+<li>3.提高层级</li>
+</ul>
+<p>2.参考点：</p>
+<p>以浏览器的左上角为参考点</p>
+<pre><code><code>&lt;style&gt;
+    body{
+        padding-top: 100px;
+    }
+
+    .active{
+        position: relative;
+        background-color: yellowgreen;
+
+    }
+    .fix{
+        width: 100%;
+        height: 100px;
+        background-color: red;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+&lt;/style&gt;
+&lt;body&gt;
+    &lt;p&gt;MJJwusir&lt;/p&gt;
+    &lt;p&gt;wusir&lt;/p&gt;
+    &lt;p class=&quot;active&quot;&gt;YAOwusir&lt;/p&gt;
+    &lt;div class=&quot;fix&quot;&gt;固定不变&lt;/div&gt;
+    &lt;p&gt;wusir&lt;/p&gt;
+    &lt;p&gt;wusir&lt;/p&gt;
+&lt;/body&gt;</code></pre>
+<h4 id="z-index">1.5 z-index</h4>
+<p>1.z-index只应用在定位的元素，默认z-index:auto;(auto相当于0)</p>
+<p>2.z-index取值为整数，数值越大，它的层级越高</p>
+<p>3.如果元素设置了定位，没有设置z-index，那么谁写在最后面的，表示谁的层级越高。(与标签的结构有关系)</p>
+<p>4.从父现象。通常布局方案我们采用子绝父相，比较的是父元素的z-index值，哪个父元素的z-index值越大，表示子元素的层级越高。</p>
+<pre><code><code>/*从父现象*/
+&lt;style&gt;
+    .box1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 60px;
+        border: 2px solid blue;
+        background-color: #000;
+        z-index: 10;
+    }
+
+    .box2 {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: 200px;
+        height: 60px;
+        border: 2px solid red;
+        background-color: greenyellow;
+        z-index: 6;
+    }
+&lt;/style&gt;
+&lt;body&gt;
+    &lt;div class=&quot;father1&quot; style=&quot;position: relative;z-index: 2;&quot;&gt;
+        &lt;span class=&quot;box1&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;father2&quot; style=&quot;position: relative;z-index: 3;&quot;&gt;
+        &lt;div class=&quot;box2&quot;&gt; &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+<h3 id="背景图">2. 背景图</h3>
+<p>1.背景图属性</p>
+<ul>
+<li>1.background-image:url(&quot;图片地址&quot;); 给一个元素设置一个或多个背景图像</li>
+<li>2.background-repeat:
+<ul>
+<li>定义背景图像的重复方式。 背景图像可以沿着水平轴，垂直轴，两个轴重复，或者根本不重复。</li>
+<li>属性值：
+<ul>
+<li>repeat 默认值。表示背景图水平和垂直方向都平铺</li>
+<li>no-repeat 表示背景图水平和处置方向都不平铺</li>
+<li>repeat-x 表示背景图只有水平方向上平铺</li>
+<li>repeat-y 表示背景图只有垂直方向上平铺</li>
+</ul></li>
+</ul></li>
+<li>3.background-position
+<ul>
+<li>表示背景图定位初始位置。<code>background-position</code>是<code>background-position-x</code>和<code>background-position-y</code>的综合属性。如果想使用<code>background-position</code>属性，那么必须先指定<code>background-image</code>属性。</li>
+<li>语法：
+<ul>
+<li>1.background-position:值1 值2;</li>
+<li>2.background-position:position position;</li>
+</ul></li>
+</ul></li>
+</ul>
+<pre><code><code>&lt;style&gt;
+    .bg{
+        width: 1200px;
+        height:1200px;
+        border: 1px solid #000;
+        /*设置背景图*/
+        background-image: url(&quot;xiaohua.jpg&quot;);
+        background-repeat: no-repeat;
+        /*调整背景图的位置*/
+        /*background-position: -164px -106px;*/
+        background-position: center center;
+
+        color: green;
+        font-weight: 700;
+        font-size: 30px;
+    }
+&lt;/style&gt;</code></pre>
+<p>2.CSS Sprite 雪碧图</p>
+<p>CSS雪碧图技术：即CSS Sprite,也有人叫它CSS精灵图，是一种图像拼合技术。该方法是将多个小图标和背景图像合并到一张图片上，然后利用css的背景定位来显示需要显示的图片部分。</p>
+<p>使用雪碧图的使用场景:</p>
+<ul>
+<li><p>静态图片，不随用户信息的变化而变化</p></li>
+<li><p>小图片，图片容量比较小(2~3k)</p></li>
+<li><p>加载量比较大</p>
+<p>一些大图不建议制作雪碧图</p></li>
+</ul>
+<p>优点:</p>
+<ul>
+<li>有效的减少HTTP请求数量</li>
+<li>加速内容显示</li>
+</ul>
+<p>雪碧图的实现原理:</p>
+<ul>
+<li>它通过css的背景属性的backrground-position的来控制雪碧图的显示。</li>
+<li>控制一个层，可显示的区域范围大消息，通过一个窗口，进行背景图的移动。</li>
+</ul>
+<pre><code><code>&lt;style&gt;
+    .swiper {
+            width: 100%;
+            height: 460px;
+        }
+        .container {
+            width: 1226px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .swiper span {
+            display: inline-block;
+            width: 41px;
+            height: 69px;
+            background: url(&quot;icon-slides.png&quot;) no-repeat 0 0;
+            position: absolute;
+            margin-top: -34px;
+            top: 50%;
+            cursor: pointer;
+        }
+        .swiper span.prev {
+            background-position: -83px 0;
+            left: 234px;
+        }
+        .swiper span.next {
+            background-position: -124px 0;
+            right: 0;
+        }
+        .swiper span.prev:hover{
+            background-position: 0 0;
+        }
+         .swiper span.next:hover{
+            background-position: -42px 0;
+        }
+&lt;/style&gt;
+&lt;div class=&quot;swiper&quot;&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;span class=&quot;prev&quot;&gt;&lt;/span&gt;
+        &lt;span class=&quot;next&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<h3 id="水平垂直居中">3. 水平垂直居中</h3>
+<h4 id="行内元素水平居中显示">3.1 行内元素水平居中显示</h4>
+<p>1.第一种方式：line-height+text-align</p>
+<pre><code><code>p {
+    width: 200px;
+    height: 200px;
+    background: #666;
+    color: #fff;
+    line-height: 200px;
+    text-align: center;
+}</code></pre>
+<p>2.第二种方式：给父元素设置<code>display:table-cell;</code>,并且设置<code>vertical-align:middle</code></p>
+<pre><code><code>.box{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}</code></pre>
+<h4 id="块级元素水平垂直居中">3.2 块级元素水平垂直居中</h4>
+<p>1.方法一：position+margin</p>
+<pre><code><code>&lt;style&gt;
+    .father{
+        width: 200px;
+        height: 200px;
+        background-color: red;
+        position: relative;
+    }
+    .child{
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background-color: green;
+        margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+    }
+&lt;/style&gt;
+&lt;div class=&quot;father&quot;&gt;
+    &lt;div class=&quot;child&quot;&gt;我是个居中的盒子&lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>2.方法二：display:table-cell</p>
+<pre><code><code>&lt;style type=&quot;text/css&quot;&gt;
+    .father{
+        width: 200px;
+        height: 200px;
+        background-color: red;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
+    .child{
+        width: 100px;
+        height: 100px;
+        background-color: green;
+        display: inline-block;
+        vertical-align: middle;
+    }
+&lt;/style&gt;
+&lt;div class=&quot;father&quot;&gt;
+    &lt;div class=&quot;child&quot;&gt;我是个居中的盒子&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>3.第三种：纯position</p>
+<pre><code><code>&lt;style&gt;
+    .father{
+        width: 500px;
+        height: 300px;
+        background-color: red;
+        position: relative;
+    }
+    .child{
+        /*如何让一个绝对定位的垂直居中： top设置50%，margin-top设置当前盒子的一半，并且是负*/
+        position: absolute;
+        width: 100px;
+        height: 140px;
+        background-color: green;
+        left: 50%;
+        margin-left: -50px;
+        top: 50%;
+        margin-top: -70px;
+    }
+&lt;/style&gt;
+&lt;div class=&quot;father&quot;&gt;
+    &lt;div class=&quot;child&quot;&gt;我是个居中的盒子&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

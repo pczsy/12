@@ -1,0 +1,202 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修jq动画插件，自制基于vue的圆形时钟' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>jq动画插件，自制基于vue的圆形时钟</center></div><div class='banquan'>原文出处:本文由博客园博主TenFly提供。<br/>
+原文连接:https://www.cnblogs.com/tenfly/p/11513062.html</div><br>
+    <p>首先附上jq插件库，里面的东西太炫了，建议学前端的可以看看学习下：http://www.jq22.com/</p>
+<p>里面有个&ldquo;超个性动画版本的个人简历&rdquo;，通过屏幕上不断打印内容，改变相应样式来实现动画简历，我从来没想到过还有这种操作；</p>
+<p>再附上一个比较有趣的基于vue的圆形时钟：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　*</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　body</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #000000</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+　　　　<span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">    transition（过渡），平滑过渡主要靠这个属性
+　　　　语法：transition: property duration timing-function delay;    
+　　　　property（设置过渡效果的 CSS 属性的名称）
+　　　　duration（完成过渡效果需要多少秒或毫秒）
+　　　　function（速度效果的速度曲线）
+　　　　delay（过渡效果何时开始）
+　　　　</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　.sec,.min,.hou,.wee,.day,.mon,.yea</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 700px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 800px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">transform 1s</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #999999</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　text-align</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> center</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">    
+　　　　.nowTime,.yea</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #FF0000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 18px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　font-weight</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> bold</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span>
+　　<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">
+　　　　梳理一下几个点：
+　　　　v-for(item,index) in num：
+　　　　　　item是从1-num，index是从0-num-1，所以下面用到item和index的地方可以相互替换，只要别忘了+1-1
+
+　　　　v-bind:calss：
+　　　　　　给当前时间绑定样式，用于区别其他时间
+　　　　　　想让当前时间始终处于最右边：
+　　　　　　顺时针：逆时针旋转（num-当前时间）*度数
+　　　　　　逆时针：顺时针旋转（当前时间）*度数
+　　　　　　比如：nowTime:60-item==sec，就表示顺时针情况下，当前秒sec想处于最右边，就需要逆时针旋转item*度数
+
+　　　　v-bind:style：
+　　　　　　translate平移后，rotate旋转角度使之对准圆心
+
+　　　　此处不涉及平滑过渡，在样式里：transition:transform 1s;
+　　</span><span style="color: #008000;">--&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="sec"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 60"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:60-item==sec}:{nowTime:item==sec}"</span><span style="color: #ff0000;"> 
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(s_r,item+sec,60)+'px,'+yTrans(s_r,item+sec,60)+'px) rotate('+dTrans(item+sec,60)+'deg)'}:{transform:'translate('+xTrans(s_r,item-sec,60)+'px,'+yTrans(s_r,item-sec,60)+'px) rotate('+dTrans(item-sec-180,60)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>{{direct==0?60-item:item-1}}秒<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="min"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 60"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:60-item==min}:{nowTime:item==min}"</span><span style="color: #ff0000;">
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(i_r,item+min,60)+'px,'+yTrans(i_r,item+min,60)+'px) rotate('+dTrans(item+min,60)+'deg)'}:{transform:'translate('+xTrans(i_r,item-min,60)+'px,'+yTrans(i_r,item-min,60)+'px) rotate('+dTrans(item-min,60)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>{{direct==0?60-item:item-1}}分<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="hou"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 24"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:24-item==hou}:{nowTime:item==hou}"</span><span style="color: #ff0000;">
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(h_r,item+hou,24)+'px,'+yTrans(h_r,item+hou,24)+'px) rotate('+dTrans(item+hou,24)+'deg)'}:{transform:'translate('+xTrans(h_r,item-hou,24)+'px,'+yTrans(h_r,item-hou,24)+'px) rotate('+dTrans(item-hou,24)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>{{direct==0?24-item:item-1}}点<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wee"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 7"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:7-item==wee}:{nowTime:item==wee}"</span><span style="color: #ff0000;">
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(w_r,item+wee,7)+'px,'+yTrans(w_r,item+wee,7)+'px) rotate('+dTrans(item+wee,7)+'deg)'}:{transform:'translate('+xTrans(w_r,item-wee,7)+'px,'+yTrans(w_r,item-wee,7)+'px) rotate('+dTrans(item-wee,7)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>星期{{direct==0?week[7-item]:week[item-1]}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="day"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 31"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:31-index==day}:{nowTime:index==day}"</span><span style="color: #ff0000;">
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(d_r,index+day,31)+'px,'+yTrans(d_r,index+day,31)+'px) rotate('+dTrans(index+day,31)+'deg)'}:{transform:'translate('+xTrans(d_r,index-day,31)+'px,'+yTrans(d_r,index-day,31)+'px) rotate('+dTrans(index-day,31)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>{{direct==0?31-index:index+1}}号<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="mon"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 100px; "</span><span style="color: #ff0000;">
+　　　　　　v-for</span><span style="color: #0000ff;">="(item,index) in 12"</span><span style="color: #ff0000;">
+　　　　　　v-bind:class</span><span style="color: #0000ff;">="direct==0?{nowTime:12-index==mon+1}:{nowTime:index==mon+1}"</span><span style="color: #ff0000;">
+　　　　　　v-bind:style</span><span style="color: #0000ff;">="direct==0?{transform:'translate('+xTrans(m_r,index+mon+1,12)+'px,'+yTrans(m_r,index+mon+1,12)+'px) rotate('+dTrans(index+mon+1,12)+'deg)'}:{transform:'translate('+xTrans(m_r,index+mon-1,12)+'px,'+yTrans(m_r,index+mon-1,12)+'px) rotate('+dTrans(index+mon-1,12)+'deg)'}"</span><span style="color: #0000ff;">&gt;</span>{{direct==0?12-index:index+1}}月<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+　　　　<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">点击年份可进行逆时针旋转</span><span style="color: #008000;">--&gt;</span>
+　　　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="yea"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="padding-left:1%"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="change"</span><span style="color: #0000ff;">&gt;</span>{{yea}}年<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+　　<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+　　　　<span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> mv</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+　　　　　　el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+　　　　　　data:{
+　　　　　　　　direct:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">顺时针</span>
+<span style="background-color: #f5f5f5; color: #000000;">
+　　　　　　　　PI:Math.PI,
+
+　　　　　　　　sec:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, min:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, hou:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, day:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, wee:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, mon:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, yea:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">,
+
+　　　　　　　　s_r:</span><span style="background-color: #f5f5f5; color: #000000;">600</span><span style="background-color: #f5f5f5; color: #000000;">, i_r:</span><span style="background-color: #f5f5f5; color: #000000;">500</span><span style="background-color: #f5f5f5; color: #000000;">, h_r:</span><span style="background-color: #f5f5f5; color: #000000;">400</span><span style="background-color: #f5f5f5; color: #000000;">, w_r:</span><span style="background-color: #f5f5f5; color: #000000;">300</span><span style="background-color: #f5f5f5; color: #000000;">, d_r:</span><span style="background-color: #f5f5f5; color: #000000;">200</span><span style="background-color: #f5f5f5; color: #000000;">, m_r:</span><span style="background-color: #f5f5f5; color: #000000;">100</span><span style="background-color: #f5f5f5; color: #000000;">,
+
+　　　　　　　　week:[</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">日</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">一</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">二</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">三</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">四</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">五</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">六</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]
+　　　　　　},
+　　　　　　created() {
+　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.timeSender</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">setInterval(()</span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;">{
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> date</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Date();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.yea</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getFullYear();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.mon</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getMonth();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.day</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getDate();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.wee</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getDay();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.hou</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getHours();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.min</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getMinutes();
+　　　　　　　　　　</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.sec</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">date.getSeconds()    
+　　　　　　　　},</span><span style="background-color: #f5f5f5; color: #000000;">1000</span><span style="background-color: #f5f5f5; color: #000000;">)
+　　　　　　},
+　　　　　　methods:{
+　　　　　　　　xTrans(r,k,l){ </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> r</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">Math.cos(</span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">k</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.PI</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">l) },</span>
+<span style="background-color: #f5f5f5; color: #000000;">　　　　　　　　yTrans(r,k,l){ </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> r</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">Math.sin(</span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">k</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.PI</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">l) },</span>
+<span style="background-color: #f5f5f5; color: #000000;">　　　　　　　　dTrans(k,l){ </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> k</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">360</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">l },</span>
+<span style="background-color: #f5f5f5; color: #000000;">
+　　　　　　　　change(){ </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.direct </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.direct </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">0</span> <span style="background-color: #f5f5f5; color: #000000;">?</span> <span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;"> : </span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;"> }
+　　　　　　}
+　　　　})
+　　</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/jq动画插件，自制基于vue的圆形时钟0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>你还可以在其他页面引用它并为他添加样式，我前面的有篇文章有讲到过</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="http://libs.baidu.com/jquery/2.0.0/jquery.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.mon</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #E8E8ED</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.day</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #E8D5ED</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.wee</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #E8E4D8</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.hou</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #E8E4B8</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.min</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #CBE4F5</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+　　　　div.sec</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+　　　　　　background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> #B0E4F5</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+　　　　<span style="background-color: #f5f5f5; color: #000000;">}</span>
+　　<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+　　<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="clock"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+$(document).ready(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+　　$(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#clock</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).load(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">clock.html</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+});
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/jq动画插件，自制基于vue的圆形时钟1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;本文借鉴于：https://blog.csdn.net/n994298535/article/details/89436283，大家可以去看看</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

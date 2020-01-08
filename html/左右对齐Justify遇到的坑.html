@@ -1,0 +1,78 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修左右对齐Justify遇到的坑' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>左右对齐Justify遇到的坑</center></div><div class='banquan'>原文出处:本文由博客园博主Jingge提供。<br/>
+原文连接:https://www.cnblogs.com/Jingge/p/11898802.html</div><br>
+    <h4 id="遇到的问题">遇到的问题</h4>
+<p>这两天在开发一个病历的对外展示页面，设计稿上label是左右拉伸对齐的，显示效果如下：<br />
+<img src="./images/左右对齐Justify遇到的坑0.png" alt="image" /></p>
+<p><strong>怎么实现这种效果呢？</strong></p>
+<p>首先想到的是文字中间加空格，但是这种方式太low了，而且不太容易控制。网上查资料，发现用justify可以实现。</p>
+<pre><code><code>.item-field {
+    display: inline-block;
+    width: 80px;
+    text-align: justify;
+}
+.....
+&lt;div&gt;
+    &lt;label class=&quot;item-field&quot;&gt;主诉：&lt;/label&gt;
+&lt;/div&gt;</code></pre>
+<p>但是加上上述样式后，文字依然没有左右对齐。</p>
+<p><strong>justify为什么没有生效呢？</strong></p>
+<p>查询MDN上关于<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align">text-align</a>的介绍，发现text-align有以下规则：</p>
+<ol>
+<li>text-align只对块级元素或者table-cell有效果</li>
+<li>text-align并不控制块元素自己的对齐，只控制它的行内内容的对齐</li>
+<li>justify ：<strong>文字向两侧对齐，对最后一行无效</strong></li>
+</ol>
+<p>由于label标签的内容&quot;主诉&quot;只有一行，所以justify没有生效</p>
+<h4 id="解决方式">解决方式</h4>
+<p>给label标签添加伪元素，伪元素独占一行且是最后一行，这样label的内容就可以左右对齐</p>
+<pre><code><code>.item-field {
+    display: inline-block;
+    width: 80px;
+    text-align: justify;
+    line-height: 0;
+}
+
+.item-field::after {
+    content: &#39;&#39;;
+    height: 0;
+    width: 100%;
+    display: inline-block;
+    line-height:
+}</code></pre>
+<p>注释：<br />
+::after用来创建一个伪元素，作为==已选中元素的最后一个子元素==。通常会配合content属性来为该元素添加装饰内容。这个虚拟元素默认是行内元素。</p>
+<h4 id="为什么不使用justify-all">为什么不使用justify-all</h4>
+<p>text-align还有一个可选值justify-all, 根据MDN上的定义：justify-all同justify一样，区别是最后一行也会两端对齐。<br />
+<strong>为什么不使用justify-all呢？因为justify-all是一个体验性的API，各个主流浏览器都不支持</strong> ，<a href="https://caniuse.com/#search=justify-all">浏览器支持度</a></p>
+<h4 id="小结">小结</h4>
+<p>text-align: justify可以设置元素内容左右对齐，但是对最后一行不生效。如果内容只有一行，可通过伪元素添加一个空行，实现内容左右对齐的效果。</p>
+<h4 id="参考">参考</h4>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align">MDN：text-align</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/::after">MDN：伪元素::after</a></li>
+</ul>
+<p>首发地址：<a href="http://www.geeee.top/2019/11/20/justify/" class="uri">http://www.geeee.top/2019/11/20/justify/</a>， 转载请注明出处！</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

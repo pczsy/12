@@ -1,0 +1,479 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修基于Vue2-Calendar改进的日历组件（含中文使用说明）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>基于Vue2-Calendar改进的日历组件（含中文使用说明）</center></div><div class='banquan'>原文出处:本文由博客园博主越笨越爱提供。<br/>
+原文连接:https://www.cnblogs.com/alax/p/10649295.html</div><br>
+    <h1>一，前言</h1>
+<p>我是刚学Vue的菜鸟，在使用过程中需要用到日历控件，由于项目中原来是用jQuery写的，因此用了bootstarp的日历控件，但是配合Vue实在有点蛋疼，不够优雅&hellip;&hellip;</p>
+<p>于是网上搜了好久找到了Vue2-Calendar，不用说，挺好用的，但是同时也发现这个组件有些问题，有些功能挺不符合我们的要求，于是着手改了一版</p>
+<h1>二，改进的功能</h1>
+<div>在Vue2-Calendar v2.2.4 版基础上作了优化。</div>
+<ol>
+<li><span style="color: #0000ff; font-size: 16px;">改进原控件无法切换语言的BUG，支持 lang='zh-CN'和'en'。</span></li>
+<li><span style="color: #0000ff; font-size: 16px;">日历面板增加一个位置选项，允许让面板右对齐，只需要position=right即可。</span></li>
+<li><span style="color: #0000ff; font-size: 16px;">原 :on-day-click 事件只有在 hasInput=false 时才生效，现改为一直有效，这样当用户点击日历面板上的日期后就可以触发该事件。</span></li>
+<li><span style="color: #0000ff; font-size: 16px;">clear=false时文本框右侧会显示一个日历图标，高仿bootstrap的日历组件，但clear=true时不显示</span></li>
+</ol>
+<p><span style="color: #000000;">效果图</span></p>
+<p>&nbsp;<img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）0.png" alt="" /><img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）1.png" alt="" /><img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）2.png" alt="" /></p>
+<p>&nbsp;</p>
+<h1>三，使用示例</h1>
+<h3>1.常规使用，单日历</h3>
+<p><img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）3.png" alt="" /></p>
+<p>HTML代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2b1b0109-8d29-43f7-9ea2-50acd806934e')"><img id="code_img_closed_2b1b0109-8d29-43f7-9ea2-50acd806934e" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_2b1b0109-8d29-43f7-9ea2-50acd806934e" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('2b1b0109-8d29-43f7-9ea2-50acd806934e',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_2b1b0109-8d29-43f7-9ea2-50acd806934e" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">calendar </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="value"</span><span style="color: #ff0000;"> show-date-only :disabled-days-of-week</span><span style="color: #0000ff;">="disabled"</span><span style="color: #ff0000;"> :format</span><span style="color: #0000ff;">="format"</span><span style="color: #ff0000;"> :clear-button</span><span style="color: #0000ff;">="clear"</span><span style="color: #ff0000;"> :placeholder</span><span style="color: #0000ff;">="placeholder"</span><span style="color: #ff0000;"> :lang</span><span style="color: #0000ff;">="lang"</span><span style="color: #ff0000;"> :position</span><span style="color: #0000ff;">="position"</span><span style="color: #ff0000;"> :on-day-click</span><span style="color: #0000ff;">="dayClick"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">calendar</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>JS代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('8e4ea70a-6eb0-4ad6-a0d7-008652bcb47b')"><img id="code_img_closed_8e4ea70a-6eb0-4ad6-a0d7-008652bcb47b" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_8e4ea70a-6eb0-4ad6-a0d7-008652bcb47b" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('8e4ea70a-6eb0-4ad6-a0d7-008652bcb47b',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_8e4ea70a-6eb0-4ad6-a0d7-008652bcb47b" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+</span><span style="color: #008080;"> 2</span>             el: "#app"<span style="color: #000000;">,
+</span><span style="color: #008080;"> 3</span>             data: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 4</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 5</span>                     disabled: [], <span style="color: #008000;">//</span><span style="color: #008000;">禁用的日期</span>
+<span style="color: #008080;"> 6</span>                     value: <span style="color: #0000ff;">new</span> Date(), <span style="color: #008000;">//</span><span style="color: #008000;">值</span>
+<span style="color: #008080;"> 7</span>                     format: "yyyy-MM-dd", <span style="color: #008000;">//</span><span style="color: #008000;">文本框中显示的日期格式</span>
+<span style="color: #008080;"> 8</span>                     clear: <span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;">是否在文本框右侧显示清除按钮（X）</span>
+<span style="color: #008080;"> 9</span>                     placeholder: "日期", <span style="color: #008000;">//</span><span style="color: #008000;">水印</span>
+<span style="color: #008080;">10</span>                     position: "left", <span style="color: #008000;">//</span><span style="color: #008000;">日期面板位置，默认null和left 居左，right则靠右</span>
+<span style="color: #008080;">11</span>                     lang: "" <span style="color: #008000;">//</span><span style="color: #008000;">语言，默认中文，可选值：zh-CN、en</span>
+<span style="color: #008080;">12</span> <span style="color: #000000;">                };
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">            methods: {
+</span><span style="color: #008080;">15</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">鼠标点击日历面板上的日期时的事件，</span>
+<span style="color: #008080;">16</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">传递的两个参数均是同一个值，只是类型不同，随便用哪个看个人需要</span>
+<span style="color: #008080;">17</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">date 是 Date 类型</span>
+<span style="color: #008080;">18</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">dateStr 是 String 类型</span>
+<span style="color: #008080;">19</span>                 dayClick: <span style="color: #0000ff;">function</span><span style="color: #000000;">(date, dateStr) {
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">                    console.log(date);
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">                    console.log(dateStr);
+</span><span style="color: #008080;">22</span>                     console.log(<span style="color: #0000ff;">this</span><span style="color: #000000;">.value);
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            components: {
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">                calendar: Calendar
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">28</span>         });</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;</p>
+<h3>2.常规使用，双月日历</h3>
+<p><img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）8.png" alt="" /></p>
+<p>HTML代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('38e88411-d7eb-42a6-9f92-5a7ab343a478')"><img id="code_img_closed_38e88411-d7eb-42a6-9f92-5a7ab343a478" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_38e88411-d7eb-42a6-9f92-5a7ab343a478" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('38e88411-d7eb-42a6-9f92-5a7ab343a478',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_38e88411-d7eb-42a6-9f92-5a7ab343a478" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">calendar </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="value"</span><span style="color: #ff0000;"> show-date-only :disabled-days-of-week</span><span style="color: #0000ff;">="disabled"</span><span style="color: #ff0000;"> :format</span><span style="color: #0000ff;">="format"</span><span style="color: #ff0000;"> :clear-button</span><span style="color: #0000ff;">="clear"</span><span style="color: #ff0000;"> :placeholder</span><span style="color: #0000ff;">="placeholder"</span><span style="color: #ff0000;"> :lang</span><span style="color: #0000ff;">="lang"</span><span style="color: #ff0000;"> :position</span><span style="color: #0000ff;">="position"</span><span style="color: #ff0000;"> :on-day-click</span><span style="color: #0000ff;">="dayClick"</span><span style="color: #ff0000;"> :pane</span><span style="color: #0000ff;">="2"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">calendar</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>JS代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('378ff5a2-cc4d-45f6-ae92-3fe8f45d18b6')"><img id="code_img_closed_378ff5a2-cc4d-45f6-ae92-3fe8f45d18b6" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_378ff5a2-cc4d-45f6-ae92-3fe8f45d18b6" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('378ff5a2-cc4d-45f6-ae92-3fe8f45d18b6',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_378ff5a2-cc4d-45f6-ae92-3fe8f45d18b6" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span>   <span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+</span><span style="color: #008080;"> 2</span>             el: "#app"<span style="color: #000000;">,
+</span><span style="color: #008080;"> 3</span>             data: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 4</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 5</span>                     disabled: [], <span style="color: #008000;">//</span><span style="color: #008000;">禁用的日期</span>
+<span style="color: #008080;"> 6</span>                     value: <span style="color: #0000ff;">new</span> Date(), <span style="color: #008000;">//</span><span style="color: #008000;">值</span>
+<span style="color: #008080;"> 7</span>                     format: "yyyy-MM-dd", <span style="color: #008000;">//</span><span style="color: #008000;">文本框中显示的日期格式</span>
+<span style="color: #008080;"> 8</span>                     clear: <span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;">是否在文本框右侧显示清除按钮（X）</span>
+<span style="color: #008080;"> 9</span>                     placeholder: "日期", <span style="color: #008000;">//</span><span style="color: #008000;">水印</span>
+<span style="color: #008080;">10</span>                     position: "left", <span style="color: #008000;">//</span><span style="color: #008000;">日期面板位置，默认null和left 居左，right则靠右</span>
+<span style="color: #008080;">11</span>                     lang: "" <span style="color: #008000;">//</span><span style="color: #008000;">语言，默认中文，可选值：zh-CN、en</span>
+<span style="color: #008080;">12</span> <span style="color: #000000;">                };
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">            methods: {
+</span><span style="color: #008080;">15</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">鼠标点击日历面板上的日期时的事件，</span>
+<span style="color: #008080;">16</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">传递的两个参数均是同一个值，只是类型不同，随便用哪个看个人需要</span>
+<span style="color: #008080;">17</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">date 是 Date 类型</span>
+<span style="color: #008080;">18</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">dateStr 是 String 类型</span>
+<span style="color: #008080;">19</span>                 dayClick: <span style="color: #0000ff;">function</span><span style="color: #000000;">(date, dateStr) {
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">                    console.log(date);
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">                    console.log(dateStr);
+</span><span style="color: #008080;">22</span>                     console.log(<span style="color: #0000ff;">this</span><span style="color: #000000;">.value);
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            components: {
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">                calendar: Calendar
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">28</span>         });</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h3>3.双日历联动，通常用在开始和结束时间的选择上，结束时间不能早于开始时间</h3>
+<p><img src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）2.png" alt="" /></p>
+<p>说明：当选择了开始时间后，结束时间选择时会显示哪些日期可选，并且显示已经选择的开始时间</p>
+<p>HTML代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('d8f0f6e0-8089-4f8d-88a4-7a44bdc1d674')"><img id="code_img_closed_d8f0f6e0-8089-4f8d-88a4-7a44bdc1d674" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_d8f0f6e0-8089-4f8d-88a4-7a44bdc1d674" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('d8f0f6e0-8089-4f8d-88a4-7a44bdc1d674',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_d8f0f6e0-8089-4f8d-88a4-7a44bdc1d674" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">calendar </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="value"</span><span style="color: #ff0000;"> show-date-only :disabled-days-of-week</span><span style="color: #0000ff;">="disabled"</span><span style="color: #ff0000;"> :format</span><span style="color: #0000ff;">="format"</span><span style="color: #ff0000;"> :clear-button</span><span style="color: #0000ff;">="clear"</span><span style="color: #ff0000;"> :placeholder</span><span style="color: #0000ff;">="'起始时间'"</span><span style="color: #ff0000;"> :lang</span><span style="color: #0000ff;">="lang"</span><span style="color: #ff0000;"> :position</span><span style="color: #0000ff;">="position"</span><span style="color: #ff0000;"> :on-day-click</span><span style="color: #0000ff;">="dayClick"</span><span style="color: #ff0000;"> :pane</span><span style="color: #0000ff;">="1"</span><span style="color: #ff0000;"> :range-bus</span><span style="color: #0000ff;">="getBus"</span><span style="color: #ff0000;"> :range-status</span><span style="color: #0000ff;">="1"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">calendar</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">calendar </span><span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="value2"</span><span style="color: #ff0000;"> show-date-only :disabled-days-of-week</span><span style="color: #0000ff;">="disabled"</span><span style="color: #ff0000;"> :format</span><span style="color: #0000ff;">="format"</span><span style="color: #ff0000;"> :clear-button</span><span style="color: #0000ff;">="clear"</span><span style="color: #ff0000;"> :placeholder</span><span style="color: #0000ff;">="'结束时间'"</span><span style="color: #ff0000;"> :lang</span><span style="color: #0000ff;">="lang"</span><span style="color: #ff0000;"> :position</span><span style="color: #0000ff;">="position"</span><span style="color: #ff0000;"> :on-day-click</span><span style="color: #0000ff;">="dayClick"</span><span style="color: #ff0000;"> :pane</span><span style="color: #0000ff;">="1"</span><span style="color: #ff0000;"> :range-bus</span><span style="color: #0000ff;">="getBus"</span><span style="color: #ff0000;"> :range-status</span><span style="color: #0000ff;">="2"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">calendar</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>JS代码：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('50f43e34-d4d5-4d4c-b372-aab664243e43')"><img id="code_img_closed_50f43e34-d4d5-4d4c-b372-aab664243e43" class="code_img_closed" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）4.png" alt="" /><img id="code_img_opened_50f43e34-d4d5-4d4c-b372-aab664243e43" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('50f43e34-d4d5-4d4c-b372-aab664243e43',event)" src="./images/基于Vue2-Calendar改进的日历组件（含中文使用说明）5.png" alt="" />
+<div id="cnblogs_code_open_50f43e34-d4d5-4d4c-b372-aab664243e43" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span>  <span style="color: #0000ff;">var</span> app2 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+</span><span style="color: #008080;"> 2</span>             el: "#app2"<span style="color: #000000;">,
+</span><span style="color: #008080;"> 3</span>             data: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 4</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">                    disabled: [],
+</span><span style="color: #008080;"> 6</span>                     value: <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date(),
+</span><span style="color: #008080;"> 7</span>                     value2: <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date(),
+</span><span style="color: #008080;"> 8</span>                     format: "yyyy-MM-dd"<span style="color: #000000;">,
+</span><span style="color: #008080;"> 9</span>                     clear: <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+</span><span style="color: #008080;">10</span>                     placeholder: "Start Date"<span style="color: #000000;">,
+</span><span style="color: #008080;">11</span>                     position: "left"<span style="color: #000000;">,
+</span><span style="color: #008080;">12</span>                     lang: ""<span style="color: #000000;">,
+</span><span style="color: #008080;">13</span>                     bus: <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue()
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">                };
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">            methods: {
+</span><span style="color: #008080;">17</span>                 dayClick: <span style="color: #0000ff;">function</span><span style="color: #000000;">(date, dateStr) {
+</span><span style="color: #008080;">18</span>                     console.log('value=' + <span style="color: #0000ff;">this</span><span style="color: #000000;">.value);
+</span><span style="color: #008080;">19</span>                     console.log('value2=' + <span style="color: #0000ff;">this</span><span style="color: #000000;">.value2);
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">                },
+</span><span style="color: #008080;">21</span>                 getBus: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">22</span>                     <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.bus;
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            components: {
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">                calendar: Calendar
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">28</span>         });</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<h1>&nbsp;四，参数说明（翻译的官方文档）</h1>
+<h2>安装（需要node支持）</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:bash;gutter:true;">$ npm install vue2-slot-calendar
+</pre>
+</div>
+<h3>导入模块</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">// js file
+import 'vue2-slot-calendar/lib/calendar.min.css';
+import calendar from 'vue2-slot-calendar/lib/calendar';
+
+// vue file
+// in ES6 modules
+import Calendar from 'vue2-slot-calendar';
+
+// in CommonJS
+const Calendar = require('vue2-slot-calendar');
+
+// in Global variable
+const VueCalendar = Calendar;
+</pre>
+</div>
+<h3>直接引用编译好的js文件（推荐）</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;link rel="stylesheet" href="/lib/calendar.min.css" &gt;
+&lt;script src="/lib/calendar.min.js"&gt;&lt;/script&gt;
+</pre>
+</div>
+<h2>多语言支持</h2>
+<p>系统提供<span style="background-color: #ffff00; color: #0000ff;">window.VueCalendarLang </span>勾子函数来让用户自定义语言，</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">window.VueCalendarLang=function(lang){
+    return {}; //对象必须是下面JSON格式 
+};
+</pre>
+</div>
+<p>上面勾子函数返回的必须是下面格式的JSON对象。</p>
+<p>下面的脚本在 /src/lang/zh-CN.js 中有</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">{
+    daysOfWeek: ["日", "一", "二", "三", "四", "五", "六"],
+    limit: "超过限制 (最多{{limit}}项)",
+    loading: "加载中...",
+    minLength: "最小长度",
+    months: [
+        "一月",
+        "二月",
+        "三月",
+        "四月",
+        "五月",
+        "六月",
+        "七月",
+        "八月",
+        "九月",
+        "十月",
+        "十一",
+        "十二"
+    ],
+    notSelected: "未选择",
+    required: "必填项",
+    search: "查找"
+}
+</pre>
+</div>
+<p>　　</p>
+<h2>构建步骤</h2>
+<div class="cnblogs_Highlighter">
+<pre class="brush:bash;gutter:true;"># 安装依赖
+npm install
+
+# 运行开发服务器 localhost:4000
+npm run dev
+
+# 编译（压缩JS和CSS等）
+npm run build
+
+# 单元测试
+npm run unit
+
+# 运行所有测试
+npm test
+</pre>
+</div>
+<h3>参数和事件</h3>
+<p>&nbsp;</p>
+<table style="height: 447px; width: 1092px;">
+<thead>
+<tr><th>Name</th><th>Type</th><th>Default</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>value</td>
+<td><code>String</code></td>
+<td>''</td>
+<td>组件输入输出的值，即 v-model 的值</td>
+</tr>
+<tr>
+<td>width</td>
+<td><code>String</code></td>
+<td>'200px'</td>
+<td>input文本框的宽度</td>
+</tr>
+<tr>
+<td>format</td>
+<td><code>String</code></td>
+<td><code>yyyy-MM-dd</code></td>
+<td>日期格式,可用值： d, dd, M, MM, MMM, MMMM, yyyy.</td>
+</tr>
+<tr>
+<td>disabled-days-of-week</td>
+<td><code>Array</code></td>
+<td>&nbsp;</td>
+<td>每周有哪些天禁用，可用值0-6，多个值则用逗号隔开</td>
+</tr>
+<tr>
+<td>clear-button</td>
+<td><code>Bollean</code></td>
+<td>false</td>
+<td>是否显示清除按钮，显示清除按钮时右侧的日历图标不显示，不显示清除按钮时则显示日历图标</td>
+</tr>
+<tr>
+<td>placeholder</td>
+<td><code>String</code></td>
+<td>&nbsp;</td>
+<td>文本框中显示的水印</td>
+</tr>
+<tr>
+<td>hasInput</td>
+<td><code>Boolean</code></td>
+<td>true</td>
+<td>是否显示文本框</td>
+</tr>
+<tr>
+<td>pane</td>
+<td><code>Number</code></td>
+<td>1</td>
+<td>日历面板数量，默认1，双月日历设为2即可，目前仅支持1和2</td>
+</tr>
+<tr>
+<td>borderWidth</td>
+<td><code>Number</code></td>
+<td>2</td>
+<td>日历面板边框线宽度</td>
+</tr>
+<tr>
+<td><span style="color: #0000ff;">onDayClick</span></td>
+<td><span style="color: #0000ff;"><code>Function</code></span></td>
+<td><span style="color: #0000ff;">&nbsp;</span></td>
+<td><span style="color: #0000ff;">点击日期时的事件，已改为不受hasInput值的限制，总是触发</span></td>
+</tr>
+<tr>
+<td>specialDays</td>
+<td><code>Object</code></td>
+<td>&nbsp;</td>
+<td>特殊日期</td>
+</tr>
+<tr>
+<td>changePane</td>
+<td><code>Function</code></td>
+<td>&nbsp;</td>
+<td>切换日历面板时的事件, 暂时还没研究这个，大多数情况下用不到，请参考&nbsp;&nbsp;<code>/src/modules/Docs.vue</code></td>
+</tr>
+<tr>
+<td>rangeBus</td>
+<td><code>Function</code></td>
+<td>&nbsp;</td>
+<td>暂时不明白啥意思，请总是返回一个 new Vue() 就对了</td>
+</tr>
+<tr>
+<td>rangeStatus</td>
+<td><code>Number</code></td>
+<td>0</td>
+<td>日期范围状态，默认0表示不使用日期范围，1表示双日历联动的起始日期，2表示双日历联动的结束日期</td>
+</tr>
+<tr>
+<td>onDrawDate</td>
+<td><code>Function</code></td>
+<td>&nbsp;</td>
+<td>绘制日期时的事件，可以让用户自定义日历样式</td>
+</tr>
+<tr>
+<td>showDateOnly</td>
+<td><code>Boolean</code></td>
+<td>false</td>
+<td>是否只显示日历面板</td>
+</tr>
+<tr>
+<td>transfer</td>
+<td><code>Boolean</code></td>
+<td>false</td>
+<td>是否将日历面板添加到 document.body中</td>
+</tr>
+<tr>
+<td>elementId</td>
+<td><code>String</code></td>
+<td>&nbsp;</td>
+<td>日历ID</td>
+</tr>
+<tr>
+<td>firstDayOfWeek</td>
+<td><code>Number</code></td>
+<td>0</td>
+<td>每周第1天，0表示星期天，1表示星期一，其它依次类推</td>
+</tr>
+</tbody>
+</table>
+<h3 class="prettyprint prettyprinted"><br />组件的所有属性值</h3>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">props: {
+    value: {
+      type: [String, Date]
+    },
+    format: {
+      default: 'yyyy-MM-dd'
+    },
+    firstDayOfWeek: {
+      // sunday
+      default: 0
+    },
+    disabledDaysOfWeek: {
+      type: Array,
+      default () {
+        return []
+      }
+    },
+    width: {
+      type: String,
+      default: '200px'
+    },
+    clearButton: {
+      type: Boolean,
+      default: false
+    },
+    inputClasses: {
+      type: String,
+      default: ''
+    },
+    lang: {
+      type: String,
+      default: navigator.language
+    },
+    placeholder: {
+      type: String
+    },
+    hasInput: {
+      type: Boolean,
+      default: true
+    },
+    pane: {
+      type: Number,
+      default: 1
+    },
+    borderWidth: {
+      type: Number,
+      default: 2
+    },
+    onDayClick: {
+      type: Function,
+      default () {}
+    },
+    changePane: {
+      type: Function,
+      default () {}
+    },
+    specialDays: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
+    rangeBus: {
+      type: Function,
+      default () {
+        // return new Vue()
+      }
+    },
+    rangeStatus: {
+      type: Number,
+      default: 0
+    },
+    onDrawDate: {
+      type: Function,
+      default () {}
+    },
+    maxDate: {
+      type: String
+    },
+    minDate: {
+      type: String
+    },
+    showDateOnly: {
+      type: Boolean,
+      default: false
+    },
+    transfer: {
+      type: Boolean,
+      default: false
+    },
+    elementId: [String]
+  }
+</pre>
+</div>
+<h1>五，源码</h1>
+<p>以下是我改过后的源码：</p>
+<p><a title="https://github.com/alaxgit/Vue2-Calendar" href="https://github.com/alaxgit/Vue2-Calendar" target="_blank">https://github.com/alaxgit/Vue2-Calendar</a></p>
+<h1>六，直接引用JS</h1>
+<p>如果你喜欢直接引用JS和CSS，不喜欢用webpack编译啥的，可以直接下载编译好的文件：</p>
+<p><a title="https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.js" href="https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.js" target="_blank">https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.js</a></p>
+<p><a title="https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.css" href="https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.css" target="_blank">https://github.com/alaxgit/Vue2-Calendar/blob/master/lib/calendar.min.css</a></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

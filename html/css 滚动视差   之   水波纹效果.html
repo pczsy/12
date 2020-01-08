@@ -1,0 +1,250 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css 滚动视差   之   水波纹效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css 滚动视差   之   水波纹效果</center></div><div class='banquan'>原文出处:本文由博客园博主初心，你好吗提供。<br/>
+原文连接:https://www.cnblogs.com/LHLVS/p/10738203.html</div><br>
+    <p>核心属性： background-attachment</p>
+<p>这个属性就牛逼了， 它可以定义背景图片是相对视口固定，</p>
+<p>还是随着视口滚动， 加上这个属性网页瞬间就从屌丝变成</p>
+<p>高大上。</p>
+<p>我们来看个例子：</p>
+<p>html:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;div class="attach view"&gt;&lt;/div&gt;
+&lt;div class="text view"&gt;I WANT FLY&lt;/div&gt;
+&lt;div class="attach view"&gt;&lt;/div&gt;
+&lt;div class="text view"&gt;I WANT FLY&lt;/div&gt;
+&lt;div class="attach view"&gt;&lt;/div&gt;
+&lt;div class="text view"&gt;I WANT FLY&lt;/div&gt;
+&lt;div class="attach view"&gt;&lt;/div&gt;</pre>
+</div>
+<p>css:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">body{
+    background</span>-<span style="color: #000000;">color: #cccccc;
+    margin: </span>0<span style="color: #000000;">;
+    padding: </span>0<span style="color: #000000;">;
+}
+.attach{
+    background</span>-image: url("./img/1.jpg"<span style="color: #000000;">);
+    background</span>-<span style="color: #000000;">size: cover;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">background-attachment: fixed;</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    background</span>-<span style="color: #000000;">position: center center;
+}
+.view{
+    height: 100vh;
+}
+.text{
+    font</span>-<span style="color: #000000;">size: 45px;
+    text</span>-<span style="color: #000000;">align: center;
+    line</span>-<span style="color: #000000;">height: 100vh;
+    color: #ffffff;
+}</span></pre>
+</div>
+<p>代码很简单，让视口出现滚动条，</p>
+<p>然后它是这样的：</p>
+<p><img src="./images/css 滚动视差   之   水波纹效果0.png" alt="" width="476" height="223" /></p>
+<p>很普通的一个滚动效果， 然后我们把注释去掉，</p>
+<p>就是加上这句话：</p>
+<div class="cnblogs_code">
+<pre><code>background-attachment: fixed;</pre>
+</div>
+<p>华丽变身：</p>
+<p><img src="./images/css 滚动视差   之   水波纹效果1.png" alt="" width="464" height="217" /></p>
+<p>由于它相对视口固定， 看起来就好像只有一个背景一样。</p>
+<p>我们就用这个属性来制作水波纹效果：</p>
+<p>波纹效果其实就是动态生成几个div 叠加在一起， 并且背景图片一样</p>
+<p>它们的宽高逐渐变大， 透明度逐渐变为0， 并且每个div有delay, 效果</p>
+<p>结束后remove掉，并且多次点击产生的波纹的层级越来越高才不会被前面的波纹覆盖；</p>
+<p>HTML：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;div class="water-wave"&gt;
+
+&lt;/div&gt;</pre>
+</div>
+<p>CSS:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">整体的背景</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.water</span>-<span style="color: #000000;">wave {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">占满整个屏幕</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    position: relative;
+    height: 100vh;
+    width: 100vw;
+    background</span>-image: url("./img/1.jpg"<span style="color: #000000;">);
+    background</span>-<span style="color: #000000;">size: cover;
+    background</span>-<span style="color: #000000;">position: center center;
+    background</span>-<span style="color: #000000;">attachment: fixed;
+    overflow: hidden;
+    cursor: pointer;
+
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">存放波纹的一个自适应的正方形</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.wave</span>-<span style="color: #000000;">container {
+    position: absolute;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> vmin =  视口width &gt; 视口height ?  height : width</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    width: 80vmin;
+    height: 80vmin;
+}
+.center{
+    position: relative;
+    width: </span>100%<span style="color: #000000;">;
+    height: </span>100%<span style="color: #000000;">;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">背景铺满</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    background</span>-<span style="color: #000000;">size: cover;
+}
+.wave {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">每个波纹居中</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    position: absolute;
+    top: calc((</span>100% - 10vmin) / 2<span style="color: #000000;">);
+    left: calc((</span>100% - 10vmin) / 2<span style="color: #000000;">);
+    width: 10vmin;
+    height: 10vmin;
+    border</span>-radius: 50%<span style="color: #000000;">;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">开启3d加速</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    transform: translate3d(</span>0, 0, 0<span style="color: #000000;">);
+    background</span>-image: url("./img/1.jpg"<span style="color: #000000;">);
+    background</span>-<span style="color: #000000;">position: center center;
+    background</span>-<span style="color: #000000;">attachment: fixed;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">所有属性变化过渡200ms</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    transition: all .2s;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">每个波纹的动画延迟不一样， size由大变小再
+变为100%这样效果更逼真</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.wave1 {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">forwards停留在动画的最后一帧</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    animation: move 1s ease</span>-<span style="color: #000000;">out .1s forwards;
+    background</span>-size: 106%<span style="color: #000000;">;
+    z</span>-index: 10<span style="color: #000000;">;
+
+}
+
+.wave2 {
+    animation: move 1s ease</span>-<span style="color: #000000;">out .15s forwards;
+    background</span>-size: 102%<span style="color: #000000;">;
+    z</span>-index: 20<span style="color: #000000;">;
+
+}
+
+.wave3 {
+    animation: move 1s ease</span>-<span style="color: #000000;">out .25s forwards;
+    background</span>-size: 104%<span style="color: #000000;">;
+    z</span>-index: 30<span style="color: #000000;">;
+
+}
+
+.wave4 {
+    animation: move 1s ease</span>-<span style="color: #000000;">out .4s forwards;
+    background</span>-size: 100%<span style="color: #000000;">;
+    z</span>-index: 40<span style="color: #000000;">;
+
+}
+
+@keyframes move {
+    </span>0%<span style="color: #000000;"> {
+        top: calc((</span>100% - 10vmin) / 2<span style="color: #000000;">);
+        left: calc((</span>100% - 10vmin) / 2<span style="color: #000000;">);
+        width: 10vmin;
+        height: 10vmin;
+        opacity: </span>1<span style="color: #000000;">;
+    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">动画过程中不能让opacity渐变，不然没有水波纹的效果</span><span style="color: #008000;">*/</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">但是这样又会产生一点小抖动， 不过不影响效果</span><span style="color: #008000;">*/</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">你也可以注释掉看看</span><span style="color: #008000;">*/</span>
+    99%<span style="color: #000000;"> {
+        opacity: </span>1<span style="color: #000000;">;
+    }
+    </span>100%<span style="color: #000000;"> {
+        top: calc((</span>100% - 40vmin) / 2<span style="color: #000000;">);
+        left: calc((</span>100% - 40vmin) / 2<span style="color: #000000;">);
+        width: 40vmin;
+        height: 40vmin;
+        opacity: </span>0<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>JS:&nbsp; &nbsp;我尽量每行都写注释</p>
+<div class="cnblogs_code">
+<pre><code>const container = document.getElementsByClassName('water-wave'); <span style="color: #008000;">//</span><span style="color: #008000;"> 取父级</span>
+<span style="color: #000000;">
+const number </span>= 4; <span style="color: #008000;">//</span><span style="color: #008000;"> 自定义产生几个水波纹</span>
+<span style="color: #000000;">
+let index </span>= 0; <span style="color: #008000;">//</span><span style="color: #008000;"> 定义每次点击产生的波纹的层级</span>
+<span style="color: #000000;">
+const containerWidth </span>= document.body.clientHeight &gt;<span style="color: #000000;"> document.body.clientWidth
+    </span>? document.body.clientWidth * 0.8 / 2 : document.body.clientHeight * 0.8 / 2<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 取包裹波纹的正方形的半个宽 这是为了计算点击时正方形的位置</span>
+<span style="color: #000000;">
+
+container[</span>0].addEventListener('click', (e) =&gt;<span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 传入事件， 父级，  波纹数， 层级</span>
+    addWave(e, container[0], number, index++<span style="color: #000000;">)
+}, </span><span style="color: #0000ff;">false</span>);   <span style="color: #008000;">//</span><span style="color: #008000;"> 注册点击事件</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> 点击触发</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> addWave(e, parentNode, number, index) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染完波纹后插入父级， 传入波纹数， 点击的坐标x, y ，层级</span>
+<span style="color: #000000;">    parentNode.appendChild(renderWave(number, e.pageX, e.pageY, index));
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">  移除每次点击产生的波纹，</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;">  index是用来识别每次点击的波纹相当于唯一的ID</span>
+<span style="color: #000000;">    removeWave(parentNode, index);
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染波纹的函数</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> renderWave(number, x, y, z) {
+    let childrenNode </span>= ''<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 创建一个父级div元素用来包裹波纹</span>
+    let childrenContainer = document.createElement('div'<span style="color: #000000;">);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 添加一个class用来标记，方便删除</span>
+<span style="color: #000000;">    childrenContainer.classList.add(`remove${z}`);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 循环产生波纹</span>
+    <span style="color: #0000ff;">for</span> (let i = 0; i &lt; number; i++<span style="color: #000000;">) {
+        childrenNode </span>+= `&lt;div class='wave wave${i + 1}'&gt;&lt;/div&gt;`
+<span style="color: #000000;">    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 波纹放进div里</span>
+    childrenContainer.innerHTML =<span style="color: #000000;">
+        `</span>&lt;div class='wave-container' style='left:${x - containerWidth}px;top:${y - containerWidth}px;z-index:${z}'&gt;
+            &lt;div class="center"&gt;<span style="color: #000000;">
+                ${childrenNode}
+            </span>&lt;/div&gt;
+         &lt;/div&gt;`;
+    <span style="color: #008000;">//</span><span style="color: #008000;"> 返回这个div</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> childrenContainer;
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> removeWave(parentNode, index) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 延迟3秒删除波纹</span>
+    setTimeout(() =&gt;<span style="color: #000000;"> {
+        const node </span>= document.getElementsByClassName(`remove${index}`)[0<span style="color: #000000;">];
+        parentNode.removeChild(node);
+    }, </span>3000<span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>注释已经写的很详细了， 自己动手写写才能发现问题哦</p>
+<p>我们来看看最终效果：</p>
+<p><img src="./images/css 滚动视差   之   水波纹效果2.png" alt="" width="538" height="252" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>可在下方评论大声说出你的看法 &darr;&darr;👇</strong></span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

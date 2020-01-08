@@ -1,0 +1,407 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修手把手教你grid布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>手把手教你grid布局</center></div><div class='banquan'>原文出处:本文由博客园博主Cynthia-milk提供。<br/>
+原文连接:https://www.cnblogs.com/cythia/p/10894598.html</div><br>
+    <h2>概述</h2>
+<p>目前css布局方案中,网格布局可以算得上是最强大的布局方案了。它可以将网页分为一个个网格，然后利用这些网格组合做出各种各样的布局。</p>
+<h2>基本概念</h2>
+<p>在学习grid布局之前，我们需要了解一些基本概念</p>
+<h3>1.容器和项目</h3>
+<p>采用网格布局的区域，称为&ldquo;容器&rdquo;。容器内部的采用网格定位的子元素称为&ldquo;项目&rdquo;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>上面的代码中，<span style="background-color: #ffff00;">wrapper</span>就是容器，<span style="background-color: #ffff00;">item</span>就是项目</p>
+<h4>1.1 行、列和单元格</h4>
+<p>容器里面的水平区域称为&ldquo;行&rdquo;，垂直区域称为&ldquo;列&rdquo;，行列重叠出来的空间组成单元格</p>
+<p><img src="./images/手把手教你grid布局0.png" alt="" /></p>
+<h4>1.2 网格线</h4>
+<p>划分网格的线，称为&rdquo;网格线&ldquo;</p>
+<p><img src="./images/手把手教你grid布局1.png" alt="" /></p>
+<p>黄色的代表是列的网格线，绿色代表的是行的网格线</p>
+<p>&nbsp;</p>
+<p>Grid和flex类似，布局的属性都是分为两类，一类定义在容器上，称为容器属性，一类定义在项目上，称为项目属性</p>
+<h3>2 容器属性</h3>
+<h4>2.1 display属性</h4>
+<p><span style="background-color: #ffff00;">display:grid指定一个容器为网格布局</span></p>
+<p>html部分：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>css部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+            width:450px;
+            background: #f3f3f3;
+            text-align:center;
+            display: grid;
+            grid-template-columns: 150px 150px 150px;
+            grid-template-rows: 150px 150px 150px
+        }
+        .item{
+            text-align: center;
+            border:1px solid #fff;
+            color:#fff;
+            font-weight: bold;
+            line-height: 150px;
+        }
+        .item:first-of-type{
+            background:#ef342a
+        }
+        .item:nth-of-type(2){
+            background:#00a0a0;
+        }
+        .item:nth-of-type(3){
+            background:#a0a0ff;
+        }</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局2.png" alt="" /></p>
+<p>在这里我定义的三个网格都是宽高为150px</p>
+<p>当然啦，我们也可以把它定义为行内元素，该元素内部就采用网格布局</p>
+<h4>2.2 display：inline-grid效果</h4>
+<p><img src="./images/手把手教你grid布局3.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>foo<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>bar<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>3 grid-template-columns和&nbsp;grid-template-rows</h3>
+<p>grid-template-columns：用来指定行的宽度</p>
+<p>grid-template-rows：用来指定行的高度</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:csharp;gutter:true;">.wrapper{
+            width:450px;
+            background: #e5e5e5;
+            text-align:center;
+            display: inline-grid;
+            grid-template-columns: 150px 150px 150px;
+            grid-template-rows: 150px 150px 150px
+        }</pre>
+</div>
+<p>上面这段代码指定的宽高各为150px</p>
+<p>当然来，出来能指定具体的数值之外，也可以使用百分比来表示</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  display: grid;
+  grid-template-columns: 33.33% 33.33% 33.33%;
+  grid-template-rows: 33.33% 33.33% 33.33%;
+}</span></pre>
+</div>
+<h4>3.1 repeat</h4>
+<p>有时候，重复写同样的值非常麻烦，尤其网格很多时。这时，可以使用<code>repeat()</code>函数，简化重复的值。上面的代码用<code>repeat()</code>改写如下</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 33.33%);
+  grid-template-rows: repeat(3, 33.33%);
+}</span></pre>
+</div>
+<p>repeat接受两个参数：第一个数重复的次数（上面的例子是重复3次），第二个是重复的值（上面例子是33.33%）</p>
+<p>repeat也可以是重复某种模式，例如下面的例子就是一只重复<span style="background-color: #ffff00;">100px,20px,80px</span></p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-1"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-2"</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-3"</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-4"</span><span style="color: #0000ff;">&gt;</span>4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-5"</span><span style="color: #0000ff;">&gt;</span>5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-6"</span><span style="color: #0000ff;">&gt;</span>6<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-7"</span><span style="color: #0000ff;">&gt;</span>7<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-8"</span><span style="color: #0000ff;">&gt;</span>8<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item item-9"</span><span style="color: #0000ff;">&gt;</span>9<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+              <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>css部分：repeat（2，100px,20px,80px）</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> #wrapper{
+  display: grid;
+  grid-template-columns: repeat(2, 100px 20px 80px);
+  grid-template-rows: repeat(3, 100px);
+}
+
+.item {
+  font-size: 4em;
+  text-align: center;
+  border: 1px solid #e5e4e9;
+}
+
+.item-1 {
+  background-color: #ef342a;
+}
+
+.item-2 {
+  background-color: #f68f26;
+}
+
+.item-3 {
+  background-color: #4ba946;
+}
+
+.item-4 {
+  background-color: #0376c2;
+}
+
+.item-5 {
+  background-color: #c077af;
+}
+
+.item-6 {
+  background-color: #f8d29d;
+}
+
+.item-7 {
+  background-color: #b5a87f;
+}
+
+.item-8 {
+  background-color: #d0e4a9;
+}
+
+.item-9 {
+  background-color: #4dc7ec;
+}</span></pre>
+</div>
+<h4>3.2 auto-fill</h4>
+<p>有时候单元格的大小是固定的，但是容器的大小不确定。如果希望每一行或则每一列都尽可能的容纳更多的单元格，我们就可以使用auto-fill来自动填充</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, 100px)  
+}</span></pre>
+</div>
+<h4>3.3 fr</h4>
+<p>为了方柏霓表示比例关系，网格提供了<span style="background-color: #ffff00;">fr</span>关键字（fraction的缩写，意为&ldquo;片段&rdquo;），如果两列的宽度分别为<span style="background-color: #ffff00;">1fr</span>和<span style="background-color: #ffff00;">2fr</span>，就表示后者是前者的2倍</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span> 
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>css部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+            width:450px;
+            background: #f3f3f3;
+            text-align:center;
+            display:grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: 150px 150px 150px
+        }</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局4.png" alt="" /></p>
+<p><span style="background-color: #ffff00;">fr</span>可以和绝对长度相结合一起使用</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">  .wrapper {
+        display: grid;
+        grid-template-columns: 150px 1fr 2fr;
+        
+      }</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局5.png" alt="" /></p>
+<h4>3.4 minmax</h4>
+<p><span style="background-color: #ffff00;">minmax()</span> 产生一个长度范围，表示长度就在这个范围之中，它接受两个参数，分别为最小值和最大值</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+grid-template-columns: 1fr 1fr minmax(100px,1fr);
+}</span></pre>
+</div>
+<p>上面代码(minmax(100px,1fr))表示列宽不小于100px，不大于1fr</p>
+<h4>3.5 auto关键字</h4>
+<p>表示浏览器自己决定宽度</p>
+<div class="cnblogs_code">
+<pre><code>grid-template-columns: 100px auto 100px;</pre>
+</div>
+<p>上面代码中，第二列的宽度，基本上等于该列单元格的最大宽度，除非单元格内容设置了<code>min-width</code>，且这个值大于最大宽度</p>
+<h3>4&nbsp; grid-row-gap和grid-colunm-gap属性</h3>
+<h4>&nbsp;</h4>
+<p><span style="background-color: #ffff00;">grid-row-gap</span>：设置行与行之间的间隔</p>
+<p>grid-colunm-gap：设置列于列之间的间隔</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+}</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局6.png" alt="" /></p>
+<p>grid-row-gap和grid-colunms-gap合并简写的话,格式为<span style="background-color: #ffff00;">grid-gap</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+grid-gap: 10px 10px;
+}</span></pre>
+</div>
+<p>如果省略第二个值的话，那么就默认第二个值等于第一个值</p>
+<h3>5 grid-auto-flow</h3>
+<p>划分网格，容器的子元素排序是按照&ldquo;先行后列&rdquo;来排的通过该属性我们可以自定义排列的顺序</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper{
+  grid-auto-flow:colunm;  
+}</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局7.png" alt="" /></p>
+<h4>6 .1 justify-items、align-items和place-items属性</h4>
+<p><span style="background-color: #ffff00;">justify-items</span>属性设置单元格内容的水平位置，<span style="background-color: #ffff00;">align-items</span>设置单元格内容的垂直位置</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  justify-items: start | end | center | stretch;
+  align-items: start | end | center | stretch;
+}</span></pre>
+</div>
+<p>这两个属性的取值是完全一样的</p>
+<ul>
+<li>start：对齐单元格的起始边缘。</li>
+<li>end：对齐单元格的结束边缘。</li>
+<li>center：单元格内部居中。</li>
+<li>stretch：拉伸，占满单元格的整个宽度（默认值）</li>
+</ul>
+<p><img src="./images/手把手教你grid布局8.png" alt="" /></p>
+<p>这个是在单元中内居中</p>
+<p><span style="background-color: #ffff00;">place-item</span>是两者的合并写法</p>
+<div class="cnblogs_code">
+<pre><code>place-items: <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">align-items</span><span style="color: #0000ff;">&gt;</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">justify-items</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>例子：</p>
+<div class="cnblogs_code">
+<pre><code>place-items: start end;</pre>
+</div>
+<h4>6.2 justify-content属性、align-content属性和place-content属性</h4>
+<p><span style="background-color: #ffff00;">justify-content</span>属性是整个内容区域在容器里面的水平位置，<span style="background-color: #ffff00;">align-content</span>属性是整个内容区域在容器里面的垂直位置</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  justify-content: start | end | center | stretch | space-around | space-between | space-evenly;
+  align-content: start | end | center | stretch | space-around | space-between | space-evenly;  
+}</span></pre>
+</div>
+<p><strong>start</strong></p>
+<p>水平方向和垂直方向都是start</p>
+<p><img src="./images/手把手教你grid布局9.png" alt="" /></p>
+<p><strong>center</strong></p>
+<p>垂直和水平方向都是center</p>
+<p><img src="./images/手把手教你grid布局10.png" alt="" /></p>
+<p><strong>end</strong></p>
+<p>垂直和水平都是end</p>
+<p><img src="./images/手把手教你grid布局11.png" alt="" /></p>
+<h4>7 justify-content、align-content和place-content</h4>
+<p><span style="background-color: #ffff00;">justify-content</span> 属性是整个内容区域在容器里面的水平位置，<strong>align-conent</strong>属性是整个内容区域的垂直位置</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.wrapper {
+  justify-content: start | end | center | stretch | space-around | space-between | space-evenly;
+  align-content: start | end | center | stretch | space-around | space-between | space-evenly;  
+}</span></pre>
+</div>
+<p>这两个属性的写法是完全相同的，取的值是一样的</p>
+<p>&nbsp;</p>
+<h2>项目属性</h2>
+<h3>grid-colunm-start属性、grid-colunm-end属性、grid-row-start属性\grid-row-end属性</h3>
+<p>项目的位置是可以指定的，具体方法就是指定项目的边框，分别定位在哪根网格线</p>
+<ul>
+<li><code>grid-column-start</code>属性：左边框所在的垂直网格线</li>
+<li><code>grid-column-end</code>属性：右边框所在的垂直网格线</li>
+<li><code>grid-row-start</code>属性：上边框所在的水平网格线</li>
+<li><code>grid-row-end</code>属性：下边框所在的水平网格线</li>
+</ul>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/手把手教你grid布局12.png" alt="" /></p>
+<p>编号为1的项目水平方向的网格线是从2开始的，到4结束。其他编号的没有指定位置，由浏览器自动布局，这时它们的位置由容器的<span style="background-color: #ffff00;"><code>grid-auto-flow</code></span>属性决定，这个属性的默认值是<code>row</code>，因此会"先行后列"进行排列。读者可以把这个属性的值分别改成<code>column</code>、<code>row dense</code>和<code>column dense</code>，看看其他项目的位置发生了怎样的变化。</p>
+<p>&nbsp;</p>
+<p>下面的例子是列的网格线布局</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 4;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="./images/手把手教你grid布局13.png" alt="" /></p>
+<p>除了这个四个属性的值之外，我们还可以使用<span style="background-color: #ffff00;">span</span>关键字，表示占几个网格，类似table的colspan和rowspan</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  grid-column-start: span 2;
+}</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局14.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>grid-column和grid-row属性</h3>
+<p><span style="background-color: #ffff00;">grid -column</span>属性是<span style="background-color: #ffff00;">grid-column-start</span>和<span style="background-color: #ffff00;">grid-column-end</span>的合并写法，<span style="background-color: #ffff00;">grid-row</span>是<span style="background-color: #ffff00;">grid-row-start</span>和<span style="background-color: #ffff00;">grid-row-end</span>的合并写法</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+}
+/* 等同于 */
+.item-1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/手把手教你grid布局15.png" alt="" /></p>
+<p>这两个属性也可以使用span关键字，表示跨越多少个网格</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  background: #b03532;
+  grid-column: 1 / 3;
+  grid-row: 1 / 3;
+}
+/* 等同于 */
+.item-1 {
+  background: #b03532;
+  grid-column: 1 / span 2;
+  grid-row: 1 / span 2;
+}</span></pre>
+</div>
+<p>斜杠及后面的部分可以被省略，默认跨越一个网格</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.item-1 {
+  grid-column: 1;
+  grid-row: 1;
+}</span></pre>
+</div>
+<p><img src="./images/手把手教你grid布局16.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

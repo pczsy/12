@@ -1,0 +1,103 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修浅谈CSS3 box-sizing 属性 有趣的盒模型' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>浅谈CSS3 box-sizing 属性 有趣的盒模型</center></div><div class='banquan'>原文出处:本文由博客园博主青瑟少年提供。<br/>
+原文连接:https://www.cnblogs.com/webdom/p/10642574.html</div><br>
+    <p>盒模型的组成大家肯定都懂，由里向外content,padding,border,margin.</p>
+<p>盒模型是有两种标准的，一个是标准模型，一个是IE模型。</p>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型0.png" alt="" /></p>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型1.png" alt="" /></p>
+<p>&nbsp;从上面两图不难看出在标准模型中，盒模型的宽高只是内容（content）的宽高，</p>
+<p>而在IE模型中盒模型的宽高是内容(content)+填充(padding)+边框(border)的总宽高。</p>
+<h2>css如何设置两种模型</h2>
+<p>这里用到了CSS3 的属性 box-sizing(默认值：content-box)</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> 标准模型 </span><span style="color: #008000;">*/ </span>
+<span style="color: #008080;">2</span> box-sizing:content-<span style="color: #000000;">box;
+</span><span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span>  <span style="color: #008000;">/*</span><span style="color: #008000;">IE模型</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">5</span> box-sizing:border-box;</pre>
+</div>
+<p><span style="color: #ff00ff;">content-box: 这是CSS2.1指定的宽度和高度的行为。指定元素的宽度和高度（最小/最大属性）适用于box的宽度和高度。元素的填充和边框布局和绘制指定宽度和高度除外</span></p>
+<p><span style="color: #ff00ff;">border-box: 指定宽度和高度（最小/最大属性）确定元素边框box。也就是说，对元素指定宽度和高度包括padding和border的指定。内容的宽度和高度减去各自双方该边框和填充的宽度从指定的"宽度"和"高度"属性计算</span></p>
+<p><em><span style="color: #ff0000;"><strong>测试参考案例</strong></span></em></p>
+<p>理想中的效果和代码如下图：</p>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型2.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.input {
+    width: 146px;
+    height: 36px;
+    line</span>-<span style="color: #000000;">height: 36px;
+    background: transparent;
+    border: 2px solid #0D349A;
+    color: #bdbdbd;
+    padding</span>-<span style="color: #000000;">left: 10px;
+    padding</span>-<span style="color: #000000;">right: 30px;
+    font</span>-<span style="color: #000000;">size: 14px;<br />    box-sizing:content-box;(默认的可不写)
+}</span></pre>
+</div>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型3.png" alt="" /></p>
+<p>应用在有用 bootstrap框架 的项目中发现bootstrap.min.css 样式里默认&nbsp;box-sizing: border-box; 会干扰搜索框的宽高</p>
+<div class="cnblogs_code">
+<pre><code>*<span style="color: #000000;"> {
+    </span>-webkit-box-sizing: border-<span style="color: #000000;">box;
+    </span>-moz-box-sizing: border-<span style="color: #000000;">box;
+    <span style="color: #ff0000;">box</span></span><span style="color: #ff0000;">-sizing: border-</span><span style="color: #000000;"><span style="color: #ff0000;">box;</span>
+}</span></pre>
+</div>
+<p>这个属性导致页面出现的样子：</p>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型4.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.input {
+    width: 146px;
+    height: 36px;
+    line</span>-<span style="color: #000000;">height: 36px;
+    background: transparent;
+    border: 2px solid #0D349A;
+    color: #bdbdbd;
+    padding</span>-<span style="color: #000000;">left: 10px;
+    padding</span>-<span style="color: #000000;">right: 30px;
+    font</span>-<span style="color: #000000;">size: 14px;
+    box</span>-sizing:border-<span style="color: #000000;">box;
+}</span></pre>
+</div>
+<p><img src="./images/浅谈CSS3 box-sizing 属性 有趣的盒模型5.png" alt="" /></p>
+<p>这个时候想要实现理想中的效果必须把样式调整成：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.input {
+    <span style="color: #ff00ff;">width: 190px;
+    height: 40px;
+    line</span></span><span style="color: #ff00ff;">-</span><span style="color: #000000;"><span style="color: #ff00ff;">height: 40px;</span>
+    background: transparent;
+    border: 2px solid #0D349A;
+    color: #bdbdbd;
+    padding</span>-<span style="color: #000000;">left: 10px;
+    padding</span>-<span style="color: #000000;">right: 30px;
+    font</span>-<span style="color: #000000;">size: 14px;
+    box</span>-sizing:border-<span style="color: #000000;">box;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;">PS技巧: 当一个容器宽度定义为 width:100%; &nbsp;之后，如果再增加 padding 或者 border 则会溢出父容器，是向外扩张的</span></p>
+<p><span style="color: #ff0000;">如果使用该样式，指定为&nbsp;box-sizing: border-box; 则 padding 和 border 就不会再溢出，而是向内收缩的，这个效果感觉非常实用的</span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

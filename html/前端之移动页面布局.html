@@ -1,0 +1,956 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端之移动页面布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端之移动页面布局</center></div><div class='banquan'>原文出处:本文由博客园博主YifChan提供。<br/>
+原文连接:https://www.cnblogs.com/yifchan/p/html-1-6.html</div><br>
+    <h2>移动端页面布局</h2>
+<h3>移动端app分类</h3>
+<p><br />1、Native App 原生app手机应用程序<br />使用原生的语言开发的手机应用，Android系统用的是java，iOS系统用的是object-C<br />2、Hybrid App 混合型app手机应用程序<br />混合使用原生的程序和html5页面开发的手机应用<br />3、Web App 基于Web的app手机应用程序<br />完全使用html5页面加前端js框架开发的手机应用</p>
+<h3>Viewport 视口</h3>
+<p>视口是移动设备上用来显示网页的区域，一般会比移动设备可视区域大，宽度可能是980px或者1024px，目的是为了显示下整个为PC端设计的网页，这样带来的后果是移动端会出现横向滚动条，为了避免这种情况，移动端会将视口缩放到移动端窗口的大小。这样会让网页不容易观看，可以用 meta 标签，name=&ldquo;viewport &rdquo; 来设置视口的大小，将视口的大小设置为和移动设备可视区一样的大小。</p>
+<p>设置方法如下：<br />meta:vp+tab键</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+......
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no,initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+......
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>移动端视口示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('49d66357-1485-4e9f-ac14-f37cfea84dab')"><img id="code_img_closed_49d66357-1485-4e9f-ac14-f37cfea84dab" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_49d66357-1485-4e9f-ac14-f37cfea84dab" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('49d66357-1485-4e9f-ac14-f37cfea84dab',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_49d66357-1485-4e9f-ac14-f37cfea84dab" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .box</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>div里面的文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">移动端视口示例</span></div>
+<p>&nbsp;</p>
+<h3>视网膜屏幕（retina屏幕）清晰度解决方案</h3>
+<p><br />视网膜屏幕指的是屏幕的物理像素密度更高的屏幕，物理像素可以理解为屏幕上的一个发光点，无数发光的点组成的屏幕，视网膜屏幕比一般屏幕的物理像素点更小，常见有2倍的视网膜屏幕和3倍的视网膜屏幕，2倍的视网膜屏幕，它的物理像素点大小是一般屏幕的1/4,3倍的视网膜屏幕，它的物理像素点大小是一般屏幕的1/9。</p>
+<p>图像在视网膜屏幕上显示的大小和在一般屏幕上显示的大小一样，但是由于视网膜屏幕的物理像素点比一般的屏幕小，图像在上面好像是被放大了，图像会变得模糊，为了解决这个问题，可以使用比原来大一倍的图像，然后用css样式强制把图像的尺寸设为原来图像尺寸的大小，就可以解决模糊的问题。</p>
+<p>背景图强制改变大小，可以使用background新属性</p>
+<p>清晰度解决示例：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('d9976710-e522-4b7c-938d-d66733d2278e')"><img id="code_img_closed_d9976710-e522-4b7c-938d-d66733d2278e" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_d9976710-e522-4b7c-938d-d66733d2278e" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('d9976710-e522-4b7c-938d-d66733d2278e',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_d9976710-e522-4b7c-938d-d66733d2278e" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span>
+
+       <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> retina屏幕适配：通过样式将它的尺寸设为原来的一半     </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+        
+        .shipei</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">215px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/pic1x.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="1倍图"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/pic2x.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="2倍图"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="shipei"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">清晰度解决示例</span></div>
+<p>&nbsp;</p>
+<h3>移动端背景图尺寸设置</h3>
+<p>background新属性 <br />background-size:</p>
+<p>length：用长度值指定背景图像大小。不允许负值。<br />percentage：用百分比指定背景图像大小。不允许负值。<br />auto：背景图像的真实大小。<br />cover：将背景图像等比缩放到完全覆盖容器，背景图像有可能超出容器。<br />contain：将背景图像等比缩放到宽度或高度与容器的宽度或高度相等，背景图像始终被包含在容器内。</p>
+<p>背景图尺寸适配示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('82647c0f-5579-4243-a7dd-d89cc3a787fe')"><img id="code_img_closed_82647c0f-5579-4243-a7dd-d89cc3a787fe" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_82647c0f-5579-4243-a7dd-d89cc3a787fe" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('82647c0f-5579-4243-a7dd-d89cc3a787fe',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_82647c0f-5579-4243-a7dd-d89cc3a787fe" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .box</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">200px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2px solid #000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">50px auto 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+
+            background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">url(images/apple.png) no-repeat</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> background-size:200px 200px; </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> background-size:100% 100%; </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 
+                缩放图像，让图片的大小足够盖住容器
+                background-size:cover; 
+
+            </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+            
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 缩放图像，让容器可以包含整个图像     </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">contain</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>asdfsdfsdfasdfdsf<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">背景图尺寸适配示例</span></div>
+<p>&nbsp;</p>
+<h2 id="pc及移动端页面适配方法">PC及移动端页面适配方法</h2>
+<p>PC及移动端页面适配方法<br />设备屏幕有多种不同的分辨率，页面适配方案有如下几种：<br />1、全适配：流体布局+响应式布局<br />2、移动端适配：<br />流体布局+少量响应式<br />基于rem的布局<br />弹性盒模型</p>
+<h3>流体布局</h3>
+<p>流体布局，就是使用百分比来设置元素的宽度，元素的高度按实际高度写固定值，流体布局中，元素的边线无法用百分比，可以使用样式中的计算函数 calc() 来设置宽度，或者使用 box-sizing 属性将盒子设置为从边线计算盒子尺寸。</p>
+<p>calc() <br />可以通过计算的方式给元素加尺寸，比如： width：calc(25% - 4px);</p>
+<p>box-sizing <br />1、content-box 默认的盒子尺寸计算方式<br />2、border-box 置盒子的尺寸计算方式为从边框开始，盒子的尺寸，边框和内填充算在盒子尺寸内</p>
+<p>流体布局示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('df27c972-a827-40c6-9a36-7e0a2f448cff')"><img id="code_img_closed_df27c972-a827-40c6-9a36-7e0a2f448cff" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_df27c972-a827-40c6-9a36-7e0a2f448cff" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('df27c972-a827-40c6-9a36-7e0a2f448cff',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_df27c972-a827-40c6-9a36-7e0a2f448cff" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        body</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .con a</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">25%</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 
+            width:calc(25% - 4px);
+            </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">100px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            text-align</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> center</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            line-height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">100px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">left</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            text-decoration</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">#333</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">14px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2px solid #000</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+
+            <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 将盒子真实尺寸的计算方式设置为包含边框和padding </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            box-sizing</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">border-box</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="con"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>菜单文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>菜单文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>菜单文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>菜单文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">流体布局示例</span></div>
+<p>&nbsp;</p>
+<h3>响应式布局</h3>
+<p>响应式布局就是使用媒体查询的方式，通过查询浏览器宽度，不同的宽度应用不同的样式块，每个样式块对应的是该宽度下的布局方式，从而实现响应式布局。响应式布局的页面可以适配多种终端屏幕（pc、平板、手机）。</p>
+<p>相应布局的伪代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">@media (max-width:960px){
+    .left_con{width:58%;}
+    .right_con{width:38%;}
+}
+@media (max-width:768px){
+    .left_con{width:100%;}
+    .right_con{width:100%;}
+}</span></pre>
+</div>
+<p>响应式布局示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('472b9a9d-1d97-4e5a-b548-d8440b0491fe')"><img id="code_img_closed_472b9a9d-1d97-4e5a-b548-d8440b0491fe" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_472b9a9d-1d97-4e5a-b548-d8440b0491fe" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('472b9a9d-1d97-4e5a-b548-d8440b0491fe',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_472b9a9d-1d97-4e5a-b548-d8440b0491fe" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">        
+        body</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0
+        </span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .con div</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">23%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2px solid #000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">200px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">1%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">left</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            box-sizing</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">border-box</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        @media (max-width:800px)</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            .con div{
+                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">46%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2%</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        }
+        @media (max-width:400px)</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            
+            .con div{
+                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">94%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+                margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">3%</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        }
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="con"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">响应式布局示例</span></div>
+<p>流体布局是将一行的内容按照比例进行压缩；<br />响应式布局是，当宽度小于一定比例时，将一行的内容分两行放置；</p>
+<p>&nbsp;</p>
+<h2>移动端布局实例</h2>
+<h3>基于rem的布局</h3>
+<p>首先了解em单位，em单位是参照元素自身的文字大小来设置尺寸，rem指的是参照根节点的文字大小，根节点指的是html标签，设置html标签的文字大小，其他的元素相关尺寸设置用rem，这样，所有元素都有了统一的参照标准，改变html文字的大小，就会改变所有元素用rem设置的尺寸大小。</p>
+<p><br />em单位示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('1593cc52-defd-483b-8312-4b17f5197f53')"><img id="code_img_closed_1593cc52-defd-483b-8312-4b17f5197f53" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_1593cc52-defd-483b-8312-4b17f5197f53" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('1593cc52-defd-483b-8312-4b17f5197f53',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_1593cc52-defd-483b-8312-4b17f5197f53" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        
+        .box01</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">12px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20em</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10em</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        .box02</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20em</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10em</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">green</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        p</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            text-indent</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2em</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box01"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br </span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br </span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box02"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>首先了解em单位，em单位是参照元素自身的文字大小来设置尺寸，rem指的是参照根节点的文字大小，根节点指的是html标签，设置html标签的文字大小，其他的元素相关尺寸设置用rem，这样，所有元素都有了统一的参照标准，改变html文字的大小，就会改变所有元素用rem设置的尺寸大小。首先了解em单位，em单位是参照元素自身的文字大小来设置尺寸，rem指的是参照根节点的文字大小，根节点指的是html标签，设置html标签的文字大小，其他的元素相关尺寸设置用rem，这样，所有元素都有了统一的参照标准，改变html文字的大小，就会改变所有元素用rem设置的尺寸大小。<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">em单位示例</span></div>
+<p>最小的文字单位是12px，小于12px的文字大小都会默认改为12px；</p>
+<p>rem单位示例</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('0f7f1c02-1cd3-4616-996b-81a315436f27')"><img id="code_img_closed_0f7f1c02-1cd3-4616-996b-81a315436f27" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_0f7f1c02-1cd3-4616-996b-81a315436f27" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('0f7f1c02-1cd3-4616-996b-81a315436f27',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_0f7f1c02-1cd3-4616-996b-81a315436f27" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="font-size:30px;"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .box01</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">12px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">1rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+
+        .box02</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">green</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">1rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+            
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box01"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box02"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">rem单位示例</span></div>
+<p>rem是在移动页面将内容进行等比例缩小；</p>
+<p><br />rem示例-通过js控制rem来动态控制内容宽度</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('f453266c-c2aa-441d-a5f3-cd78be0e44a4')"><img id="code_img_closed_f453266c-c2aa-441d-a5f3-cd78be0e44a4" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_f453266c-c2aa-441d-a5f3-cd78be0e44a4" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('f453266c-c2aa-441d-a5f3-cd78be0e44a4',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_f453266c-c2aa-441d-a5f3-cd78be0e44a4" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">&lt;script type="text/javascript" src="js/set_root.js"&gt;&lt;/script&gt;</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        body</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .header</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2.5rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">gold</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            text-align</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">center</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            line-height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">2.5rem</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="header"</span><span style="color: #0000ff;">&gt;</span>头部文字<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    (</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> calc </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> docElement </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> document.documentElement;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> clientWidthValue </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> docElement.clientWidth </span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span> <span style="background-color: #f5f5f5; color: #000000;">750</span> <span style="background-color: #f5f5f5; color: #000000;">?</span> <span style="background-color: #f5f5f5; color: #000000;">750</span><span style="background-color: #f5f5f5; color: #000000;"> : docElement.clientWidth;
+        docElement.style.fontSize </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">20</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">(clientWidthValue</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">375) + 'px';</span>
+<span style="background-color: #f5f5f5; color: #000000;">    };
+    calc();
+    window.addEventListener(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">resize</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,calc);
+})();
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">通过js控制rem来动态控制内容宽度</span></div>
+<p>&nbsp;</p>
+<h3>cssrem安装</h3>
+<p>cssrem插件可以动态地将px尺寸换算成rem尺寸</p>
+<p>下载本项目，比如：git clone https://github.com/flashlizi/cssrem <br />进入packages目录：Sublime Text -&gt; Preferences -&gt; Browse Packages... <br />复制下载的cssrem目录到刚才的packges目录里。 重启Sublime Text。</p>
+<p>配置参数 参数配置文件：Sublime Text -&gt; Preferences -&gt; Package Settings -&gt; cssrem px_to_rem - px转rem的单位比例，默认为40。 max_rem_fraction_length - px转rem的小数部分的最大长度。默认为6。 available_file_types - 启用此插件的文件类型。默认为：[".css", ".less", ".sass"]。</p>
+<p>&nbsp;</p>
+<h3>流体布局制作首页</h3>
+<p>将ui设计师给的图片按缩小一半来制作页面</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('37966eaa-782d-4020-8f1c-675cc17ce0e9')"><img id="code_img_closed_37966eaa-782d-4020-8f1c-675cc17ce0e9" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_37966eaa-782d-4020-8f1c-675cc17ce0e9" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('37966eaa-782d-4020-8f1c-675cc17ce0e9',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_37966eaa-782d-4020-8f1c-675cc17ce0e9" class="cnblogs_code_hide">
+<pre><code><span style="color: #000000;">index.html
+</span><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/reset.css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/main.css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>天天生鲜-首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="header clearfix"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="logo"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/logo.png"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="天天生鲜logo"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="search"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+
+set_root.js
+(function(){
+    var calc = function(){
+        var docElement = document.documentElement;
+        var clientWidthValue = docElement.clientWidth &gt; 750 ? 750 : docElement.clientWidth;
+        docElement.style.fontSize = 20*(clientWidthValue/375) + 'px';
+    }
+    calc();
+    window.addEventListener('resize',calc);
+})();
+
+main.css
+.header{
+    height:50px;
+    background-color:#37ab40;
+    position:relative;
+}
+
+.logo{
+    display:block;
+    width:89px;
+    height:36px;
+    margin:7px auto 0;
+}
+
+.logo img{
+    width:100%;
+}
+
+.search{
+    width:27px;
+    height:27px;
+    position:absolute;
+    right:15px;
+    top:12px;
+    background:url(../images/icons.png) left top no-repeat;
+    background-size:60px 840px;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">流体布局制作首页</span></div>
+<p>&nbsp;</p>
+<h3>移动端轮播图和菜单页的制作</h3>
+<p>如果软件是在微信中，固定定位的按钮可能无效，因此移动端软件的三层式结构不应该用固定定位；解决方式是在最外面套一个大盒子，然后给里面的设置absolute绝对定位；最外层left：0；right：0；top：0；bottom：0；这样可以让最外层达到手机屏幕最大化；<br />将上下两层使用left：0；right：0；top：2.5rem；bottom：2.5rem；固定住；中间层再设置left：0；right：0；top：2.5rem；bottom：2.5rem；固定和overflow:auto可以进行滚动条；为了避免出现横线滚动条，拆开写overflow-y:auto；overflow-x:hidden；</p>
+<p>&nbsp;</p>
+<p>雪碧图的使用除了给除第一个以外的其他元素添加类属性之外，还可以使用新增选择器的nth-child()来设置position；<br />移动端文字应该直接使用像素，不需要rem，因为太小了不易观看；<br />选择器层级越少越好，因为它找标签或属性等是从层级选择器的右边开始找的；</p>
+<p>&nbsp;</p>
+<h3>弹性盒模型布局</h3>
+<p>1、容器属性<br />display : flex<br />声明使用弹性盒布局</p>
+<p>flex-direction : row | row-reverse | column | column-reverse<br />确定子元素排列的方向</p>
+<p>flex-wrap : nowrap | wrap | wrap-reverse<br />元素超过父容器尺寸时是否换行</p>
+<p>flex-flow : flex-direction | flex-wrap<br />同时设置flex-direction 和 flex-wrap</p>
+<p>justify-content : flex-start | flex-end | center | space-between | space-around<br />子元素的尺寸确定之后，用此属性来设置flex-direction定义方向上的分布方式</p>
+<p>align-items : flex-start | flex-end | center | baseline | stretch<br />子元素的尺寸确定之后，用此属性来设置flex-direction定义方向上的垂直方向的分布方式</p>
+<p>align-content : flex-start | flex-end | center | space-between | space-around | stretch<br />设置多行子元素在行方向上的对齐方式</p>
+<p>2、条目属性<br />flex : none | &lt;' flex-grow '&gt; &lt;' flex-shrink &gt;'? || &lt;' flex-basis '&gt;<br />同时设置flex-grow 和 flex-shrink 以及 flex-basis</p>
+<p>flex-grow ： number<br />表示的是当父元素有多余的空间时，这些空间在不同子元素之间的分配比例</p>
+<p>flex-shrink： number<br />当父元素的空间不足时，各个子元素的尺寸缩小的比例</p>
+<p>flex-basis ：length | percentage | auto | content<br />用来确定弹性条目的初始主轴尺寸。</p>
+<p>align-self ：auto | flex-start | flex-end | center | baseline | stretch<br />覆写父元素指定的对齐方式</p>
+<p>order : integer<br />改变条目在容器中的出现顺序</p>
+<p>&nbsp;</p>
+<h3>移动首页布局代码</h3>
+<p>index.html</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('9543ceb7-3184-4ba7-abd6-413d50900cea')"><img id="code_img_closed_9543ceb7-3184-4ba7-abd6-413d50900cea" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_9543ceb7-3184-4ba7-abd6-413d50900cea" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('9543ceb7-3184-4ba7-abd6-413d50900cea',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_9543ceb7-3184-4ba7-abd6-413d50900cea" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;">
+          content</span><span style="color: #0000ff;">="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/reset.css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/main.css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/set_root.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>天天生鲜-首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="main_wrap"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="header clearfix"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="logo"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/logo.png"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="天天生鲜logo"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="search"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="center_con"</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="slide"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/slide.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="幻灯片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> ul.menu&gt;(li&gt;a+h2{水果})*8 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="menu_con clearfix"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="menu"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="common_model clearfix"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="common_title"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>新鲜水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>更多 <span style="color: #ff0000;">&amp;gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="banner"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/banner.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="banner"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="goods_list"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="common_model clearfix"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="common_title"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>新鲜水果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #0000ff;">&gt;</span>更多 <span style="color: #ff0000;">&amp;gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="banner"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/banner.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="banner"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="goods_list"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="goods_link"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="images/goods.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">="商品图片"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>新西兰皇家大红苹果<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="unit"</span><span style="color: #0000ff;">&gt;</span>12/提<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>&yen;68.00<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="add_chart"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="footer"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">index.html</span></div>
+<p>set_root.js</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ed41503a-1294-4170-9a43-d4caa2afeef9')"><img id="code_img_closed_ed41503a-1294-4170-9a43-d4caa2afeef9" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_ed41503a-1294-4170-9a43-d4caa2afeef9" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('ed41503a-1294-4170-9a43-d4caa2afeef9',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_ed41503a-1294-4170-9a43-d4caa2afeef9" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">var</span> calc = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+        </span><span style="color: #0000ff;">var</span> docElement =<span style="color: #000000;"> document.documentElement;
+        </span><span style="color: #0000ff;">var</span> clientWidthValue = docElement.clientWidth &gt; 750 ? 750<span style="color: #000000;"> : docElement.clientWidth;
+        docElement.style.fontSize </span>= 20*(clientWidthValue/375) + 'px';
+<span style="color: #000000;">    };
+    calc();
+    window.addEventListener(</span>'resize'<span style="color: #000000;">,calc);
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">set_root.js</span></div>
+<p>reset.css</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('177ead0e-9c17-412b-979b-1e6f1888edf3')"><img id="code_img_closed_177ead0e-9c17-412b-979b-1e6f1888edf3" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_177ead0e-9c17-412b-979b-1e6f1888edf3" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('177ead0e-9c17-412b-979b-1e6f1888edf3',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_177ead0e-9c17-412b-979b-1e6f1888edf3" class="cnblogs_code_hide">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">  去掉标签默认的间距   </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+body,ul,ol,p,h1,h2,h3,h4,h4,h6,dl,dd,select,input,form</span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;">0</span>;
+}
+<span style="color: #008000;">/*</span><span style="color: #008000;">  去掉小圆点以及数字   </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+ul,ol</span>{<span style="color: #ff0000;">
+    list-style</span>:<span style="color: #0000ff;">none</span>;
+}
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 去掉下划线 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+a</span>{<span style="color: #ff0000;">text-decoration</span>:<span style="color: #0000ff;">none</span>;}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 去掉斜体 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+em</span>{<span style="color: #ff0000;">
+    font-style</span>:<span style="color: #0000ff;">normal</span>;
+}
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 让h标签继承body的文字设置 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+h1,h2,h3,h4,h4,h6</span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;">100%</span>;<span style="color: #ff0000;">
+    font-weight</span>:<span style="color: #0000ff;">normal</span>;
+}
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 在IE下去掉图片做链接时生成的框线 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+img</span>{<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;">0px</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 清除浮动以及清除margin-top塌陷 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+
+.clearfix:before,.clearfix:after</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;">''</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;">table</span>;
+}<span style="color: #800000;">
+.clearfix:after</span>{<span style="color: #ff0000;">
+    clear</span>:<span style="color: #0000ff;">both</span>;
+}<span style="color: #800000;">
+.clearfix</span>{<span style="color: #ff0000;">
+    zoom</span>:<span style="color: #0000ff;">1</span>;
+}<span style="color: #800000;">
+
+
+.fl</span>{<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;">left</span>;
+}<span style="color: #800000;">
+
+.fr</span>{<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;">right</span>;
+}</pre>
+</div>
+<span class="cnblogs_code_collapse">reset.css</span></div>
+<p>main.css</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('1cbf3513-02b1-4dae-8fbc-c6c11f395f37')"><img id="code_img_closed_1cbf3513-02b1-4dae-8fbc-c6c11f395f37" class="code_img_closed" src="./images/前端之移动页面布局0.png" alt="" /><img id="code_img_opened_1cbf3513-02b1-4dae-8fbc-c6c11f395f37" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('1cbf3513-02b1-4dae-8fbc-c6c11f395f37',event)" src="./images/前端之移动页面布局1.png" alt="" />
+<div id="cnblogs_code_open_1cbf3513-02b1-4dae-8fbc-c6c11f395f37" class="cnblogs_code_hide">
+<pre><code><span style="color: #800000;">.main_wrap </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> gold</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 0px</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 顶部样式   </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.header </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 2.5rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #37ab40</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;
+}<span style="color: #800000;">
+
+.logo </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 4.45rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1.8rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.35rem auto 0</span>;
+}<span style="color: #800000;">
+
+.logo img </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;
+}<span style="color: #800000;">
+
+.search </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 1.35rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1.35rem</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 0.75rem</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0.6rem</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> url(../images/icons.png) left top no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 3.0rem 42.0rem</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 中间滚动区域的样式   </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+.center_con </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 2.5rem</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 2.5rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #efefef</span>;
+
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 只自动出现竖向滚动条，不出现横向滚动条  </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    overflow-y</span>:<span style="color: #0000ff;"> auto</span>;<span style="color: #ff0000;">
+    overflow-x</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    padding-bottom</span>:<span style="color: #0000ff;"> 0.5rem</span>;
+}<span style="color: #800000;">
+
+.slide </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 7.0rem</span>;
+}<span style="color: #800000;">
+
+.slide img </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;
+}<span style="color: #800000;">
+
+.menu_con </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 9.25rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #fff</span>;<span style="color: #ff0000;">
+    margin-top</span>:<span style="color: #0000ff;"> 0.5rem</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+
+.menu_con ul </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 18rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 8.375rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.6rem 0 0 1.375rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 2.8rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 4.05rem</span>;<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> left</span>;<span style="color: #ff0000;">
+    margin-right</span>:<span style="color: #0000ff;"> 1.625rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li a </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 2.8rem</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> url(../images/icons.png) left -3.025rem no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 3.0rem 42.0rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(2) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -6rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(3) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -9rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(4) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -12rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(5) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -15rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(6) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -18rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(7) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -21rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li:nth-child(8) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -24rem</span>;
+}<span style="color: #800000;">
+
+.menu_con li h2 </span>{<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> bold 13px/1.25rem 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #666</span>;
+}<span style="color: #800000;">
+
+.common_model </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 17.25rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #fff</span>;<span style="color: #ff0000;">
+    margin-top</span>:<span style="color: #0000ff;"> 0.5rem</span>;
+}<span style="color: #800000;">
+
+.common_title </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 17.75rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 0.9rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.8rem auto 0</span>;
+}<span style="color: #800000;">
+
+.common_title h3 </span>{<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> left</span>;<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> bold 15px/0.9rem 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #fbc83d</span>;<span style="color: #ff0000;">
+    border-left</span>:<span style="color: #0000ff;"> 0.25rem solid #fbc83d</span>;<span style="color: #ff0000;">
+    text-indent</span>:<span style="color: #0000ff;"> 0.4rem</span>;
+}<span style="color: #800000;">
+
+.common_title a </span>{<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> right</span>;<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> normal 12px/0.9rem 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #7f7f7f</span>;
+}<span style="color: #800000;">
+
+.banner </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 17.75rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 4.5rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.5rem auto 0</span>;
+}<span style="color: #800000;">
+
+.banner img </span>{<span style="color: #ff0000;">width</span>:<span style="color: #0000ff;"> 100%</span>;}<span style="color: #800000;">
+
+.goods_list </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 17.75rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 9.325rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.5rem auto 0</span>;
+}<span style="color: #800000;">
+
+.goods_list li </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 5.9rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 9.325rem</span>;<span style="color: #ff0000;">
+    border-right</span>:<span style="color: #0000ff;"> 1px solid #e7e7e7</span>;<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> left</span>;<span style="color: #ff0000;">
+    box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;
+}<span style="color: #800000;">
+
+.goods_list li:last-child </span>{<span style="color: #ff0000;">border-right</span>:<span style="color: #0000ff;"> 0px</span>;}<span style="color: #800000;">
+
+.goods_link </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 4.5rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 4.5rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.375rem auto 0</span>;
+}<span style="color: #800000;">
+
+.goods_link img </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;
+}<span style="color: #800000;">
+
+.goods_list h4 </span>{<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> normal 15px/15px 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 5.0rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.925rem auto 0</span>;<span style="color: #ff0000;">
+
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 强制文字不换行 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    white-space</span>:<span style="color: #0000ff;"> nowrap</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 超出部分显示省略号   </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    text-overflow</span>:<span style="color: #0000ff;"> ellipsis</span>;
+}<span style="color: #800000;">
+
+.unit </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 5.0rem</span>;<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> normal 12px/12px 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #bbb</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.8rem auto 0</span>;
+}<span style="color: #800000;">
+
+.price </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 5.0rem</span>;<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> normal 12px/12px 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #ff4400</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.5rem auto 0</span>;
+}<span style="color: #800000;">
+
+.add_chart </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 1.7rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1.7rem</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 0.675rem</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> url(../images/icons.png) left -27.0rem no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 3.0rem 42.0rem</span>;
+}<span style="color: #800000;">
+
+.footer </span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 2.5rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #fff</span>;
+
+}<span style="color: #800000;">
+
+.footer li </span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 25%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 2.5rem</span>;<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> left</span>;
+}<span style="color: #800000;">
+
+.footer li a </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 1.3rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1.3rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0.35rem auto 0</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> url(../images/icons.png) left -30.0rem no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 3.0rem 42.0rem</span>;
+}<span style="color: #800000;">
+
+.footer li:nth-child(2) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -33rem</span>;
+}<span style="color: #800000;">
+
+.footer li:nth-child(3) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -36rem</span>;
+}<span style="color: #800000;">
+
+.footer li:nth-child(4) a </span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> left -39rem</span>;
+}<span style="color: #800000;">
+
+.footer li h2 </span>{<span style="color: #ff0000;">
+    font</span>:<span style="color: #0000ff;"> normal 12px/0.8rem 'Microsoft Yahei'</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #949392</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;
+}</pre>
+</div>
+<span class="cnblogs_code_collapse">main.css</span></div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

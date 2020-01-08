@@ -1,0 +1,159 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】</center></div><div class='banquan'>原文出处:本文由博客园博主遇你温柔如初提供。<br/>
+原文连接:https://www.cnblogs.com/web-aqin/p/10796845.html</div><br>
+    <div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">nav</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 导航栏 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 3</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="indexNavOut"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>               <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="indexNav"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="navLi"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="width: 130px;"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/home"</span><span style="color: #0000ff;">&gt;</span>了解海华教育(视频)<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!--</span><span style="color: #008000;">&lt;a href="#"&gt;了解海华教育(视频)&lt;/a&gt;</span><span style="color: #008000;">--&gt;</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/home','active2':Index=='#/'}"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>                       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/home"</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/synopsis'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/synopsis"</span><span style="color: #0000ff;">&gt;</span>学校简介<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/major'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/major"</span><span style="color: #0000ff;">&gt;</span>专业介绍<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/campus'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/campus"</span><span style="color: #0000ff;">&gt;</span>校园风采<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/news'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/news"</span><span style="color: #0000ff;">&gt;</span>新闻资讯<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/enrollment'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/enrollment"</span><span style="color: #0000ff;">&gt;</span>招生信息<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">20</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/employment'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/employment"</span><span style="color: #0000ff;">&gt;</span>就业中心<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/enlist'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/enlist"</span><span style="color: #0000ff;">&gt;</span>在线报名<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">23</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">24</span>                   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="checkNav()"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{'active':Index=='#/contact'}"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">to</span><span style="color: #0000ff;">="/contact"</span><span style="color: #0000ff;">&gt;</span>联系我们<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">25</span>                   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">26</span>                 <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">27</span>               <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">28</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">29</span>            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">nav</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>css:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> 导航栏 </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 2</span> <span style="color: #800000;">.indexNavOut</span>{
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">  background-color</span>:<span style="color: #0000ff;"> #486B8A</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">  height</span>:<span style="color: #0000ff;"> 60px</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> <span style="color: #800000;">.indexNav</span>{
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">  width</span>:<span style="color: #0000ff;"> 80%</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">  margin</span>:<span style="color: #0000ff;"> 0 auto</span>;
+<span style="color: #008080;"> 9</span> }
+<span style="color: #008080;">10</span> <span style="color: #800000;">.navLi</span>{
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;"> flex</span>;
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span> }
+<span style="color: #008080;">14</span> <span style="color: #800000;">.navLi li:nth-child(1)</span>{
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;"> 1.8</span>;
+<span style="color: #008080;">16</span> }
+<span style="color: #008080;">17</span> <span style="color: #800000;">.navLi li</span>{
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;"> 1</span>;
+<span style="color: #008080;">19</span> }
+<span style="color: #008080;">20</span> <span style="color: #800000;">.navLi li a</span>{
+<span style="color: #008080;">21</span> <span style="color: #ff0000;">  text-decoration</span>:<span style="color: #0000ff;"> none</span>;
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">  color</span>:<span style="color: #0000ff;"> #fff</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">  font-size</span>:<span style="color: #0000ff;"> 16px</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">  padding-bottom</span>:<span style="color: #0000ff;"> 17px</span>;
+<span style="color: #008080;">25</span> }
+<span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span> <span style="color: #800000;">.indexNav .icon</span>{
+<span style="color: #008080;">28</span> <span style="color: #ff0000;">  width</span>:<span style="color: #0000ff;"> 230px</span>;
+<span style="color: #008080;">29</span> <span style="color: #ff0000;">  margin-top</span>:<span style="color: #0000ff;"> 10px</span>;
+<span style="color: #008080;">30</span> }
+<span style="color: #008080;">31</span> <span style="color: #800000;">.indexNav .icon img</span>{
+<span style="color: #008080;">32</span> <span style="color: #ff0000;">  width</span>:<span style="color: #0000ff;"> 100%</span>;
+<span style="color: #008080;">33</span> }
+<span style="color: #008080;">34</span> 
+<span style="color: #008080;">35</span> <span style="color: #800000;">.navLi li </span>{
+<span style="color: #008080;">36</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 60px</span>;
+<span style="color: #008080;">37</span> <span style="color: #ff0000;">  line-height</span>:<span style="color: #0000ff;"> 60px</span>;
+<span style="color: #008080;">38</span> <span style="color: #ff0000;">  position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">39</span> }
+<span style="color: #008080;">40</span> <span style="color: #800000;">.navLi li.active a</span>{
+<span style="color: #008080;">41</span> <span style="color: #ff0000;">  border-bottom</span>:<span style="color: #0000ff;"> 3px solid #E96463</span>;
+<span style="color: #008080;">42</span>     
+<span style="color: #008080;">43</span> }
+<span style="color: #008080;">44</span> <span style="color: #800000;">.navLi li.active2 a</span>{
+<span style="color: #008080;">45</span> <span style="color: #ff0000;">  border-bottom</span>:<span style="color: #0000ff;"> 3px solid #E96463</span>;
+<span style="color: #008080;">46</span>     
+<span style="color: #008080;">47</span> }
+<span style="color: #008080;">48</span> <span style="color: #800000;">.navLi li:last-child:after</span>{
+<span style="color: #008080;">49</span> <span style="color: #ff0000;">  border-right</span>:<span style="color: #0000ff;"> none</span>;
+<span style="color: #008080;">50</span> }
+<span style="color: #008080;">51</span> <span style="color: #800000;">.navLi li .line</span>{
+<span style="color: #008080;">52</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 20px</span>;
+<span style="color: #008080;">53</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 3px</span>;
+<span style="color: #008080;">54</span> <span style="color: #ff0000;">    background</span>:<span style="color: #0000ff;"> #E96463</span>;
+<span style="color: #008080;">55</span> <span style="color: #ff0000;">    border</span>:<span style="color: #0000ff;"> none</span>;
+<span style="color: #008080;">56</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> absolute</span>;
+<span style="color: #008080;">57</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">top: -14px;</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">58</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">right: -32px;</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">59</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> 50px</span>;
+<span style="color: #008080;">60</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;"> 45px</span>;    
+<span style="color: #008080;">61</span> <span style="color: #ff0000;">    z-index</span>:<span style="color: #0000ff;"> 100</span>;
+<span style="color: #008080;">62</span> }</pre>
+</div>
+<p>js:</p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;main.js代码：</p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】1.png" alt="" /></p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】2.png" alt="" /></p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】3.png" alt="" /></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('a99aa181-f415-46cd-8bc9-d4535b077280')"><img id="code_img_closed_a99aa181-f415-46cd-8bc9-d4535b077280" class="code_img_closed" src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】4.png" alt="" /><img id="code_img_opened_a99aa181-f415-46cd-8bc9-d4535b077280" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('a99aa181-f415-46cd-8bc9-d4535b077280',event)" src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】5.png" alt="" />
+<div id="cnblogs_code_open_a99aa181-f415-46cd-8bc9-d4535b077280" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> import Vuex from 'vuex'
+<span style="color: #008080;"> 2</span> <span style="color: #000000;">Vue.use(Vuex);
+</span><span style="color: #008080;"> 3</span> const store = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vuex.Store({
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">  state: {
+</span><span style="color: #008080;"> 5</span>     majorDetail: <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+</span><span style="color: #008080;"> 6</span>     Index: document.location.hash,<span style="color: #008000;">//</span><span style="color: #008000;">导航条跳转路由样式控制</span>
+<span style="color: #008080;"> 7</span> <span style="color: #000000;">  },
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">  mutations: {
+</span><span style="color: #008080;"> 9</span>     <span style="color: #008000;">//</span><span style="color: #008000;">控制专业介绍详情显示隐藏</span>
+<span style="color: #008080;">10</span> <span style="color: #000000;">    updatemajorDetail(state, majorDetail) {
+</span><span style="color: #008080;">11</span>       state.majorDetail =<span style="color: #000000;"> majorDetail;
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">    updateIndex(state, Index) {
+</span><span style="color: #008080;">14</span>         state.Index =<span style="color: #000000;"> Index;
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">  }
+</span><span style="color: #008080;">17</span> });</pre>
+</div>
+<span class="cnblogs_code_collapse">main.js代码</span></div>
+<p>&nbsp;<img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】6.png" alt="" /></p>
+<p>效果图：</p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】7.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】8.png" alt="" /></p>
+<p>现在在这个页面里点击了解更多的时候跳转到新闻资讯页面，然后然后state里的值，然后改变当前的url以及导航选中新闻资讯。</p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】9.png" alt="" /></p>
+<p><img src="./images/vue实现首页导航切换不同路由的方式（二）【使用vuex实现的】10.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

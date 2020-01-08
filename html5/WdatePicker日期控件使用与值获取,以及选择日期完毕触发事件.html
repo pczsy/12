@@ -1,0 +1,31 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修WdatePicker日期控件使用与值获取,以及选择日期完毕触发事件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>WdatePicker日期控件使用与值获取,以及选择日期完毕触发事件</center></div><div class='banquan'>原文出处:本文由博客园博主L缘OV分E提供。<br/>
+原文连接:https://www.cnblogs.com/bxcsx/p/10919051.html</div><br>
+    <pre><code><code>踩过无数坑，调试了很长时间，写出适合自己需求的方法<br />需求：没有查询按钮，要求选择日期后自动触发查询事件(只有日期选择完成后才触发),<br /><br />解决方案：代码如下：<br />检索开始时间：<br /><br />&lt;input </code><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in">type=<span class="hljs-string">"text" </span></span></span></span></span></code><code>id=<span class="hljs-string">"startTime" onFocus=<span class="hljs-string">"WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true,onpicked:function(){onemonthtypeChange(this,'startTime','endTime');search();}})"<span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"> class=<span class="hljs-string">"j_toTimeMM" <span class="hljs-built_in">readonly=<span class="hljs-string">"readonly" /<span class="hljs-string">&gt;<br /><br />检索结束时间：</span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code><code>&lt;input </code><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in">type=<span class="hljs-string">"text" </span></span></span></span></span></code><code>id=<span class="hljs-string">"endTime" onFocus=<span class="hljs-string">"WdatePicker({dateFmt:'yyyy-MM-dd',alwaysUseStartDate:true,onpicked:function(){onemonthtypeChange(this,'startTime','endTime');search();}})"<span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"> class=<span class="hljs-string">"j_toTimeMM" <span class="hljs-built_in">readonly=<span class="hljs-string">"readonly" /<span class="hljs-string">&gt;</span></span></span></span></span></span></span></span></span></span></code><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string">&lt;script&gt;</span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code><em id="__mceDel"><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string">function </span></span></span></span></span></span></span></span></span></span></code><code>onemonthtypeChange(obj,id1,id2){<br />　　var start = $("#"+id1).val();<br />　　var end = $("#"+id2).val();<br />　　if(start != null &amp;&amp; start != "" &amp;&amp; end !=null &amp;&amp; end != ""){<br />　　　　var startNum,endNum;<br />　　　　if(start.length &gt; 5){<br />　　　　　　startNum = parseInt(start.replace(/-/g,'').replace(' ','').replace(/:/g,''),10);<br /></code><code>　　　　　　endNum = parseInt(end.replace(/-/g,'').replace(' ','').replace(/:/g,''),10);</code></em></pre>
+<pre><code><code>　　　　}else{<br />　　　　　　staetNum = parseInt(start.replace(/:/g,''),10);<br />　　　　　　endNum = parseInt(end.replace(/:/g,''),10);<br />　　　　}<br />　　　　if(startNum &gt; endNum){<br />　　　　　　$(obj).val();<br />　　　　　　alert("开始时间不能大于结束时间")；<br />　　　　　　return false;<br />　　　　}<br />　　}<br />　　return true;<br />}</code></pre>
+<pre><code><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string">&lt;/script&gt;<br />亲测完美符合自己的需求</span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code><code><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string"><span class="hljs-string"><span class="hljs-built_in"><span class="hljs-string"><span class="hljs-string">&nbsp;</span></span></span></span></span></span></span></span></span></span></code></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

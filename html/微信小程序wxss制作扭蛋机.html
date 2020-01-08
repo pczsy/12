@@ -1,0 +1,341 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序wxss制作扭蛋机' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序wxss制作扭蛋机</center></div><div class='banquan'>原文出处:本文由博客园博主写代码的农民提供。<br/>
+原文连接:https://www.cnblogs.com/li-fenghan/p/11577828.html</div><br>
+    <h2>小程序制作扭蛋机</h2>
+<p>2019-09-24 13:26:53</p>
+<p>公司要制作活动小程序，其中有一个扭蛋机的效果实现抽奖的功能。在网上找了好久竟没有找到(不知道是不是我找代码的方式有问题)。最后还是自己做一个吧- _ - ,效果如下:</p>
+<p><img src="./images/微信小程序wxss制作扭蛋机0.png" alt="" width="199" height="139" /></p>
+<p>&nbsp;</p>
+<h3>&nbsp;1.wxml&nbsp;</h3>
+<p>当然我这里没有用wx:for遍历</p>
+<div class="cnblogs_code">
+<pre><code>  &lt;!-- 扭蛋机 --&gt;
+  &lt;view <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">egg</span><span style="color: #800000;">"</span>&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">egg_ji</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_nd.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">play {{start?'go':''}}</span><span style="color: #800000;">"</span> bindtap=<span style="color: #800000;">"</span><span style="color: #800000;">eggPlay</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_eggplay.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_1 {{start?'weiyi_1':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg1.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_2 {{start?'weiyi_2':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg2.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_3 {{start?'weiyi_3':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg3.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_4 {{start?'weiyi_4':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg4.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_5 {{start?'weiyi_5':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg5.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_6 {{start?'weiyi_6':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg6.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+    &lt;image <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_7 {{start?'weiyi_7':''}}</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg7.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span>&gt;&lt;/image&gt;
+   &lt;image hidden=<span style="color: #800000;">"</span><span style="color: #800000;">{{qiu}}</span><span style="color: #800000;">"</span> animation=<span style="color: #800000;">"</span><span style="color: #800000;">{{ani}}</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">ball ball_end</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">{{imgUrl}}small_program/game/game_luck_draw_egg7.png</span><span style="color: #800000;">"</span> mode=<span style="color: #800000;">"</span><span style="color: #800000;">widthFix</span><span style="color: #800000;">"</span> &gt;&lt;/image&gt;
+  &lt;/view&gt;</pre>
+</div>
+<h3>2.wxss</h3>
+<p>这一步比较麻烦,需要调试扭蛋的位置和动画路径</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">  1</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> 扭蛋机 </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">  2</span> <span style="color: #000000;">.egg{
+</span><span style="color: #008080;">  3</span>   width: <span style="color: #800080;">100</span>%<span style="color: #000000;">;
+</span><span style="color: #008080;">  4</span> <span style="color: #000000;">  position: absolute;
+</span><span style="color: #008080;">  5</span>   z-index: <span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;">  6</span> <span style="color: #000000;">  top: 260rpx;
+</span><span style="color: #008080;">  7</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">  8</span> <span style="color: #000000;">.egg .egg_ji{
+</span><span style="color: #008080;">  9</span>   width: <span style="color: #800080;">70</span>%<span style="color: #000000;">;
+</span><span style="color: #008080;"> 10</span>   margin-left: <span style="color: #800080;">15</span>%<span style="color: #000000;">;
+</span><span style="color: #008080;"> 11</span>   z-index: <span style="color: #800080;">3</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 12</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 13</span> <span style="color: #000000;">.egg .play{
+</span><span style="color: #008080;"> 14</span> <span style="color: #000000;">  width: 80rpx;
+</span><span style="color: #008080;"> 15</span> <span style="color: #000000;">  position: absolute;
+</span><span style="color: #008080;"> 16</span>   z-index: <span style="color: #800080;">4</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 17</span> <span style="color: #000000;">  top: 405rpx;
+</span><span style="color: #008080;"> 18</span> <span style="color: #000000;">  left: 275rpx;
+</span><span style="color: #008080;"> 19</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 20</span> <span style="color: #000000;">.egg .ball{
+</span><span style="color: #008080;"> 21</span> <span style="color: #000000;">  width: 75rpx;
+</span><span style="color: #008080;"> 22</span> <span style="color: #000000;">  position: absolute;
+</span><span style="color: #008080;"> 23</span>   z-index: <span style="color: #800080;">2</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 24</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 25</span> <span style="color: #000000;">.egg .ball_1{
+</span><span style="color: #008080;"> 26</span> <span style="color: #000000;">  top: 290rpx;
+</span><span style="color: #008080;"> 27</span> <span style="color: #000000;">  left: 300rpx;
+</span><span style="color: #008080;"> 28</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 29</span> <span style="color: #000000;">.egg .ball_2{
+</span><span style="color: #008080;"> 30</span> <span style="color: #000000;">  top: 295rpx;
+</span><span style="color: #008080;"> 31</span> <span style="color: #000000;">  left: 360rpx;
+</span><span style="color: #008080;"> 32</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 33</span> <span style="color: #000000;">.egg .ball_3{
+</span><span style="color: #008080;"> 34</span> <span style="color: #000000;">  top: 260rpx;
+</span><span style="color: #008080;"> 35</span> <span style="color: #000000;">  left: 240rpx;
+</span><span style="color: #008080;"> 36</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 37</span> <span style="color: #000000;">.egg .ball_4{
+</span><span style="color: #008080;"> 38</span> <span style="color: #000000;">  top: 260rpx;
+</span><span style="color: #008080;"> 39</span> <span style="color: #000000;">  left: 420rpx;
+</span><span style="color: #008080;"> 40</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 41</span> <span style="color: #000000;">.egg .ball_5{
+</span><span style="color: #008080;"> 42</span> <span style="color: #000000;">  top: 230rpx;
+</span><span style="color: #008080;"> 43</span> <span style="color: #000000;">  left: 280rpx;
+</span><span style="color: #008080;"> 44</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 45</span> <span style="color: #000000;">.egg .ball_6{
+</span><span style="color: #008080;"> 46</span> <span style="color: #000000;">  top: 230rpx;
+</span><span style="color: #008080;"> 47</span> <span style="color: #000000;">  left: 340rpx;
+</span><span style="color: #008080;"> 48</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 49</span> <span style="color: #000000;">.egg .ball_7{
+</span><span style="color: #008080;"> 50</span> <span style="color: #000000;">  top: 220rpx;
+</span><span style="color: #008080;"> 51</span> <span style="color: #000000;">  left: 390rpx;
+</span><span style="color: #008080;"> 52</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 53</span> <span style="color: #000000;">.egg .ball_end{
+</span><span style="color: #008080;"> 54</span> <span style="color: #000000;">  top: 410rpx;
+</span><span style="color: #008080;"> 55</span> <span style="color: #000000;">  left: 390rpx;
+</span><span style="color: #008080;"> 56</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 57</span> 
+<span style="color: #008080;"> 58</span> <span style="color: #000000;">.weiyi_1 {
+</span><span style="color: #008080;"> 59</span>  animation: around1 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 60</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 61</span> <span style="color: #000000;">.weiyi_2 {
+</span><span style="color: #008080;"> 62</span>  animation: around2 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 63</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 64</span> <span style="color: #000000;">.weiyi_3 {
+</span><span style="color: #008080;"> 65</span>  animation: around3 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 66</span> <span style="color: #000000;">} 
+</span><span style="color: #008080;"> 67</span> <span style="color: #000000;">.weiyi_4 {
+</span><span style="color: #008080;"> 68</span>  animation: around4 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 69</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 70</span> <span style="color: #000000;">.weiyi_5 {
+</span><span style="color: #008080;"> 71</span>  animation: around5 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 72</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 73</span> <span style="color: #000000;">.weiyi_6 {
+</span><span style="color: #008080;"> 74</span>  animation: around6 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 75</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 76</span> <span style="color: #000000;">.weiyi_7 {
+</span><span style="color: #008080;"> 77</span>  animation: around7 <span style="color: #800080;">1</span><span style="color: #000000;">.5s linear infinite;
+</span><span style="color: #008080;"> 78</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 79</span> <span style="color: #000000;">.go{
+</span><span style="color: #008080;"> 80</span>   animation: around <span style="color: #800080;">0</span>.3s linear <span style="color: #800080;">1</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 81</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 82</span> 
+<span style="color: #008080;"> 83</span> 
+<span style="color: #008080;"> 84</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> 位移 </span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 85</span> <span style="color: #000000;">@keyframes around{
+</span><span style="color: #008080;"> 86</span>   <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;"> 87</span>  -webkit-transform: rotate(-<span style="color: #000000;">180deg)
+</span><span style="color: #008080;"> 88</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;"> 89</span> <span style="color: #000000;">}
+</span><span style="color: #008080;"> 90</span> 
+<span style="color: #008080;"> 91</span> <span style="color: #000000;">@keyframes around1 {
+</span><span style="color: #008080;"> 92</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;"> 93</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;"> 94</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;"> 95</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;"> 96</span>  -webkit-transform: translate(-100rpx, -<span style="color: #000000;">200rpx)
+</span><span style="color: #008080;"> 97</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;"> 98</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;"> 99</span>  -webkit-transform: translate(40rpx, -<span style="color: #000000;">280rpx)
+</span><span style="color: #008080;">100</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">101</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">102</span>  -webkit-transform: translate(150rpx, -<span style="color: #000000;">200rpx)
+</span><span style="color: #008080;">103</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">104</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">105</span>  -webkit-transform: translate(150rpx, -<span style="color: #000000;">50rpx)
+</span><span style="color: #008080;">106</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">107</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">108</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">109</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">110</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">111</span> 
+<span style="color: #008080;">112</span> <span style="color: #000000;">@keyframes around2 {
+</span><span style="color: #008080;">113</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">114</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">115</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">116</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">117</span>  -webkit-transform: translate(100rpx, -<span style="color: #000000;">200rpx)
+</span><span style="color: #008080;">118</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">119</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">120</span>  -webkit-transform: translate(-20rpx, -<span style="color: #000000;">280rpx)
+</span><span style="color: #008080;">121</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">122</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">123</span>  -webkit-transform: translate(-150rpx, -<span style="color: #000000;">200rpx)
+</span><span style="color: #008080;">124</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">125</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">126</span>  -webkit-transform: translate(-150rpx, -<span style="color: #000000;">50rpx)
+</span><span style="color: #008080;">127</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">128</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">129</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">130</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">131</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">132</span> 
+<span style="color: #008080;">133</span> <span style="color: #000000;">@keyframes around3 {
+</span><span style="color: #008080;">134</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">135</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">136</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">137</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">138</span>  -webkit-<span style="color: #000000;">transform: translate(180rpx, 10rpx)
+</span><span style="color: #008080;">139</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">140</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">141</span>  -webkit-transform: translate(240rpx, -<span style="color: #000000;">110rpx)
+</span><span style="color: #008080;">142</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">143</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">144</span>  -webkit-transform: translate(100rpx, -<span style="color: #000000;">240rpx)
+</span><span style="color: #008080;">145</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">146</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">147</span>  -webkit-transform: translate(-50rpx, -<span style="color: #000000;">130rpx)
+</span><span style="color: #008080;">148</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">149</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">150</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">151</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">152</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">153</span> 
+<span style="color: #008080;">154</span> <span style="color: #000000;">@keyframes around4 {
+</span><span style="color: #008080;">155</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">156</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">157</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">158</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">159</span>  -webkit-transform: translate(-<span style="color: #000000;">180rpx, 10rpx)
+</span><span style="color: #008080;">160</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">161</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">162</span>  -webkit-transform: translate(-240rpx, -<span style="color: #000000;">110rpx)
+</span><span style="color: #008080;">163</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">164</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">165</span>  -webkit-transform: translate(-100rpx, -<span style="color: #000000;">240rpx)
+</span><span style="color: #008080;">166</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">167</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">168</span>  -webkit-transform: translate(50rpx, -<span style="color: #000000;">130rpx)
+</span><span style="color: #008080;">169</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">170</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">171</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">172</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">173</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">174</span> 
+<span style="color: #008080;">175</span> <span style="color: #000000;">@keyframes around5 {
+</span><span style="color: #008080;">176</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">177</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">178</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">179</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">180</span>  -webkit-<span style="color: #000000;">transform: translate(40rpx, 70rpx)
+</span><span style="color: #008080;">181</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">182</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">183</span>  -webkit-transform: translate(50rpx, -<span style="color: #000000;">210rpx)
+</span><span style="color: #008080;">184</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">185</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">186</span>  -webkit-transform: translate(-80rpx, -<span style="color: #000000;">100rpx)
+</span><span style="color: #008080;">187</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">188</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">189</span>  -webkit-transform: translate(190rpx, -<span style="color: #000000;">50rpx)
+</span><span style="color: #008080;">190</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">191</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">192</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">193</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">194</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">195</span> 
+<span style="color: #008080;">196</span> <span style="color: #000000;">@keyframes around6 {
+</span><span style="color: #008080;">197</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">198</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">199</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">200</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">201</span>  -webkit-transform: translate(-150rpx, -<span style="color: #000000;">50rpx)
+</span><span style="color: #008080;">202</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">203</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">204</span>  -webkit-transform: translate(130rpx, -<span style="color: #000000;">140rpx)
+</span><span style="color: #008080;">205</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">206</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">207</span>  -webkit-transform: translate(-110rpx, -<span style="color: #000000;">180rpx)
+</span><span style="color: #008080;">208</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">209</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">210</span>  -webkit-transform: translate(-130rpx, -<span style="color: #000000;">20rpx)
+</span><span style="color: #008080;">211</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">212</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">213</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">214</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">215</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">216</span> 
+<span style="color: #008080;">217</span> <span style="color: #000000;">@keyframes around7 {
+</span><span style="color: #008080;">218</span>  <span style="color: #800080;">0</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">219</span>  -webkit-<span style="color: #000000;">transform: translate(0rpx, 0rpx)
+</span><span style="color: #008080;">220</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">221</span>  <span style="color: #800080;">20</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">222</span>  -webkit-transform: translate(80rpx, -<span style="color: #000000;">50rpx)
+</span><span style="color: #008080;">223</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">224</span>  <span style="color: #800080;">40</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">225</span>  -webkit-transform: translate(-180rpx, -<span style="color: #000000;">100rpx)
+</span><span style="color: #008080;">226</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">227</span>  <span style="color: #800080;">60</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">228</span>  -webkit-transform: translate(50rpx, -<span style="color: #000000;">150rpx)
+</span><span style="color: #008080;">229</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">230</span>  <span style="color: #800080;">80</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">231</span>  -webkit-transform: translate(-180rpx, -<span style="color: #000000;">20rpx)
+</span><span style="color: #008080;">232</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">233</span>  <span style="color: #800080;">100</span>%<span style="color: #000000;"> {
+</span><span style="color: #008080;">234</span>  -webkit-transform: translate(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">)
+</span><span style="color: #008080;">235</span> <span style="color: #000000;"> }
+</span><span style="color: #008080;">236</span> }</pre>
+</div>
+<h3>3.js</h3>
+<p>这一步要比css要是要简单的多,点击使动画动起来,调用api接口获取奖品就可以了</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">Page({
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span>   <span style="color: #008000;">/*</span><span style="color: #008000;">*
+</span><span style="color: #008080;"> 4</span> <span style="color: #008000;">   * 页面的初始数据
+</span><span style="color: #008080;"> 5</span>    <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 6</span> <span style="color: #000000;">  data: {
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    imgUrl: app.data.imgUrl,
+</span><span style="color: #008080;"> 8</span>     start : <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+</span><span style="color: #008080;"> 9</span>     qiu: <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">  },
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span> <span style="color: #008000;">/*</span><span style="color: #008000;">*
+</span><span style="color: #008080;">13</span> <span style="color: #008000;"> * 点击扭蛋机
+</span><span style="color: #008080;">14</span>  <span style="color: #008000;">*/</span>
+<span style="color: #008080;">15</span> <span style="color: #000000;">  eggPlay(){
+</span><span style="color: #008080;">16</span>     let _this = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+</span><span style="color: #008080;">17</span> 
+<span style="color: #008080;">18</span> <span style="color: #000000;">    _this.setData({
+</span><span style="color: #008080;">19</span>       start: <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">    })
+</span><span style="color: #008080;">21</span>     setTimeout(() =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">      _this.setData({
+</span><span style="color: #008080;">23</span>         start: <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+</span><span style="color: #008080;">24</span>         qiu: <span style="color: #0000ff;">false</span><span style="color: #000000;">,
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">      })
+</span><span style="color: #008080;">26</span>       <span style="color: #008000;">//</span><span style="color: #008000;">球落下动画</span>
+<span style="color: #008080;">27</span>       <span style="color: #0000ff;">var</span> animation =<span style="color: #000000;"> wx.createAnimation({
+</span><span style="color: #008080;">28</span>         duration: <span style="color: #800080;">1500</span><span style="color: #000000;">,
+</span><span style="color: #008080;">29</span>         timingFunction: <span style="color: #800000;">'</span><span style="color: #800000;">ease</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">      });
+</span><span style="color: #008080;">31</span>       animation.opacity(<span style="color: #800080;">1</span><span style="color: #000000;">).step()
+</span><span style="color: #008080;">32</span>       <span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">        ani: animation.export()
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">      })
+</span><span style="color: #008080;">35</span>     }, <span style="color: #800080;">3000</span><span style="color: #000000;">);
+</span><span style="color: #008080;">36</span> 
+<span style="color: #008080;">37</span> <span style="color: #000000;">    _this.setData({
+</span><span style="color: #008080;">38</span>       qiu: <span style="color: #0000ff;">true</span>
+<span style="color: #008080;">39</span> <span style="color: #000000;">    })
+</span><span style="color: #008080;">40</span>     <span style="color: #008000;">//</span><span style="color: #008000;">将动画返回到开始位置</span>
+<span style="color: #008080;">41</span>     <span style="color: #0000ff;">var</span> animation =<span style="color: #000000;"> wx.createAnimation({
+</span><span style="color: #008080;">42</span>       duration: <span style="color: #800080;">1500</span><span style="color: #000000;">,
+</span><span style="color: #008080;">43</span>       timingFunction: <span style="color: #800000;">'</span><span style="color: #800000;">ease</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">    });
+</span><span style="color: #008080;">45</span>     animation.opacity(<span style="color: #800080;">0</span><span style="color: #000000;">).step()
+</span><span style="color: #008080;">46</span>     <span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">      ani: animation.export()
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">    })
+</span><span style="color: #008080;">49</span>   },</pre>
+</div>
+<p>&nbsp;<strong>这个动画有个小的bug,就是连续点击按钮动画时间会变快,如果有更好的方法可以留言交流。</strong></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

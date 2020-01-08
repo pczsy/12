@@ -1,0 +1,681 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Web基础了解版04-XML-Tomcat-Http' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Web基础了解版04-XML-Tomcat-Http</center></div><div class='banquan'>原文出处:本文由博客园博主远离颠倒梦想提供。<br/>
+原文连接:https://www.cnblogs.com/Open-ing/p/12061720.html</div><br>
+    <h2 style="text-align: center;">XML</h2>
+<h3 class="md-end-block md-heading md-focus">&nbsp;</h3>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">什么是XML -&nbsp;</span><span class="md-plain md-expand"><a href="#Tomcat">Tomcat</a>&nbsp;- <a href="#Http">Http</a></span></h3>
+<ul>
+<li><span class="md-plain md-expand">XML：e<span><strong><span class="md-plain">X</span></strong><span class="md-plain">tensible <span><strong><span class="md-plain">M</span></strong><span class="md-plain">arkup <span><strong><span class="md-plain">L</span></strong><span class="md-plain md-expand">anguage （可扩展标记语言）。</span></span></span></span></span></span></span></li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">XML 是一种标记语言，很类似 HTML。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">XML 的设计宗旨是传输数据，而非显示数据。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">XML的使命，就是以一个统一的格式，组织有关系的数据。为不同平台下的应用程序服务，独立于软件和硬件的信息传输工具。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">XML 仅仅是纯文本。有能力处理纯文本的软件都可以处理 XML。不过，能够读懂 XML 的应用程序可以有针对性地处理 XML 的标签。</span></p>
+</li>
+</ul>
+<p>XML相较于HTML，语法更加严格。</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">XML用途</span></h3>
+<ul>
+<li class="md-end-block md-heading md-focus"><span class="md-plain md-expand">配置文件</span></li>
+</ul>
+<ul>
+<li class="md-end-block md-heading md-focus"><span class="md-plain md-expand">数据交换格式</span></li>
+</ul>
+<ul>
+<li class="md-end-block md-heading md-focus"><span class="md-plain md-expand">数据存储</span></li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">基本语法</span></h3>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http0.png" alt="" /></p>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain">文档声明</span></h4>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">version属性指定XML版本，固定值是<span><strong>1.0。</strong></span></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">必须在文件的第一行书写文档声明。</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">encoding指定的字符集，是<span><strong>告诉解析器使用什么字符集进行解码</strong><span class="md-plain">，而编码是由文本编辑器决定的</span></span></span></p>
+</li>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">通常的写法：<span><strong><span>&lt;<span class="md-plain">?xml version="1.0" encoding="utf-8" ?&gt;</span></span></strong></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">这样就要求保存文件时，必须用utf-8编码保存。此时要求XML文档的作者确认当前编辑器保存文档的编码方式。</span></p>
+</li>
+</ul>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain">语法规则</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">① XML声明要么不写，要写就写在第一行，并且前面没有任何其他字符,并且必须严格遵循语法</span></p>
+<p class="md-end-block md-p"><span class="md-plain">② 只能有一个根标签，所有的其他标签都必须声明在根标签内部</span></p>
+<p class="md-end-block md-p"><span class="md-plain">③ 标签必须正确结束，不能交叉嵌套</span></p>
+<p class="md-end-block md-p"><span class="md-plain">⑤ 严格区分大小写</span></p>
+<p class="md-end-block md-p"><span class="md-plain">⑥ 开始标签中，可以自定义添加属性。但，如果有属性就必须有值，且必须加引号</span></p>
+<p class="md-end-block md-p"><span class="md-plain">⑦ 标签不能以数字开头</span></p>
+<p class="md-end-block md-p"><span class="md-plain">⑧ 注释不能嵌套,&nbsp;</span><span class="md-plain">注释采用：<span class="md-comment md-expand">&lt;!--注释--&gt;</span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">⑨ XML中可以使用HTML中的转义字符</span></p>
+<p class="md-end-block md-p">XML实体中不允许出现"&amp;","&lt;","&gt;"等特殊字符,否则XML语法检查时将出错,请使用转义字符</p>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain">CDATA区</span></h4>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">当XML文档中需要写一些程序代码、SQL语句或其他<span><strong>不希望XML解析器进行解析的内容</strong><span class="md-plain">时，就可以写在CDATA区中</span></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">XML解析器会将CDATA区中的内容原封不动的输出</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">CDATA区的定义格式：<span>&lt;<span class="md-plain">![CDATA[&hellip;]]&gt;</span></span></span></p>
+</li>
+</ul>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http1.png" alt="" /></p>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">处理指令</span></h4>
+<p class="md-end-block md-p md-focus"><span class="md-plain">① 处理指令，简称PI （processing instruction）。处理指令用来指挥解析引擎如何解析XML文档内容。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">② 处理指令必须以 <span>&lt;<span class="md-plain">? 作为开头，以 ?&gt; 作为结尾，XML声明语句就是最常见的一种处理指令。 </span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">例如，在XML文档中可以使用xml-stylesheet指令，通知XML解析引擎，应用xsl文件显示xml文档内容。</span></p>
+<pre><code><span><span class="cm-meta">&lt;?xml-stylesheet <span class="cm-meta">type="text/css" href="p.xsl"?&gt;</span></span></span></pre>
+<p class="md-end-block md-p"><span class="md-plain">③ XSL对于XML来说就相当于CSS对HTML一样，XSL是XML的文件样式。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">XSL 指扩展样式表语言（<span><em>E</em><span class="md-plain">Xtensible <span><em>S</em><span class="md-plain">tylesheet <span><em>L</em><span class="md-plain">anguage）。</span></span></span></span></span></span></span></p>
+<h2 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">XML解析</span></h2>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">XML解析是指通过解析器读取XML文档，解释语法，并将文档转化成对象</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">对XML的一切操作都是由解析开始的，所以解析非常重要。</span></p>
+</li>
+</ul>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http2.png" alt="" /></p>
+<h2 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">dom4j</span></h2>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">dom4j是一个简单、灵活的开放源代码的库。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">Dom4j是由早期开发JDOM的人分离出来而后独立开发的。与JDOM不同的是，dom4j使用接口和抽象基类，虽然Dom4j的API相对要复杂一些，但它提供了比JDOM更好的灵活性。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">dom4j是一个非常优秀的Java XML API，具有性能优异、功能强大和极易使用的特点。现在很多软件都采用dom4j，例如Hibernate。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">使用dom4j开发，需导入dom4j相应的jar包dom4j-1.6.1.jar。所以使用第一步：导包！</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>Dom4j解析步骤</strong></span></p>
+</li>
+</ul>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">1、创建解析器对象</span>
+SAXReader reader = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SAXReader();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">2、使用解析器将xml文件转换为内存中的document对象</span>
+Document document = reader.read("teachers.xml"); <span style="color: #008000;">//</span><span style="color: #008000;">相对在项目根路径下查找xml文件
+</span><span style="color: #008000;">//</span><span style="color: #008000;">3、通过文档对象可以获取文档的根标签</span>
+Element rootElement =<span style="color: #000000;"> document.getRootElement();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">4、根据根标签获取所有的根标签的子标签集合</span>
+List&lt;Element&gt; elements =<span style="color: #000000;"> rootElement.elements();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">5、遍历集合中的标签，并将所有的数据解析出来</span>
+<span style="color: #0000ff;">for</span><span style="color: #000000;"> (Element element : elements) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">每次遍历就代表一个teacher信息</span>
+    System.out.println("正在遍历的标签名："+<span style="color: #000000;">element.getName());
+    System.out.println(</span>"正在遍历标签的id属性值："+element.attributeValue("id"<span style="color: #000000;">));
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">获取teacher的子标签的内容</span>
+    String tname = element.elementText("tname"<span style="color: #000000;">);
+    System.out.println(</span>"tname："+<span style="color: #000000;">tname);
+    String age </span>= element.elementText("tage"<span style="color: #000000;">);
+    System.out.println(</span>"tage:"+age);<br />}</pre>
+</div>
+<p><strong>修改</strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">添加一个新的student节点</span>
+Element newEle = rootElement.addElement("teacher"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建一个良好的xml格式</span>
+OutputFormat format =<span style="color: #000000;"> OutputFormat.createPrettyPrint();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">写入文件</span>
+XMLWriter xmlWriter = <span style="color: #0000ff;">new</span> XMLWriter(<span style="color: #0000ff;">new</span> FileWriter("teachers.xml"<span style="color: #000000;">),format);
+xmlWriter.write(document);
+xmlWriter.close();</span></pre>
+</div>
+<p><strong>新建</strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">1.创建文档</span>
+Document document =<span style="color: #000000;"> DocumentHelper.createDocument();
+</span><span style="color: #008000;">//</span><span style="color: #008000;">2.添加根元素</span>
+Element root = document.addElement("teachers"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">3.添加元素节点</span>
+Element tcEle = root.addElement("teacher"<span style="color: #000000;">);
+Element tcEle2 </span>= root.addElement("teacher");</pre>
+</div>
+<h2 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">XPath</span></h2>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">XPath 是在 XML 文档中查找信息的语言，类似于jQuery选择器。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain">XPath通过元素和属性进行查找，<span class="md-expand"><strong>简化了Dom4j查找节点</strong>的过程</span></span></p>
+</li>
+</ul>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-plain md-expand">语法</span></span></th><th><span class="td-span"><span class="md-plain">说明</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择根元素AAA</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA/CCC</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择AAA下的所有CCC子元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA/DDD/BBB</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择AAA的子元素DDD的所有BBB子元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//DDD/BBB</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有父元素是DDD的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA/CCC/DDD/*</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有路径依附于/AAA/CCC/DDD的元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/<span>*<span class="md-plain">/<span>*<span class="md-plain">/*/BBB</span></span></span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有的有3个祖先元素的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//*</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA/BBB[1]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择AAA的第一个BBB子元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/AAA/BBB[last()]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择AAA的最后一个BBB子元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//@id</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择所有元素的id属性</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB[@id]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择有id属性的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB[@name]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择有name属性的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB[@*]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择有任意属性的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB[not(@*)]</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择没有属性的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">//BBB[@id='b1']</span></span></td>
+<td><span class="td-span"><span class="md-plain">选择含有属性id且其值为'b1'的BBB元素</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">//BBB[@name='bbb']</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">选择含有属性name且其值为'bbb'的BBB元素</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain">使用</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">① 导包：<span><strong>jaxen-1.1-beta-6.jar</strong></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">② dom4j怎么做就怎么做。只是在查找元素的时候可以使用xpath了</span></p>
+<p class="md-end-block md-p"><span class="md-plain">③ 获取所有符合条件的节点</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>document.selectNodes(String xpathExpression) ：返回List集合</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">举例：document.selectNodes("/students/student")</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>document.selectSingleNode(String xpathExpression)</strong><span class="md-plain"> ：获取符合条件的单个节点。即一个Node对象。如果符合条件的节点有多个，那么返回第一个。</span></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">举例：document.selectSingleNode("/students/student[@id='1']")</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 class="md-end-block md-heading md-focus" style="text-align: center;"><span class="md-plain md-expand"><a name="Tomcat"></a>Tomcat</span></h1>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">Tomcat下载</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">Tomcat官方网站：<span class="md-link"><a href="http://tomcat.apache.org/">http://tomcat.apache.org/</a></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">安装版：需要安装，一般不考虑使用。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">解压版: 直接解压缩使用，我们使用的版本。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">因为tomcat服务器软件需要使用java环境，所以<strong>需要正确配置JAVA_HOME。</strong></span></p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">安装</span></h3>
+<p><span class="md-plain md-expand"><span class="md-plain md-expand">解压apache-tomcat-7.0.79-windows-x64.zip到<span><strong><span class="md-plain">非中文无空格</span></strong><span class="md-plain md-expand">目录中</span></span></span></span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http3.png" alt="" /></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand"><strong>bin</strong>：该目录下存放的是二进制可执行文件，如果是安装版，那么这个目录下会有两个exe文件：tomcat6.exe、tomcat6w.exe，前者是在控制台下启动Tomcat，后者是弹出GUI窗口启动Tomcat；如果是解压版，那么会有startup.bat和shutdown.bat文件，startup.bat用来启动Tomcat，但需要先配置JAVA_HOME环境变量才能启动，shutdawn.bat用来停止Tomcat；</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>conf</strong>：这是一个非常非常重要的目录，这个目录下有四个最为重要的文件：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>server.xml：配置整个服务器信息。</strong>例如修改端口号。默认HTTP请求的端口号是：<strong>8080</strong></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>tomcat-users.xml</strong>：存储tomcat用户的文件，这里保存的是tomcat的用户名及密码，以及用户的角色信息。可以按着该文件中的注释信息添加tomcat用户，然后就可以在Tomcat主页中进入Tomcat Manager页面了；</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>web.xml</strong>：部署描述符文件，这个文件中注册了很多MIME类型，即文档类型。这些MIME类型是客户端与服务器之间说明文档类型的，如用户请求一个html网页，那么服务器还会告诉客户端浏览器响应的文档是text/html类型的，这就是一个MIME类型。客户端浏览器通过这个MIME类型就知道如何处理它了。当然是在浏览器中显示这个html文件了。但如果服务器响应的是一个exe文件，那么浏览器就不可能显示它，而是应该弹出下载窗口才对。MIME就是用来说明文档的内容是什么类型的！</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">context.xml：对所有应用的统一配置，通常我们不会去配置它。</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>lib</strong>：Tomcat的类库，里面是一大堆jar文件。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain"><strong>logs</strong>：这个目录中都是日志文件，记录了Tomcat启动和关闭的信息，如果启动Tomcat时有错误，那么异常也会记录在日志文件中。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">temp：存放Tomcat的临时文件，这个目录下的东西可以在停止Tomcat后删除！</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>webapps：存放web项目的目录，其中每个文件夹都是一个项目</strong><span class="md-plain">；如果这个目录下已经存在了目录，那么都是tomcat自带的项目。其中ROOT是一个特殊的默认项目</span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">work：运行时生成的文件，最终运行的文件都在这里。通过webapps中的项目生成的，可以把这个目录下的内容删除，再次运行时会生再次生成work目录。当客户端用户访问一个JSP文件时，Tomcat会通过JSP生成Java文件，然后再编译Java文件生成class文件，生成的java和class文件都会存放到这个目录下。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">LICENSE：许可证。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">NOTICE：说明文件。</span></p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">启动</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain">在命令行中运行<span><strong>catalina run</strong><span class="md-plain">或者 Tomcat解压目录下<span><strong>双击startup.bat</strong><span class="md-plain md-expand"> 启动Tomcat服务器，在浏览器地址栏访问地址进行测试</span></span></span></span></span><strong><span class="md-link"><a href="http://localhost:8080">http://localhost:8080</a></span></strong></p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">如果启动失败，查看如下的情况：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">情况一：如果双击startup.bat后窗口一闪而过，请查看JAVA_HOME是否配置正确。</span></p>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">startup.bat会调用catalina.bat，而catalina.bat会调用setclasspath.bat，setclasspath.bat会使用JAVA_HOME环境变量，所以我们必须在启动Tomcat之前把JAVA_HOME配置正确。</span></p>
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">情况二：如果启动失败，提示端口号被占用，则将默认的8080端口修改为其他未使用的值，例如8989等。</span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain">&nbsp;打开：解压目录\conf\server.xml，找到第一个Connector标签，修改port属性</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http4.png" alt="" /></span></p>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">web服务器在启动时，实际上是监听了本机上的一个端口，当有客户端向该端口发送请求时，web服务器就会处理请求。但是如果不是向其所监听的端口发送请求，web服务器不会做任何响应。例如：Tomcat启动监听了8989端口，而访问的地址是<span class="md-link"><a href="http://localhost:8080">http://localhost:8080</a><span class="md-plain md-expand">，将不能正常访问。</span></span></span></p>
+</blockquote>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">在Eclipse中创建Tomcat镜像</span></h3>
+<p><span class="md-plain md-expand">① 在Servers视窗里点击超链接或在空白处右键&rarr;New</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http5.png" alt="" /></span></p>
+<p><span class="md-plain md-expand">②选择对应的安装版本，点next</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http6.png" alt="" /></span></p>
+<blockquote>
+<p><span class="md-plain md-expand">注意1：关联Tomcat镜像时，Eclipse会从本地Tomcat中复制信息及文件（如下图），之后二者的配置信息就没有关系了，其中任何一个的配置信息发生变化都不会自动同步到另外一个。所以，如果修改端口号的话，需要Tomcat目录中和Eclipse的镜像文件中都要修改端口号才可以。</span></p>
+</blockquote>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http7.png" alt="" /></span></p>
+<blockquote>
+<p><span class="md-plain md-expand"><span class="md-plain md-expand">注意2：Tomcat服务器在Eclipse中启动以后，在浏览器中访问：<span class="md-link">http://localhost:8080<span class="md-plain md-expand">会发现访问失败。因为此时在Eclipse中启动的webapps目录与之前方式访问使用的webapps目录不一致。</span></span></span></span></p>
+</blockquote>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http8.png" alt="" /></span></p>
+<h2 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">动态Web工程部署</span></h2>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http9.png" alt="" /></span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http10.png" alt="" /></span></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">项目目录结构说明</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>src：存放Java源代码的目录。</strong></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">Libraries：存放的是Tomcat及JRE中的jar包。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">build：自动编译.java文件的目录。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">WebContent：存放的是需要部署到服务器的文件</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">META-INF：是存放工程自身相关的一些信息，元文件信息，通常由开发工具和环境自动生成。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">MANIFEST.MF：配置清单文件</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">WEB-INF：<span>这个目录下的文件，<strong>是不能被客户端直接访问的。</strong></span></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>lib：</strong>用于存放该工程用到的库。粘贴过来以后，<strong>不再需要build path</strong></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>web.xml：</strong>web工程的配置文件，<strong>完成用户请求的逻辑名称到真正的servlet类的映射。</strong></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">classes：存放Java字节码文件的目录。</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">凡是客户端能访问的资源(*.html或 *.jpg)必须跟WEB-INF在同一目录，即放在Web根目录下的资源，从客户端是可以通过URL地址直接访问的。</span></p>
+</blockquote>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">部署/移除Web项目</span></h3>
+<p><span class="md-plain md-expand">右键点击刚创建好的Tomcat服务器，选择Add and Remove &hellip;</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http11.png" alt="" /></span></p>
+<p><span class="md-plain md-expand">将左边的项目 add 到右边，即为部署：</span></p>
+<p><span class="md-plain md-expand">将右边的项目remove到左边，即为移除：</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http12.png" alt="" /></span></p>
+<p><span class="md-plain md-expand">部署或移除web项目以后，需要重启服务器</span></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">部署Web项目的原理</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">当我们使用Eclipse将项目部署到Tomcat中时，我们发现，在Tomcat下的webapps目录下并没有我们创建好的项目，但是当通过Eclipse启动服务器后，项目却真的可以访问到，这是为什么呢？</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">实际上，Eclipse在使用Tomcat时，并没有将项目部署到Tomcat的目录下，而是在其工作空间中，创建了一个Tomcat的镜像，Eclipse启动的Tomcat是他自己配置的镜像。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">Eclipse镜像所在目录：你的工作空间目录<span>.<span class="md-plain">metadata<span>.<span class="md-plain">plugins\org.eclipse.wst.server.core\tmp0</span></span></span></span></span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">（重启Tomcat以后，双击Servers-TOmcat v7.0即会看到部署好的web工程存在的默认位置。)</span></p>
+</li>
+</ul>
+<p><span class="md-plain md-expand">或者通过如下的方式，也可以直接找到部署的位置：</span></p>
+<p><span class="md-plain md-expand"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http13.png" alt="" /></span></p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http14.png" alt="" /></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">在这个目录下，我们会发现一个和Tomcat安装目录几乎一模一样的目录结构。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">在这里Eclipse中Tomcat镜像配置文件也是独立的，而我们所创建的项目是部署到wtpwebapps目录下的，这样做的好处是Eclipse中Tomcat和我们本机的Tomcat可以保持相互独立，不会影响彼此。但是千万注意，此时千万不要试图删除原有的Tomcat目录结构或移动位置。</span></p>
+</li>
+</ul>
+<p>总结：启动服务器以后，我们的web项目会部署到服务器目录的wtpwebapps文件夹的目录下。index.jsp也是直接声明在此项目目录下的。</p>
+<h1 style="text-align: center;"><a name="Http"></a>HTTP</h1>
+<ul>
+<li>&nbsp;<span class="md-expand"><strong><span class="md-plain">HTTP 超文本传输协议</span></strong><span class="md-plain md-expand"> (HTTP-Hypertext transfer protocol)，是一个属于应用层的面向对象的协议，由于其简捷、快速的方式，适用于分布式超媒体信息系统。<span class="md-expand"><strong><span class="md-plain">它是一种详细规定了浏览器和万维网服务器之间互相通信的规则</span></strong><span class="md-plain md-expand">，通过因特网传送万维网文档的数据传送协议。</span></span></span></span></li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">客户端与服务端通信时传输的内容我们称之为<span><strong>报文</strong><span class="md-plain">。<span><strong>HTTP协议就是规定报文的格式。</strong></span></span></span></span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain">HTTP就是一个通信规则，这个规则规定了客户端发送给服务器的报文格式，也规定了服务器发送给客户端的报文格式。实际我们要学习的就是这两种报文。客户端发送给服务器的称为&rdquo;<span><strong>请求报文</strong><span class="md-plain">&ldquo;，服务器发送给客户端的称为&rdquo;<span><strong>响应报文</strong><span class="md-plain md-expand">&ldquo;。</span></span></span></span></span></p>
+</li>
+</ul>
+<p>&nbsp;浏览器与服务器之间的通信过程要经历四个步骤</p>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http15.png" alt="" /></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">浏览器与WEB服务器的连接过程是短暂的，每次连接只处理一个请求和响应。对每一个页面的访问，浏览器与WEB服务器都要建立一次单独的连接。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">浏览器到WEB服务器之间的所有通讯都是完全独立分开的请求和响应对。</span></p>
+</li>
+</ul>
+<h2 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">报文</span></h2>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">请求报文：浏览器发给服务器</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">响应报文：服务器发回给浏览器</span></p>
+</li>
+</ul>
+<p>&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./images/Web基础了解版04-XML-Tomcat-Http16.png" alt="" /></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">请求报文</span></h3>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">GET请求</span></h4>
+<p>&nbsp;<span class="md-plain md-expand">1、由于请求参数在请求首行中已经携带了，所以没有请求体，也没有请求空行</span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain">2、请求参数拼接在url地址中，地址栏可见[url?name1=value1&amp;name2=value2]，不安全</span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"> <span class="md-plain">3、由于参数在地址栏中携带，所以有大小限制[地址栏数据大小一般限制为4k]，只能携带纯文本</span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain">4、get请求参数只能上传文本数据</span></span></span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain md-expand">5、没有请求体。所以封装和解析都快，效率高， 浏览器默认提交的请求都是get请求[比如：① 地址栏输入url地址回车，②点击超链接a ， ③ form表单默认方式...]</span></span></span></span></span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain md-expand"><strong><span class="md-plain">请求头</span></strong></span></span></span></span></span></span></span></span></span></p>
+<div class="cnblogs_code">
+<pre><code>Host: localhost:<span style="color: #800080;">8080</span><span style="color: #000000;">   主机虚拟地址
+Connection: keep</span>-<span style="color: #000000;">alive 长连接
+Upgrade</span>-Insecure-Requests: <span style="color: #800080;">1</span><span style="color: #000000;">  请求协议的自动升级[http的请求，服务器却是https的，浏览器自动会将请求协议升级为https的]
+User</span>-Agent: Mozilla/<span style="color: #800080;">5.0</span> (Windows NT <span style="color: #800080;">6.1</span>; WOW64) AppleWebKit/<span style="color: #800080;">537.36</span> (KHTML, like Gecko) Chrome/<span style="color: #800080;">68.0</span>.<span style="color: #800080;">3440.75</span> Safari/<span style="color: #800080;">537.36</span>
+-<span style="color: #000000;"> 用户系统信息
+Accept:text</span>/html,application/xhtml+xml,application/xml;q=<span style="color: #800080;">0.9</span>,image/webp,image/apng,*/*;q=<span style="color: #800080;">0.8</span>
+-<span style="color: #000000;"> 浏览器支持的文件类型
+Referer: http:</span>//localhost:<span style="color: #800080;">8080</span>/05_web_tomcat/<span style="color: #000000;">login.html
+</span>-<span style="color: #000000;"> 当前页面的上一个页面的路径[当前页面通过哪个页面跳转过来的]：   可以通过此路径跳转回上一个页面， 广告计费，防止盗链
+Accept</span>-<span style="color: #000000;">Encoding: gzip, deflate, br
+</span>-<span style="color: #000000;"> 浏览器支持的压缩格式
+Accept</span>-Language: zh-CN,zh;q=<span style="color: #800080;">0.9</span>,en-US;q=<span style="color: #800080;">0.8</span>,en;q=<span style="color: #800080;">0.7</span>
+- 浏览器支持的语言</pre>
+</div>
+<h3><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain md-expand"><span style="font-size: 1em;">POST请求</span></span></span></span></span></span></span></span></span></span></h3>
+<p>&nbsp;POST请求要求将form标签的method的属性设置为post</p>
+<p><span class="md-plain md-expand">1、POST请求有请求体，而GET请求没有请求体。</span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"> <span class="md-plain">2、post请求数据在请求体中携带，请求体数据大小没有限制，可以用来上传所有内容[文件、文本]</span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain">3、只能使用post请求上传文件</span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain">4、post请求报文多了和请求体相关的配置[请求头]</span></span></span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain">5、地址栏参数不可见，相对安全</span></span></span></span></span></span></span></span></span></p>
+<p><span class="md-plain md-expand"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"><span class="md-plain"><span class="md-softbreak"> <span class="md-plain md-expand">6、post效率比get低</span></span></span></span></span></span></span></span></span></span></span></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">响应报文</span></h3>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain">报文格式(4部分)</span></h4>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">响应首行（<span><strong>响应行</strong><span class="md-plain">）；</span></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">响应头信息（<span><strong>响应头</strong><span class="md-plain">）；</span></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">空行；</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-expand"><strong>响应体；</strong></span></p>
+</li>
+</ul>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand"> 响应码</span></h4>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-expand"><strong>200：</strong><span class="md-plain">请求成功，浏览器会把响应体内容（通常是html）显示在浏览器中；</span></span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span><strong>404：</strong><span class="md-plain md-expand">请求的资源没有找到，说明客户端错误的请求了不存在的资源；</span></span></p>
+</li>
+<li>&nbsp;<span class="md-expand"><strong><span class="md-plain">500：</span></strong><span class="md-plain md-expand">请求资源找到了，但服务器内部出现了错误；</span></span></li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li><span class="md-expand"><strong><span class="md-plain">302：</span></strong><span class="md-plain md-expand">重定向，当响应码为302时，表示服务器要求浏览器重新再发一个请求，服务器会发送一个响应头Location，它指定了新请求的URL地址；</span></span></li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li><strong>304</strong> （未修改） 自从上次请求后，请求的网页未修改过。服务器返回此响应时，不会返回网页内容。&nbsp;</li>
+</ul>
+<ul>
+<li><strong>405</strong> （方法禁用） 禁用请求中指定的方法。</li>
+</ul>
+<h4 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">MIME类型</span></h4>
+<p class="md-end-block md-p md-focus"><span class="md-plain">HTTP内容类型：当前响应体的数据类型。</span></p>
+<p class="md-end-block md-p"><span class="md-plain">① 需要指出的是在浏览器和服务器之间传输的数据类型并非都是文本类型，还包括图片、视频、音频等多媒体类型。这些多媒体类型是使用MIME类型定义的。</span></p>
+<p class="md-end-block md-p"><span class="md-plain md-expand">② MIME的英文全称是"Multipurpose Internet Mail Extensions" 多功能Internet 邮件扩充服务。MIME类型的格式是&ldquo;大类型/小类型&rdquo;，并与某一种文件的扩展名相对应。</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-plain md-expand">文件</span></span></th><th><span class="td-span"><span class="md-plain">MIME类型</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">超文本标记语言文本</span></span></td>
+<td><span class="td-span"><span class="md-plain">.html,.htm text/html</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">普通文本</span></span></td>
+<td><span class="td-span"><span class="md-plain">.txt text/plain</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">RTF文本</span></span></td>
+<td><span class="td-span"><span class="md-plain">.rtf application/rtf</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">GIF图形</span></span></td>
+<td><span class="td-span"><span class="md-plain">.gif image/gif</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">JPEG图形</span></span></td>
+<td><span class="td-span"><span class="md-plain">.jpeg,.jpg image/jpeg</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">au声音文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">.au audio/basic</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">MIDI音乐文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">mid,.midi audio/midi,audio/x-midi</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">RealAudio音乐文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">.ra, .ram audio/x-pn-realaudio</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">MPEG文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">.mpg,.mpeg video/mpeg</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">AVI文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">.avi video/x-msvideo</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">GZIP文件</span></span></td>
+<td><span class="td-span"><span class="md-plain">.gz application/x-gzip</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">TAR文件</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">.tar application/x-tar</span></span></td>
+</tr>
+</tbody>
+</table>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">1xx（临时响应） 
+表示临时响应并需要请求者继续执行操作的状态代码。
+
+代码 说明 
+</span><span style="color: #800080;">100</span><span style="color: #000000;"> （继续） 请求者应当继续提出请求。服务器返回此代码表示已收到请求的第一部分，正在等待其余部分。 
+</span><span style="color: #800080;">101</span><span style="color: #000000;"> （切换协议） 请求者已要求服务器切换协议，服务器已确认并准备切换。
+
+2xx （成功） 
+表示成功处理了请求的状态代码。
+
+代码 说明 
+</span><span style="color: #800080;">200</span><span style="color: #000000;"> （成功） 服务器已成功处理了请求。通常，这表示服务器提供了请求的网页。 
+</span><span style="color: #800080;">201</span><span style="color: #000000;"> （已创建） 请求成功并且服务器创建了新的资源。 
+</span><span style="color: #800080;">202</span><span style="color: #000000;"> （已接受） 服务器已接受请求，但尚未处理。 
+</span><span style="color: #800080;">203</span><span style="color: #000000;"> （非授权信息） 服务器已成功处理了请求，但返回的信息可能来自另一来源。 
+</span><span style="color: #800080;">204</span><span style="color: #000000;"> （无内容） 服务器成功处理了请求，但没有返回任何内容。 
+</span><span style="color: #800080;">205</span><span style="color: #000000;"> （重置内容） 服务器成功处理了请求，但没有返回任何内容。 
+</span><span style="color: #800080;">206</span> （部分内容） 服务器成功处理了部分 <span style="color: #0000ff;">GET</span><span style="color: #000000;"> 请求。
+
+3xx （重定向） 
+表示要完成请求，需要进一步操作。 通常，这些状态代码用来重定向。
+
+代码 说明 
+</span><span style="color: #800080;">300</span><span style="color: #000000;"> （多种选择） 针对请求，服务器可执行多种操作。服务器可根据请求者 (user agent) 选择一项操作，或提供操作列表供请求者选择。 
+</span><span style="color: #800080;">301</span> （永久移动） 请求的网页已永久移动到新位置。服务器返回此响应（对 <span style="color: #0000ff;">GET</span><span style="color: #000000;"> 或 HEAD 请求的响应）时，会自动将请求者转到新位置。 
+</span><span style="color: #800080;">302</span><span style="color: #000000;"> （临时移动） 服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。 
+</span><span style="color: #800080;">303</span> （查看其他位置） 请求者应当对不同的位置使用单独的 <span style="color: #0000ff;">GET</span><span style="color: #000000;"> 请求来检索响应时，服务器返回此代码。 
+</span><span style="color: #800080;">304</span><span style="color: #000000;"> （未修改） 自从上次请求后，请求的网页未修改过。服务器返回此响应时，不会返回网页内容。 
+</span><span style="color: #800080;">305</span><span style="color: #000000;"> （使用代理） 请求者只能使用代理访问请求的网页。如果服务器返回此响应，还表示请求者应使用代理。 
+</span><span style="color: #800080;">307</span><span style="color: #000000;"> （临时重定向） 服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。
+
+4xx（请求错误） 
+这些状态代码表示请求可能出错，妨碍了服务器的处理。
+
+代码 说明 
+</span><span style="color: #800080;">400</span><span style="color: #000000;"> （错误请求） 服务器不理解请求的语法。 
+</span><span style="color: #800080;">401</span><span style="color: #000000;"> （未授权） 请求要求身份验证。 对于需要登录的网页，服务器可能返回此响应。 
+</span><span style="color: #800080;">403</span><span style="color: #000000;"> （禁止） 服务器拒绝请求。 
+</span><span style="color: #800080;">404</span><span style="color: #000000;"> （未找到） 服务器找不到请求的网页。 
+</span><span style="color: #800080;">405</span><span style="color: #000000;"> （方法禁用） 禁用请求中指定的方法。 
+</span><span style="color: #800080;">406</span><span style="color: #000000;"> （不接受） 无法使用请求的内容特性响应请求的网页。 
+</span><span style="color: #800080;">407</span> （需要代理授权） 此状态代码与 <span style="color: #800080;">401</span><span style="color: #000000;">（未授权）类似，但指定请求者应当授权使用代理。 
+</span><span style="color: #800080;">408</span><span style="color: #000000;"> （请求超时） 服务器等候请求时发生超时。 
+</span><span style="color: #800080;">409</span><span style="color: #000000;"> （冲突） 服务器在完成请求时发生冲突。服务器必须在响应中包含有关冲突的信息。 
+</span><span style="color: #800080;">410</span><span style="color: #000000;"> （已删除） 如果请求的资源已永久删除，服务器就会返回此响应。 
+</span><span style="color: #800080;">411</span><span style="color: #000000;"> （需要有效长度） 服务器不接受不含有效内容长度标头字段的请求。 
+</span><span style="color: #800080;">412</span><span style="color: #000000;"> （未满足前提条件） 服务器未满足请求者在请求中设置的其中一个前提条件。 
+</span><span style="color: #800080;">413</span><span style="color: #000000;"> （请求实体过大） 服务器无法处理请求，因为请求实体过大，超出服务器的处理能力。 
+</span><span style="color: #800080;">414</span><span style="color: #000000;"> （请求的 URI 过长） 请求的 URI（通常为网址）过长，服务器无法处理。 
+</span><span style="color: #800080;">415</span><span style="color: #000000;"> （不支持的媒体类型） 请求的格式不受请求页面的支持。 
+</span><span style="color: #800080;">416</span><span style="color: #000000;"> （请求范围不符合要求） 如果页面无法提供请求的范围，则服务器会返回此状态代码。 
+</span><span style="color: #800080;">417</span><span style="color: #000000;"> （未满足期望值） 服务器未满足&rdquo;期望&rdquo;请求标头字段的要求。
+
+5xx（服务器错误） 
+这些状态代码表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错。
+
+代码 说明 
+</span><span style="color: #800080;">500</span><span style="color: #000000;"> （服务器内部错误） 服务器遇到错误，无法完成请求。 
+</span><span style="color: #800080;">501</span><span style="color: #000000;"> （尚未实施） 服务器不具备完成请求的功能。例如，服务器无法识别请求方法时可能会返回此代码。 
+</span><span style="color: #800080;">502</span><span style="color: #000000;"> （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应。 
+</span><span style="color: #800080;">503</span><span style="color: #000000;"> （服务不可用） 服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。 
+</span><span style="color: #800080;">504</span><span style="color: #000000;"> （网关超时） 服务器作为网关或代理，但是没有及时从上游服务器收到请求。 
+</span><span style="color: #800080;">505</span><span style="color: #000000;"> （HTTP 版本不受支持） 服务器不支持请求中所用的 HTTP 协议版本。
+
+HttpWatch状态码Result </span><span style="color: #0000ff;">is</span>
+
+<span style="color: #800080;">200</span> -<span style="color: #000000;"> 服务器成功返回网页，客户端请求已成功。 
+</span><span style="color: #800080;">302</span> -<span style="color: #000000;"> 对象临时移动。服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。 
+</span><span style="color: #800080;">304</span> -<span style="color: #000000;"> 属于重定向。自上次请求后，请求的网页未修改过。服务器返回此响应时，不会返回网页内容。 
+</span><span style="color: #800080;">401</span> -<span style="color: #000000;"> 未授权。请求要求身份验证。 对于需要登录的网页，服务器可能返回此响应。 
+</span><span style="color: #800080;">404</span> -<span style="color: #000000;"> 未找到。服务器找不到请求的网页。 
+2xx </span>-<span style="color: #000000;"> 成功。表示服务器成功地接受了客户端请求。 
+3xx </span>-<span style="color: #000000;"> 重定向。表示要完成请求，需要进一步操作。客户端浏览器必须采取更多操作来实现请求。例如，浏览器可能不得不请求服务器上的不同的页面，或通过代理服务器重复该请求。 
+4xx </span>-<span style="color: #000000;"> 请求错误。这些状态代码表示请求可能出错，妨碍了服务器的处理。 
+5xx </span>- 服务器错误。表示服务器在尝试处理请求时发生内部错误。 这些错误可能是服务器本身的错误，而不是请求出错。</pre>
+</div>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

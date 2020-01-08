@@ -1,0 +1,193 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修做一个好看的可翻转登录注册界面' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>做一个好看的可翻转登录注册界面</center></div><div class='banquan'>原文出处:本文由博客园博主崩坏的领航员提供。<br/>
+原文连接:https://www.cnblogs.com/CollapseNav/p/11879695.html</div><br>
+    <h1 id="做一个好看的登录注册界面">做一个好看的登录注册界面</h1>
+<h2 id="前言">前言</h2>
+<p>最近在尝试做网盘，使用的技术栈大概是 <strong>.net core + MVC + Mysql + Layui</strong>，主要目的是通过这个具体的项目，熟悉熟悉 <strong>.net core</strong> 开发，<strong>.net</strong> 的未来就是他了！</p>
+<h2 id="我的设想">我的设想</h2>
+<p>在完成后端的一部分 <strong>建设</strong> 之后，我把目光投向了前端——登陆注册，由于这个网盘是用来试手的个人项目，我并不想用曾经用过的制作方式——登录和注册界面分开来做。我试图讲这两个功能合到一个页面上，并且以一种不是很 <strong>&quot;Low&quot;</strong> 的方式呈现出来。</p>
+<p><del>你也可以认为我只是单纯的懒，不想再多搞一个页面</del></p>
+<p>所以排除了曾经使用过的点击按钮跳出 登录/注册 表单，排除了比较僵硬的使用选项卡切换 登录/注册 之后，我瞄上了 <strong>翻转</strong> 效果。</p>
+<p><img src="./images/做一个好看的可翻转登录注册界面0.png" /></p>
+<p><img src="./images/做一个好看的可翻转登录注册界面1.png" /></p>
+<p>看到那个 <strong>sign up</strong> 和 <strong>log in</strong> 之后我就想到，拿这两个超链接做点文章或许是不错的选择</p>
+<p>用户点击 <strong>sign up</strong> 之后从登录翻转到注册，点击 <strong>log in</strong> 从注册翻转到登录</p>
+<p>从技术上来说应该是不难的，但是 <strong>B 格</strong> 看起来立刻就高了不少啊！！！！</p>
+<p><del>具体效果可以直接拉到最下面</del></p>
+<h2 id="具体实现">具体实现</h2>
+<p><strong><em>Html</em></strong></p>
+<pre><code><code>&lt;body&gt;
+  &lt;div class=&quot;mainbody middle&quot;&gt;
+    &lt;form class=&quot;form-box front&quot;&gt;
+      &lt;div&gt;
+        &lt;h1&gt;Login&lt;/h1&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;input class=&quot;input-normal&quot; type=&quot;text&quot; placeholder=&quot;UserAccount&quot; /&gt;
+        &lt;input class=&quot;input-normal&quot; type=&quot;password&quot; placeholder=&quot;PassWord&quot; /&gt;
+        &lt;button class=&quot;btn-submit&quot; type=&quot;submit&quot;&gt;
+          LOGIN
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;p style=&quot;margin-top: 40px&quot;&gt;If you don&#39;t have account.Please&lt;/p&gt;
+        &lt;p&gt;Click here to &lt;a id=&quot;signup&quot;&gt;Sign Up&lt;/a&gt;&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+    &lt;!-- 对的你没看错，上下两个表单基本上没区别，一个front，一个back --&gt;
+    &lt;form class=&quot;form-box back&quot;&gt;
+      &lt;div&gt;
+        &lt;h1&gt;Register&lt;/h1&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;input class=&quot;input-normal&quot; type=&quot;text&quot; placeholder=&quot;UserAccount&quot; /&gt;
+        &lt;input class=&quot;input-normal&quot; type=&quot;password&quot; placeholder=&quot;PassWord&quot; /&gt;
+        &lt;button class=&quot;btn-submit&quot; type=&quot;submit&quot;&gt;
+          Register
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div&gt;
+        &lt;p style=&quot;margin-top: 40px&quot;&gt;Have a account ? You can&lt;/p&gt;
+        &lt;p&gt;Click here to &lt;a id=&quot;login&quot;&gt;Log in&lt;/a&gt;&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+<p><strong><em>Css</em></strong></p>
+<pre class="css"><code>body {
+  /*颜色这个看个人喜好*/
+  background: darkslategrey;
+  /*字体这个看个人喜好*/
+  font-family: sans-serif;
+}
+
+/*主要是规定中间表单尺寸，调整到自己觉得好看就行了*/
+.mainbody {
+  height: 440px;
+  width: 400px;
+}
+
+/*居中效果*/
+.middle {
+  /*使左上角对应到父元素的中心*/
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  /*向左向上偏移50%*/
+  transform: translate(-50%, -50%);
+}
+
+.form-box {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  background: darkcyan;
+  /* 我觉得这个圆角大小刚刚好 */
+  border-radius: 40px;
+}
+
+.input-normal {
+  width: 220px;
+  height: 38px;
+  margin: 30px auto;
+  padding: 0;
+  text-align: center;
+  border-radius: 20px;
+  outline: none;
+  display: block;
+  transition: 0.3s;
+  border: 1px solid #e6e6e6;
+}
+
+.btn-submit {
+  width: 100px;
+  height: 36px;
+  margin: auto;
+  font-size: 18px;
+  text-align: center;
+  color: white;
+  border-radius: 20px;
+  display: block;
+  background: darkslategrey;
+  transition: 0.3s;
+}
+
+.front {
+  transform: rotateY(0deg);
+}
+
+/* 将back旋转180度，背面朝向用户，我这边选y轴的 */
+.back {
+  transform: rotateY(-180deg);
+}
+
+.front,
+.back {
+  position: absolute;
+  /* 然后设置为背面朝向用户时不可见 */
+  backface-visibility: hidden;
+  /* 我觉得用linear顺滑一点 */
+  transition: 0.3s linear;
+}
+
+/* 将front旋转180度 */
+.middle-flip .front {
+  transform: rotateY(180deg);
+}
+/* 将back旋转180度 */
+.middle-flip .back {
+  transform: rotateY(0deg);
+}
+
+/* 我调整了一下，感觉还不错的样式，你可以改成其他的好看点的 */
+p {
+  margin: 15px auto;
+  padding: 0;
+  font-size: 16px;
+  color: white;
+  display: block;
+  text-align: center;
+}
+a {
+  color: aqua;
+  cursor: pointer;
+}</code></pre>
+<p><strong><em>js</em></strong></p>
+<pre class="javascript"><code>// 点击sigup触发翻转样式
+$(&quot;#signup&quot;).click(function() {
+  $(&quot;.middle&quot;).toggleClass(&quot;middle-flip&quot;);
+});
+// 点击login触发翻转样式
+$(&quot;#login&quot;).click(function() {
+  $(&quot;.middle&quot;).toggleClass(&quot;middle-flip&quot;);
+});</code></pre>
+<h2 id="效果">效果</h2>
+<p><img src="./images/做一个好看的可翻转登录注册界面2.png" /></p>
+<p>看起来好像还行的样子啊</p>
+<p>可以考虑在 <code>transfrom</code> 后面加点 <code>perspective</code> ，增强立体感</p>
+<p>我用的 <code>perspective(600px)</code></p>
+<p><img src="./images/做一个好看的可翻转登录注册界面3.png" /></p>
+<p>不管你们怎么想，反正我觉得这个效果还是挺绿的</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

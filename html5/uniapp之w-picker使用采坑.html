@@ -1,0 +1,64 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修uniapp之w-picker使用采坑' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>uniapp之w-picker使用采坑</center></div><div class='banquan'>原文出处:本文由博客园博主老梁讲Java提供。<br/>
+原文连接:https://www.cnblogs.com/sky-chen/p/11190376.html</div><br>
+    <h1 id="uniapp之w-picker使用采坑">1. uniapp之w-picker使用采坑</h1>
+<h2 id="前言">1.1. 前言</h2>
+<ul>
+<li><p>由于我是先在index页面集合了这个组件，发现该文件内容实在太多了，不好维护，所以打算把内容一个个抽成组件，在抽w-picker时，遇到了两个问题</p>
+<ol>
+<li>点击取消，会调用方法，但不会产生取消隐藏效果，点击确认也一样，确认函数的确调用了，但w-picker就是不隐藏</li>
+<li>watch监听的使用，在uniapp可能有一定局限性，我使用如下形式，在h5可行，在微信小程序连错误都不报，同时也没起到作用</li>
+</ol>
+<pre><code><code>watch:{
+    &#39;formData.hospital&#39;: (val,oldval) =&gt; {
+        debugger
+        this.$refs.bedCom.initBed();
+    }
+},</code></pre></li>
+</ul>
+<h2 id="解决">1.2. 解决</h2>
+<h3 id="隐藏无效">1.2.1. 隐藏无效</h3>
+<ul>
+<li>这是<w-picker> 标签放置位置不对问题，请<strong>放置到根目录</strong>，不要和其它组件混用到一起</li>
+</ul>
+<pre><code><code>&lt;template&gt;
+    &lt;view class=&quot;&quot;&gt;
+        &lt;view class=&quot;input-wrapper&quot; @tap=&quot;showBed&quot;&gt;
+            &lt;view style=&quot;font-size: 24upx;&quot; class=&quot;iconfont icon-bingchuang&quot;&gt;&lt;/view&gt;
+            &lt;input disabled cursor-spacing=&quot;150&quot; name=&quot;bed&quot; class=&quot;input-row&quot; placeholder-style=&quot;color:#828288&quot; type=&quot;text&quot;
+             v-model=&quot;formData.bed&quot; placeholder=&quot;床号&quot; /&gt;
+        &lt;/view&gt;
+        &lt;w-picker :colData=&quot;colData&quot; :current=&quot;true&quot; :mode=&quot;bedData.mode&quot; @change=&quot;bedPickerChange&quot; :defaultVal=&quot;bedData.value&quot;
+         @confirm=&quot;onBedConfirm&quot; ref=&quot;bed&quot; themeColor=&quot;#f00&quot;&gt;&lt;/w-picker&gt;
+    &lt;/view&gt;
+&lt;/template&gt;</code></pre>
+<h3 id="watch问题">1.2.2. watch问题</h3>
+<ul>
+<li>改成了如下形式就兼容了h5和小程序，在<code>onLoad</code>生命周期调用</li>
+</ul>
+<pre><code><code>this.$watch(&#39;formData.hospital&#39;,(newValue,old) =&gt; {
+                this.$refs.bedCom.initBed();
+            });</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

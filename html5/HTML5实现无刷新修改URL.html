@@ -1,0 +1,84 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML5实现无刷新修改URL' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML5实现无刷新修改URL</center></div><div class='banquan'>原文出处:本文由博客园博主给时光以生命提供。<br/>
+原文连接:https://www.cnblogs.com/jing-tian/p/11854432.html</div><br>
+    <h2 id="前言">前言</h2>
+<p>今天在做一个vue的搜索功能，需要从搜索结果页面跳转到细节页面，然后点击返回还能返回到刚刚的结果页面，如果只用window.history.go(-1)当然会重新刷新搜索页面，当然是不行的。</p>
+<p>我尝试了俩种方式来修改url:</p>
+<ol>
+<li>window.location.href,拼接一个搜索的key值，点击搜索的同时，刷新了页面，url改变了，功能是实现了，可是bug来了...，搜索页面闪烁后才进入结果页，而结合不跳转页面就不会发生闪烁的情况，所以当页面刷新时，vue实例都会被重新加载。</li>
+<li>window.location.hash,url中#为网页中的一个位置，当读取此url时，页面会自动滚动到锚点处。这种方法不会向服务器发送请求，也不会重载页面。可读写。读取时，可以用来判断网页状态是否改变；写入时，则会在不重载网页的前提下，创造一条访问历史记录。</li>
+</ol>
+<h2 id="新增api">新增API</h2>
+<p>百度后发现HTML5为<code>window.history</code>对象引入了两个新的api是<code>history.pushState()</code> 和 <code>history.replaceState()</code>方法，它们分别可以添加和修改历史记录条目。这些方法通常与<code>window.onpopstate</code>事件配合使用。两种api都能改变当前的url，不同的是，pushState在浏览器中创建一条新的历史记录，而<code>history.replaceState</code>仅仅替换当前地址为指定url。</p>
+<p>HTML5 新增的历史记录 API 均可以实现无刷新更改地址栏链接，配合 AJAX 完全可以做到无刷新跳转。他们的作用非常大，可以做到改变网址却不需要刷新页面，这个特性后来用到了单页面应用中比如：vue-router，react-router-dom里面。那么下面介绍新API的使用方法</p>
+<h2 id="pushstate方法">pushState方法</h2>
+<p>上面提到的这套 API 提供一种「人为操纵」浏览器历史记录的方法。</p>
+<p>我们可以将浏览器历史记录可以看作一个「栈」。栈是一种后进先出的结构，可以把它想象成一摞盘子，用户每点开一个新网页，都会在上面加一个新盘子，叫「入栈」。用户每次点击「后退」按钮都会取走最上面的那个盘子，叫做「出栈」。而每次浏览器显示的自然是最顶端的盘子的内容。</p>
+<pre><code><code>语法:window.history.pushState(state, title, url);</code></pre>
+<p>执行pushState函数之后，会往浏览器的历史记录中创建一条新记录，同时改变地址栏的地址内容。它可以接收三个参数，按语法顺序分别为：</p>
+<ol>
+<li>一个state对象或者字符串，用于描述新记录的一些特性。这个参数会被一并添加到历史记录中，以供以后使用。这个参数是开发者根据自己的需要自由给出的。该值是后期可以通过history.state;获取当前页面的参数,</li>
+<li>一个字符串，代表新页面的标题。当前基本上所有浏览器都会忽略这个参数。</li>
+<li>一个字符串，代表新页面的相对地址。（必须与当前页面处在同一个域。）</li>
+</ol>
+<p>简单例子：假设当前页面为renfei.org/，打开控制台执行下面的 JavaScript 语句：</p>
+<pre><code><code>window.history.pushState({id: 1,name: &quot;profile1&quot;}, &quot;My Profile&quot;, &quot;/profile/&quot;);  //第一二参数可忽略设置为null</code></pre>
+<p>之后，地址栏的地址就会变成<code>renfei.org/profile/</code>，但同时浏览器不会刷新页面，甚至不会检测目标页面是否存在。</p>
+<h2 id="replacestate方法">replaceState方法</h2>
+<p>有时，你希望不添加一个新记录，而是替换当前的记录，俩者区别在于 replaceState() 是修改了当前的历史记录项而不是新建一个。</p>
+<p>replaceState和pushState原理一样使用也一样,最常用的方法：</p>
+<pre><code><code>window.history.replaceState({id: 1,name: &quot;profile&quot;},&#39;下载&#39;,&#39;download?id=1&#39;);</code></pre>
+<p>特点：replaceState不会加入到历史记录里面,用history.go(-1)会跳过当前页面相当于是history.go(-2)。</p>
+<h2 id="popstate事件">popstate事件</h2>
+<p>当页面加载时，它可能会有一个非空的state对象。这可能发生在当页面设置一个state对象(使用pushState或者replaceState)之后用户重启了浏览器。当页面重新加载，页面将收到onload事件，但不会有popstate事件。然而，如果你读取history.state属性，将在popstate事件发生后得到这个state对象</p>
+<pre><code><code>var currentState = history.state; //得到当前页面设置的history.pushState的state对象参数值</code></pre>
+<p>调用 history.pushState() 或者 history.replaceState() 不会触发 popstate 事件。 popstate事件只会在浏览器某些行为下触发， 比如点击后退、前进按钮(或者在JavaScript中调用history.back()、history.forward()、history.go()方法)。</p>
+<p>例子：假设当前页面地址是http://example.com/index.html</p>
+<pre><code><code>window.onpopstate = function(event) {
+  alert(&quot;location: &quot; + document.location.href + &quot;, state: &quot; + JSON.stringify(event.state));//拿到history.state对象值
+};
+//绑定事件处理函数. 
+history.pushState({page: 1}, &quot;title 1&quot;, &quot;?page=100&quot;);    //添加并激活一个历史记录条目 http://example.com/index.html?page=100,条目索引为1    //history.state为{page: 1}
+history.pushState({page: 2}, &quot;title 2&quot;, &quot;?page=200&quot;);    //添加并激活一个历史记录条目 http://example.com/index.html?page=200,条目索引为2
+history.replaceState({page: 3}, &quot;title 3&quot;, &quot;?page=300&quot;); //修改当前所在页面激活的历史记录条目 http://ex..?page=200 变为 http://ex..?page=300,条目索引为3
+
+history.back(); // 弹出 &quot;location: http://example.com/index.html?page=100, state: {&quot;page&quot;:1}&quot;
+history.back(); // 弹出 &quot;location: http://example.com/index.html, state: null
+history.go(2);  // 弹出 &quot;location: http://example.com/index.html?page=300, state: {&quot;page&quot;:3}</code></pre>
+<h2 id="pushstate方法与设置hash值的区别">pushState方法与设置hash值的区别</h2>
+<p>在某种意义上，调用 pushState() 与 设置 window.location = &quot;#foo&quot; 类似，二者都会在当前页面创建并激活新的历史记录。但 pushState() 具有如下几条优点：</p>
+<ol>
+<li>新的 URL 可以是与当前URL同源的任意URL 。而设置 window.location 仅当你只修改了哈希值时才保持同一个文件。</li>
+<li>如果需要，可以不必改变URL就能创建一条历史记录。而设置 window.location.hash = &quot;#foo&quot;;只有在当前哈希不是 #foo 的情况下， 才会创建一个新的历史记录项。</li>
+<li>我们可以为新的历史记录项关联任意数据。而基于哈希值的方式，则必须将所有相关数据编码到一个短字符串里。</li>
+</ol>
+<p>需要注意的是通过history.pushState修改网页的URL地址，在配合相关代码显示隐藏相应界面便可以实现单页面多界面相互操作。该方法比直接访问URL地址速度快，执行效率高，UI体验好，但会增加页面的复杂性及耦合性，要视实际情况而定，一般都用在dialog弹出框上。</p>
+<h2 id="应用全站-ajax并使浏览器能够抓取-ajax-页面">应用：全站 AJAX，并使浏览器能够抓取 AJAX 页面</h2>
+<p>这个可以干啥用？一个比较常用的场景就是，配合 AJAX。</p>
+<p>假设一个页面左侧是若干导航链接，右侧是内容，同时导航时只有右侧的内容需要更新，那么刷新整个页面无疑是浪费的。这时我们可以使用 AJAX 来拉取右面的数据。但是如果仅仅这样，地址栏是不会改变的，用户无法前进、后退，也无法收藏当前页面或者把当前页面分享给他人；搜索引擎抓取也有困难。这时，就可以使用 HTML5 的 History API 来解决这个问题。</p>
+<p>思路：首先绑定click事件。当用户点击一个链接时，通过preventDefault函数防止默认的行为（页面跳转），同时读取链接的地址（如果有 jQuery，可以写成$(this).attr('href')），把这个地址通过pushState塞入浏览器历史记录中，再利用 AJAX 技术拉取（如果有 jQuery，可以使用$.get方法）这个地址中真正的内容，同时替换当前网页的内容。</p>
+<p>为了处理用户前进、后退，我们监听popstate事件。当用户点击前进或后退按钮时，浏览器地址自动被转换成相应的地址，同时popstate事件发生。在事件处理函数中，我们根据当前的地址抓取相应的内容，然后利用 AJAX 拉取这个地址的真正内容，呈现，即可。</p>
+<p>最后，整个过程是不会改变页面标题的，可以通过直接对document.title赋值来更改页面标题。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

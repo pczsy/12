@@ -1,0 +1,501 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修初始css一' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>初始css一</center></div><div class='banquan'>原文出处:本文由博客园博主亚峰牛皮提供。<br/>
+原文连接:https://www.cnblogs.com/yafeng666/p/12103394.html</div><br>
+    <h1 id="初始css">初始CSS</h1>
+<h3 id="一form表单补充">一、form表单补充</h3>
+<ul>
+<li>form表单关键性的属性补充</li>
+</ul>
+<pre><code><code>    form表单
+    关键性的属性
+        action
+            控制的是数据的提交路径
+            1、不写 默认是朝着当前页面所在的地址提交
+            2、全路径
+            3、后缀（/index/）
+
+
+        method
+            控制的是提交方式
+            form表单默认是get请求 method=&#39;get&#39;
+            你也可以指定成post请求 method=&#39;post&#39;
+
+        enctype
+            控制的是数据提交的编码格式
+            默认情况下form表单是不能够直接发送文件的
+            如果你要发送文件 必须将该参数由默认的urlencoded改为formdata
+
+        注意事项：
+            1、获取用户输入的标签 都是用value属性来存放用户的输入
+                获取用户输入的标签都应该有name属性 就类似于字典的key
+                value属性就类似于字典中的value
+
+            2、如何给input设置默认
+                可以直接给input标签加value属性
+
+            3、input框如何设置提示信息
+                username:&lt;input type=&#39;text&#39; value=&#39;jason&#39; placeholder=&#39;用户名&#39;&gt;</code></pre>
+<h3 id="二验证form提交数据">二、验证form提交数据</h3>
+<ul>
+<li>结合Flask演示验证</li>
+</ul>
+<pre><code><code>    后端框架
+        Django
+
+        Flask
+
+        Tornado
+
+
+    Flask框架
+        pip install Flask
+
+        get请求能够携带参数 但是参数的携带方式是直接跟在url后面的
+            url?xxx=ooo&amp;yyy=bbb&amp;lll=ccc
+            特点：
+                1、数据全是明文
+                2、数据大小有限 大概可能在4kb左右
+                3、get请求不应该携带隐私信息</code></pre>
+<ul>
+<li>初始后端框架</li>
+</ul>
+<pre class="pyithon"><code>from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route(&#39;/index&#39;, methods=[&#39;GET&#39;, &#39;POST&#39;])
+def func():
+    print(request.form)  # 获取普通数据
+    print(request.files)
+    file_obj = request.files.get(&#39;myfile&#39;)
+    file_obj.save(&#39;xxx.png&#39;)
+    return &quot;OK&quot;
+
+
+app.run()
+</code></pre>
+<ul>
+<li>form表单</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;form action=&quot;http://127.0.0.1:5000/index&quot; method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+    &lt;p&gt;用户名:&lt;input type=&quot;text&quot; placeholder=&quot;用户名&quot; name=&quot;username&quot;&gt;&lt;/p&gt;
+    &lt;p&gt;密码:&lt;input type=&quot;password&quot; name=&quot;password&quot;&gt;&lt;/p&gt;
+    &lt;p&gt;日期:
+        &lt;input type=&quot;date&quot; name=&quot;birth&quot;&gt;
+
+    &lt;/p&gt;
+    &lt;p&gt;性别:
+        男:&lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;male&quot;&gt;
+        女:&lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;female&quot;&gt;
+    &lt;/p&gt;
+    &lt;p&gt;爱好:
+        篮球:&lt;input type=&quot;checkbox&quot; name=&quot;hobby&quot;  value=&quot;basketball&quot;&gt;
+        足球:&lt;input type=&quot;checkbox&quot; name=&quot;hobby&quot;  value=&quot;football&quot;&gt;
+        双色球:&lt;input type=&quot;checkbox&quot; name=&quot;hobby&quot;  value=&quot;doublecolorball&quot;&gt;
+    &lt;/p&gt;
+    &lt;p&gt;省份:
+        &lt;select name=&quot;province&quot; id=&quot;&quot;&gt;
+            &lt;option value=&quot;bj&quot;&gt;北京&lt;/option&gt;
+            &lt;option value=&quot;sh&quot;&gt;上海&lt;/option&gt;
+            &lt;option value=&quot;sz&quot;&gt;深圳&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/p&gt;
+    &lt;p&gt;女友:
+        &lt;select name=&quot;girlfriend&quot; id=&quot;&quot; multiple&gt;  # multiple可以多选
+            &lt;option value=&quot;c&quot;&gt;苍老师&lt;/option&gt;
+            &lt;option value=&quot;s&quot;&gt;三上悠亚老师&lt;/option&gt;
+            &lt;option value=&quot;m&quot;&gt;吉泽明步老师&lt;/option&gt;
+            &lt;option value=&quot;xz&quot;&gt;小泽老师&lt;/option&gt;
+            &lt;option value=&quot;xhjy&quot;&gt;新恒结衣老师&lt;/option&gt;
+        &lt;/select&gt;
+    &lt;/p&gt;
+    &lt;p&gt;个人简介:
+        &lt;textarea name=&quot;information&quot; id=&quot;&quot; cols=&quot;30&quot; rows=&quot;10&quot;&gt;&lt;/textarea&gt;
+    &lt;/p&gt;
+    &lt;p&gt;个人简历:
+        &lt;input type=&quot;file&quot; name=&quot;myfile&quot;&gt;
+    &lt;/p&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一0.png" /></p>
+<p><img src="./images/初始css一1.png" /></p>
+<h3 id="三css">三、CSS</h3>
+<ul>
+<li>理论知识</li>
+</ul>
+<pre class="css"><code>    什么是css?
+        css其实就是层叠样式表 说白了其实就是用来调节标签的样式
+
+    css的注释
+        单行注释：/*注释*/
+        多行注释：/*
+                    注释1
+                    注释2
+                    注释...
+                */
+
+        注释的使用：
+            css应该是一个独立的文件
+            比如：
+                /*这是小米首页的css样式文件*/
+                /*页面通用样式*/
+                /*顶部导航条样式*/
+                /*侧边菜单栏样式*/
+
+
+    css的语法结构
+        选择器 {属性名：属性值; 属性名1：属性值1; 属性名2： 属性值2;}</code></pre>
+<ul>
+<li>css的三种引入方式</li>
+</ul>
+<pre class="css"><code>    css的三种引入方式
+        1、外部css文件（最正规的书写方式）
+        2、head内style标签内部直接书写css代码（为了演示方便可以使用这种）
+        3、标签内部通过style属性直接书写对应的样式（不推荐）
+
+</code></pre>
+<ul>
+<li>mycss.css</li>
+</ul>
+<pre class="css"><code>mycss.css文件
+/*这是一个非常牛逼的页面的css样式文件*/
+/*公共样式*/
+p {  /*p是选择器*/
+    color: greenyellow;  /*这里面是属性名:属性值*/
+}</code></pre>
+<ul>
+<li>HTML演示</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+
+    &lt;!--第一种引入在head里引入--&gt;
+&lt;!--    &lt;link rel=&quot;stylesheet&quot; href=&quot;mycss.css&quot;&gt;--&gt;
+
+&lt;!--第二种引入方式--&gt;
+&lt;!--    &lt;style&gt;--&gt;
+&lt;!--        p {--&gt;
+&lt;!--            color: red;--&gt;
+&lt;!--        }--&gt;
+&lt;!--    &lt;/style&gt;--&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!--第三种引入--&gt;
+&lt;p style=&quot;color: blue&quot;&gt;上海这个地方就像是希腊神话里的魔女岛 好好的人来了 也会变成畜生&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一2.png" /></p>
+<p><img src="./images/初始css一3.png" /></p>
+<p><img src="./images/初始css一4.png" /></p>
+<h3 id="四如何学习css">四、如何学习css？</h3>
+<ul>
+<li>方法</li>
+</ul>
+<pre class="css"><code>    1、如何查找标签？
+        基本选择器
+
+        组合选择器
+
+        属性选择器
+            所有的标签都可以有默认的属性比如：
+                id
+                class
+
+            标签还可以有自定义的属性 并且可以有多个
+                &lt;input type=&#39;text&#39; username=&#39;jason&#39; xxx=&#39;ooo&#39;&gt;
+
+        分组与嵌套
+
+        伪类选择器
+
+        伪元素选择器
+            a链接标签
+                a标签默认的颜色是蓝色 但是只要你点过一次 就会变成紫色 浏览器会记住你有没有点过
+
+
+    2、如何调节样式？
+</code></pre>
+<h3 id="五css之查找标签">五、css之查找标签</h3>
+<ul>
+<li>基本选择器</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        /*!*标签选择器 元素选择器*!*/
+        /*div { !*div将页面上所有的div标签内部的文本变成你要想的颜色*!*/
+        /*    color: red;*/
+        /*}*/
+
+        /*类的选择器   点号加一个对象*/
+        /*.c1 { !*让所有的具有c1类属性值的标签内部文本变成你想要的颜色*!*/
+        /*    color: blue;*/
+        /*}*/
+
+        /*id选择器   #号加id*/
+        /*#d1 { !*将id为d1的标签内部的文件变成你想要的颜色*!*/
+        /*    color: green;*/
+        /*}*/
+
+        /*通用选择器   *号*/
+        /** { !*页面上所有的标签统一修改样式*!*/
+        /*    color: deeppink;*/
+        /*}*/
+
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;c1&quot;&gt;老板你好 我是23号技师 很高兴为您服务
+    &lt;span&gt;我是div内部的span&lt;/span&gt;  #span是划分区域的
+&lt;/div&gt;
+&lt;p id=&quot;d1&quot; class=&quot;c1&quot;&gt;来宾三位 楼上请&lt;/p&gt;
+&lt;div&gt;老板你好 我是16号技师 很高兴为您服务&lt;/div&gt;
+&lt;span class=&quot;c1&quot;&gt;小美出来接待一下&lt;/span&gt;
+&lt;p&gt;来宾四位楼上请&lt;/p&gt;
+&lt;span id=&quot;d2&quot;&gt;珊珊出来接待一下&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一5.png" /></p>
+<p><img src="./images/初始css一6.png" /></p>
+<p><img src="./images/初始css一7.png" /></p>
+<p><img src="./images/初始css一8.png" /></p>
+<ul>
+<li>组合选择器</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        /*后代选择器*/
+        /*div span {  !*空格表示div内部的所有后代span没有层级限制*!*/
+        /*    color: red;*/
+        /*}*/
+
+
+        /*儿子选择器*/
+        /*div &gt; span { !*&gt;大于号表示div内部的儿子*!*/
+        /*    color: green;*/
+        /*}*/
+
+        /*毗邻选择器*/
+        /*div + span { !*下面的紧接着的第一个标签*!*/
+        /*    color: red;*/
+        /*}*/
+
+        /*弟弟选择器*/
+        div ~ span { /*同级别下面的所有的标签*/
+            color: deeppink;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div&gt;
+    &lt;span&gt;div内部的第一个span&lt;/span&gt;
+    &lt;p&gt;div内部的p
+        &lt;span&gt;div内部的p内部的span&lt;/span&gt;
+    &lt;/p&gt;
+    &lt;span&gt;div内部的最后一个span&lt;/span&gt;
+&lt;/div&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;span&gt;div下面的span&lt;/span&gt;
+&lt;div&gt;弟弟救我
+    &lt;p&gt;我来舔你了&lt;/p&gt;
+&lt;/div&gt;
+&lt;span&gt;你会被我活活骚死&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一9.png" /></p>
+<p><img src="./images/初始css一10.png" /></p>
+<p><img src="./images/初始css一11.png" /></p>
+<p><img src="./images/初始css一12.png" /></p>
+<ul>
+<li>属性选择器</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+
+        /*属性选择器  [] */
+        /*[username] { !*找到页面上所有具有username属性名的标签*!*/
+        /*    background-color: blue;*/
+        /*}*/
+
+        /*进一步的属性选择器 [] */
+        /*[username=&#39;yafeng&#39;] { !*找到页面上属性名是username并且属性值叫yafeng的标签*!*/
+        /*    background-color: aqua;*/
+        /*}*/
+
+        /*更进一步的属性选择器 [] */
+        input[username=&#39;yafeng&#39;] { /*找到页面上属性名是username并且属性值叫yafeng的input标签*/
+            background-color: brown;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;input type=&quot;text&quot; username=&quot;yafeng&quot;&gt;
+&lt;input type=&quot;text&quot; username=&quot;reba&quot;&gt;
+&lt;input type=&quot;text&quot; username=&quot;jason&quot;&gt;
+&lt;input type=&quot;text&quot; username=&quot;tank&quot;&gt;
+&lt;input type=&quot;text&quot; username=&quot;sean&quot;&gt;
+&lt;p username=&quot;yafeng&quot;&gt;亚峰你真帅啊&lt;/p&gt;
+&lt;div username=&quot;reba&quot;&gt;热巴真美啊&lt;/div&gt;
+&lt;span username=&quot;jason&quot;&gt;jason最爱大宝剑啊&lt;/span&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一13.png" /></p>
+<p><img src="./images/初始css一14.png" /></p>
+<p><img src="./images/初始css一15.png" /></p>
+<ul>
+<li>分组与嵌套</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        /*div,p,span { !*查找具有div,p,span的标签*!*/
+        /*    color: brown;*/
+        /*}*/
+
+        /*.c1,#d1,p { !*查找具有c1, d1,p的标签*!*/
+        /*    color: aqua;*/
+        /*}*/
+
+        /*.c1 h1 { !*找具有c1属性值的标签 后代的h1*!*/
+        /*    color: blue;*/
+        /*}*/
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;c1&quot;&gt;亚峰最帅 啊 真的好帅啊 怎么可以这么帅
+    &lt;h1&gt;我是h标签&lt;/h1&gt;
+&lt;/div&gt;
+&lt;span id=&quot;d1&quot;&gt;啊 热巴好美啊 怎么可以这么美啊&lt;/span&gt;
+&lt;p&gt;我要年薪百万啊&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一16.png" /></p>
+<p><img src="./images/初始css一17.png" /></p>
+<p><img src="./images/初始css一18.png" /></p>
+<ul>
+<li>伪类选择器</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        a:link { /*未访问的链接*/
+            color: aqua;
+        }
+
+        a:hover { /*鼠标悬浮*/
+            color: black;
+        }
+
+        a:active { /*选定的的链接*/
+            color: green;
+        }
+
+        a:visited { /*已访问过的链接会变色*/
+            color: gray;
+        }
+
+        input:focus { /*输入框获取焦点的样式*/
+            background-color: red;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;a href=&quot;https://www.mzitu.com&quot;&gt;点我有你好看哦&lt;/a&gt;
+&lt;a href=&quot;https://www.baidu.com&quot;&gt;点我&lt;/a&gt;
+&lt;a href=&quot;https://www.jd.com&quot;&gt;点我1&lt;/a&gt;
+&lt;a href=&quot;https://www.xiaomi.com&quot;&gt;点我2&lt;/a&gt;
+&lt;input type=&quot;text&quot;&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一19.png" /></p>
+<p><img src="./images/初始css一20.png" /></p>
+<p><img src="./images/初始css一21.png" /></p>
+<p><img src="./images/初始css一22.png" /></p>
+<p><img src="./images/初始css一23.png" /></p>
+<ul>
+<li>伪元素选择器</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;style&gt;
+        p:first-letter { /*给首字母设置特殊样式*/
+            color: red;
+            font-size: 48px;
+        }
+
+        p:before { /*在每个&lt;p&gt;元素之前插入内容*/
+            content: &#39;你好啊&#39;;
+            color: red;
+        }
+        p:after { /*在每个&lt;p&gt;元素之后插入内容*/
+            content: &#39;大家都要好好的 加油吧！！！&#39;;
+            color: blue;
+        }
+        
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;大家好啊 家人身体健康 &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/初始css一24.png" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

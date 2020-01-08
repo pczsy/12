@@ -1,0 +1,86 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修给postmessage加上callback方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>给postmessage加上callback方法</center></div><div class='banquan'>原文出处:本文由博客园博主alan0405提供。<br/>
+原文连接:https://www.cnblogs.com/allofalan/p/11265486.html</div><br>
+    <p>postmessage双向通信中，是不能使用回调函数的。</p>
+<div class="cnblogs_code">
+<pre><code>window.postmessage({msg:<span style="color: #800000;">'</span><span style="color: #800000;">hello</span><span style="color: #800000;">'</span><span style="color: #000000;">,callback:function(e){
+    </span><span style="color: #0000ff;">do</span><span style="color: #000000;"> something with e
+}})</span></pre>
+</div>
+<p>这样是不行的，js会提示function不会被克隆。</p>
+<p>我猜啊因为postmessage是通过dom通讯，js对象会被json化</p>
+<p>也就是说不能传递方法。</p>
+<p>不过，话说回来，有什么不能的呢，大不了，把function tostring一下，也是可以传过去的。</p>
+<p>那这里就要考虑你传callback是干什么用了，如果是作为一种自定义 的数据处理方法，你就tostring一下，过去随便用用就好了，就好像foreach那样，传一个方法，在foreach内部用用。</p>
+<p><strong>如果就是想要得到返回值，让自己的书写比较连续。业务逻辑比较连续，callback的结果不会再传到对面。也就是说，callback始终是在本window下运行的。</strong></p>
+<p><strong>保持业务逻辑连续的在你所写的方法里，不会因为调用postmessage而把业务处理逻辑跳跃到onmessage里。</strong></p>
+<p>这是我要在这里讨论的。</p>
+<p>1.很显然，callback从来没真正被传递到对面window里。</p>
+<p>2.callback将在onmessage（addlistoner里注册的接收事件）里执行。</p>
+<p>3.基于以上两点 ，可以得出很简单的结论。在本window里缓存callback，等onmessage接收到对面发回来的数据时，用callback处理即可。</p>
+<p>话有点儿绕嘴，分步来一次，应该会更清楚一点。</p>
+<p>1.用postmessage发消息给对面。</p>
+<p>2.对面收到消息，处理，</p>
+<p>3.用postmessage给本地发消息。</p>
+<p>4.本地接收到消息，处理</p>
+<p>那么本地要用callback去处理，要知道用的是哪个function去处理。那么本地有一个指向callback的变量，就可以得到该callback。</p>
+<p>而因为通讯不可能只一次，该callback会被放在数组里，同时会用唯一性id来标示它，而这个标示 也将被告诉对面window，再让对面告诉本地，从而，本地的接收事件中，去调用这个function。</p>
+<p>还是绕，</p>
+<p>写一下代码吧，也许代码一目了然。</p>
+<p>对面的接收单元</p>
+<div class="cnblogs_code">
+<pre><code>window.addEventListener(<span style="color: #800000;">"</span><span style="color: #800000;">message</span><span style="color: #800000;">"</span><span style="color: #000000;">, function(e) {
+      </span><span style="color: #0000ff;">var</span> data = e.data <span style="color: #008000;">//</span><span style="color: #008000;">拿到传递的数据 {msg:'给我来杯可乐',callbackid:'15146484468'}
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">打一杯可乐</span>
+     <span style="color: #0000ff;">var</span> res = <span style="color: #800000;">'</span><span style="color: #800000;">返回的可乐</span><span style="color: #800000;">'</span><span style="color: #000000;">
+     window.postmessage({result:res,callbackid:data.callbackid})</span><span style="color: #008000;">//</span><span style="color: #008000;">发出去</span>
+}, <span style="color: #0000ff;">false</span>);</pre>
+</div>
+<p>本地的单元</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span><span style="color: #000000;"> callbacks : {}</span></pre>
+<div>&nbsp; window.addEventListener("message", function(e) {</div>
+<div>&nbsp; &nbsp; &nbsp; callbacks[e.data.callbackid](e.data.result)</div>
+<div>&nbsp; }</div>
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> 点杯可乐(callback){
+     callbacks[随机id] </span>=<span style="color: #000000;"> callback
+     xxxwindow.postmessage ({msg:</span>'给我打一杯可乐',callbackid:'随机id'<span style="color: #000000;">})
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> 吃肯德基的方法(){
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">点汉堡</span>
+<span style="color: #000000;">         点汉堡(吃汉堡的方法)
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">点可乐</span>
+<span style="color: #000000;">         点杯可乐(喝可乐)
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">结账走人了</span>
+<span style="color: #000000;">}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">喝可乐就是callback对吧</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> 喝可乐(){
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">咚咚咚。。。哈  </span>
+}　　</pre>
+</div>
+<p>很显然，吃肯德基就是业务，那么业务顺序就是如此的，如果突然跳到接收事件里去吃汉堡，喝可乐，总是很诡异的。</p>
+<p>通过，缓存callback假装callback被传递出去，然后被调用，其实，就达到了目的。</p>
+<p>以上。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

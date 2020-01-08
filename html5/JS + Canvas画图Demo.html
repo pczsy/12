@@ -1,0 +1,419 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修JS + Canvas画图Demo' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>JS + Canvas画图Demo</center></div><div class='banquan'>原文出处:本文由博客园博主QianTLL提供。<br/>
+原文连接:https://www.cnblogs.com/qiantao/p/11958740.html</div><br>
+    <p>直接上代码，复制粘贴就能用：</p>
+<p>HTML代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="Public/jquery.min.js"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+canvas </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">#ccc</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0 auto</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#controls </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">200px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">100%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">linear-gradient(to bottom,#000000,#b8b8b8)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    user-select</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#controls section </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    margin-top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#controls .label </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">50%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    line-height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    text-align</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">center</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">#FFF</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">left</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#xing </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">right</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">50%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">#shape {
+    </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+        <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">width:50%;
+    height:20px;
+    display:block;
+    </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+        <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">
+}
+</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+#controls .color </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">50%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">auto</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">right</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#colors input </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">right</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">48%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#widths input </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">right</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">49%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+#style </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">right</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">49%</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">20px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+input[type=button] </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">150px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">30px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">#C40000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">#FFF</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    border-radius</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">5px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    margin-top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    margin-left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">none</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">block</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="500"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="controls"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="shape"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="shape"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="label"</span><span style="color: #0000ff;">&gt;</span>选择形状 : <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="xing"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="rect"</span><span style="color: #0000ff;">&gt;</span>矩形<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="line"</span><span style="color: #0000ff;">&gt;</span>直线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="circle"</span><span style="color: #0000ff;">&gt;</span>内切圆<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="circle1"</span><span style="color: #0000ff;">&gt;</span>外接圆<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="circle2"</span><span style="color: #0000ff;">&gt;</span>中心圆<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="poly"</span><span style="color: #0000ff;">&gt;</span>多边形<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="pen"</span><span style="color: #0000ff;">&gt;</span>铅笔<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="eraser"</span><span style="color: #0000ff;">&gt;</span>橡皮<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+　　　　     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="arrow"</span><span style="color: #0000ff;">&gt;</span>箭头<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+ 
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="colors"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="label"</span><span style="color: #0000ff;">&gt;</span>选择颜色 : <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="color"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="widths"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="label"</span><span style="color: #0000ff;">&gt;</span>选择线宽 : <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="number"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="width"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> step</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> min</span><span style="color: #0000ff;">="2"</span><span style="color: #ff0000;"> max</span><span style="color: #0000ff;">="20"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="styles"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="shape"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="label"</span><span style="color: #0000ff;">&gt;</span>选择方式 : <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="style"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="stroke"</span><span style="color: #0000ff;">&gt;</span>描边<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">option </span><span style="color: #ff0000;">value</span><span style="color: #0000ff;">="fill"</span><span style="color: #0000ff;">&gt;</span>填充<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">option</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="sides"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="side"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="label"</span><span style="color: #0000ff;">&gt;</span>选择边数 : <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="number"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="side"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="3"</span><span style="color: #ff0000;"> min</span><span style="color: #0000ff;">="3"</span><span style="color: #ff0000;"> max</span><span style="color: #0000ff;">="20"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="撤销"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="redo"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="保存"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="save"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="清空"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="qingkong"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>JS代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> cobj = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> shape = document.querySelector("#xing"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> color = document.querySelector("#color"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> width = document.querySelector("#width"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> style = document.querySelector("#style"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> side = document.querySelector("#side"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> redo = document.querySelector("#redo"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> save = document.querySelector("#save"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> qingkong = document.querySelector("#qingkong"<span style="color: #000000;">);
+console.log(side);
+</span><span style="color: #0000ff;">var</span> data =<span style="color: #000000;"> [];
+</span><span style="color: #0000ff;">var</span> s = "rect"<span style="color: #000000;">;
+shape.onchange </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    s </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+};
+</span><span style="color: #0000ff;">var</span> c = "#000"<span style="color: #000000;">;
+color.onchange </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    c </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+};
+</span><span style="color: #0000ff;">var</span> w = "2"<span style="color: #000000;">;
+width.onchange </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    w </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+};
+</span><span style="color: #0000ff;">var</span> st = "stroke"<span style="color: #000000;">;
+style.onchange </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    st </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+};
+</span><span style="color: #0000ff;">var</span> sd = "3"<span style="color: #000000;">;
+side.onchange </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    sd </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+};
+
+canvas.onmousedown </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+    </span><span style="color: #0000ff;">var</span> ox =<span style="color: #000000;"> e.offsetX;
+    </span><span style="color: #0000ff;">var</span> oy =<span style="color: #000000;"> e.offsetY;
+    </span><span style="color: #0000ff;">var</span> draw = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Draw(cobj, {
+        color: c,
+        width: w,
+        style: st,
+        side: sd
+    });
+    </span><span style="color: #0000ff;">if</span> (s == "pen"<span style="color: #000000;">) {
+        cobj.beginPath();
+        cobj.moveTo(ox, oy);
+    }
+    canvas.onmousemove </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        </span><span style="color: #0000ff;">var</span> mx =<span style="color: #000000;"> e.offsetX;
+        </span><span style="color: #0000ff;">var</span> my =<span style="color: #000000;"> e.offsetY;
+        </span><span style="color: #0000ff;">if</span> (s != "eraser"<span style="color: #000000;">) {
+            cobj.clearRect(</span>0, 0, 500, 500<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">if</span> (data.length != 0<span style="color: #000000;">) {
+                cobj.putImageData(data[data.length </span>- 1], 0, 0, 0, 0, 500, 500); <span style="color: #008000;">//</span><span style="color: #008000;">将某个图像数据放置到画布指定的位置上  后面四个参数可省略</span>
+<span style="color: #000000;">            }
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> cobj.strokeRect(ox,oy,mx-ox,my-oy);</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> cobj.beginPath()</span>
+<span style="color: #000000;">        draw[s](ox, oy, mx, my, sd);
+    };
+    document.onmouseup </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        data.push(cobj.getImageData(</span>0, 0, 500, 500)); <span style="color: #008000;">//</span><span style="color: #008000;">获取画布当中指定区域当中所有的图形数据</span>
+        canvas.onmousemove = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        document.onmouseup </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    }
+};
+redo.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #0000ff;">if</span> (data.length == 0<span style="color: #000000;">) {
+        alert(</span>"无效操作"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+    cobj.clearRect(</span>0, 0, 500, 500<span style="color: #000000;">);
+    data.pop();
+    </span><span style="color: #0000ff;">if</span> (data.length == 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+    cobj.putImageData(data[data.length </span>- 1], 0, 0, 0, 0, 500, 500<span style="color: #000000;">);
+};
+save.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #0000ff;">var</span> r =<span style="color: #000000;"> canvas.toDataURL();
+    location.assign(r)
+};
+qingkong.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    cobj.clearRect(</span>0, 0, 500, 500<span style="color: #000000;">);
+    data </span>=<span style="color: #000000;"> [];
+}
+class Draw {
+    constructor(cobj, option) {
+        </span><span style="color: #0000ff;">this</span>.cobj =<span style="color: #000000;"> cobj;
+        </span><span style="color: #0000ff;">this</span>.color =<span style="color: #000000;"> option.color;
+        </span><span style="color: #0000ff;">this</span>.width =<span style="color: #000000;"> option.width;
+        </span><span style="color: #0000ff;">this</span>.style =<span style="color: #000000;"> option.style;
+    }
+    init() { </span><span style="color: #008000;">//</span><span style="color: #008000;">初始化</span>
+        <span style="color: #0000ff;">this</span>.cobj.strokeStyle = <span style="color: #0000ff;">this</span><span style="color: #000000;">.color;
+        </span><span style="color: #0000ff;">this</span>.cobj.fillStyle = <span style="color: #0000ff;">this</span><span style="color: #000000;">.color;
+        </span><span style="color: #0000ff;">this</span>.cobj.lineWidth = <span style="color: #0000ff;">this</span><span style="color: #000000;">.width;
+    }
+    rect(ox, oy, mx, my) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #0000ff;">this</span>.cobj.rect(ox, oy, mx - ox, my -<span style="color: #000000;"> oy);
+        </span><span style="color: #0000ff;">this</span>.cobj[<span style="color: #0000ff;">this</span><span style="color: #000000;">.style]();
+    }
+    line(ox, oy, mx, my) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.moveTo(ox, oy);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.lineTo(mx, my);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.stroke();
+    }
+    circle(ox, oy, mx, my) { </span><span style="color: #008000;">//</span><span style="color: #008000;">内切圆</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #008000;">/* </span><span style="color: #008000;">var r=Math.sqrt(Math.pow(mx-ox,2)+Math.pow(my-oy,2))/2;
+        this.cobj.arc(ox+(mx-ox)/2,oy+(my-oy)/2,r,0,2*Math.PI);</span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">var</span> r = Math.abs(mx - ox) &gt; Math.abs(my - oy) ? Math.abs(my - oy) / 2 : Math.abs(mx - ox) / 2<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.cobj.arc(ox + (ox &lt; mx ? r : -r), oy + (oy &lt; my ? r : -r), r, 0, 2 *<span style="color: #000000;"> Math.PI);
+        </span><span style="color: #0000ff;">this</span>.cobj[<span style="color: #0000ff;">this</span><span style="color: #000000;">.style]();
+    }
+    circle1(ox, oy, mx, my) { </span><span style="color: #008000;">//</span><span style="color: #008000;">外接圆</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #0000ff;">var</span> r = Math.sqrt(Math.pow(mx - ox, 2) + Math.pow(my - oy, 2)) / 2<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.cobj.arc(ox + (mx - ox) / 2, oy + (my - oy) / 2, r, 0, 2 *<span style="color: #000000;"> Math.PI);
+        </span><span style="color: #0000ff;">this</span>.cobj[<span style="color: #0000ff;">this</span><span style="color: #000000;">.style]();
+    }
+    circle2(ox, oy, mx, my) { </span><span style="color: #008000;">//</span><span style="color: #008000;">中心圆</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #0000ff;">var</span> r = Math.sqrt(Math.pow(mx - ox, 2) + Math.pow(my - oy, 2<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">this</span>.cobj.arc(ox, oy, r, 0, 2 *<span style="color: #000000;"> Math.PI);
+        </span><span style="color: #0000ff;">this</span>.cobj[<span style="color: #0000ff;">this</span><span style="color: #000000;">.style]();
+    }
+    poly(ox, oy, mx, my, sd) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.save();
+        cobj.translate(ox, oy);
+        </span><span style="color: #0000ff;">this</span>.cobj.rotate(Math.PI / 2<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">var</span> angle = Math.PI /<span style="color: #000000;"> sd;
+        </span><span style="color: #0000ff;">var</span> r = Math.sqrt(Math.pow(mx - ox, 2) + Math.pow(my - oy, 2<span style="color: #000000;">));
+        </span><span style="color: #0000ff;">var</span> x = Math.cos(angle) *<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">var</span> y = Math.sin(angle) *<span style="color: #000000;"> r;
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.beginPath();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.moveTo(x, y);
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; sd; i++<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">this</span>.cobj.lineTo(x, -<span style="color: #000000;">y);
+            </span><span style="color: #0000ff;">this</span>.cobj.rotate(-angle * 2<span style="color: #000000;">)
+        }
+        </span><span style="color: #0000ff;">this</span>.cobj[<span style="color: #0000ff;">this</span><span style="color: #000000;">.style]();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.restore()
+    }
+    pen(ox, oy, mx, my) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.lineTo(mx, my);
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.cobj.stroke();
+    }
+    eraser(ox, oy, mx, my) {
+        </span><span style="color: #0000ff;">this</span>.cobj.clearRect(mx, my, 10, 10<span style="color: #000000;">);
+    }
+    arrow(ox, oy, mx, my){</span><span style="color: #008000;">//</span><span style="color: #008000;">箭头工具</span>
+    <span style="color: #0000ff;">this</span><span style="color: #000000;">.init();
+    beginPoint.x </span>=<span style="color: #000000;"> ox;
+    beginPoint.y </span>=<span style="color: #000000;"> oy;
+    stopPoint.x </span>=<span style="color: #000000;"> mx;
+    stopPoint.y </span>=<span style="color: #000000;"> my;
+    Plot.arrowCoord(beginPoint, stopPoint);
+    Plot.sideCoord();
+    Plot.drawArrow();
+    }  
+
+}
+
+</span><span style="color: #0000ff;">var</span> beginPoint = {};<span style="color: #008000;">//</span><span style="color: #008000;">画箭头需要的开始坐标</span>
+<span style="color: #0000ff;">var</span> stopPoint = {};<span style="color: #008000;">//</span><span style="color: #008000;">画箭头需要的结束坐标</span>
+<span style="color: #0000ff;">var</span> polygonVertex = [];<span style="color: #008000;">//</span><span style="color: #008000;">箭头多边形顶点的坐标</span>
+<span style="color: #0000ff;">var</span> CONST = {<span style="color: #008000;">//</span><span style="color: #008000;">箭头参数</span>
+        edgeLen: 50<span style="color: #000000;">,
+        angle: </span>25<span style="color: #000000;">
+    };    
+    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">封装的作图箭头工具对象</span>
+       <span style="color: #0000ff;">var</span> Plot =<span style="color: #000000;"> {
+           angle: </span>""<span style="color: #000000;">,
+     
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">在CONST中定义的edgeLen以及angle参数</span>
+           <span style="color: #008000;">//</span><span style="color: #008000;">短距离画箭头的时候会出现箭头头部过大，修改：</span>
+           dynArrowSize: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+               </span><span style="color: #0000ff;">var</span> x = stopPoint.x -<span style="color: #000000;"> beginPoint.x,
+                   y </span>= stopPoint.y -<span style="color: #000000;"> beginPoint.y,
+                   length </span>= Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2<span style="color: #000000;">));
+               </span><span style="color: #0000ff;">if</span> (length &lt; 250<span style="color: #000000;">) {
+                   CONST.edgeLen </span>= CONST.edgeLen/2;
+                   CONST.angle = CONST.angle/2;
+<span style="color: #000000;">               }
+               </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(length&lt;500<span style="color: #000000;">){
+                   CONST.edgeLen</span>=CONST.edgeLen*length/500;
+                   CONST.angle=CONST.angle*length/500;
+<span style="color: #000000;">               }
+               </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.log(length);</span>
+<span style="color: #000000;">           },
+     
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">getRadian 返回以起点与X轴之间的夹角角度值</span>
+           getRadian: <span style="color: #0000ff;">function</span><span style="color: #000000;">(beginPoint, stopPoint) {
+               Plot.angle </span>= Math.atan2(stopPoint.y - beginPoint.y, stopPoint.x - beginPoint.x) / Math.PI * 180<span style="color: #000000;">;
+               </span><span style="color: #008000;">//</span><span style="color: #008000;">console.log(Plot.angle);</span>
+               paraDef(50,40<span style="color: #000000;">);
+               Plot.dynArrowSize();
+           },
+     
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">/获得箭头底边两个点</span>
+           arrowCoord: <span style="color: #0000ff;">function</span><span style="color: #000000;">(beginPoint, stopPoint) {
+               polygonVertex[</span>0] =<span style="color: #000000;"> beginPoint.x;
+               polygonVertex[</span>1] =<span style="color: #000000;"> beginPoint.y;
+               polygonVertex[</span>6] =<span style="color: #000000;"> stopPoint.x;
+               polygonVertex[</span>7] =<span style="color: #000000;"> stopPoint.y;
+               Plot.getRadian(beginPoint, stopPoint);
+               polygonVertex[</span>8] = stopPoint.x - CONST.edgeLen * Math.cos(Math.PI / 180 * (Plot.angle +<span style="color: #000000;"> CONST.angle));
+               polygonVertex[</span>9] = stopPoint.y - CONST.edgeLen * Math.sin(Math.PI / 180 * (Plot.angle +<span style="color: #000000;"> CONST.angle));
+               polygonVertex[</span>4] = stopPoint.x - CONST.edgeLen * Math.cos(Math.PI / 180 * (Plot.angle -<span style="color: #000000;"> CONST.angle));
+               polygonVertex[</span>5] = stopPoint.y - CONST.edgeLen * Math.sin(Math.PI / 180 * (Plot.angle -<span style="color: #000000;"> CONST.angle));
+           },
+     
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">获取另两个底边侧面点</span>
+           sideCoord: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+               </span><span style="color: #0000ff;">var</span> midpoint =<span style="color: #000000;"> {};
+               </span><span style="color: #008000;">//</span><span style="color: #008000;"> midpoint.x = polygonVertex[6] - (CONST.edgeLen * Math.cos(Plot.angle * Math.PI / 180));</span>
+               <span style="color: #008000;">//</span><span style="color: #008000;"> midpoint.y = polygonVertex[7] - (CONST.edgeLen * Math.sin(Plot.angle * Math.PI / 180));</span>
+               midpoint.x=(polygonVertex[4]+polygonVertex[8])/2;
+               midpoint.y=(polygonVertex[5]+polygonVertex[9])/2;
+               polygonVertex[2] = (polygonVertex[4] + midpoint.x) / 2<span style="color: #000000;">;
+               polygonVertex[</span>3] = (polygonVertex[5] + midpoint.y) / 2<span style="color: #000000;">;
+               polygonVertex[</span>10] = (polygonVertex[8] + midpoint.x) / 2<span style="color: #000000;">;
+               polygonVertex[</span>11] = (polygonVertex[9] + midpoint.y) / 2<span style="color: #000000;">;
+           },
+     
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">画箭头</span>
+           drawArrow: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+               cobj.beginPath();
+               cobj.moveTo(polygonVertex[</span>0], polygonVertex[1<span style="color: #000000;">]);
+               cobj.lineTo(polygonVertex[</span>2], polygonVertex[3<span style="color: #000000;">]);
+               cobj.lineTo(polygonVertex[</span>4], polygonVertex[5<span style="color: #000000;">]);
+               cobj.lineTo(polygonVertex[</span>6], polygonVertex[7<span style="color: #000000;">]);
+               cobj.lineTo(polygonVertex[</span>8], polygonVertex[9<span style="color: #000000;">]);
+               cobj.lineTo(polygonVertex[</span>10], polygonVertex[11<span style="color: #000000;">]);
+               </span><span style="color: #008000;">//</span><span style="color: #008000;"> cobj.lineTo(polygonVertex[0], polygonVertex[1]);</span>
+<span style="color: #000000;">               cobj.closePath();
+               cobj.fill();
+           }
+       };    
+       
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">自定义参数</span>
+       <span style="color: #0000ff;">function</span><span style="color: #000000;"> paraDef(edgeLen, angle) {
+           CONST.edgeLen </span>=<span style="color: #000000;"> edgeLen;
+           CONST.angle </span>=<span style="color: #000000;"> angle;
+       }</span></pre>
+</div>
+<p>效果图：</p>
+<p><img src="./images/JS + Canvas画图Demo0.png" alt="" /></p>
+<p>&nbsp;原文链接：<a href="http://www.jq22.com/webqd1418" rel="noopener" target="_blank">http://www.jq22.com/webqd1418</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

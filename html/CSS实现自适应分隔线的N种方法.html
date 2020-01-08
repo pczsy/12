@@ -1,0 +1,315 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS实现自适应分隔线的N种方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS实现自适应分隔线的N种方法</center></div><div class='banquan'>原文出处:本文由博客园博主九梨前端编程提供。<br/>
+原文连接:https://www.cnblogs.com/zml1023/p/12083153.html</div><br>
+    <p>分割线是网页中比较常见的一类设计了，比如说知乎的更多回答</p>
+<p><a href="./images/CSS实现自适应分隔线的N种方法0.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS实现自适应分隔线的N种方法0.png" alt="image" /></a></p>
+<blockquote>
+<p>这里的自适应是指两边的横线会随着文字的个数和父级的宽度自适应</p>
+</blockquote>
+<p>偷偷的看了一下知乎的实现，很显然是用一块白色背景覆盖的，加一点背景就露馅了</p>
+<p><a href="./images/CSS实现自适应分隔线的N种方法1.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS实现自适应分隔线的N种方法1.png" alt="image" /></a></p>
+<p>心想：<del>知乎的前端也不怎么样？</del>&nbsp;可能别人的重点不在这些上面吧</p>
+<p>下面列举几种更好的实现方式，不会露馅的那种</p>
+<h2>1.伪元素+transform:translateX(-100%);</h2>
+<p>　　主要原理是设置文本居中<code>text-align: center;</code>，然后给定两个伪元素，分别绝对定位，那么此时伪元素也是跟随着水平居中的，设置足够的宽度，然后把左边的往左位移<code>100%</code>就可以了，父级记得超出隐藏。</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="cnblogs_code">
+<pre><code>&lt;div class="title"&gt;我是分割线&lt;/div&gt;</pre>
+</div>
+<p><code>css</code>样式为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;
+}<span style="color: #800000;">
+.title::before,.title::after</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #ccc</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 50%</span>;
+}<span style="color: #800000;">
+.title::before</span>{<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> -10px</span>;<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> translateX(-100%)</span>;
+}<span style="color: #800000;">
+.title::after</span>{<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> 10px</span>;
+}</pre>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/yLyggjg" rel="nofollow">CSS分隔线 （伪元素+transform）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>2.伪元素+flex</h2>
+<p>这个比较好理解了，设置<code>display:flex</code>，然后两个伪元素分别铺满剩余空间。</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><code>css</code>样式为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> flex</span>;<span style="color: #ff0000;">
+    align-items</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;
+}<span style="color: #800000;">
+.title::before,.title::after</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    flex</span>:<span style="color: #0000ff;"> 1</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #ccc</span>;
+}<span style="color: #800000;">
+.title::before</span>{<span style="color: #ff0000;">
+    margin-right</span>:<span style="color: #0000ff;"> 10px</span>;
+}<span style="color: #800000;">
+.title::after</span>{<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> 10px</span>;
+}</pre>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/VwYPPBq" rel="nofollow">CSS分隔线 （伪元素+flex）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>3.伪元素+box-shadow/outline+clip-path</h2>
+<p>同样利用<code>text-align: center</code>使文本和伪元素居中，然后生成足够大的<code>box-shadow</code>或者<code>outline</code>，由于不支持单个方向，所以用<code>clip-path</code>或者<code>clip</code>裁剪掉</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><code>css</code>样式为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+.title::before,.title::after</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;"> 0 0 0 9999px #ccc</span>;<span style="color: #ff0000;">
+    vertical-align</span>:<span style="color: #0000ff;"> middle</span>;
+}<span style="color: #800000;">
+.title::before</span>{<span style="color: #ff0000;">
+    margin-right</span>:<span style="color: #0000ff;"> 10px</span>;<span style="color: #ff0000;">
+    clip-path</span>:<span style="color: #0000ff;"> polygon(0 0, -9999px 0, -9999px 100%, 0 100%)</span>;
+}<span style="color: #800000;">
+.title::after</span>{<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> 10px</span>;<span style="color: #ff0000;">
+    clip-path</span>:<span style="color: #0000ff;"> polygon(0 0, 9999px 0, 9999px 100%, 0 100%)</span>;
+}</pre>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/KKwaaOm" rel="nofollow">CSS分隔线 （伪元素+box-shadow/outline+clip-path）</a></p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>4.伪元素+right:100%</h2>
+<p>这个实现需要多一层标签，外部仍然是<code>text-align: center</code>，内部文本里添加两个伪元素绝对定位，其中左边的设置距离右边100%（相对于文本标签）即可</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="inner"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><code>css</code>样式为</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+.inner</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;
+}<span style="color: #800000;">
+.inner::before,.inner::after</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 9999px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> #ccc</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 50%</span>;
+}<span style="color: #800000;">
+.inner::before</span>{<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    margin-right</span>:<span style="color: #0000ff;"> 10px</span>;
+}<span style="color: #800000;">
+.inner::after</span>{<span style="color: #ff0000;">
+    margin-left</span>:<span style="color: #0000ff;"> 10px</span>;
+}</pre>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/bGNgqNw" rel="nofollow">CSS分隔线 （伪元素+right:100%）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>5. border+transform</h2>
+<p>这个思路可以不用到伪元素，不过需要额外的标签，给内部文本左右足够大的<code>1px</code>边框，此时需要设置<code>line-height:1px</code>，由于内部整体以及足够大了（超过父级），可以使用绝对定位和<code>transform: translateX(-50%)</code>居中</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="inner"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+<p><code>css</code>样式为</p>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> .6em 0</span>;<span style="color: #008000;">/*</span><span style="color: #008000;">*把高度撑起来*</span><span style="color: #008000;">*/</span>
+}<span style="color: #800000;">
+.inner</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 50%</span>;<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> translateX(-50%)</span>;<span style="color: #ff0000;">
+    white-space</span>:<span style="color: #0000ff;"> nowrap</span>;<span style="color: #ff0000;">
+    line-height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    border-left</span>:<span style="color: #0000ff;"> 9999px solid #ccc</span>;<span style="color: #ff0000;">
+    border-right</span>:<span style="color: #0000ff;"> 9999px solid #ccc</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0 10px</span>;
+}</pre>
+</div>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/qBERrqw" rel="nofollow">CSS分隔线 （border+transform）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>6.伪元素+border+left/right</h2>
+<p>这个思路只需要一个伪元素，在文本内部生成一个伪元素，利用足够大的<code>border</code>和相同的负值（绝对定位+left/right）还原位置</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="inner"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+<p><code>css</code>样式为</p>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+.inner</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0 10px</span>;
+}<span style="color: #800000;">
+.inner::before</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 50%</span>;<span style="color: #ff0000;">
+    border-left</span>:<span style="color: #0000ff;"> 9999px solid #ccc</span>;<span style="color: #ff0000;">
+    border-right</span>:<span style="color: #0000ff;"> 9999px solid #ccc</span>;<span style="color: #ff0000;">
+    right</span>:<span style="color: #0000ff;"> -9999px</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> -9999px</span>;
+}</pre>
+</div>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/OJPWpmR" rel="nofollow">CSS分隔线 （伪元素+border+left/right）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>7.伪元素+table-cell</h2>
+<p>主要思路为父级设置<code>display:table</code>，伪元素设置<code>display:table-cell</code>，并设置足够大的宽度即可</p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="inner"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+<p><code>css</code>样式为</p>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> table</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;
+}<span style="color: #800000;">
+.inner</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> table-cell</span>;<span style="color: #ff0000;">
+    white-space</span>:<span style="color: #0000ff;"> nowrap</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0 10px</span>;
+}<span style="color: #800000;">
+.title::before,.title::after</span>{<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> table-cell</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 9999px</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> linear-gradient(#ccc 0,#ccc) center no-repeat</span>;<span style="color: #008000;">/*</span><span style="color: #008000;">*这里用线性渐变生成的，也可以用其他方式*</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 100% 1px</span>;
+}</pre>
+</div>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/BaypWdp" rel="nofollow">CSS分隔线 （伪元素+table-cell）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>8.fieldset+legend</h2>
+<p>利用<code>fieldset</code>和<code>legend</code>标签组合，可以天然实现分隔线效果，参考至张鑫旭的<a href="https://www.zhangxinxu.com/wordpress/2016/11/html-fieldset-legend-element-css-layout/" rel="nofollow">这篇文章</a></p>
+<p>具体实现如下</p>
+<p><code>html</code>结构为</p>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">fieldset </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="title"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">legend </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="inner"</span><span style="color: #0000ff;">&gt;</span>我是分割线<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">legend</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">fieldset</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+<p><code>css</code>样式为</p>
+<div class="highlight highlight-source-css">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.title</span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 14px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    border-top</span>:<span style="color: #0000ff;"> 1px solid #ccc</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+.inner</span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0 auto</span>;<span style="color: #ff0000;">;
+    padding</span>:<span style="color: #0000ff;"> 0 10px</span>;
+}</pre>
+</div>
+</div>
+<p>点击查看效果&nbsp;<a href="https://codepen.io/xboxyan/pen/qBERrVz" rel="nofollow">CSS分隔线 （fieldset+legend）</a>&nbsp;</p>
+<p>&lt;script async src="https://static.codepen.io/assets/embed/ei.js"&gt;&lt;/script&gt;</p>
+<h2>小结</h2>
+<p>上面一共列举了8中方式来实现分隔线的效果，每种方法思路各不相同，重要的是可以发散自己的想象力，可能这才是<code>CSS</code>与其他语言所不同的吧~</p>
+<p>这里整理了一下，整体效果如下，可访问<a href="https://codepen.io/xboxyan/pen/YzPNZjw" rel="nofollow">这里</a>查看，大家在实际项目中可自行选取所需要的方式</p>
+<p><a href="./images/CSS实现自适应分隔线的N种方法2.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS实现自适应分隔线的N种方法2.png" alt="image" /></a></p>
+<p>可能还有其他方式没有想到，欢迎大家集思广益，在下方留言讨论</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

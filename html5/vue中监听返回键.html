@@ -1,0 +1,50 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue中监听返回键' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue中监听返回键</center></div><div class='banquan'>原文出处:本文由博客园博主wangnima666提供。<br/>
+原文连接:https://www.cnblogs.com/tony-stark/p/11420010.html</div><br>
+    <p>问题：在项目中，我们常常有需求，当用户在填写表单时，点击返回的时候，我们希望加一个弹窗，确认离开吗，确认将保存为草稿</p>
+<p>解决方案：利用 H5的 pushstate（个人理解为增加页面栈）特性与onpopup事件</p>
+<p>分析：pushstate 从该方法名我们可以知道 是增加某种状态，会为history对象的length增加长度, 点击返回键的时候会触发onpopup事件（可以联想到 pop其实是数组删除的最后一个元素，符合&nbsp; &lsquo;栈&rsquo; 的思想）；</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;onpopup触发返回上一页，而 pushstate仅仅是从url上进行了改变，不会校验url的内容，页面不会改变，加入当前页面为 xxx/b.html,此时pushState(null,null,'a.html')，可以发现 url变了，而页面的内容并没有改变，我们可以通过这来造成一种无法返回的假象</p>
+<p>实施：&nbsp;&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> <br />//注意：Dialog是一款弹窗的插件<br />mounted: function() {<br />//当前页面挂载的时候调用 返回键的监听方法<br />this.listeningBack()<br /><br />}<br /></span></pre>
+<p>&nbsp;//当页面销毁的时候我们也要将事件监听销毁，以免影响其他内容</p>
+<p>&nbsp;destroyed:function(){</p>
+<p>&nbsp; &nbsp;window.onpopstate = null</p>
+<p>},</p>
+<p>methods:{</p>
+<p>&nbsp; &nbsp;&nbsp;</p>
+<p>//监听返回键<br />listeningBack() {<br /><br />var that = this;//window.onpopstate方法指向window,所以要储存一下当前的vue实例<br />let route = '上一页'；//根据业务逻辑的上一页决定<br />window.onpopstate = function() {</p>
+<p>//将当前页面window.location.href 放入页面栈当中<br />history.pushState({}, null, window.location.href);<br />Dialog.alert({<br />title: '标题',<br />message: '确认返回吗，你所填写的内容将保存为草稿'<br />}).then(() =&gt; {<br />that.$router.push({</p>
+<p>path:route</p>
+<p>})<br />}).catch(<br />console.log('取消返回，留在当前页面')<br />);</p>
+<pre><code></pre>
+<p>}<br />},</p>
+<p>}</p>
+<p>&nbsp;</p>
+<pre><code></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,241 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十四) 高级应用 自定义指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十四) 高级应用 自定义指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11171785.html</div><br>
+    <p>除了核心功能默认内置的指令 (<code>v-model</code> 和 <code>v-show</code>)，Vue 也允许注册自定义指令。</p>
+<p><span style="color: #000000;">官网介绍的比较抽象，显得很高大上，<span style="color: #ff0000;">我个人对自定义指令的理解是:当自定义指令作用在一些DOM元素或组件上时，该元素在初次渲染、插入到父节点、更新、解绑时可以执行一些特定的操作(钩子函数()</span></span></p>
+<p>自定义指令有两种注册方式，一种是全局注册，使用Vue.directive(指令名，配置参数)注册，注册之后所有的Vue实例都可以使用，另一种是局部注册，在创建Vue实例时通过directives属性创建局部指令，局部自定义指令只能在当前Vue实例内使用</p>
+<p>自定义指令可以绑定如下钩子函数:</p>
+<p>&nbsp;&nbsp;&nbsp; &middot;bind&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 　　&nbsp;　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;只调用一次，元素渲染成DOM节点后，执行directives模块的初始化工作时调用，在这里可以进行一次性的初始化设置。<br />&nbsp;&nbsp; &nbsp;&middot;inserted&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 　　　&nbsp; 　&nbsp; ;被绑定元素插入父节点时调用 (仅保证父节点存在，但不一定已被插入文档中)。<br />&nbsp;&nbsp; &nbsp;&middot;update&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;　　　　　 ;所在组件的 VNode 更新时调用，但是可能发生在其子 VNode 更新之前。指令的值可能发生了改变，也可能没有。<br />&nbsp;&nbsp; &nbsp;&middot;componentUpdated&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ;指令所在组件的 VNode 及其子 VNode 全部更新后调用。<br />&nbsp;&nbsp; &nbsp;&middot;unbind&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;　　　　　 ;只调用一次，指令与元素解绑时调用。</p>
+<p>每个钩子函数可以有四个参数，分别是el(对应的DOM节点引用)、binding(一些关于指令的扩展信息，是个对象)、vnode(该节点对应的虚拟VN哦的)和oldVnode(之前的VNode,仅在update和componentUpdated钩子中可用)</p>
+<p>bind钩子函数执行的时候该DOM元素被渲染出来了，但是并没有插入到父元素中，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="d"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> v-focus</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.directive(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">focus</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, {       
+            bind:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(el){console.log(el.parentElement);}, 　　                   //打印父节点
+            inserted: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (el) {console.log(el.parentElement);el.focus()} 　　   //打印父节点，并将当前元素处于聚焦状态
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#d</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">})
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十四) 高级应用 自定义指令详解0.png" alt="" /></p>
+<p>可以看到input元素自动获得焦点了，控制台输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十四) 高级应用 自定义指令详解1.png" alt="" /></p>
+<p><span style="color: #ff0000;">可以看到对于bind()钩子来说，它的父节点是获取不到的，因为Vue内部会在执行bind()钩子后才会将当前元素插入到父元素的子节点里</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;</p>
+<p>在解析模板将DOM转换成AST对象的时候会执行processAttrs()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {                     <span style="color: #008000;">//</span><span style="color: #008000;">解析Vue的属性</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList; 
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {             <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性 </span>
+    name = rawName =<span style="color: #000000;"> list[i].name;
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span> (dirRE.test(name)) {                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind                          //bindRD等于/^:|^v-bind:/ ，即该属性是v-bind指令时</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-bind的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-on的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives</span>
+        name = name.replace(dirRE, '');                         <span style="color: #008000;">//</span><span style="color: #008000;">去掉指令前缀，比如v-show执行后等于show</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> parse arg</span>
+        <span style="color: #0000ff;">var</span> argMatch =<span style="color: #000000;"> name.match(argRE);
+        </span><span style="color: #0000ff;">var</span> arg = argMatch &amp;&amp; argMatch[1<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (arg) {
+          name </span>= name.slice(0, -(arg.length + 1<span style="color: #000000;">));
+        }
+        addDirective(el, name, rawName, value, arg, modifiers); </span><span style="color: #008000;">//</span><span style="color: #008000;">执行addDirective给el增加一个directives属性</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; name === 'model'<span style="color: #000000;">) {
+          checkForAliasModel(el, value);
+        }
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">非Vue指令的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+  }
+}</span></pre>
+</div>
+<p>addDirective会给AST对象上增加一个directives属性保存指令信息，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> addDirective (                         <span style="color: #008000;">//</span><span style="color: #008000;">第6561行 指令相关，给el这个AST对象增加一个directives属性，值为该指令的信息</span>
+<span style="color: #000000;">  el,
+  name,
+  rawName,
+  value,
+  arg,
+  modifiers
+) {
+  (el.directives </span>|| (el.directives =<span style="color: #000000;"> [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>例子里的p元素执行到这里时对应的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十四) 高级应用 自定义指令详解2.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候，会执行genDirectives()函数，将AST转换成一个render函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"d"}},[_c('input',{<span style="color: #ff0000;">directives:[{name:"focus",rawName:"v-focus"}</span>],attrs:{"type":"","name":""}})])}</pre>
+</div>
+<p>最后等渲染完成后会执行directives模块的create钩子函数,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> directives = {                 <span style="color: #008000;">//</span><span style="color: #008000;">第6173行 directives模块 </span>
+  create: updateDirectives,             <span style="color: #008000;">//</span><span style="color: #008000;">创建DOM后的钩子</span>
+<span style="color: #000000;">  update: updateDirectives,
+  destroy: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> unbindDirectives (vnode) {
+    updateDirectives(vnode, emptyNode);
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> updateDirectives (oldVnode, vnode) {         <span style="color: #008000;">//</span><span style="color: #008000;">第6181行   oldVnode:旧的Vnode，更新时才有 vnode:新的VNode</span>
+  <span style="color: #0000ff;">if</span> (oldVnode.data.directives ||<span style="color: #000000;"> vnode.data.directives) {
+    _update(oldVnode, vnode);
+  }
+}</span></pre>
+</div>
+<p><span style="color: #000000;">_updat</span> <span style="color: #000000;">就是处理指令初始化和更新的，如下:</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> _update (oldVnode, vnode) {                 <span style="color: #008000;">//</span><span style="color: #008000;">第6187行 初始化/更新指令</span>
+  <span style="color: #0000ff;">var</span> isCreate = oldVnode === emptyNode;                                                     <span style="color: #008000;">//</span><span style="color: #008000;">是否为初始化</span>
+  <span style="color: #0000ff;">var</span> isDestroy = vnode ===<span style="color: #000000;"> emptyNode;
+  </span><span style="color: #0000ff;">var</span> oldDirs = normalizeDirectives$1<span style="color: #000000;">(oldVnode.data.directives, oldVnode.context);          
+  </span><span style="color: #0000ff;">var</span> newDirs = normalizeDirectives$1(vnode.data.directives, vnode.context);                 <span style="color: #008000;">//</span><span style="color: #008000;">调用normalizeDirectives$1()函数规范化参数</span>
+     
+  <span style="color: #0000ff;">var</span> dirsWithInsert =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> dirsWithPostpatch =<span style="color: #000000;"> [];
+
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> key, oldDir, dir;
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span> newDirs) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">遍历newDirs</span>
+    oldDir = oldDirs[key];                                         <span style="color: #008000;">//</span><span style="color: #008000;">oldVnode上的key指令信息</span>
+    dir = newDirs[key];                                            <span style="color: #008000;">//</span><span style="color: #008000;">vnode上的key指令信息</span>
+    <span style="color: #0000ff;">if</span> (!oldDir) {                                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果oldDir不存在，即是新增指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> new directive, bind</span>
+      callHook$1(dir, 'bind', vnode, oldVnode);                     <span style="color: #008000;">//</span><span style="color: #008000;">调用callHook$1()函数，参数2为bind，即执行v-focus指令的bind函数</span>
+      <span style="color: #0000ff;">if</span> (dir.def &amp;&amp; dir.def.inserted) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果有定义了inserted钩子函数</span>
+        dirsWithInsert.push(dir);                                     <span style="color: #008000;">//</span><span style="color: #008000;">则保存到dirsWithInsert数组里</span>
+<span style="color: #000000;">      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> existing directive, update</span>
+      dir.oldValue =<span style="color: #000000;"> oldDir.value;
+      callHook$</span>1(dir, 'update'<span style="color: #000000;">, vnode, oldVnode);
+      </span><span style="color: #0000ff;">if</span> (dir.def &amp;&amp;<span style="color: #000000;"> dir.def.componentUpdated) {
+        dirsWithPostpatch.push(dir);
+      }
+    }
+  }
+  </span><span style="color: #0000ff;">if</span> (dirsWithInsert.length) {                                    <span style="color: #008000;">//</span><span style="color: #008000;">如果dirsWithInsert存在(即有绑定了inserted钩子函数)</span>
+    <span style="color: #0000ff;">var</span> callInsert = <span style="color: #0000ff;">function</span> () {                                  <span style="color: #008000;">//</span><span style="color: #ff0000;">定义一个callInsert函数，该函数会执行dirsWithInsert里的每个函数</span>
+      <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; dirsWithInsert.length; i++<span style="color: #000000;">) {
+        callHook$</span>1(dirsWithInsert[i], 'inserted'<span style="color: #000000;">, vnode, oldVnode);   
+      }
+    };
+    </span><span style="color: #0000ff;">if</span> (isCreate) {                                                 <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">如果是初始化 </span> </span>
+      mergeVNodeHook(vnode, 'insert', callInsert);                    <span style="color: #008000;">//</span><span style="color: #ff0000;">则调用mergeVNodeHook()函数</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      callInsert();
+    }
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (dirsWithPostpatch.length) {        
+    mergeVNodeHook(vnode, </span>'postpatch', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+      </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; dirsWithPostpatch.length; i++<span style="color: #000000;">) {
+        callHook$</span>1(dirsWithPostpatch[i], 'componentUpdated'<span style="color: #000000;">, vnode, oldVnode);
+      }
+    });
+  }
+
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isCreate) {
+    </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span><span style="color: #000000;"> oldDirs) {
+      </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">newDirs[key]) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> no longer present, unbind</span>
+        callHook$1(oldDirs[key], 'unbind'<span style="color: #000000;">, oldVnode, oldVnode, isDestroy);
+      }
+    }
+  }
+}</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>&nbsp;</p>
+<p>对于bind钩子函数来说是直接执行了，而对于inserted钩子函数则是把函数保存到dirsWithInsert数组里，再定义了一个callInsert函数，该函数内部通过作用域访问dirsWithInsert变量，并遍历该变量依次执行每个inserted钩子函数</p>
+<p>&nbsp;</p>
+<p>mergeVNodeHook()钩子函数的作用是把insert作为一个hooks属性保存到对应的Vnode的data上面，当该Vnode插入到父节点后会调用该hooks，如下:</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> mergeVNodeHook (def, hookKey, hook) {      <span style="color: #008000;">//</span><span style="color: #008000;">第2074行  合并VNode的钩子函数 def:一个VNode hookKey:(事件名，比如:insert) hook:回调函数</span>
+  <span style="color: #0000ff;">if</span> (def <span style="color: #0000ff;">instanceof</span> VNode) {                           <span style="color: #008000;">//</span><span style="color: #008000;">如果def是一个VNode</span>
+    def = def.data.hook || (def.data.hook = {});          <span style="color: #008000;">//</span><span style="color: #008000;">则将它重置为VNode.data.hook，如果VNode.data.hook不存在则初始化为一个空对象 注:普通节点VNode.data.hook是不存在的。</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> invoker;
+  </span><span style="color: #0000ff;">var</span> oldHook =<span style="color: #000000;"> def[hookKey];
+ 
+  </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> wrappedHook () {     
+    hook.apply(</span><span style="color: #0000ff;">this</span>, arguments);                            <span style="color: #008000;">//</span><span style="color: #008000;">先执行hook函数        </span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> important: remove merged hook to ensure it's called only once</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> and prevent memory leak</span>
+    remove(invoker.fns, wrappedHook);                       <span style="color: #008000;">//</span><span style="color: #008000;">然后把wrappedHook从invoker.fns里remove掉，以且包只执行一次</span>
+<span style="color: #000000;">  }
+
+  </span><span style="color: #0000ff;">if</span> (isUndef(oldHook)) {                               <span style="color: #008000;">//</span><span style="color: #008000;">如果oldHook不存在，即之前没有定义hookKey这个钩子函数</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> no existing hook</span>
+    invoker = createFnInvoker([wrappedHook]);               <span style="color: #008000;">//</span><span style="color: #ff0000;">直接调用createFnInvoker()返回一个闭包函数，参数为执行的回调函数</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span> (isDef(oldHook.fns) &amp;&amp;<span style="color: #000000;"> isTrue(oldHook.merged)) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> already a merged invoker</span>
+      invoker =<span style="color: #000000;"> oldHook;
+      invoker.fns.push(wrappedHook);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> existing plain hook</span>
+      invoker =<span style="color: #000000;"> createFnInvoker([oldHook, wrappedHook]);
+    }
+  }
+
+  invoker.merged </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  def[hookKey] </span>= invoker;                               <span style="color: #008000;">//</span><span style="color: #008000;">设置def的hookKey属性指向新的invoker</span>
+}</pre>
+</div>
+<p>createFnInvoker就是v-on指令对应的那个函数，用到了同一个API，执行完后，我们就把invoker插入到input对应的VNode.data.hook里了，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十四) 高级应用 自定义指令详解3.png" alt="" /></p>
+<p>最后等到该VNode插入到父节点后就会执行invokeCreateHooks()函数，该函数会遍历VNode.hook.insert，依次执行每个函数，也就执行到我们自定义定义的inserted钩子函数了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

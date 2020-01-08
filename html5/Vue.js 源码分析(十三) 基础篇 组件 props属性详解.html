@@ -1,0 +1,309 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十三) 基础篇 组件 props属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十三) 基础篇 组件 props属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11090143.html</div><br>
+    <p>父组件通过props属性向子组件传递数据，定义组件的时候可以定义一个props属性，值可以是一个字符串数组或一个对象。</p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;  
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;&lt;child :title="message"&gt;&lt;/child&gt;&lt;/div&gt;        
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.component(</span>'child'<span style="color: #000000;">,{
+            template:</span>'&lt;h1&gt;{{title}}&lt;/h1&gt;',props:['title'<span style="color: #000000;">] 　　　　　　<span style="color: #008000;">//这里props是一个字符串数组</span>
+        })
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app',data:{message:'Hello World'<span style="color: #000000;">}
+        })  
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p><span style="color: #ff0000;">这里我们给child这个组件定义了名为title的props，父组件通过title特性传递给子组件,</span>渲染为:</p>
+<p><img src="./images/Vue.js 源码分析(十三) 基础篇 组件 props属性详解0.png" alt="" /></p>
+<p>props除了数组,也可以是一个对象，此时对象的键对应的props的名称，值又是一个对象，可以包含如下属性:</p>
+<p>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; type:&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;类型，可以设置为:String、Number、Boolean、Array、Object、Date等等&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; ;如果只设置type而未设置其他选项，则值可以直接用类型，例如:props:{title:Object}<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;default&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;默认值<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;required&nbsp;&nbsp; &nbsp;;布尔类型，表示是否必填项目<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;validator&nbsp;&nbsp; &nbsp;;自定义验证函数&nbsp;&nbsp;&nbsp; </p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+    &lt;title&gt;Document&lt;/title&gt;    
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;&lt;child&gt;&lt;/child&gt;&lt;/div&gt;        
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.component(</span>'child'<span style="color: #000000;">,{
+            template:</span>'&lt;h1&gt;{{title}}&lt;/h1&gt;',props:{title:{<span style="color: #0000ff;">default</span>:'Hello World'}}                 <span style="color: #008000;">//</span><span style="color: #008000;">这里我们定义的title是个对象，含有默认值</span>
+<span style="color: #000000;">        })
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app'<span style="color: #000000;">
+        })  
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>这里父组件app没有给子组件child传递数据，子组件使用了默认值Hello World，渲染的结果和第一个例子是一样的。</p>
+<p>&nbsp;</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p><span style="color: #000000;"><span style="color: #000000;">&nbsp;<span style="font-size: 18pt;">源码分析</span></span></span></p>
+<hr />
+<p>&nbsp;以上面的例1为例,Vue.component()注册组件的时候会调用Vue.extend()生成一个Vue基础构造器，内部会调用mergeOptions函数合并属性， mergeOptions又会调用normalizeProps对props的属性进行一些规范化的修饰，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> normalizeProps (options, vm) {       <span style="color: #008000;">//</span><span style="color: #008000;">第1361行 规范化props属性</span>
+  <span style="color: #0000ff;">var</span> props = options.props;                        <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取props属性</span>
+  <span style="color: #0000ff;">if</span> (!props) { <span style="color: #0000ff;">return</span><span style="color: #000000;"> }
+  </span><span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, val, name;
+  </span><span style="color: #0000ff;">if</span> (Array.isArray(props)) {                       <span style="color: #008000;">//</span><span style="color: #008000;">如果props是个数组       <span style="color: #ff0000;">;这是props的数组用法的分支</span></span>
+    i =<span style="color: #000000;"> props.length;
+    </span><span style="color: #0000ff;">while</span> (i--) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">遍历props</span>
+      val =<span style="color: #000000;"> props[i];
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> val === 'string') {                  <span style="color: #008000;">//</span><span style="color: #008000;">如果值是一个字符串</span>
+        name =<span style="color: #000000;"> camelize(val);
+        res[name] </span>= { type: <span style="color: #0000ff;">null</span> };                       <span style="color: #008000;">//</span><span style="color: #008000;">保存到res里面                  ;例如:{ title: {type: null} }</span>
+      } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        warn(</span>'props must be strings when using array syntax.'<span style="color: #000000;">);
+      }
+    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isPlainObject(props)) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果props是个对象        <span style="color: #ff0000;"> ;这是props的对象用法的分支</span></span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> props) {
+      val </span>=<span style="color: #000000;"> props[key];
+      name </span>=<span style="color: #000000;"> camelize(key);
+      res[name] </span>=<span style="color: #000000;"> isPlainObject(val)
+        </span>?<span style="color: #000000;"> val
+        : { type: val };
+    }
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    warn(
+      </span>"Invalid value for option \"props\": expected an Array or an Object, " +
+      "but got " + (toRawType(props)) + "."<span style="color: #000000;">,
+      vm
+    );
+  }
+  options.props </span>=<span style="color: #000000;"> res;
+}</span></pre>
+</div>
+<p>&nbsp;经过normalizeProps规范后，props被修饰为一个对象格式，例子里的执行到这里等于:</p>
+<p><img src="./images/Vue.js 源码分析(十三) 基础篇 组件 props属性详解1.png" alt="" /></p>
+<p>接下来_render函数执行遇到该组件时会执行createComponent函数，该函数又会执行extractPropsFromVNodeData(data, Ctor, tag)函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> extractPropsFromVNodeData (      <span style="color: #008000;">//</span><span style="color: #008000;">第2109行 获取原始值</span>
+<span style="color: #000000;">  data,
+  Ctor,
+  tag
+) {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> we are only extracting raw values here.</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> validation and default values are handled in the child</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> component itself.</span>
+  <span style="color: #0000ff;">var</span> propOptions = Ctor.options.props;                  <span style="color: #008000;">//</span><span style="color: #008000;">获取组件的定义的props对象，例如:{message: {type: null}}</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(propOptions)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span> attrs = data.attrs;                                   <span style="color: #008000;">//</span><span style="color: #008000;">获取data的attrs属性，例如:{title: "Hello Vue"}</span>
+  <span style="color: #0000ff;">var</span> props = data.props;                                   <span style="color: #008000;">//</span><span style="color: #008000;">获取data的props属性，这应该是建立父子组件时的关系</span>
+  <span style="color: #0000ff;">if</span> (isDef(attrs) || isDef(props)) {                       <span style="color: #008000;">//</span><span style="color: #008000;">如果data有定义了attrs或者props属性</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> propOptions) {                            <span style="color: #008000;">//</span><span style="color: #008000;">遍历组件的props属性</span>
+      <span style="color: #0000ff;">var</span> altKey =<span style="color: #000000;"> hyphenate(key);
+      {   
+        </span><span style="color: #0000ff;">var</span> keyInLowerCase = key.toLowerCase();                 <span style="color: #008000;">//</span><span style="color: #008000;">hyphenate:如果key是是驼峰字符串，则转换为-格式</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+          key </span>!== keyInLowerCase &amp;&amp;<span style="color: #000000;">
+          attrs </span>&amp;&amp; hasOwn(attrs, keyInLowerCase)                  <span style="color: #008000;">//</span><span style="color: #008000;">转换为小写格式</span>
+<span style="color: #000000;">        ) {
+          tip(
+            </span>"Prop \"" + keyInLowerCase + "\" is passed to component " +<span style="color: #000000;">
+            (formatComponentName(tag </span>|| Ctor)) + ", but the declared prop name is" +
+            " \"" + key + "\". " +
+            "Note that HTML attributes are case-insensitive and camelCased " +
+            "props need to use their kebab-case equivalents when using in-DOM " +
+            "templates. You should probably use \"" + altKey + "\" instead of \"" + key + "\"."<span style="color: #000000;">
+          );
+        }
+      }
+      checkProp(res, props, key, altKey, </span><span style="color: #0000ff;">true</span>) ||           <span style="color: #008000;">//</span><span style="color: #008000;">调用checkProp优先从props里拿对应的属性，其次从attrs里拿(对于attrs的话第五个参数为false，即会删除对应的attrs里的属性)</span>
+      checkProp(res, attrs, key, altKey, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    }
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+}</span></pre>
+</div>
+<p><span style="color: #000000;">checkProp是检测props或attrs是否含有key对应的值，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> checkProp (          <span style="color: #008000;">//</span><span style="color: #008000;">第2150行 检测prop是否存在</span>
+<span style="color: #000000;">  res,
+  hash,
+  key,
+  altKey,
+  preserve
+) {
+  </span><span style="color: #0000ff;">if</span> (isDef(hash)) {              <span style="color: #008000;">//</span><span style="color: #008000;">如果hash存在</span>
+    <span style="color: #0000ff;">if</span> (hasOwn(hash, key)) {            <span style="color: #008000;">//</span><span style="color: #008000;">如果hash里面有定义了key</span>
+      res[key] =<span style="color: #000000;"> hash[key];
+      </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">preserve) {
+        </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> hash[key];
+      }
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (hasOwn(hash, altKey)) {  <span style="color: #008000;">//</span><span style="color: #008000;">如果有驼峰的表示法，也找到了</span>
+      res[key] =<span style="color: #000000;"> hash[altKey];
+      </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">preserve) {
+        </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> hash[altKey];
+      }
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    }
+  }
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span>                          <span style="color: #008000;">//</span><span style="color: #008000;">如果在res里未找到则返回false</span>
+}</pre>
+</div>
+<p>&nbsp;extractPropsFromVNodeData只是获取值，验证理验证和默认值是子组件完成执行的，执行到这里就获取到了props的值，例子里执行到这里等于</p>
+<p><img src="./images/Vue.js 源码分析(十三) 基础篇 组件 props属性详解2.png" alt="" /></p>
+<p>整个对象会作为propsData属性保存到组件的VNode里面，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十三) 基础篇 组件 props属性详解3.png" alt="" /></p>
+<p>&nbsp;当子组件实例化的时候会执行_init()函数，首先会执行initInternalComponent函数，对于props的操作如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initInternalComponent (vm, options) {          <span style="color: #008000;">//</span><span style="color: #008000;">第4632行 子组件初始化子组件</span>
+  <span style="color: #0000ff;">var</span> opts = vm.$options = Object.create(vm.constructor.options);     <span style="color: #008000;">//</span><span style="color: #008000;">组件的配置信息</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> doing this because it's faster than dynamic enumeration. </span>
+  <span style="color: #0000ff;">var</span> parentVnode = options._parentVnode;                             <span style="color: #008000;">//</span><span style="color: #008000;">该组件的占位符VNode</span>
+  opts.parent =<span style="color: #000000;"> options.parent;
+  opts._parentVnode </span>=<span style="color: #000000;"> parentVnode;
+  opts._parentElm </span>=<span style="color: #000000;"> options._parentElm;
+  opts._refElm </span>=<span style="color: #000000;"> options._refElm;
+
+  </span><span style="color: #0000ff;">var</span> vnodeComponentOptions = parentVnode.componentOptions;           <span style="color: #008000;">//</span><span style="color: #008000;">占位符VNode初始化传入的配置信息</span>
+  opts.propsData = vnodeComponentOptions.propsData;                   <span style="color: #008000;">//</span><span style="color: #008000;">这就是上面经过extractPropsFromVNodeData()得到的propsData对象</span>
+  opts._parentListeners =<span style="color: #000000;"> vnodeComponentOptions.listeners;
+  opts._renderChildren </span>=<span style="color: #000000;"> vnodeComponentOptions.children;
+  opts._componentTag </span>=<span style="color: #000000;"> vnodeComponentOptions.tag;
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (options.render) {
+    opts.render </span>=<span style="color: #000000;"> options.render;
+    opts.staticRenderFns </span>=<span style="color: #000000;"> options.staticRenderFns;
+  }
+}</span></pre>
+</div>
+<p>这样组件实例化时就得到了propsData了，如下</p>
+<p><img src="./images/Vue.js 源码分析(十三) 基础篇 组件 props属性详解4.png" alt="" /></p>
+<p>然后回到_init()初始化函数，会执行initState()函数，该函数首先会判断是否有props属性,如果有则执行initProps初始化props，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initProps (vm, propsOptions) {     <span style="color: #008000;">//</span><span style="color: #008000;">第3319行 初始化props属性</span>
+  <span style="color: #0000ff;">var</span> propsData = vm.$options.propsData || {};                      <span style="color: #008000;">//</span><span style="color: #008000;">获取propsData属性,也就是例子里的{title:"Hello World"}</span>
+  <span style="color: #0000ff;">var</span> props = vm._props =<span style="color: #000000;"> {};
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> cache prop keys so that future props updates can iterate using Array</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> instead of dynamic object key enumeration.</span>
+  <span style="color: #0000ff;">var</span> keys = vm.$options._propKeys = [];                            <span style="color: #008000;">//</span><span style="color: #008000;">用于保存当前组件的props里的key   ;以便之后在父组件更新props时可以直接使用数组迭代，而不需要动态枚举键值</span>
+  <span style="color: #0000ff;">var</span> isRoot = !<span style="color: #000000;">vm.$parent;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> root instance props should be converted</span>
+  <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isRoot) {
+    toggleObserving(</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+  }
+  </span><span style="color: #0000ff;">var</span> loop = <span style="color: #0000ff;">function</span> ( key ) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">定义一个loop函数，一会儿会循环调用它</span>
+    keys.push(key);                                                   <span style="color: #008000;">//</span><span style="color: #008000;">保存key</span>
+    <span style="color: #0000ff;">var</span> value = validateProp(key, propsOptions, propsData, vm);       <span style="color: #008000;">//</span><span style="color: #ff0000;">执行validateProp检查propsData里的key值是否符合propsOptions里对应的要求，并将值保存到value里面</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore else </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    {
+      </span><span style="color: #0000ff;">var</span> hyphenatedKey =<span style="color: #000000;"> hyphenate(key);
+      </span><span style="color: #0000ff;">if</span> (isReservedAttribute(hyphenatedKey) ||<span style="color: #000000;">
+          config.isReservedAttr(hyphenatedKey)) {
+        warn(
+          (</span>"\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."<span style="color: #000000;">),
+          vm
+        );
+      }
+      defineReactive(props, key, value, </span><span style="color: #0000ff;">function</span> () {                 <span style="color: #008000;">//</span><span style="color: #008000;">将key变成响应式，同时也定义了props的key属性的值为value</span>
+        <span style="color: #0000ff;">if</span> (vm.$parent &amp;&amp; !<span style="color: #000000;">isUpdatingChildComponent) {
+          warn(
+            </span>"Avoid mutating a prop directly since the value will be " +
+            "overwritten whenever the parent component re-renders. " +
+            "Instead, use a data or computed property based on the prop's " +
+            "value. Prop being mutated: \"" + key + "\""<span style="color: #000000;">,
+            vm
+          );
+        }
+      });
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> static props are already proxied on the component's prototype</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> during Vue.extend(). We only need to proxy props defined at</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> instantiation here.</span>
+    <span style="color: #0000ff;">if</span> (!(key <span style="color: #0000ff;">in</span><span style="color: #000000;"> vm)) {
+      proxy(vm, </span>"_props"<span style="color: #000000;">, key);
+    }
+  };
+ 
+  </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> propsOptions) loop( key );                          <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个props 依次调用loop()函数</span>
+  toggleObserving(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>至此整个流程跑完了，前面说了extractPropsFromVNodeData只是获取值,而验证理验证和默认值就是在validateProp()函数内做的判断，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> validateProp (         <span style="color: #008000;">//</span><span style="color: #008000;">第1582行 检查props</span>
+<span style="color: #000000;">  key,
+  propOptions,
+  propsData,
+  vm
+) {
+  </span><span style="color: #0000ff;">var</span> prop = propOptions[key];                    <span style="color: #008000;">//</span><span style="color: #008000;">获取对应的值，例如:{type: null}</span>
+  <span style="color: #0000ff;">var</span> absent = !hasOwn(propsData, key);           <span style="color: #008000;">//</span><span style="color: #008000;">如果propsData没有key这个键名，则absent为true</span>
+  <span style="color: #0000ff;">var</span> value = propsData[key];                     <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取propsData里key这个键的值</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> boolean casting</span>
+  <span style="color: #0000ff;">var</span> booleanIndex = getTypeIndex(Boolean, prop.type);          <span style="color: #008000;">//</span><span style="color: #008000;">调用getTypeIndex()含糊判断prop.type是否包含布尔类型</span>
+  <span style="color: #0000ff;">if</span> (booleanIndex &gt; -1<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">if</span> (absent &amp;&amp; !hasOwn(prop, 'default'<span style="color: #000000;">)) {
+      value </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (value === '' || value ===<span style="color: #000000;"> hyphenate(key)) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> only cast empty string / same name to boolean if</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> boolean has higher priority</span>
+      <span style="color: #0000ff;">var</span> stringIndex =<span style="color: #000000;"> getTypeIndex(String, prop.type);
+      </span><span style="color: #0000ff;">if</span> (stringIndex &lt; 0 || booleanIndex &lt;<span style="color: #000000;"> stringIndex) {
+        value </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      }
+    }
+  }
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> check default value</span>
+  <span style="color: #0000ff;">if</span> (value === undefined) {                        <span style="color: #008000;">//</span><span style="color: #008000;">如果value未定义</span>
+    value = getPropDefaultValue(vm, prop, key);         <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取默认值</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> since the default value is a fresh copy,   </span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> make sure to observe it.</span>
+    <span style="color: #0000ff;">var</span> prevShouldObserve =<span style="color: #000000;"> shouldObserve;
+    toggleObserving(</span><span style="color: #0000ff;">true</span><span style="color: #000000;">);
+    observe(value);
+    toggleObserving(prevShouldObserve);
+  }
+  {
+    assertProp(prop, key, value, vm, absent);           </span><span style="color: #008000;">//</span><span style="color: #008000;">判断Prop是否有效</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">return</span> value                                      <span style="color: #008000;">//</span><span style="color: #008000;">最后返回value</span>
+}</pre>
+</div>
+<p>剩下来就几个工具函数了，比较简单，大致如此。</p>
+<p><span style="color: #ff0000;">注:在Vue这么多属性里面，props是最有意思，最好玩的。虽然props的用法比较简单，但是它的原理实现我觉得是最复杂的，理解了props的实现原理，可以说是对Vue源码算是有比较大的深入了解了</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,206 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Linux基础命令和文件权限' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Linux基础命令和文件权限</center></div><div class='banquan'>原文出处:本文由博客园博主埃尔本提供。<br/>
+原文连接:https://www.cnblogs.com/hhyf/p/11149012.html</div><br>
+    <div>
+<h1 id="linux%E5%91%BD%E4%BB%A4%E4%B8%8E%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90" class="mume-header" style="text-align: center;">Linux命令与文件权限</h1>
+<p>&nbsp;</p>
+<h2 id="linux%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4" class="mume-header">Linux基础命令</h2>
+<ol>
+<li><strong><code>&nbsp; reboot　　</code></strong>&nbsp;重启</li>
+<li><strong><code>&nbsp; cd</code></strong>&nbsp;　　&nbsp; &nbsp; &nbsp; &nbsp;切换目录</li>
+<li><strong><code>&nbsp; cd ..&nbsp; &nbsp;&nbsp;</code></strong>&nbsp;回到上一级目录</li>
+<li><code>&nbsp;<strong> cd ~&nbsp;</strong> &nbsp; &nbsp;</code>&nbsp;回到主目录</li>
+<li><code>&nbsp; <strong>cd /</strong></code><strong>&nbsp;</strong> &nbsp; &nbsp; &nbsp; &nbsp; 回到根目录</li>
+<li><code>&nbsp; <strong>ls</strong></code><strong>&nbsp; &nbsp;</strong> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;查看文件目录并显示相关信息</li>
+<li><code>&nbsp; <strong>ls -l</strong></code>&nbsp; &nbsp; &nbsp; &nbsp; 即ll</li>
+<li><code>&nbsp;<strong> ls -al</strong></code><strong>&nbsp;</strong> &nbsp; &nbsp; 查看文件目录包含隐藏文件(以.开头)</li>
+<li><strong><code>&nbsp; cat filename |grep "cont"</code></strong>&nbsp;管道过滤，在指定文件中查找包含指定的内容( cat为查找命令，grep为过滤命令filename为文件名,cont为查找内容)</li>
+<li><code>&nbsp; <strong>cat filename |grep "cont1" |grep "cont2"</strong></code>&nbsp;再次过滤</li>
+<li><strong><code>&nbsp; ll |grep "node"</code></strong>&nbsp;仅显示含有node的文件信息</li>
+<li><code>&nbsp;<strong> mkdir</strong></code><strong>&nbsp;</strong>&nbsp;<strong>dirname&nbsp;</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;创建文件夹</li>
+<li><code>&nbsp; <strong>touch</strong></code><strong>&nbsp;</strong>&nbsp;<strong>filename</strong>&nbsp; &nbsp; &nbsp;　　&nbsp; 创建文件</li>
+<li><code>&nbsp; <strong>mkdir -p test1/test2</strong></code>&nbsp;创建test2文件夹，如果没有test1文件夹，则也创建test1文件夹</li>
+<li><code>&nbsp; <strong>rmdir</strong></code>&nbsp; <strong>dirname</strong>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 删除文件夹，后跟文件夹名,仅能删除空文件夹</li>
+<li><code>&nbsp; <strong>rm -rf</strong></code>&nbsp; <strong>dirname</strong>&nbsp; &nbsp;　　&nbsp; &nbsp;递归的删除文件夹</li>
+<li><code>&nbsp; <strong>mkdir -m</strong></code><strong>&nbsp;dirname&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</strong>创建带权限的文件夹</li>
+<li><code>&nbsp; <strong>mkdir -m 777</strong></code>&nbsp;<strong>dirname&nbsp; &nbsp;</strong>创建公有读写执行权限的文件夹</li>
+<li><code>&nbsp; <strong>pwd</strong></code>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;显示当前文件夹的绝对路径</li>
+<li><code>&nbsp; <strong>vi</strong></code>&nbsp; &nbsp;<strong>filename&nbsp;</strong>&nbsp; &nbsp; &nbsp; 　　&nbsp; &nbsp; &nbsp;vim打开文件，如果该文件不存在则创建，如果不保存则文件最终不会被创建</li>
+<li><strong><code>&nbsp; chmod 777 filename</code>&nbsp;</strong>给指定文件添加777权限</li>
+<li><code>&nbsp; <strong>lscpu</strong></code>&nbsp; &nbsp; &nbsp;查看cpu信息</li>
+<li><code>&nbsp; <strong>df</strong>&nbsp; &nbsp; &nbsp;&nbsp;</code>查看磁盘信息</li>
+<li><code>&nbsp; <strong>df -i</strong></code>&nbsp; &nbsp; &nbsp;查看磁盘信息(索引)</li>
+<li><code>&nbsp;<strong> ps aux</strong></code><strong>&nbsp; &nbsp;</strong>查看目前系统运行的服务</li>
+<li><code>&nbsp;<strong> top</strong></code>&nbsp; &nbsp; &nbsp; &nbsp; 资源占用情况
+<ul>
+<li>其中的<strong>load average</strong>为1，3，15分钟的占用情况</li>
+<li>Cpu(s)的参数分别为:
+<ul>
+<li><strong>us&nbsp;&nbsp;</strong>用户的cpu占用比,</li>
+<li><strong>sy&nbsp;&nbsp;</strong>系统的cpu占用比,</li>
+<li><strong>ni&nbsp;&nbsp;</strong>改变过优先级的进程cup占比，</li>
+<li><strong>id&nbsp;&nbsp;</strong>空闲cup百分比,</li>
+<li><strong>wa&nbsp;&nbsp;</strong>i/o等待的占用百分比，</li>
+<li><strong>hi&nbsp;</strong> 硬件中断cup占比,</li>
+<li><strong>si&nbsp;&nbsp;</strong>软件中断cpu占比,</li>
+<li><strong>st&nbsp;&nbsp;</strong>实时cup占比</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong><code>systemctl disable firewalld</code></strong>&nbsp;关闭防火墙( 需reboot才有效)</li>
+</ol>
+<p class="sync-line" data-line="44">&nbsp;</p>
+<h2 id="%E7%94%A8%E6%88%B7%E5%91%BD%E4%BB%A4" class="mume-header">用户命令</h2>
+<p>tip:<strong>用户必须至少属于某一个组</strong></p>
+<ul>
+<li><code>useradd name</code>&nbsp;创建新用户, name为用户名</li>
+<li><code>cat /ect/passwd</code>&nbsp;查看用户列表及信息,[用户名:密码(x为未知):用户ID(自己定义的用户ID从1000开始):用户所在组id:备注:用户目录]</li>
+<li><code>passwd username</code>&nbsp;添加用户密码,username为用户名，完成后会让填写密码</li>
+<li><code>ssh ip</code>&nbsp;远程连接用户,ip为用户ip地址(ip addr查看)</li>
+<li><code>cat /etc/group</code>&nbsp;查看用户组</li>
+<li><code>groupadd groupname</code>添加用户组，groupname为用户组名</li>
+<li><code>useradd -G groupname username</code>&nbsp;新增用户至指定用户组</li>
+<li><code>groupdel groupname</code>&nbsp;删除用户组,不可删除有用户(且该组为这个用户唯一的组)的组</li>
+<li><code>userdel username</code>&nbsp;删除用户</li>
+<li><code>groups usernamw</code>&nbsp;查看用户所在组</li>
+<li><code>whoami</code>&nbsp;查看自己所在用户组</li>
+<li><code>su username</code>&nbsp;切换用户,切换为管理用户请加上sudo</li>
+<li><code>exit</code>&nbsp;返回用户</li>
+</ul>
+<p class="sync-line" data-line="62">&nbsp;</p>
+<h2 id="vim%E5%91%BD%E4%BB%A4" class="mume-header">vim命令</h2>
+<p>vi打开文件后</p>
+<ul>
+<li>
+<p>[i] 进入insert模式，可以编辑文件</p>
+</li>
+<li>
+<p>[h] [j] [k] [l] 光标移动，上线左右</p>
+</li>
+<li>
+<p>[2h] 光标向指定方向移动指定个位置</p>
+</li>
+<li>
+<p>[+] 光标移动移动至下一个非空格行</p>
+</li>
+<li>
+<p>[ctrl+f] 向翻页</p>
+</li>
+<li>
+<p>[ctrl+b] 向上翻页</p>
+</li>
+<li>
+<p>[ctrl+d] 向下翻半页</p>
+</li>
+<li>
+<p>[esc] 退出insert模式</p>
+</li>
+<li>
+<p>[$] 跳转至行尾</p>
+</li>
+<li>
+<p>[^] 跳转至行首</p>
+</li>
+<li>
+<p>[shift+g] 跳转至最后一页</p>
+</li>
+<li>
+<p>[5+shift+g] 跳转至第5行</p>
+</li>
+<li>
+<p>[gg] 跳转至第一行</p>
+</li>
+<li>
+<p>[/] 查找最近的符合条件的内容,后面跟查找内容,向下查找</p>
+</li>
+<li>
+<p>[?]向上查找</p>
+</li>
+<li>
+<p><code>:w</code>&nbsp;保存</p>
+</li>
+<li>
+<p><code>:wq</code>&nbsp;退出并保存</p>
+</li>
+<li>
+<p><code>:w!</code>&nbsp;强制退出并保存</p>
+</li>
+<li>
+<p><code>:q!</code>&nbsp;强制退出</p>
+</li>
+</ul>
+<p class="sync-line" data-line="87">&nbsp;</p>
+<h2 id="%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90" class="mume-header">文件权限</h2>
+<p>当使用ll查看文件目录时，文件前面都会有一串字符，代表了改文件/文件夹的权限</p>
+<p>第一个字符：文件夹or文件[文件为 -，文件夹为d]<br />后面分三组：</p>
+<ul>
+<li>
+<p>当前所属用户权限</p>
+
+
+
+</li>
+<li>
+<p>当前所属组的权限</p>
+
+
+
+</li>
+<li>
+<p>其他用户权限</p>
+
+
+
+</li>
+
+
+
+</ul>
+<p>每组3个字符:</p>
+<ul>
+<li>　　R权限读 </li>
+<li>　　W权限写 </li>
+<li>　　X权限执行</li>
+
+
+
+</ul>
+<p>这三组按RWX来写，不拥有此权限则为-，如仅读: r--</p>
+<p>设置权限时可以使用数字代表它们:</p>
+<ul>
+<li>R代表数字4</li>
+<li>W代表数字2</li>
+<li>X代表数字1</li>
+
+
+
+</ul>
+<p>可以使用他们的和来设置，如:读写权限为6，写和执行权限为3,只读4</p>
+<p>在上面的基础命令中有使用777，现在应该知道777代表什么了吧？&nbsp;</p>
+
+
+
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,66 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修url编码本质' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>url编码本质</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11696583.html</div><br>
+    <h2 id="url编码本质">url编码本质</h2>
+<p>其实url本质就是将中文字符串进行<code>utf8编码</code>,然后得到编码后的对象转换字符串去掉开头的<code>b'</code>以及末尾的<code>'</code>,然后再将<code>\x</code>转换成<code>%</code>,再将里面内容<code>x</code>变成<code>e</code>最后将字符串<code>小写</code>变成<code>大写</code></p>
+<p>举例</p>
+<pre><code><code>#拿我举例
+
+#第一步进行编码
+a= &#39;我&#39;
+a= a.encode(&#39;utf8&#39;)
+
+#第二步进行转字符串去除头尾
+a = str(a).strip(&quot;b&#39;&quot;) #strip里面的值不是匹配而是有无
+
+#第三步将\转换成%
+a = a.replace(&#39;\\&#39;,&#39;%&#39;)
+
+#第四部将x写变成e
+a = a.replace(&#39;x&#39;,&#39;e&#39;)
+
+#第五步将小写变成大写
+a = a.upper()
+
+#一步到位
+a=str(a.encode(&#39;utf8&#39;)).strip(&quot;b&#39;&quot;).replace(&#39;\\x&#39;,&#39;%&#39;).replace(&#39;x&#39;,&#39;e&#39;).upper()
+
+#结果%E6%88%91
+
+#不行你可以访问 https://www.baidu.com/s?wd=%E6%88%91,https://www.baidu.com/s?wd=我
+#看看是不是一样</code></pre>
+<h2 id="python中调用库进行url编码和解码">python中调用库进行url编码和解码</h2>
+<p><code>from urllib import parse</code></p>
+<h3 id="编码">编码</h3>
+<pre><code><code>str1 = &#39;我&#39;
+str2 = parse.quote(str1)
+print(str2)
+#%E6%88%91</code></pre>
+<h3 id="解码">解码</h3>
+<pre><code><code>str1 = &#39;%E6%88%91&#39;
+str2 = parse.unquote(str1)
+print(str2)
+#我</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

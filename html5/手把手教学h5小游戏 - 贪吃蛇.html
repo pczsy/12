@@ -1,0 +1,724 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修手把手教学h5小游戏 - 贪吃蛇' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>手把手教学h5小游戏 - 贪吃蛇</center></div><div class='banquan'>原文出处:本文由博客园博主严俊东提供。<br/>
+原文连接:https://www.cnblogs.com/jundong/p/11963501.html</div><br>
+    <blockquote>
+<p>简单的小游戏制作，代码量只有两三百行。游戏可自行扩展延申。</p>
+</blockquote>
+<p>源码已发布至github，喜欢的点个小星星，源码入口：<a href="https://github.com/gaga-change/game-snake">game-snake</a></p>
+<p>游戏已发布，游戏入口：<a href="http://snake.game.yanjd.top" class="uri">http://snake.game.yanjd.top</a></p>
+<h2 id="第一步---制作想法">第一步 - 制作想法</h2>
+<p>游戏如何实现是首要想的，这里我的想法如下：</p>
+<ol>
+<li>利用canvas进行绘制地图（格子装）。</li>
+<li>利用canvas绘制蛇，就是占用地图格子。让蛇移动，即：更新蛇坐标，重新绘制。</li>
+<li>创建四个方向按钮，控制蛇接下来的方向。</li>
+<li>随机在地图上绘制出果子，蛇移动时“吃”到果子，增加长度和“移速”。</li>
+<li>开始键和结束键配置，分数显示、历史记录</li>
+</ol>
+<h2 id="第二步---框架选型">第二步 - 框架选型</h2>
+<p>从第一步可知，我想实现这个游戏，只需要用到canvas绘制就可以了，没有物理引擎啥的，也没有高级的UI特效。可以选个简单点的，用来方便操作canvas绘制。精挑细选后选的是<a href="https://createjs.com/getting-started/easeljs">EaselJS</a>，比较轻量，用于绘制canvas，以及canvas的动态效果。</p>
+<h2 id="第三步---开发">第三步 - 开发</h2>
+<h3 id="准备">准备</h3>
+<p>目录和文件准备：</p>
+<p>| - index.html</p>
+<p>| - js</p>
+<p>| - | - main.js</p>
+<p>| - css</p>
+<p>| - | - stylesheet.css</p>
+<p><em>index.html</em> 导入相关的依赖，以及样式文件和脚本文件。设计是屏幕80%高度为canvas绘制区域，20%高度是操作栏以及展示分数区域.</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh&quot;&gt;
+
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot;
+    content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;meta http-equiv=&quot;X-UA-Compatible&quot;
+    content=&quot;ie=edge&quot;&gt;
+  &lt;title&gt;贪吃蛇&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;css/stylesheet.css&quot;&gt;
+  &lt;meta name=&quot;viewport&quot;
+    content=&quot;width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui&quot;&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;div class=&quot;content-canvas&quot;&gt;
+      &lt;canvas&gt;&lt;/canvas&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;control&quot;&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script src=&quot;https://cdn.bootcss.com/EaselJS/1.0.2/easeljs.min.js&quot;&gt;&lt;/script&gt;
+  &lt;!-- 载入jquery 方便dom操作 --&gt;
+  &lt;script src=&quot;https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+  &lt;!-- sweetalert 美化alert用的 --&gt;
+  &lt;script src=&quot;https://cdn.bootcss.com/sweetalert/2.1.2/sweetalert.min.js&quot;&gt;&lt;/script&gt;
+  &lt;script src=&quot;js/main.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<p><em>stylesheet.css</em></p>
+<pre class="css"><code>* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+#app {
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* canvas绘制区域 */
+.content-canvas {
+  width: 100%;
+  max-width: 768px;
+  height: 80%;
+  position: fixed;
+  overflow: hidden;
+}
+.content-canvas canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+/* 操作区域 */
+.control {
+  position: fixed;
+  width: 100%;
+  max-width: 768px;
+  height: 20%;
+  bottom: 0;
+  background-color: #aeff5d;
+}</code></pre>
+<p><em>main.js</em></p>
+<pre class="js"><code>$(function() {
+  // 主代码编写区域
+})</code></pre>
+<h3 id="绘制格子">1.绘制格子</h3>
+<p>注意的点（遇到的问题以及解决方案）：</p>
+<ol>
+<li>canvas绘制的路线是无宽度的，但线条是有宽度的。比如：从(0, 0)到(0, 100)绘制一条宽度为10px的线，则线条一半是在区域外看不见的。处理方案是起点偏移，比如：从(0, 0)到(0, 100)绘制一条宽度为10px的线，改为从(5,0)到(5,100)，偏移量为线条宽度的一半。</li>
+<li>用样式定义canvas的宽高坐标会被拉伸，处理方案是给canvas元素设置宽高属性，值为它当前的实际宽高。</li>
+</ol>
+<h4 id="代码">代码</h4>
+<p><em>main.js</em></p>
+<pre class="js"><code>$(function () {
+  var LINE_WIDTH = 1 // 线条宽度
+  var LINE_MAX_NUM = 32 // 一行格子数量
+  var canvasHeight = $(&#39;canvas&#39;).height() // 获取canvas的高度
+  var canvasWidth = $(&#39;canvas&#39;).width() // 获取canvas的宽度
+  var gridWidth = (canvasWidth - LINE_WIDTH) / LINE_MAX_NUM // 格子宽度，按一行32个格子计算
+  var num = { w: LINE_MAX_NUM, h: Math.floor((canvasHeight - LINE_WIDTH) / gridWidth) } // 计算横向和纵向多少个格子，即：横坐标的最大值和纵坐标的最大值
+
+  /**
+ * 绘制格子地图
+ * @param graphics
+ */
+  function drawGrid(graphics) {
+    var wNum = num.w
+    var hNum = num.h
+    graphics.setStrokeStyle(LINE_WIDTH).beginStroke(&#39;#ffac52&#39;)
+    // 画横向的线条
+    for (var i = 0; i &lt;= hNum; i++) {
+      if (i === hNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(0.1)
+      graphics.moveTo(LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+        .lineTo(gridWidth * wNum + LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+    }
+    graphics.setStrokeStyle(LINE_WIDTH)
+    // 画纵向的线条
+    for (i = 0; i &lt;= wNum; i++) {
+      if (i === wNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(.1)
+      graphics.moveTo(i * gridWidth + LINE_WIDTH / 2, LINE_WIDTH / 2)
+        .lineTo(i * gridWidth + LINE_WIDTH / 2, gridWidth * hNum + LINE_WIDTH / 2)
+    }
+  }
+
+  function init() {
+    $(&#39;canvas&#39;).attr(&#39;width&#39;, canvasWidth) // 给canvas设置宽高属性赋值上当前canvas的宽度和高度（单用样式配置宽高会被拉伸）
+    $(&#39;canvas&#39;).attr(&#39;height&#39;, canvasHeight)
+    var stage = new createjs.Stage($(&#39;canvas&#39;)[0])
+    var grid = new createjs.Shape()
+    drawGrid(grid.graphics)
+    stage.addChild(grid)
+    stage.update()
+  }
+
+  init()
+})</code></pre>
+<h4 id="效果图">效果图</h4>
+<p>浏览器打开<code>index.html</code>,可以看到效果：</p>
+<p><img src="./images/手把手教学h5小游戏 - 贪吃蛇0.png" /></p>
+<h3 id="绘制蛇">2.绘制蛇</h3>
+<p>蛇可以想象成一串坐标点（数组），“移动时”在数组头部添加新的坐标，去除尾部的坐标。类似队列，先进先出。</p>
+<h4 id="代码-1">代码</h4>
+<p><em>main.js</em></p>
+<pre class="js"><code>$(function () {
+  var LINE_WIDTH = 1 // 线条宽度
+  var LINE_MAX_NUM = 32 // 一行格子数量
+  var SNAKE_START_POINT = [[0, 3], [1, 3], [2, 3], [3, 3]] // 初始蛇坐标
+  var DIR_ENUM = { UP: 1, DOWN: -1, LEFT: 2, RIGHT: -2 }    // 移动的四个方向枚举值，两个对立方向相加等于0
+  var GAME_STATE_ENUM = { END: 1, READY: 2 } // 游戏状态枚举
+  var canvasHeight = $(&#39;canvas&#39;).height() // 获取canvas的高度
+  var canvasWidth = $(&#39;canvas&#39;).width() // 获取canvas的宽度
+  var gridWidth = (canvasWidth - LINE_WIDTH) / LINE_MAX_NUM // 格子宽度，按一行32个格子计算
+  var num = { w: LINE_MAX_NUM, h: Math.floor((canvasHeight - LINE_WIDTH) / gridWidth) } // 计算横向和纵向多少个格子，即：横坐标的最大值和纵坐标的最大值
+  var directionNow = null // 当前移动移动方向
+  var directionNext = null // 下一步移动方向
+  var gameState = null // 游戏状态
+
+  /**
+ * 绘制格子地图
+ * @param graphics
+ */
+  function drawGrid(graphics) {
+    var wNum = num.w
+    var hNum = num.h
+    graphics.setStrokeStyle(LINE_WIDTH).beginStroke(&#39;#ffac52&#39;)
+    // 画横向的线条
+    for (var i = 0; i &lt;= hNum; i++) {
+      if (i === hNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(0.1)
+      graphics.moveTo(LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+        .lineTo(gridWidth * wNum + LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+    }
+    graphics.setStrokeStyle(LINE_WIDTH)
+    // 画纵向的线条
+    for (i = 0; i &lt;= wNum; i++) {
+      if (i === wNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(.1)
+      graphics.moveTo(i * gridWidth + LINE_WIDTH / 2, LINE_WIDTH / 2)
+        .lineTo(i * gridWidth + LINE_WIDTH / 2, gridWidth * hNum + LINE_WIDTH / 2)
+    }
+  }
+
+  /** 
+   * 坐标类
+   */
+  function Point(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  /**
+   * 根据移动的方向，获取当前坐标的下一个坐标
+   * @param direction 移动的方向
+   */
+  Point.prototype.nextPoint = function nextPoint(direction) {
+    debugger
+    var point = new Point(this.x, this.y)
+    switch (direction) {
+      case DIR_ENUM.UP:
+        point.y -= 1
+        break
+      case DIR_ENUM.DOWN:
+        point.y += 1
+        break
+      case DIR_ENUM.LEFT:
+        point.x -= 1
+        break
+      case DIR_ENUM.RIGHT:
+        point.x += 1
+        break
+    }
+    return point
+  }
+
+  /**
+ * 初始化蛇的坐标
+ * @returns {[Point,Point,Point,Point,Point ...]}
+ * @private
+ */
+  function initSnake() {
+    return SNAKE_START_POINT.map(function (item) {
+      return new Point(item[0], item[1])
+    })
+  }
+
+  /**
+   * 绘制蛇
+   * @param graphics
+   * @param snakes // 蛇坐标
+   */
+  function drawSnake(graphics, snakes) {
+    graphics.clear()
+    graphics.beginFill(&quot;#a088ff&quot;)
+    var len = snakes.length
+    for (var i = 0; i &lt; len; i++) {
+      if (i === len - 1) graphics.beginFill(&quot;#ff6ff9&quot;)
+      graphics.drawRect(
+        snakes[i].x * gridWidth + LINE_WIDTH / 2,
+        snakes[i].y * gridWidth + LINE_WIDTH / 2,
+        gridWidth, gridWidth)
+    }
+  }
+
+  /**
+ * 改变蛇身坐标
+ * @param snakes 蛇坐标集
+ * @param direction 方向
+ */
+  function updateSnake(snakes, direction) {
+    var oldHead = snakes[snakes.length - 1]
+    var newHead = oldHead.nextPoint(direction)
+    // 超出边界 游戏结束
+    if (newHead.x &lt; 0 || newHead.x &gt;= num.w || newHead.y &lt; 0 || newHead.y &gt;= num.h) {
+      gameState = GAME_STATE_ENUM.END
+    } else if (snakes.some(function (p) { // ‘吃’到自己 游戏结束
+      return newHead.x === p.x &amp;&amp; newHead.y === p.y
+    })) {
+      gameState = GAME_STATE_ENUM.END
+    } else {
+      snakes.push(newHead)
+      snakes.shift()
+    }
+  }
+
+  /**
+   * 引擎
+   * @param graphics
+   * @param snakes
+   */
+  function move(graphics, snakes, stage) {
+    clearTimeout(window._engine) // 重启时关停之前的引擎
+    run()
+    function run() {
+      directionNow = directionNext
+      updateSnake(snakes, directionNow) // 更新蛇坐标
+      if (gameState === GAME_STATE_ENUM.END) {
+        end()
+      } else {
+        drawSnake(graphics, snakes)
+        stage.update()
+        window._engine = setTimeout(run, 500)
+      }
+    }
+  }
+
+  /**
+   * 游戏结束回调
+   */
+  function end() {
+    console.log(&#39;游戏结束&#39;)
+  }
+
+  function init() {
+    $(&#39;canvas&#39;).attr(&#39;width&#39;, canvasWidth) // 给canvas设置宽高属性赋值上当前canvas的宽度和高度（单用样式配置宽高会被拉伸）
+    $(&#39;canvas&#39;).attr(&#39;height&#39;, canvasHeight)
+    directionNow = directionNext = DIR_ENUM.DOWN // 初始化蛇的移动方向
+    var snakes = initSnake()
+    var stage = new createjs.Stage($(&#39;canvas&#39;)[0])
+    var grid = new createjs.Shape()
+    var snake = new createjs.Shape()
+    drawGrid(grid.graphics) // 绘制格子
+    drawSnake(snake.graphics, snakes)
+    stage.addChild(grid)
+    stage.addChild(snake)
+    stage.update()
+    move(snake.graphics, snakes, stage)
+  }
+
+  init()
+})</code></pre>
+<h4 id="效果图-1">效果图</h4>
+<p>效果图（gif）：</p>
+<p><img src="./images/手把手教学h5小游戏 - 贪吃蛇1.png" /></p>
+<h3 id="移动蛇">3.移动蛇</h3>
+<p>制作4个按钮，控制移动方向</p>
+<h4 id="代码-2">代码</h4>
+<p><em>index.html</em></p>
+<pre><code><code>...
+&lt;div class=&quot;control&quot;&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;btn&quot;&gt;
+      &lt;button id=&quot;UpBtn&quot;&gt;上&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;row clearfix&quot;&gt;
+    &lt;div class=&quot;btn half-width left&quot;&gt;
+      &lt;button id=&quot;LeftBtn&quot;&gt;左&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;btn half-width right&quot;&gt;
+      &lt;button id=&quot;RightBtn&quot;&gt;右&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;row&quot;&gt;
+    &lt;div class=&quot;btn&quot;&gt;
+      &lt;button id=&quot;DownBtn&quot;&gt;下&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+...</code></pre>
+<p><em>stylesheet.css</em></p>
+<pre class="css"><code>...
+.control .row {
+  position: relative;
+  height: 33%;
+  text-align: center;
+}
+
+.control .btn {
+  box-sizing: border-box;
+  height: 100%;
+  padding: 4px;
+}
+
+.control button {
+  display: inline-block;
+  height: 100%;
+  background-color: white;
+  border: none;
+  padding: 3px 20px;
+  border-radius: 3px;
+}
+
+.half-width {
+  width: 50%;
+}
+
+.btn.left {
+  padding-right: 20px;
+  float: left;
+  text-align: right;
+}
+
+.btn.right {
+  padding-left: 20px;
+  float: right;
+  text-align: left;
+}
+
+.clearfix:after {
+  content: &#39;&#39;;
+  display: block;
+  clear: both;
+}</code></pre>
+<p><em>mian.js</em></p>
+<pre class="js"><code>...
+/**
+ * 改变蛇行进方向
+ * @param dir
+ */
+function changeDirection(dir) {
+  /* 逆向及同向则不改变 */
+  if (directionNow + dir === 0 || directionNow === dir) return
+  directionNext = dir
+}
+
+/**
+ * 绑定相关元素点击事件
+ */
+function bindEvent() {
+  $(&#39;#UpBtn&#39;).click(function () { changeDirection(DIR_ENUM.UP) })
+  $(&#39;#LeftBtn&#39;).click(function () { changeDirection(DIR_ENUM.LEFT) })
+  $(&#39;#RightBtn&#39;).click(function () { changeDirection(DIR_ENUM.RIGHT) })
+  $(&#39;#DownBtn&#39;).click(function () { changeDirection(DIR_ENUM.DOWN) })
+}
+
+function init() {
+  bindEvent()
+  ...
+}</code></pre>
+<h4 id="效果图-2">效果图</h4>
+<p>效果图（gif）：</p>
+<p><img src="./images/手把手教学h5小游戏 - 贪吃蛇2.png" /></p>
+<h3 id="绘制果子">4. 绘制果子</h3>
+<p>随机取两个坐标点绘制果子，判定如果“吃到”，则不删除尾巴。缩短定时器的时间间隔增加难度。</p>
+<p>注意的点（遇到的问题以及解决方案）：新增一个果子不能占用蛇的坐标，一开始考虑的是随机生成一个坐标，如果坐标已被占用，那就继续生成随机坐标。然后发现这样做有个问题就是整个界面剩余两个坐标可用时（极端情况，蛇占了整个屏幕就差两个格子了），那这样的话，不停随机取坐标，要取到这最后两个坐标要耗不少时间。后面改了方法，先统计所有坐标，然后循环蛇身坐标，一一排除不可用坐标，然后再随机抽取可用坐标的其中一个。</p>
+<h4 id="代码-3">代码</h4>
+<p><em>main.js</em></p>
+<pre class="js"><code>$(function () {
+  var LINE_WIDTH = 1 // 线条宽度
+  var LINE_MAX_NUM = 32 // 一行格子数量
+  var SNAKE_START_POINT = [[0, 3], [1, 3], [2, 3], [3, 3]] // 初始蛇坐标
+  var DIR_ENUM = { UP: 1, DOWN: -1, LEFT: 2, RIGHT: -2 }    // 移动的四个方向枚举值，两个对立方向相加等于0
+  var GAME_STATE_ENUM = { END: 1, READY: 2 } // 游戏状态枚举
+  var canvasHeight = $(&#39;canvas&#39;).height() // 获取canvas的高度
+  var canvasWidth = $(&#39;canvas&#39;).width() // 获取canvas的宽度
+  var gridWidth = (canvasWidth - LINE_WIDTH) / LINE_MAX_NUM // 格子宽度，按一行32个格子计算
+  var num = { w: LINE_MAX_NUM, h: Math.floor((canvasHeight - LINE_WIDTH) / gridWidth) } // 计算横向和纵向多少个格子，即：横坐标的最大值和纵坐标的最大值
+  var directionNow = null // 当前移动移动方向
+  var directionNext = null // 下一步移动方向
+  var gameState = null // 游戏状态
+  var scope = 0 // 分数
+
+  /**
+ * 绘制格子地图
+ * @param graphics
+ */
+  function drawGrid(graphics) {
+    var wNum = num.w
+    var hNum = num.h
+    graphics.setStrokeStyle(LINE_WIDTH).beginStroke(&#39;#ffac52&#39;)
+    // 画横向的线条
+    for (var i = 0; i &lt;= hNum; i++) {
+      if (i === hNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(0.1)
+      graphics.moveTo(LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+        .lineTo(gridWidth * wNum + LINE_WIDTH / 2, i * gridWidth + LINE_WIDTH / 2)
+    }
+    graphics.setStrokeStyle(LINE_WIDTH)
+    // 画纵向的线条
+    for (i = 0; i &lt;= wNum; i++) {
+      if (i === wNum || i === 0) graphics.setStrokeStyle(LINE_WIDTH)
+      if (i === 1) graphics.setStrokeStyle(.1)
+      graphics.moveTo(i * gridWidth + LINE_WIDTH / 2, LINE_WIDTH / 2)
+        .lineTo(i * gridWidth + LINE_WIDTH / 2, gridWidth * hNum + LINE_WIDTH / 2)
+    }
+  }
+
+  /** 
+   * 坐标类
+   */
+  function Point(x, y) {
+    this.x = x
+    this.y = y
+  }
+
+  /**
+   * 根据移动的方向，获取当前坐标的下一个坐标
+   * @param direction 移动的方向
+   */
+  Point.prototype.nextPoint = function nextPoint(direction) {
+    var point = new Point(this.x, this.y)
+    switch (direction) {
+      case DIR_ENUM.UP:
+        point.y -= 1
+        break
+      case DIR_ENUM.DOWN:
+        point.y += 1
+        break
+      case DIR_ENUM.LEFT:
+        point.x -= 1
+        break
+      case DIR_ENUM.RIGHT:
+        point.x += 1
+        break
+    }
+    return point
+  }
+
+  /**
+ * 初始化蛇的坐标
+ * @returns {[Point,Point,Point,Point,Point ...]}
+ * @private
+ */
+  function initSnake() {
+    return SNAKE_START_POINT.map(function (item) {
+      return new Point(item[0], item[1])
+    })
+  }
+
+  /**
+   * 绘制蛇
+   * @param graphics
+   * @param snakes // 蛇坐标
+   */
+  function drawSnake(graphics, snakes) {
+    graphics.clear()
+    graphics.beginFill(&quot;#a088ff&quot;)
+    var len = snakes.length
+    for (var i = 0; i &lt; len; i++) {
+      if (i === len - 1) graphics.beginFill(&quot;#ff6ff9&quot;)
+      graphics.drawRect(
+        snakes[i].x * gridWidth + LINE_WIDTH / 2,
+        snakes[i].y * gridWidth + LINE_WIDTH / 2,
+        gridWidth, gridWidth)
+    }
+  }
+
+  /**
+ * 改变蛇身坐标
+ * @param snakes 蛇坐标集
+ * @param direction 方向
+ */
+  function updateSnake(snakes, fruits, direction, fruitGraphics) {
+    var oldHead = snakes[snakes.length - 1]
+    var newHead = oldHead.nextPoint(direction)
+    // 超出边界 游戏结束
+    if (newHead.x &lt; 0 || newHead.x &gt;= num.w || newHead.y &lt; 0 || newHead.y &gt;= num.h) {
+      gameState = GAME_STATE_ENUM.END
+    } else if (snakes.some(function (p) { // ‘吃’到自己 游戏结束
+      return newHead.x === p.x &amp;&amp; newHead.y === p.y
+    })) {
+      gameState = GAME_STATE_ENUM.END
+    } else if (fruits.some(function (p) { // ‘吃’到水果
+      return newHead.x === p.x &amp;&amp; newHead.y === p.y
+    })) {
+      scope++
+      snakes.push(newHead)
+      var temp = 0
+      fruits.forEach(function (p, i) {
+        if (newHead.x === p.x &amp;&amp; newHead.y === p.y) {
+          temp = i
+        }
+      })
+      fruits.splice(temp, 1)
+      var newFruit = createFruit(snakes, fruits)
+      if (newFruit) {
+        fruits.push(newFruit)
+        drawFruit(fruitGraphics, fruits)
+      }
+    } else {
+      snakes.push(newHead)
+      snakes.shift()
+    }
+  }
+
+  /**
+   * 引擎
+   * @param graphics
+   * @param snakes
+   */
+  function move(snakeGraphics, fruitGraphics, snakes, fruits, stage) {
+    clearTimeout(window._engine) // 重启时关停之前的引擎
+    run()
+    function run() {
+      directionNow = directionNext
+      updateSnake(snakes, fruits, directionNow, fruitGraphics) // 更新蛇坐标
+      if (gameState === GAME_STATE_ENUM.END) {
+        end()
+      } else {
+        drawSnake(snakeGraphics, snakes)
+        stage.update()
+        window._engine = setTimeout(run, 500 * Math.pow(0.9, scope))
+      }
+    }
+  }
+
+  /**
+   * 游戏结束回调
+   */
+  function end() {
+    console.log(&#39;游戏结束&#39;)
+  }
+
+  /**
+   * 改变蛇行进方向
+   * @param dir
+   */
+  function changeDirection(dir) {
+    /* 逆向及同向则不改变 */
+    if (directionNow + dir === 0 || directionNow === dir) return
+    directionNext = dir
+  }
+
+  /**
+   * 绑定相关元素点击事件
+   */
+  function bindEvent() {
+    $(&#39;#UpBtn&#39;).click(function () { changeDirection(DIR_ENUM.UP) })
+    $(&#39;#LeftBtn&#39;).click(function () { changeDirection(DIR_ENUM.LEFT) })
+    $(&#39;#RightBtn&#39;).click(function () { changeDirection(DIR_ENUM.RIGHT) })
+    $(&#39;#DownBtn&#39;).click(function () { changeDirection(DIR_ENUM.DOWN) })
+  }
+
+  /**
+ * 创建水果坐标
+ * @returns Point
+ * @param snakes
+ * @param fruits
+ */
+  function createFruit(snakes, fruits) {
+    var totals = {}
+    for (var x = 0; x &lt; num.w; x++) {
+      for (var y = 0; y &lt; num.h; y++) {
+        totals[x + &#39;-&#39; + y] = true
+      }
+    }
+    snakes.forEach(function (item) {
+      delete totals[item.x + &#39;-&#39; + item.y]
+    })
+    fruits.forEach(function (item) {
+      delete totals[item.x + &#39;-&#39; + item.y]
+    })
+    var keys = Object.keys(totals)
+    if (keys.length) {
+      var temp = Math.floor(keys.length * Math.random())
+      var key = keys[temp].split(&#39;-&#39;)
+      return new Point(Number(key[0]), Number(key[1]))
+    } else {
+      return null
+    }
+  }
+
+  /**
+ * 绘制水果
+ * @param graphics
+ * @param fruits 水果坐标集
+ */
+  function drawFruit(graphics, fruits) {
+    graphics.clear()
+    graphics.beginFill(&quot;#16ff16&quot;)
+    for (var i = 0; i &lt; fruits.length; i++) {
+      graphics.drawRect(
+        fruits[i].x * gridWidth + LINE_WIDTH / 2,
+        fruits[i].y * gridWidth + LINE_WIDTH / 2,
+        gridWidth, gridWidth)
+    }
+  }
+
+  function init() {
+    bindEvent()
+    $(&#39;canvas&#39;).attr(&#39;width&#39;, canvasWidth) // 给canvas设置宽高属性赋值上当前canvas的宽度和高度（单用样式配置宽高会被拉伸）
+    $(&#39;canvas&#39;).attr(&#39;height&#39;, canvasHeight)
+    directionNow = directionNext = DIR_ENUM.DOWN // 初始化蛇的移动方向
+    var snakes = initSnake()
+    var fruits = []
+    fruits.push(createFruit(snakes, fruits))
+    fruits.push(createFruit(snakes, fruits))
+    var stage = new createjs.Stage($(&#39;canvas&#39;)[0])
+    var grid = new createjs.Shape()
+    var snake = new createjs.Shape()
+    var fruit = new createjs.Shape()
+    drawGrid(grid.graphics) // 绘制格子
+    drawSnake(snake.graphics, snakes)
+    drawFruit(fruit.graphics, fruits)
+    stage.addChild(grid)
+    stage.addChild(snake)
+    stage.addChild(fruit)
+    stage.update()
+    move(snake.graphics, fruit.graphics, snakes, fruits, stage)
+  }
+
+  init()
+})</code></pre>
+<h4 id="效果图-3">效果图</h4>
+<p>效果图（gif）:</p>
+<p><img src="./images/手把手教学h5小游戏 - 贪吃蛇3.png" /></p>
+<h3 id="分数显示游戏结束提示排行榜">5. 分数显示、游戏结束提示、排行榜</h3>
+<p>这一部分就比较简单了，处理下数据的展示即可。这部分代码就不展示出来了。</p>
+<h4 id="效果图-4">效果图</h4>
+<p><img src="./images/手把手教学h5小游戏 - 贪吃蛇4.png" /></p>
+<h2 id="结语">结语</h2>
+<p>界面比较粗糙，主要是学习逻辑操作。中间出现一些小问题，但都一一的解决了。createjs这个游戏引擎还是比较简单易学的，整体只用了绘制图形的api。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

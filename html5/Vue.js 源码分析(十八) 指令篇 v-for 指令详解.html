@@ -1,0 +1,204 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十八) 指令篇 v-for 指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十八) 指令篇 v-for 指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11128230.html</div><br>
+    <p>我们可以用 <code>v-for</code> 指令基于一个数组or对象来渲染一个列表，有五种使用方法，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="item in items"</span><span style="color: #0000ff;">&gt;</span>{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>                                   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">数组格式一，渲染结果:&lt;p&gt;11&lt;/p&gt;&lt;p&gt;12&lt;/p&gt;    </span><span style="color: #008000;">--&gt;</span>         
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item,index) in items"</span><span style="color: #0000ff;">&gt;</span>{{index}}-&gt;{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">数组格式二，渲染结果:&lt;p&gt;0-&gt;11&lt;/p&gt;&lt;p&gt;1-&gt;12&lt;/p&gt;</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="item in infos"</span><span style="color: #0000ff;">&gt;</span>{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>                                   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">对象格式一，渲染结果:&lt;p&gt;gege&lt;/p&gt;&lt;p&gt;12&lt;/p&gt;</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item,key) in infos"</span><span style="color: #0000ff;">&gt;</span>{{key}}:{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>                     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">对象格式二，渲染结果:&lt;p&gt;name:gege&lt;/p&gt;&lt;p&gt;age:12&lt;/p&gt;</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item,key,index) in infos"</span><span style="color: #0000ff;">&gt;</span>{{index}}:{{key}}:{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">对象格式三，渲染结果:&lt;p&gt;0:name:gege&lt;/p&gt;&lt;p&gt;1:age:12&lt;/p&gt;</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            data(){
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+                    items:[</span><span style="background-color: #f5f5f5; color: #000000;">11</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">12</span><span style="background-color: #f5f5f5; color: #000000;">],                        </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">v-for可以是个对象</span>
+<span style="background-color: #f5f5f5; color: #000000;">                    infos:{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">gege</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,age:</span><span style="background-color: #f5f5f5; color: #000000;">12</span><span style="background-color: #f5f5f5; color: #000000;">}            </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">也可以是个数组</span>
+<span style="background-color: #f5f5f5; color: #000000;">                }
+            },
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span> 
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;挺简单的，后台只要提供一个接口，返回一个数组或对象，前端通过v-for就可以渲染了，我们以上面对象的第三个格式为例讲一下源码，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item,key,index) in infos"</span><span style="color: #0000ff;">&gt;</span>{{index}}:{{key}}:{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>    
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            data(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {infos:{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">gege</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,age:</span><span style="background-color: #f5f5f5; color: #000000;">12</span><span style="background-color: #f5f5f5; color: #000000;">}}},
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span> 
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;在解析模板的时候，Vue的processFor()-&gt;parseFor()函数会根据v-for内容的不同解析出这四个变量，保存到AST对象的属性上：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processFor (el) {            <span style="color: #008000;">//</span><span style="color: #008000;">第9367行 处理for指令</span>
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> exp;
+  </span><span style="color: #0000ff;">if</span> ((exp = getAndRemoveAttr(el, 'v-for'))) {    <span style="color: #008000;">//</span><span style="color: #008000;">如果获取了v-for属性</span>
+    <span style="color: #0000ff;">var</span> res = parseFor(exp);                      <span style="color: #008000;">//</span><span style="color: #008000;">调用parseFor函数解析该属性</span>
+    <span style="color: #0000ff;">if</span> (res) {                                    <span style="color: #008000;">//</span><span style="color: #008000;">如果res存在</span>
+      extend(el, res);                              <span style="color: #008000;">//</span><span style="color: #008000;">则调用extend()添加AST对象上</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      warn$</span>2<span style="color: #000000;">(
+        (</span>"Invalid v-for expression: " +<span style="color: #000000;"> exp)
+      );
+    }
+  }
+}</span></pre>
+</div>
+<p>parseFor()用于解析v-for的值，返回一个对象，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> parseFor (exp) {               <span style="color: #008000;">//</span><span style="color: #008000;">第9383行 解析v-for属性 exp:v-for的值 ;例如:"(item,key,index) in infos"</span>
+  <span style="color: #0000ff;">var</span> inMatch = exp.match(forAliasRE);                      <span style="color: #008000;">//</span><span style="color: #008000;">用正则匹配  forAliasRE定义在9403行等于:/([^]*?)\s+(?:in|of)\s+([^]*)/; </span>
+  <span style="color: #0000ff;">if</span> (!inMatch) { <span style="color: #0000ff;">return</span> }                                  <span style="color: #008000;">//</span><span style="color: #008000;">如果不能匹配，则返回false</span>
+  <span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> {};
+  res.</span><span style="color: #0000ff;">for</span> = inMatch[2].trim();                              <span style="color: #008000;">//</span><span style="color: #008000;">for的值，这里等于:infos</span>
+  <span style="color: #0000ff;">var</span> alias = inMatch[1].trim().replace(stripParensRE, ''); <span style="color: #008000;">//</span><span style="color: #008000;">去除两边的括号，此时alias等于:item,key,index</span>
+  <span style="color: #0000ff;">var</span> iteratorMatch = alias.match(forIteratorRE);           <span style="color: #008000;">//</span><span style="color: #008000;">匹配别名和索引</span>
+  <span style="color: #0000ff;">if</span> (iteratorMatch) {                                      <span style="color: #008000;">//</span><span style="color: #008000;">如果匹配到了，即是这个格式:v-for="(item,index) in data"</span>
+    res.alias = alias.replace(forIteratorRE, '');               <span style="color: #008000;">//</span><span style="color: #008000;">获取别名</span>
+    res.iterator1 = iteratorMatch[1].trim();                    <span style="color: #008000;">//</span><span style="color: #008000;">获取索引</span>
+    <span style="color: #0000ff;">if</span> (iteratorMatch[2<span style="color: #000000;">]) {
+      res.iterator2 </span>= iteratorMatch[2<span style="color: #000000;">].trim();
+    }
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    res.alias </span>=<span style="color: #000000;"> alias;
+  }
+  </span><span style="color: #0000ff;">return</span> res                                                 <span style="color: #008000;">//</span><span style="color: #008000;">返回对象，比如:{alias: "item",for: "infos",iterator1: "key",iterator2: "index"}</span>
+}</pre>
+</div>
+<p>&nbsp;执行到这里后例子里的v-for保存了四个属性与v-for相关，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十八) 指令篇 v-for 指令详解0.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候会调用genFor()生成对应的_l函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genFor (         <span style="color: #008000;">//</span><span style="color: #008000;">渲染v-for指令</span>
+<span style="color: #000000;">  el,
+  state,
+  altGen,
+  altHelper
+) {
+  </span><span style="color: #0000ff;">var</span> exp = el.<span style="color: #0000ff;">for</span>;                                                 <span style="color: #008000;">//</span><span style="color: #008000;">获取for的值</span>
+  <span style="color: #0000ff;">var</span> alias = el.alias;                                             <span style="color: #008000;">//</span><span style="color: #008000;">获取别名</span>
+  <span style="color: #0000ff;">var</span> iterator1 = el.iterator1 ? ("," + (el.iterator1)) : '';       <span style="color: #008000;">//</span><span style="color: #008000;">获取索引(v-for的值为对象时则为key)</span>
+  <span style="color: #0000ff;">var</span> iterator2 = el.iterator2 ? ("," + (el.iterator2)) : '';       <span style="color: #008000;">//</span><span style="color: #008000;">/获取索引(v-for的值为对象时))</span>
+
+  <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp;<span style="color: #000000;">
+    state.maybeComponent(el) </span>&amp;&amp;<span style="color: #000000;">
+    el.tag </span>!== 'slot' &amp;&amp;<span style="color: #000000;">
+    el.tag </span>!== 'template' &amp;&amp;
+    !<span style="color: #000000;">el.key
+  ) {
+    state.warn(
+      </span>"&lt;" + (el.tag) + " v-for=\"" + alias + " in " + exp + "\"&gt;: component lists rendered with " +
+      "v-for should have explicit keys. " +
+      "See https://vuejs.org/guide/list.html#key for more info."<span style="color: #000000;">,
+      </span><span style="color: #0000ff;">true</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> tip </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    );
+  }
+
+  el.forProcessed </span>= <span style="color: #0000ff;">true</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> avoid recursion</span>
+  <span style="color: #0000ff;">return</span> (altHelper || '_l') + "((" + exp + ")," +                <span style="color: #008000;">//</span><span style="color: #008000;">拼凑_l函数</span>
+    "function(" + alias + iterator1 + iterator2 + "){" +
+      "return " + ((altGen || genElement)(el, state)) +
+    '})'<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>最后生成的render函数等于:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"app"}},_l((infos),<span style="color: #0000ff;">function</span>(item,key,index){<span style="color: #0000ff;">return</span> _c('p',[_v(_s(index)+":"+_s(key)+":"+_s(item))])}))}</pre>
+</div>
+<p>其中与v-for相关的如下:</p>
+<div class="cnblogs_code">
+<pre><code>_l((infos),<span style="color: #0000ff;">function</span>(item,key,index){<span style="color: #0000ff;">return</span> _c('p',[_v(_s(index)+":"+_s(key)+":"+_s(item))</pre>
+</div>
+<p><span style="color: #ff0000;">_l的第一个参数为我们的v-for的目标，也就是infos,一会儿会遍历该对象的</span></p>
+<p>渲染生成VNode时就会执行Vue内部的_l函数，也就是全局的renderList,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> renderList (     <span style="color: #008000;">//</span><span style="color: #008000;">第3691行   渲染v-for指令</span>
+<span style="color: #000000;">  val,  
+  render
+) {
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> ret, i, l, keys, key;
+  </span><span style="color: #0000ff;">if</span> (Array.isArray(val) || <span style="color: #0000ff;">typeof</span> val === 'string') {    <span style="color: #008000;">//</span><span style="color: #008000;">如果val是个数组</span>
+    ret = <span style="color: #0000ff;">new</span> Array(val.length);                            <span style="color: #008000;">//</span><span style="color: #008000;">将ret定义成val一样大小的数组</span>
+    <span style="color: #0000ff;">for</span> (i = 0, l = val.length; i &lt; l; i++) {                 <span style="color: #008000;">//</span><span style="color: #008000;">遍历val数组</span>
+      ret[i] = render(val[i], i);                                 <span style="color: #008000;">//</span><span style="color: #008000;">依次调用render函数，参数1为值 参数2为索引 返回VNode，并把结果VNode保存到ret里面</span>
+<span style="color: #000000;">    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> val === 'number'<span style="color: #000000;">) {
+    ret </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Array(val);
+    </span><span style="color: #0000ff;">for</span> (i = 0; i &lt; val; i++<span style="color: #000000;">) {
+      ret[i] </span>= render(i + 1<span style="color: #000000;">, i);
+    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isObject(val)) {
+    keys </span>=<span style="color: #000000;"> Object.keys(val);
+    ret </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Array(keys.length);
+    </span><span style="color: #0000ff;">for</span> (i = 0, l = keys.length; i &lt; l; i++<span style="color: #000000;">) {
+      key </span>=<span style="color: #000000;"> keys[i];
+      ret[i] </span>=<span style="color: #000000;"> render(val[key], key, i);
+    }
+  }
+  </span><span style="color: #0000ff;">if</span> (isDef(ret)) {                                       <span style="color: #008000;">//</span><span style="color: #008000;">如果ret存在(成功调用了)</span>
+    (ret)._isVList = <span style="color: #0000ff;">true</span>;                                  <span style="color: #008000;">//</span><span style="color: #008000;">则给该数组添加一个_isVList标记，值为true</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">return</span> ret                                                <span style="color: #008000;">//</span><span style="color: #008000;">最后返回ret</span>
+}</pre>
+</div>
+<p><span style="color: #ff0000;">最后一起打包成VNode数组并返回，作为其他元素的子节点(_c的第三个参数)。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

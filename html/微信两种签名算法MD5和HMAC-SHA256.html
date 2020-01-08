@@ -1,0 +1,80 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信两种签名算法MD5和HMAC-SHA256' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信两种签名算法MD5和HMAC-SHA256</center></div><div class='banquan'>原文出处:本文由博客园博主愤怒的小菜鸡提供。<br/>
+原文连接:https://www.cnblogs.com/angryjj/p/11312733.html</div><br>
+    <p>在做微信接口开发的过程中, 有时候发现会提示签名校验失败, 一模一样的签名逻辑就是有些接口跑步通, 找了一圈发现挺坑的;</p>
+<p>原来是有些接口的signType签名类型有区别, 有些接口signType要求是MD5,有的要求是HMAC-SHA256, 其实这两种算法都是</p>
+<p>hash算法的一种没有太大的差别, 但是生成的签名结果会不一样;</p>
+<p>下面附上HMAC-SHA256算法代码</p>
+<div class="cnblogs_Highlighter">
+<pre><code>package com.lh.micro.datasource.util;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+public class HMACSHA256 {
+
+
+    /**
+     * 将加密后的字节数组转换成字符串
+     *
+     * @param b 字节数组
+     * @return 字符串
+     */
+    public  static String byteArrayToHexString(byte[] b) {
+        StringBuilder hs = new StringBuilder();
+        String stmp;
+        for (int n = 0; b!=null &amp;&amp; n &lt; b.length; n++) {
+            stmp = Integer.toHexString(b[n] &amp; 0XFF);
+            if (stmp.length() == 1)
+                hs.append('0');
+            hs.append(stmp);
+        }
+        return hs.toString().toLowerCase();
+    }
+    /**
+     * sha256_HMAC加密
+     * @param message 消息
+     * @param secret  秘钥
+     * @return 加密后字符串
+     */
+    public static String sha256_HMAC(String message, String secret) {
+        String hash = "";
+        try {
+            Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+            SecretKeySpec secret_key = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+            sha256_HMAC.init(secret_key);
+            byte[] bytes = sha256_HMAC.doFinal(message.getBytes());
+            hash = byteArrayToHexString(bytes);
+        } catch (Exception e) {
+            System.out.println("Error HmacSHA256 ===========" + e.getMessage());
+        }
+        return hash;
+    }
+
+
+}
+</pre>
+</div>
+<p>　　</p>
+<p>历史文章:<br /><a href="https://www.jianshu.com/p/8befe6dfe22c" target="_blank">JAVA微信企业付款到零钱(十分钟搞定)</a><br /><a href="https://www.jianshu.com/p/b7e2100b56e4" target="_blank">微信授权获取用户openId的方法和步骤</a><br /><a href="https://www.jianshu.com/p/40d63f50fdf4" target="_blank">一个微信号同时支持多个环境网页授权</a><br /><a href="https://www.jianshu.com/p/f4be613acf18" target="_blank">微信两种签名算法MD5和HMAC-SHA256</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

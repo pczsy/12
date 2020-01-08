@@ -1,0 +1,419 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML（上）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML（上）</center></div><div class='banquan'>原文出处:本文由博客园博主JIAYIYAN提供。<br/>
+原文连接:https://www.cnblogs.com/yanjiayi098-001/p/11649395.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#html上">HTML（上）</a><ul>
+        <li><a href="#浏览器">浏览器</a></li>
+        <li><a href="#html">HTML</a><ul>
+        <li><a href="#什么是html">什么是HTML</a></li>
+        <li><a href="#html的作用">HTML的作用</a></li>
+        <li><a href="#编写html的规范">编写HTML的规范</a></li>
+        <li><a href="#html结构">HTML结构</a></li>
+        <li><a href="#html常用标签">HTML常用标签</a></li>
+        <li><a href="#html标签速记">HTML标签速记</a></li>
+        </ul></li>
+        </ul></li>
+        </ul>
+    </div>
+</div>
+<h1 id="html上">HTML（上）</h1>
+<h2 id="浏览器">浏览器</h2>
+<ul>
+<li>浏览器也是一个客户端</li>
+</ul>
+<pre><code><code>#这是一个服务器，我们通过浏览器就可以访问的到服务器发送的&quot;hello&quot;
+import socket
+sk = socket.socket()
+sk.bind((&#39;127.0.0.1&#39;,8080))
+sk.listen(5)
+while True:
+    conn,addr = sk.accept()
+    data = conn.recv(1024)
+    conn.send(b&quot;HTTP/1.1 200 ok\r\n\r\n&quot;)  #必须要加上这一句，不然浏览器不认识
+    conn.send(b&quot;hello&quot;)
+    conn.close()</code></pre>
+<ul>
+<li>浏览器不通过服务端也可以渲染文本</li>
+</ul>
+<h2 id="html">HTML</h2>
+<h3 id="什么是html">什么是HTML</h3>
+<p>HTML全称HyperText Markup Language，超文本标记语言，是一种描述性的标记语言。</p>
+<ul>
+<li>超文本：音频、视频、图片</li>
+<li>标记：<英文单词或者字母>称为标记，一个HTML页面都是由各种标记组成。</li>
+</ul>
+<h3 id="html的作用">HTML的作用</h3>
+<p>负责描述文档语义的语言</p>
+<h3 id="编写html的规范">编写HTML的规范</h3>
+<p>1）所有标记元素都要正确的嵌套，不能交叉嵌套。eg：</p>
+<p><code>&lt;h1&gt;&lt;a&gt;&lt;/a&gt;&lt;/h1&gt;</code></p>
+<p>2）所有标记都必须小写</p>
+<p>3）所有标记都必须关闭</p>
+<ul>
+<li>双标签：<code>&lt;h&gt;&lt;/h1&gt;</code></li>
+<li>单标签：<code>&lt;img src=“URL” /&gt;</code></li>
+</ul>
+<p>4）所有属性值必须加引号。eg：<code>&lt;h1 id=&quot;head&quot;&gt;&lt;/h1&gt;</code></p>
+<p>5）所有属性必须有值：<code>&lt;a href=&quot;02.html&quot; target=&quot;_blank&quot;&gt;首页&lt;/a&gt;</code></p>
+<h3 id="html结构">HTML结构</h3>
+<p>用pycharm新建一个HTML文件，文件会自动生成如下代码的一个HTML模板</p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;!--文档声明头，告诉浏览器它应该用什么版本的html去解析以下代码--&gt;
+
+&lt;html lang=&quot;en&quot;&gt;
+&lt;!--文档的开始标记和结束标记，lang=&quot;en&quot;表示用英语或者其他国家的语言，在它们之间是文档的头部（head）和主体（body）--&gt;
+&lt;head&gt;
+&lt;!--定义了HTML文档的开头部分，不会再浏览器的文档窗口显示--&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;!--HTML的编码格式--&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;!--网页标题，在浏览器标题栏显示--&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!--文本主体，他们之间的文本是可见的网页主题内容--&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="html常用标签">HTML常用标签</h3>
+<h4 id="head内常用标签">head内常用标签</h4>
+<h5 id="基本标签">基本标签</h5>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">标签</th>
+<th style="text-align: center;">意义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;title&gt;&lt;/title&gt;</code></td>
+<td style="text-align: center;">定义网页标题</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>&lt;style&gt;&lt;/style&gt;</code></td>
+<td style="text-align: center;">定义内部样式表</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;script&gt;&lt;/script&gt;</code></td>
+<td style="text-align: center;">定义JS代码或引入外部JS文件</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>&lt;link/&gt;</code></td>
+<td style="text-align: center;">引入外部样式表文件</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>&lt;meta/&gt;</code></td>
+<td style="text-align: center;">定义网页原信息</td>
+</tr>
+</tbody>
+</table>
+<h5 id="meta标签">meta标签</h5>
+<pre class="html"><code>&lt;meta http-equiv=&quot;refresh&quot; content=&quot;2;URL = https://www.cnblogs.com/yanjiayi098-001/&quot;&gt;
+&lt;!--2秒过后跳到 https://www.cnblogs.com/yanjiayi098-001 网页--&gt;
+
+&lt;meta name=&quot;keywords&quot; content=&quot;meta总结,html meta,meta属性,meta跳转&quot;&gt;
+&lt;!--对网页并没有什么影响，就是给网页关键字,便于搜索引擎机器人查找信息和分类信息用的--&gt;
+
+&lt;meta name=&quot;description&quot; content=&quot;老男孩教育Python学院&quot;&gt;
+&lt;!--这个也没有什么影响，就是给网页一个描述,便于搜索引擎机器人查找信息和分类信息用的--&gt;
+
+&lt;meta http-equiv=&quot;content-Type&quot; charset=UTF8&quot;&gt;
+&lt;!--指定文档的编码类型--&gt;
+                                             
+&lt;meta http-equiv=&quot;x-ua-compatible&quot; content=&quot;IE = edge&quot;&gt;
+&lt;!--告诉IE以最高级模式渲染文档--&gt;</code></pre>
+<h4 id="body内常用标签">body内常用标签</h4>
+<h5 id="基本标签-1">基本标签</h5>
+<pre class="html"><code>&lt;b&gt;加粗&lt;/b&gt;
+&lt;i&gt;斜体&lt;/i&gt;
+&lt;u&gt;下划线&lt;/u&gt;
+&lt;s&gt;删除&lt;/s&gt;
+
+&lt;p&gt;段落标签，写在这个标签内的东西就是一个段落&lt;/p&gt;
+
+&lt;h1&gt;1号标题&lt;/h1&gt;
+&lt;h2&gt;2号标题&lt;/h2&gt;
+&lt;h3&gt;3号标题&lt;/h3&gt;
+&lt;h4&gt;4号标题&lt;/h4&gt;
+&lt;h5&gt;5号标题&lt;/h5&gt;
+&lt;h6&gt;6号标题&lt;/h6&gt;
+
+&lt;br&gt;
+&lt;!--这是一个换行标签--&gt;
+
+&lt;hr&gt;
+&lt;!--这是一个水平线标签--&gt;</code></pre>
+<h5 id="特殊字符">特殊字符</h5>
+<pre class="html"><code>&amp;nbsp;
+&lt;!--空格--&gt;
+
+&amp;gt;
+&lt;!--大于号(&gt;)--&gt;
+
+&amp;lt;
+&lt;!--小于号(&lt;)--&gt;
+
+&amp;amp;
+&lt;!--&amp;符号--&gt;
+
+&amp;yen;
+&lt;!--人民币(￥)符号--&gt;
+
+&amp;copy;
+&lt;!--版权符号--&gt;
+
+&amp;reg;
+&lt;!--注册符号--&gt;
+</code></pre>
+<h5 id="div标签和span标签">div标签和span标签</h5>
+<pre class="html"><code>div标签:
+&lt;div&gt;
+    &lt;!--块级标签，无意义，通过CSS样式为其赋予不同的表现--&gt;
+&lt;/div&gt;
+
+
+span标签:
+&lt;span&gt;
+    &lt;!--内联标签，无意义，通过CSS样式为其赋予不同的表现--&gt;
+&lt;/span&gt;
+
+**块级标签与内联标签的区别**
+块级标签：另起一行开始渲染元素
+内联标签：不需要另起一行
+如果单独在网页中插入这两个元素，不会对页面产生任何的影响，他们是专门为定义CSS样式而生的</code></pre>
+<p><font color = blue>注意：</font ></p>
+<p>​ 块级标签可以嵌套内联标签或者某些块级标签</p>
+<p>​ 内联标签不能嵌套块级标签</p>
+<p>​ ==p标签不能嵌套块级标签，也不能嵌套p标签==</p>
+<h5 id="img标签">img标签</h5>
+<pre class="html"><code>&lt;img src=&quot;图片的路径&quot; alt=&quot;图片未加载成功时的提示&quot; title=&quot;鼠标悬浮时提示信息&quot;&gt;
+&lt;img src=&quot;https://goss.veer.com/creative/vcg/veer/800water/veer-132444248.jpg&quot; alt=&quot;故宫&quot; title=&quot;美丽的故宫&quot; &gt;</code></pre>
+<h5 id="a标签">a标签</h5>
+<p>a标签又叫做超链接标签</p>
+<p>所谓的超链接是指从一个网页指向一个目标的连接关系，这个目标可以是另一个网页，也可以是相同网页上的不同位置，还可以是一个图片，一个电子邮件地址，一个文件，甚至是一个应用程序</p>
+<p>我们就先拿另一个网页举例</p>
+<pre><code><code>href属性指定目标网页地址。该地址可以有几种类型：
+
+绝对URL - 指向另一个站点（比如 href=&quot;http://www.jd.com）
+相对URL - 指当前站点中确切的路径（href=&quot;index.htm&quot;）
+锚URL - 指向页面中的锚（href=&quot;#top&quot;）</code></pre>
+<pre class="html"><code>&lt;a href=&quot;https://www.cnblogs.com/yanjiayi098-001/&quot; target=&quot;_blank&quot;&gt;点我会跳转哦！&lt;/a&gt;
+&lt;!--target=&quot;_blank&quot;表示重新打开一个网页进行跳转--&gt;
+
+
+&lt;a href=&quot;https://www.cnblogs.com/yanjiayi098-001/&quot; target=&quot;_self&quot;&gt;点我会跳转哦！&lt;/a&gt;
+&lt;!--target=&quot;_self&quot;表示就在当前网页进行跳转--&gt;
+
+
+&lt;a href=&quot;https://www.cnblogs.com/yanjiayi098-001/&quot;&gt;点我会跳转哦！&lt;/a&gt;
+&lt;!--默认target=&quot;_self&quot;--&gt;
+
+
+&lt;a href=&quot;#b1&quot;&gt;点我回到加粗&lt;/a&gt;
+&lt;!--b1是id属性，#b1表示回到id属性为b1的这个位置，这个位置就是&lt;b id = &quot;b1&quot;&gt;加粗&lt;/b&gt; --&gt;
+
+
+&lt;a href=&quot;body内常用标签.html&quot;&gt;点我转到这个网页哦！&lt;/a&gt;
+&lt;!--他会跳到 body内常用标签.html 网页--&gt;</code></pre>
+<h5 id="列表">列表</h5>
+<h6 id="无序列表ulul">无序列表<code>&lt;ul&gt;&lt;/ul&gt;</code></h6>
+<pre class="html"><code>&lt;ul type=&quot;disc&quot;&gt;
+    &lt;li&gt;第一项&lt;/li&gt;
+    &lt;li&gt;第二项&lt;/li&gt;
+    &lt;li&gt;第三项&lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+<p>type属性：</p>
+<ul>
+<li>type=&quot;disc&quot;(实心圆点，默认值)</li>
+<li>type=&quot;circle&quot;(空心圆圈)</li>
+<li>type=&quot;square&quot;(实心方块)</li>
+<li>type=&quot;none&quot;(无样式)</li>
+</ul>
+<h6 id="有序列表olol">有序列表<code>&lt;ol&gt;&lt;/ol&gt;</code></h6>
+<pre class="html"><code>&lt;ol type=&quot;1&quot; start=&quot;3&quot;&gt;
+    &lt;li&gt;第一项&lt;/li&gt;
+    &lt;li&gt;第二项&lt;/li&gt;
+    &lt;li&gt;第三项&lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+<p>type属性：</p>
+<ul>
+<li>1 数字列表，默认值</li>
+<li>A 大写字母</li>
+<li>a 小写字母</li>
+<li>Ⅰ大写罗马</li>
+<li>ⅰ小写罗马</li>
+</ul>
+<p>start属性：</p>
+<p><code>start=&quot;3&quot;</code>只能写数字，表示从第3个开始</p>
+<h6 id="标题列表dldl">标题列表<code>&lt;dl&gt;&lt;/dl&gt;</code></h6>
+<pre class="html"><code>&lt;dl&gt;
+    &lt;dt&gt;标题1&lt;/dt&gt;
+        &lt;dd&gt;内容&lt;/dd&gt;
+    &lt;dt&gt;标题2&lt;/dt&gt;
+        &lt;dd&gt;内容1&lt;/dd&gt;
+        &lt;dd&gt;内容2&lt;/dd&gt;
+&lt;/dl&gt;</code></pre>
+<h5 id="表格">表格</h5>
+<pre class="html"><code>&lt;table&gt;
+    &lt;thead&gt;
+    &lt;tr&gt;
+        &lt;th&gt;序号&lt;/th&gt;
+        &lt;th&gt;姓名&lt;/th&gt;
+        &lt;th&gt;爱好&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tr&gt;
+        &lt;td&gt;1&lt;/td&gt;
+        &lt;td&gt;yjy&lt;/td&gt;
+        &lt;td&gt;跳舞&lt;/td&gt;
+    &lt;/tr&gt;
+     &lt;tr&gt;
+        &lt;td&gt;2&lt;/td&gt;
+        &lt;td&gt;wwb&lt;/td&gt;
+        &lt;td&gt;唱歌&lt;/td&gt;
+    &lt;/tr&gt;
+&lt;/table&gt;
+
+
+&lt;!--
+看到 &lt;table&gt; 就说明接下来是一个表格
+&lt;thead&gt;是表格的表头
+&lt;tr&gt;表示一行，而在这一行中又有&lt;th&gt;
+&lt;th&gt;表示表头的内容，表示整个一列的属性，eg：姓名
+同理&lt;tr&gt;中的&lt;td&gt;就表示表格内容，按照&lt;th&gt;的要求写就行了，eg：姓名就写人名
+--&gt;</code></pre>
+<p>属性：</p>
+<ul>
+<li>border: 表格边框 eg：border=&quot;6&quot;</li>
+<li>cellpadding: 内边距 eg：cellpadding=&quot;8&quot;</li>
+<li>cellspacing: 外边距 eg：cellspacing=&quot;2&quot;</li>
+<li>width: 像素 百分比 eg：width=&quot;100%&quot;</li>
+</ul>
+<p><font color = blue>以上这些属性要在<code>&lt;table&gt;</code>中设置</font></p>
+<ul>
+<li>rowspan: 单元格竖跨多少行（上下合并单元格） eg：rowspan=&quot;3&quot;</li>
+<li>colspan: 单元格横跨多少列（左右合并单元格） eg：colspan=&quot;2&quot;</li>
+</ul>
+<p><font color = blue>以上这些属性要在<code>&lt;td&gt;</code>中设置</font></p>
+<h3 id="html标签速记">HTML标签速记</h3>
+<h4 id="块级标签">块级标签</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">标题</th>
+<th style="text-align: center;">h1</th>
+<th style="text-align: center;">h2</th>
+<th style="text-align: center;">h3</th>
+<th style="text-align: center;">h4</th>
+<th style="text-align: center;">h5</th>
+<th style="text-align: center;">h6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">列表</td>
+<td style="text-align: center;">ul</td>
+<td style="text-align: center;">ol</td>
+<td style="text-align: center;">li</td>
+<td style="text-align: center;">dl</td>
+<td style="text-align: center;">dt</td>
+<td style="text-align: center;">dd</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">排版标签</td>
+<td style="text-align: center;">p</td>
+<td style="text-align: center;">div</td>
+<td style="text-align: center;">hr</td>
+<td style="text-align: center;">center</td>
+<td style="text-align: center;">pre</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">表格</td>
+<td style="text-align: center;">table</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">表单</td>
+<td style="text-align: center;">form</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<h4 id="内联标签">内联标签</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">字体</th>
+<th style="text-align: center;">b</th>
+<th style="text-align: center;">i</th>
+<th style="text-align: center;">sup</th>
+<th style="text-align: center;">sub</th>
+<th style="text-align: center;">u</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">排版</td>
+<td style="text-align: center;">span</td>
+<td style="text-align: center;">br</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">超链接</td>
+<td style="text-align: center;">a</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">图片</td>
+<td style="text-align: center;">img</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>补充</strong></p>
+<ul>
+<li>文本级标签：p、span、a、b、i、u、em。</li>
+<li>容器级标签：div、h系列、li、dt、dd</li>
+</ul>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

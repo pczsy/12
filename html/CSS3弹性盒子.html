@@ -1,0 +1,594 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS3弹性盒子' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS3弹性盒子</center></div><div class='banquan'>原文出处:本文由博客园博主Yafine提供。<br/>
+原文连接:https://www.cnblogs.com/yafine/p/11881352.html</div><br>
+    <p>&nbsp;</p>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">弹性盒模型的一些知识</span></p>
+
+</blockquote>
+<h2 class="md-end-block md-heading"><span class="md-plain">一、简单介绍</span></h2>
+<p class="md-end-block md-p"><span class="md-entity" data-content="&emsp;">&emsp;<span class="md-entity" data-content="&emsp;">&emsp;<span class="md-plain">弹性盒模型（ Flexible Box或FlexBox）是一个CSS3新增布局模块，官方称为CSS Flexible Box Layout Module，用于实现容器里项目的对齐、方向、排序（即使在项目大小位置、动态生成的情况）, 分配空白空间 。弹性盒模型最大的特性在于，能够动态修改子元素的宽度和高度，以满足在不同尺寸屏幕下的恰当布局。</span></span></span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">二、基本知识</span></h2>
+<p class="md-end-block md-p"><span class="md-entity" data-content="&emsp;">&emsp;<span class="md-entity" data-content="&emsp;">&emsp;<span class="md-plain">弹性盒子是由弹性容器（flex container）和弹性子元素（flex item）组成，弹性盒子有一个主轴（main axis）和一个纵轴（cross axis），弹性子元素沿着主轴依次排列 ，侧轴垂直于主轴。弹性容器的主轴开始（main start）、主轴结束（main end）和侧轴开始（cross start）、侧轴结束（cross end）代表了弹性子元素排列的起始和结束位置。具体可以看下面的图。</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="./images/CSS3弹性盒子0.png"><img src="./images/CSS3弹性盒子0.png" alt="弹性盒子组成示意图" /></span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">三、属性分类</span></h2>
+<h3 class="md-end-block md-heading"><span class="md-plain">1. 弹性容器的相关属性</span></h3>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性</span></th><th><span class="td-span">属性说明</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">flex-direction</span></td>
+<td><span class="td-span">设置主轴方向，确定弹性子元素的排列方式</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-wrap</span></td>
+<td><span class="td-span">当弹性子元素超出弹性容器范围时是否换行</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-flow</span></td>
+<td><span class="td-span">flex-direction和flex-wrap的快捷方式，复合属性</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">justify-content</span></td>
+<td><span class="td-span">设置弹性子元素主轴上的对齐方式</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">align-items</span></td>
+<td><span class="td-span">设置弹性子元素侧轴上的对齐方式</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">align-content</span></td>
+<td><span class="td-span">侧轴上有空白时且有多行时，设置弹性子元素侧轴的对齐方式</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h4 class="md-end-block md-heading"><span class="md-plain">a. flex-direction属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：<code>flex-direction:row |row-reverse |column |column-reverse</code></span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">row（默认值）</span></td>
+<td><span class="td-span">主轴为水平方向。排序方向与页面的文档顺序相同。如果文档顺序是ltr，则排列顺序是从左到右；如果文档顺序是rtl，则排列顺序是从右到左。</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">row-reverse</span></td>
+<td><span class="td-span">主轴为水平方向。排序方向与页面的文档顺序相反。</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column</span></td>
+<td><span class="td-span">主轴为垂直方向。排列顺序为从上到下</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-reverse</span></td>
+<td><span class="td-span">主轴为垂直方向。排列顺序为从下到上</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p"><span class="md-plain">其属性的效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/flex-direction属性效果图.png"><img src="./images/CSS3弹性盒子1.png" alt="flex-direction属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">b. flex-wrap属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex-wrap: nowrap | wrap | wrap-reverse</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">nowrap（默认值）</span></td>
+<td><span class="td-span">溢出时不换行</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">wrap</span></td>
+<td><span class="td-span">溢出时自动换行</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">wrap-reverse</span></td>
+<td><span class="td-span">溢出时自动换行，翻转排列</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p"><span class="md-plain">其效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/flex-wrap属性效果图.png"><img src="./images/CSS3弹性盒子2.png" alt="flex-wrap属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">c. flex-flow属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex-flow: [flex-direction] || [flex-wrap]</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：复合属性（flex-direction和flex-wrap），设置弹性子元素的排列方式</span></p>
+
+</blockquote>
+<h4 class="md-end-block md-heading"><span class="md-plain">d. justify-content属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：justify-content: flex-start | flex-end | center | space-between | space-around</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">flex-start（默认值）</span></td>
+<td><span class="td-span">主轴开始对齐，主轴为横轴，ltr环境下，左对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-end</span></td>
+<td><span class="td-span">主轴结束对齐，主轴为横轴，ltr环境下，右对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">center</span></td>
+<td><span class="td-span">居中对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">space-between</span></td>
+<td><span class="td-span">第一个、最后一个对齐弹性容器的边缘，其余均匀分布</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">space-around</span></td>
+<td><span class="td-span">全部均匀分布</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p"><span class="md-plain">其效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/justify-content属性效果图.png"><img src="./images/CSS3弹性盒子3.png" alt="justify-content属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">e. align-items属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：align-items: flex-start | flex-end | center | baseline | stretch</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">flex-start</span></td>
+<td><span class="td-span">侧轴开始对齐，主轴为横轴，顶对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-end</span></td>
+<td><span class="td-span">侧轴结束对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">center</span></td>
+<td><span class="td-span">居中对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">baseline</span></td>
+<td><span class="td-span">基线对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">stretch（默认值）</span></td>
+<td><span class="td-span">从侧轴开始到侧轴结束铺满整个侧轴</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p"><span class="md-plain">其效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/align-items属性效果图.png"><img src="./images/CSS3弹性盒子4.png" alt="align-items属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">f. align-content属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：align-content: flex-start | flex-end | center | space-between | space-around | stretch</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">flex-start</span></td>
+<td><span class="td-span">主轴开始对齐，主轴为横轴，ltr环境下，左对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-end</span></td>
+<td><span class="td-span">主轴结束对齐，主轴为横轴，ltr环境下，右对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">center</span></td>
+<td><span class="td-span">居中对齐</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">space-between</span></td>
+<td><span class="td-span">第一个、最后一个对齐弹性容器的边缘，其余均匀分布</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">space-around</span></td>
+<td><span class="td-span">全部均匀分布</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">stretch（默认值）</span></td>
+<td><span class="td-span">各行伸展以占用剩余空间。如果剩余空间是负数，该值等效于flex-start</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p"><span class="md-plain">其效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/align-content属性效果图.png"><img src="./images/CSS3弹性盒子5.png" alt="align-content属性效果图" /></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">2. 弹性子元素的相关属性</span></h3>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">order</span></td>
+<td><span class="td-span">控制弹性容器里子元素的顺序，数值小的排在前面，可以为负值</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-grow</span></td>
+<td><span class="td-span">设置弹性子元素的扩展比率</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-shrink</span></td>
+<td><span class="td-span">设置弹性子元素的收缩比率</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex-basis</span></td>
+<td><span class="td-span">指定弹性子元素伸缩前的默认大小值，相当于width和height属性</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">flex</span></td>
+<td><span class="td-span">flex-grow，flex-shrink和flex-basis属性的复合属性</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">align-self</span></td>
+<td><span class="td-span">允许独立的弹性子元素覆盖弹性容器的默认对齐设置（align-items）</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h4 class="md-end-block md-heading"><span class="md-plain">a. order属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：order: integer number</span></p>
+
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">其属性效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/order属性效果图.png"><img src="./images/CSS3弹性盒子6.png" alt="order属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">b. flex-grow属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex-grow: number</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置弹性子元素的扩展比率，不允许为负值，默认值为0。根据弹性盒子元素所设置的扩展因子作为比率来分配剩余空间。</span></p>
+
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">其属性效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/flex-grow属性效果图.png"><img src="./images/CSS3弹性盒子7.png" alt="flex-grow属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">c. flex-shrink属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex-shrink: number</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置弹性子元素的收缩比率，不允许为负值，默认值为1。根据弹性盒子元素所设置的扩展因子作为比率来收缩空间。</span></p>
+
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">其属性效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/flex-shrink属性效果图.png"><img src="./images/CSS3弹性盒子8.png" alt="flex-shrink属性效果图" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">d. flex-basis属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex-basis:&nbsp;<span class="md-tag md-raw-inline">&lt;length&gt;<span class="md-plain">&nbsp;|&nbsp;<span class="md-tag md-raw-inline">&lt;percentage&gt;<span class="md-plain">&nbsp;| auto</span></span></span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置弹性子元素的伸缩基准值，不允许为负值。默认值为auto，无特定宽度（高度）。</span></p>
+
+</blockquote>
+<h4 class="md-end-block md-heading"><span class="md-plain">e. flex属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：flex: none | [flex-grow] || [flex-shrink] || [flex-basis</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：复合属性，设置弹性子元素的如何分配空间</span></p>
+
+</blockquote>
+<h4 class="md-end-block md-heading"><span class="md-plain">f. align-self属性</span></h4>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：auto | flex-start | flex-end | center | baseline | stretch</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置弹性子元素的在侧轴上的对齐方式，与align-items相同。设置某个弹性子元素的对立对齐方式。</span></p>
+
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">其属性效果图如下：</span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/align-self属性效果图.png"><img src="./images/CSS3弹性盒子9.png" alt="align-self属性效果图" /></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">3. 多列属性详解</span></h3>
+<h4 class="md-end-block md-heading"><span class="md-plain">1）基础知识</span></h4>
+<p class="md-end-block md-p"><span class="md-entity" data-content="&emsp;">&emsp;<span class="md-entity" data-content="&emsp;">&emsp;<span class="md-plain">多列（Multi-column）是一个CSS3新增布局模块，官方称为Multiple column layout，可以比较轻松的实现多列布局，比如图片瀑布流。</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-image md-img-loaded" data-src="https://raw.githubusercontent.com/Yafine/Yafine-imgs/master/images/图片瀑布流.png"><img src="./images/CSS3弹性盒子10.png" alt="图片瀑布流" /></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">2）属性一览</span></h4>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性</span></th><th><span class="td-span">属性说明</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">columns</span></td>
+<td><span class="td-span">复合属性（column-width和column-count），设置宽度和列数</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-width</span></td>
+<td><span class="td-span">设置每列的宽度</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-count</span></td>
+<td><span class="td-span">设置列数</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-gap</span></td>
+<td><span class="td-span">设置列之间的间隙</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-rule</span></td>
+<td><span class="td-span">复合属性（column-rule-width、column-rule-style和column-rule-color），设置列之间的边框样式</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-fill</span></td>
+<td><span class="td-span">设置列的高度是否统一</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-span</span></td>
+<td><span class="td-span">设置是否横跨所有列</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">a. column-width属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：column-width: length | auto</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">auto（默认值）</span></td>
+<td><span class="td-span">浏览器决定列的宽度</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">length</span></td>
+<td><span class="td-span">用长度值来定义列宽。不允许负值</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">b. column-count属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法： column-count: integer number | auto</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">auto（默认值）</span></td>
+<td><span class="td-span">列数将取决于其他属性，例如："column-width"</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">imteger number</span></td>
+<td><span class="td-span">用整数值来定义列数，列的最佳数目将其中的元素的内容无法流出。</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">c. columns属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：columns: [column-width]｜[column-count]</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：复合属性设置列的宽度和个数</span></p>
+
+</blockquote>
+<h5 class="md-end-block md-heading"><span class="md-plain">d. column-gap属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：column-gap: length | normal</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">normal（默认值）</span></td>
+<td><span class="td-span">与font-size大小相同。假设该对象的font-size为16px，则normal的值为16px，以此类推。</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">length</span></td>
+<td><span class="td-span">用长度来定义列与列之间的间隙。不允许为负值。</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">e. column-rule属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：column-rule: [column-rule-width] || [column-rule-style] || [column-rule-color]</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置列与列之间的边框，和border属性相似</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">column-rule-width</span></td>
+<td><span class="td-span">设置列与列之间的边框的厚度</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-rule-style</span></td>
+<td><span class="td-span">设置列与列之间的边框的样式</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">column-rule-color</span></td>
+<td><span class="td-span">设置列与列之间的边框的颜色</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">f. column-fill属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：column-fill: auto | balance</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：设置所有列的高度是否统一</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">auto（默认值）</span></td>
+<td><span class="td-span">列高度自适应内容</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">balance</span></td>
+<td><span class="td-span">所有列的高度以其中最高的一列统一</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<h5 class="md-end-block md-heading"><span class="md-plain">g. column-span属性</span></h5>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">使用方法：column-span: none | all</span></p>
+<p class="md-end-block md-p"><span class="md-plain">含义：对象元素是否横跨所有列</span></p>
+
+</blockquote>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span">属性值</span></th><th><span class="td-span">含义</span></th></tr>
+
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span">none（默认值）</span></td>
+<td><span class="td-span">不跨列</span></td>
+
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span">all</span></td>
+<td><span class="td-span">横跨所有列</span></td>
+
+</tr>
+
+</tbody>
+
+</table>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">CSS3弹性盒子的基本知识就是这些了，如果有错的话，我会及时更改的！这篇文章就到此结束了，<span class="md-emoji" data-content="wave">👋<span class="md-emoji" data-content="wave">👋<span class="md-emoji" data-content="wave">👋</span></span></span></span></p>
+<p><span class="md-emoji" data-content="wave">&nbsp;</span></p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p">&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

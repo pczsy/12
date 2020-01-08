@@ -1,0 +1,255 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十五) 指令篇 v-bind指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十五) 指令篇 v-bind指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11104024.html</div><br>
+    <p>指令是Vue.js模板中最常用的一项功能，它带有前缀v-,比如上面说的v-if、v-html、v-pre等。指令的主要职责就是当其表达式的值改变时，相应的将某些行为应用到DOM上，先介绍v-bind指令</p>
+<p>v-bind用于动态地绑定一个或多个特性，或一个组件 prop 到表达式。</p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+    &lt;title&gt;Document&lt;/title&gt;    
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;&lt;a v-bind:href="href"&gt;链接&lt;/a&gt;&lt;/div&gt;
+    &lt;script&gt;<span style="color: #000000;">
+    Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+        el:</span>'#app'<span style="color: #000000;">,
+        data:{href:</span>"http://www.baidu.com"<span style="color: #000000;">}
+    })
+    </span>&lt;/script&gt; 
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>渲染为:</p>
+<p><img src="./images/Vue.js 源码分析(十五) 指令篇 v-bind指令详解0.png" alt="" /></p>
+<p>当我们点击整个超链接时将跳转到http://www.baidu.com，如果在控制台输入app.href="http://www.taobao.com"时:</p>
+<p><img src="./images/Vue.js 源码分析(十五) 指令篇 v-bind指令详解1.png" alt="" /></p>
+<p>点击按钮后就跳转到淘宝了</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;以上面的例子为例,Vue内部将DOM解析成AST对象的时候会执行parse()函数，该函数解析到a节点时会执行到processElement()函数，该函数先将key、ref、插槽、class和style解析完后就会执行processAttrs()函数，如下:</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {    <span style="color: #008000;">//</span><span style="color: #008000;">第9526行  对剩余的属性进行分析</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList;
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp; 
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {              <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性</span>
+    name = rawName =<span style="color: #000000;"> list[i].name; 
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span> (dirRE.test(name)) {                                <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers </span>
+      modifiers = parseModifiers(name);                     <span style="color: #008000;">//</span><span style="color: #008000;">获取修饰符，比如:{native: true,prevent: true}</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind                      //bindRD等于/^:|^v-bind:/ ，即该属性是v-bind指令时 例如:&lt;a :href="url"&gt;你好&lt;/a&gt;</span>
+        name = name.replace(bindRE, '');                          <span style="color: #008000;">//</span><span style="color: #008000;">去掉指令特性，获取特性名，比如 href</span>
+        value = parseFilters(value);                              <span style="color: #008000;">//</span><span style="color: #008000;">对一些表达式做解析，例如{a|func1|func2}</span>
+        isProp = <span style="color: #0000ff;">false</span>;                                           <span style="color: #008000;">//</span><span style="color: #008000;">是否绑定到DOM对象上</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+          </span><span style="color: #0000ff;">if</span> (modifiers.prop) {                                   <span style="color: #008000;">//</span><span style="color: #008000;">如果有修饰符</span>
+            isProp = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            name </span>=<span style="color: #000000;"> camelize(name);
+            </span><span style="color: #0000ff;">if</span> (name === 'innerHtml') { name = 'innerHTML'<span style="color: #000000;">; }
+          }
+          </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.camel) {
+            name </span>=<span style="color: #000000;"> camelize(name);
+          }
+          </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.sync) {
+            addHandler(
+              el,
+              (</span>"update:" +<span style="color: #000000;"> (camelize(name))),
+              genAssignmentCode(value, </span>"$event"<span style="color: #000000;">)
+            );
+          }
+        }
+        </span><span style="color: #0000ff;">if</span> (isProp ||<span style="color: #000000;"> (
+          </span>!el.component &amp;&amp; platformMustUseProp(el.tag, el.attrsMap.type, name)    <span style="color: #008000;">//</span><span style="color: #008000;">如果isProp为true</span>
+        )) {                                                                            <span style="color: #008000;">//</span><span style="color: #008000;">则调用addProp()</span>
+<span style="color: #000000;">          addProp(el, name, value);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+          addAttr(el, name, value);                                               </span><span style="color: #008000;">//</span><span style="color: #008000;">否则调用addAttr()</span>
+<span style="color: #000000;">        }
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on                     //onRE等于/^@|^v-on:/，即该属性是v-on指令时</span>
+        name = name.replace(onRE, ''<span style="color: #000000;">);
+        addHandler(el, name, value, modifiers, </span><span style="color: #0000ff;">false</span>, warn$2<span style="color: #000000;">);
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives                             //普通指令</span>
+        name = name.replace(dirRE, ''<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> parse arg</span>
+        <span style="color: #0000ff;">var</span> argMatch =<span style="color: #000000;"> name.match(argRE);
+        </span><span style="color: #0000ff;">var</span> arg = argMatch &amp;&amp; argMatch[1<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (arg) {
+          name </span>= name.slice(0, -(arg.length + 1<span style="color: #000000;">));
+        }
+        addDirective(el, name, rawName, value, arg, modifiers);
+        </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; name === 'model'<span style="color: #000000;">) {
+          checkForAliasModel(el, value);
+        }
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+  }
+}</span></pre>
+</div>
+<p>addAttr()函数用于在AST对象上新增一个attrs属性，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> addAttr (el, name, value) {    <span style="color: #008000;">//</span><span style="color: #008000;">第6550行 </span>
+  (el.attrs || (el.attrs = [])).push({ name: name, value: value });     <span style="color: #008000;">//</span><span style="color: #008000;">将{name: name,value: value}保存到el.attrs里面</span>
+  el.plain = <span style="color: #0000ff;">false</span>;                                                      <span style="color: #008000;">//</span><span style="color: #008000;">修正el.plain为false</span>
+}</pre>
+</div>
+<p>例子里执行到这里时对应的AST对象为:</p>
+<p><img src="./images/Vue.js 源码分析(十五) 指令篇 v-bind指令详解2.png" alt="" /></p>
+<p>执行generate()函数获取data$2时会判断是否有attrs属性，如果有则将属性保存到attrs上，例子里的实例渲染后render函数等于:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (el.attrs) { 　　　<span style="color: #99cc00;">　</span><span style="color: #008000;">//第10306行</span>
+    data </span>+= "attrs:{" + (genProps(el.attrs)) + "},"<span style="color: #000000;">;
+  }</span></pre>
+</div>
+<p>&nbsp;genProps用于拼凑对应的值，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genProps (props) {     <span style="color: #008000;">//</span><span style="color: #008000;">第10537行 拼凑AST对象的属性或DOM属性用的</span>
+  <span style="color: #0000ff;">var</span> res = ''<span style="color: #000000;">;   
+  </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; props.length; i++) {    <span style="color: #008000;">//</span><span style="color: #008000;">遍历prps</span>
+    <span style="color: #0000ff;">var</span> prop = props[i];                         <span style="color: #008000;">//</span><span style="color: #008000;">对应的值</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    {
+      res </span>+= "\"" + (prop.name) + "\":" + (transformSpecialNewlines(prop.value)) + ",";   <span style="color: #008000;">//</span><span style="color: #008000;">拼凑字符串</span>
+<span style="color: #000000;">    }
+  }
+  </span><span style="color: #0000ff;">return</span> res.slice(0, -1<span style="color: #000000;">)
+}</span></pre>
+</div>
+<p>例子执行到这里渲染的render函数等于:</p>
+<div class="cnblogs_code">
+<pre><code>with(this) {<br />&nbsp;&nbsp;&nbsp; return _c('div', {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; attrs: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "id": "app"<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; },<br />&nbsp;&nbsp;&nbsp; [_c('a', {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; attrs: {<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "href": href<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br />&nbsp;&nbsp;&nbsp; },<br />&nbsp;&nbsp;&nbsp; [_v("链接")])])<br />}</pre>
+</div>
+<p>这样当该函数执行的时候就会触发Vue实例的href属性，此时就会将渲染watcher作为href属性的订阅者了，当href修改时就会触发渲染watcher的重新渲染了。</p>
+<p><span style="color: #ff0000;">最后当a标签整个DOM元素生成之后会触发attrs模块的create事件去设置href特性</span>，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> updateAttrs (oldVnode, vnode) {      <span style="color: #008000;">//</span><span style="color: #008000;">第6294行 更新attrs</span>
+  <span style="color: #0000ff;">var</span> opts = vnode.componentOptions;                                      <span style="color: #008000;">//</span><span style="color: #008000;">获取vnode.componentOptions(组件才有)</span>
+  <span style="color: #0000ff;">if</span> (isDef(opts) &amp;&amp; opts.Ctor.options.inheritAttrs === <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">if</span> (isUndef(oldVnode.data.attrs) &amp;&amp; isUndef(vnode.data.attrs)) {        <span style="color: #008000;">//</span><span style="color: #008000;">如果在oldVnode和vnode上都没有定义attrs属性</span>
+    <span style="color: #0000ff;">return</span>                                                                     <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回，不做处理</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> key, cur, old;
+  </span><span style="color: #0000ff;">var</span> elm =<span style="color: #000000;"> vnode.elm;
+  </span><span style="color: #0000ff;">var</span> oldAttrs = oldVnode.data.attrs ||<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span> attrs = vnode.data.attrs || {};                             <span style="color: #008000;">//</span><span style="color: #008000;">新VNode的attrs属性</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> clone observed objects, as the user probably wants to mutate it</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(attrs.__ob__)) {
+    attrs </span>= vnode.data.attrs =<span style="color: #000000;"> extend({}, attrs);
+  }
+
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span> attrs) {                                            <span style="color: #008000;">//</span><span style="color: #008000;">遍历新VNode的每个attrs</span>
+    cur =<span style="color: #000000;"> attrs[key];
+    old </span>=<span style="color: #000000;"> oldAttrs[key];
+    </span><span style="color: #0000ff;">if</span> (old !==<span style="color: #000000;"> cur) {
+      setAttr(elm, key, cur);                                     </span><span style="color: #008000;">//</span><span style="color: #008000;">则调用setAttr设置属性</span>
+<span style="color: #000000;">    }
+  }
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> #4391: in IE9, setting type can reset value for input[type=radio]</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> #6666: IE/Edge forces progress value down to 1 before setting a max</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> ((isIE || isEdge) &amp;&amp; attrs.value !== oldAttrs.value) {       <span style="color: #008000;">//</span><span style="color: #008000;">IE9的特殊情况</span>
+    setAttr(elm, 'value'<span style="color: #000000;">, attrs.value);
+  }
+  </span><span style="color: #0000ff;">for</span> (key <span style="color: #0000ff;">in</span><span style="color: #000000;"> oldAttrs) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(attrs[key])) {
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isXlink(key)) {
+        elm.removeAttributeNS(xlinkNS, getXlinkProp(key));
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isEnumeratedAttr(key)) {
+        elm.removeAttribute(key);
+      }
+    }
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> setAttr (el, key, value) {         <span style="color: #008000;">//</span><span style="color: #008000;">设置el元素的key属性为value</span>
+  <span style="color: #0000ff;">if</span> (el.tagName.indexOf('-') &gt; -1) {            <span style="color: #008000;">//</span><span style="color: #008000;">如果el的标签名里含有-</span>
+<span style="color: #000000;">    baseSetAttr(el, key, value); 
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isBooleanAttr(key)) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果key是布尔类型的变量(比如:disabled、selected)</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> set attribute for blank value</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> e.g. &lt;option disabled&gt;Select one&lt;/option&gt;</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isFalsyAttrValue(value)) {
+      el.removeAttribute(key);
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> technically allowfullscreen is a boolean attribute for &lt;iframe&gt;,</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> but Flash expects a value of "true" when used on &lt;embed&gt; tag</span>
+      value = key === 'allowfullscreen' &amp;&amp; el.tagName === 'EMBED'
+        ? 'true'<span style="color: #000000;">
+        : key;
+      el.setAttribute(key, value);
+    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isEnumeratedAttr(key)) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果key是这三个之一:contenteditable,draggable,spellcheck</span>
+    el.setAttribute(key, isFalsyAttrValue(value) || value === 'false' ? 'false' : 'true'<span style="color: #000000;">);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isXlink(key)) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isFalsyAttrValue(value)) {
+      el.removeAttributeNS(xlinkNS, getXlinkProp(key));
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      el.setAttributeNS(xlinkNS, key, value);
+    }
+  } </span><span style="color: #0000ff;">else</span> {                                          <span style="color: #008000;">//</span><span style="color: #008000;">不满足上述的情况就直接调用baseSetAttr设置属性</span>
+<span style="color: #000000;">    baseSetAttr(el, key, value);
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> baseSetAttr (el, key, value) {         <span style="color: #008000;">//</span><span style="color: #008000;">设置el的key属性为value</span>
+  <span style="color: #0000ff;">if</span> (isFalsyAttrValue(value)) {                  <span style="color: #008000;">//</span><span style="color: #008000;">如果value是null或false</span>
+    el.removeAttribute(key);                       <span style="color: #008000;">//</span><span style="color: #008000;">则删除属性</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> { 
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> #7138: IE10 &amp; 11 fires input event when setting placeholder on</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> &lt;textarea&gt;... block the first input event and remove the blocker</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> immediately.</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> ( 
+      isIE </span>&amp;&amp; !isIE9 &amp;&amp;<span style="color: #000000;">
+      el.tagName </span>=== 'TEXTAREA' &amp;&amp;<span style="color: #000000;">
+      key </span>=== 'placeholder' &amp;&amp; !<span style="color: #000000;">el.__ieph
+    ) {                                         特殊情况 
+      </span><span style="color: #0000ff;">var</span> blocker = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (e) {
+        e.stopImmediatePropagation();
+        el.removeEventListener(</span>'input'<span style="color: #000000;">, blocker);
+      };
+      el.addEventListener(</span>'input'<span style="color: #000000;">, blocker);
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+      el.__ieph = <span style="color: #0000ff;">true</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> IE placeholder patched </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+    el.setAttribute(key, value);                    </span><span style="color: #ff0000;">//直接调用原生DOMAPI setAttribute设置属性</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,98 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP中的Accept-Encoding、Content-Encoding、Transfer-Encoding、Content-Type' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP中的Accept-Encoding、Content-Encoding、Transfer-Encoding、Content-Type</center></div><div class='banquan'>原文出处:本文由博客园博主AmyZYX提供。<br/>
+原文连接:https://www.cnblogs.com/amyzhu/p/11960100.html</div><br>
+    <h2 id="accept-encoding和content-encoding">Accept-Encoding和Content-Encoding</h2>
+<p>Accept-Encoding和Content-Encoding是HTTP中用来对采用何种压缩格式传输正文进行协定的一对header。工作原理如下：</p>
+<ul>
+<li>浏览器发送请求，通过Accept-Encoding带上自己支持的内容编码格式列表</li>
+<li>服务端从中挑选一个用来对正文进行编码，并通过Content-Encoding响应头指明响应编码格式。</li>
+<li>浏览器拿到响应正文后，根据Content-Encoding进行解压缩。服务端若响应未压缩的正文，则不允许返回Content-Encoding。</li>
+</ul>
+<p>压缩类型：</p>
+<ul>
+<li>gzip：表示采用 <a href="http://en.wikipedia.org/wiki/LZ77_and_LZ78#LZ77">Lempel-Ziv coding</a> (LZ77) 压缩算法，以及32位CRC校验的编码方式</li>
+<li>Compress：采用<a href="http://en.wikipedia.org/wiki/LZW">Lempel-Ziv-Welch</a> (LZW) 压缩算法。</li>
+<li>deflate：表示采用 <a href="http://en.wikipedia.org/wiki/Zlib">zlib</a> 结构 (在 <a href="http://tools.ietf.org/html/rfc1950">RFC 1950</a> 中规定)，和 <a href="http://en.wikipedia.org/wiki/DEFLATE"><em>deflate</em></a> 压缩算法(在 <a href="http://tools.ietf.org/html/rfc1952">RFC 1951</a> 中规定)。</li>
+<li>identity：用于指代自身（未经过压缩和修改）。除非特别指明，这个标记始终可以被接受。</li>
+<li>Br：表示采用<a href="https://en.wikipedia.org/wiki/Brotli">Brotli</a> 算法的编码方式。</li>
+</ul>
+<p>内容编码：</p>
+<ol>
+<li>内容编码针对的只是传输正文。HTTP/1中，header始终是以ASCII文本传输，没有经过任何压缩；HTTP/2中引入header压缩技术。</li>
+</ol>
+<h2 id="传输编码transfer-encoding">传输编码Transfer-Encoding</h2>
+<ul>
+<li>用于表示节点之间传输message的编码方式。最典型是分块传输（chunked）</li>
+<li>是一个响应header</li>
+</ul>
+<p>Transfer-Encoding支持类型：</p>
+<ul>
+<li>chunked</li>
+<li>compress</li>
+<li>deflate</li>
+<li>gzip</li>
+<li>identit</li>
+<li>多个类型可以共存</li>
+</ul>
+<p>Gzip+Curl例子：</p>
+<pre><code><code>echo &quot;content=Web%20%E5%AE%89%E5%85%A8%E6%98%AF%E4%B8%80%E9%A1%B9%E7%B3%BB%E7%BB%9F%E5%B7%A5%E7%A8%8B%EF%BC%8C%E4%BB%BB%E4%BD%95%E7%BB%86%E5%BE%AE%E7%96%8F%E5%BF%BD%E9%83%BD%E5%8F%AF%E8%83%BD%E5%AF%BC%E8%87%B4%E6%95%B4%E4%B8%AA%E5%AE%89%E5%85%A8%E5%A0%A1%E5%9E%92%E5%9C%9F%E5%B4%A9%E7%93%A6%E8%A7%A3%E3%80%82&quot; | gzip -c &gt; data.txt.gz
+
+curl -v --data-binary @data.txt.gz -H&#39;Content-Type: application/x-www-form-urlencoded; charset=UTF-8&#39; -H&#39;Content-Encoding: gzip&#39; -X POST https://qgy18.com/node/</code></pre>
+<p><strong>Transfer-Encoding与Content-Encoding的区别：</strong></p>
+<ol>
+<li>Transfer-Encoding只是在传输过程中才有的，并发请求URL对应实体的本身特性。</li>
+<li>Transfer-Encoding是一个&quot;跳到跳&quot;的header，而Content-Encoding是&quot;端到端&quot;的header。</li>
+</ol>
+<h2 id="content-type">Content-type</h2>
+<p>Content-type是HTTP的实体首部，用于说明请求或者返回的消息主体是用何种方式编码（即资源的MIME类型）。在请求、响应header中均存在。</p>
+<p>示例如下：</p>
+<pre><code><code>Content-Type: text/html; charset=utf-8
+Content-Type: multipart/form-data; boundary=something</code></pre>
+<p>参数一般包含：</p>
+<ul>
+<li>media-type：资源或者数据的MIME type</li>
+<li>charset：字符编码标准</li>
+<li>boundary：多于多部实体，boundary是必需的。其包括一组1到70个字符，用于封装消息的多个部分的边界。</li>
+</ul>
+<p>Media-type常用类型：</p>
+<ul>
+<li><h5 id="applicationx-www-form-urlencoded">application/x-www-form-urlencoded</h5>
+<ul>
+<li>form表单或者提交的数据按照key1=value1&amp;key2=value2方式进行编码，key、value均进行了urlencode</li>
+</ul></li>
+<li><h5 id="multipartform-data">multipart/form-data</h5>
+<ul>
+<li>常见的POST数据提交的方式，使用form进行文件上传的时候，必须让form的enctype为这个。</li>
+</ul></li>
+<li><h5 id="applicationjson">application/json</h5>
+<ul>
+<li>消息主体是序列化后的json字符串。</li>
+</ul></li>
+<li><p>text/html</p>
+<ul>
+<li>是一种用HTTP作为传输协议，XML作为编码方式的远程调用规范。</li>
+</ul></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

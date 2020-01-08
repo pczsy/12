@@ -1,0 +1,84 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修搭建Vue开发环境' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>搭建Vue开发环境</center></div><div class='banquan'>原文出处:本文由博客园博主AnotherBlue提供。<br/>
+原文连接:https://www.cnblogs.com/AnotherBlue/p/11850432.html</div><br>
+    <h3 id="安装node.js">1.安装Node.js</h3>
+<p>安装包下载地址： <a href="https://nodejs.org/en/" class="uri">https://nodejs.org/en/</a></p>
+<p><img src="./images/搭建Vue开发环境0.png" /></p>
+<p><em>安装时可以选择是否自动安装必要的工具，如Chocolatey、Python2，这里我选择了自动安装</em></p>
+<p><img src="./images/搭建Vue开发环境1.png" /></p>
+<p>Node.js安装结束后，打开cmd输入 node -v ，回车，会输出node的版本号则表示Node.js安装成功。</p>
+<h3 id="设置node.js-prefix全局和cache缓存路径">2.设置Node.js prefix（全局）和cache（缓存）路径</h3>
+<p>在nodejs安装路径下，新建node_global和node_cache两个文件夹</p>
+<p>设置缓存文件夹</p>
+<p><code>npm config set cache &quot;C:\Program Files\nodejs\node_cache&quot;</code></p>
+<p>设置全局模块存放路径</p>
+<p><code>npm config set prefix &quot;C:\Program Files\nodejs\node_global&quot;</code></p>
+<p>设置成功后，之后用命令<code>npm install XXX -g</code>安装以后模块就在C:\Program Files\nodejs\node_global里</p>
+<h3 id="安装cnpm镜像">3.安装cnpm镜像</h3>
+<p><code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></p>
+<h3 id="设置环境变量">4.设置环境变量</h3>
+<p>系统变量添加NODE_PATH，路径：C:\Program Files\nodejs\node_global\node_modules</p>
+<p><img src="./images/搭建Vue开发环境2.png" /></p>
+<p>修改用户变量中path，添加路径C:\Program Files\nodejs\node_global</p>
+<p><img src="./images/搭建Vue开发环境3.png" /></p>
+<p>验证环境变量</p>
+<pre><code><code>node -v
+
+npm -v
+
+cnpm -v</code></pre>
+<p>若上述命令均能成功显示版本信息，环境变量设置成功。</p>
+<p><em>遇到如下错误信息</em></p>
+<p><img src="./images/搭建Vue开发环境4.png" /></p>
+<p>需要输入如下语句解决：</p>
+<p><code>set-ExecutionPolicy RemoteSigned</code></p>
+<p>在提示菜单选择时选择A或者Y，再次输入<code>cnpm -v</code>成功显示版本信息。</p>
+<p>​ <img src="./images/搭建Vue开发环境5.png" /></p>
+<h3 id="安装vue和vue-cli">5.安装vue和vue-cli</h3>
+<p><code>cnpm install vue -g</code></p>
+<p><code>cnpm install vue-cli -g</code></p>
+<h3 id="新建项目并运行测试">6.新建项目并运行测试</h3>
+<p><strong>a.) cmd进入D:/Vue</strong></p>
+<p><strong>b.) <code>vue init webpack-simple demo</code></strong></p>
+<p>​<img src="./images/搭建Vue开发环境6.png" /></p>
+<p><strong>c.) 进入项目目录 <code>cd demo</code></strong></p>
+<p><strong>d.) 安装项目需要的依赖 <code>npm install</code></strong></p>
+<p><em>此时会出现安装node-sass失败的错误提示，解决办法如下</em>：</p>
+<p>1）先运行： <code>npm install -g node-gyp</code></p>
+<p>2）然后运行：运行 <code>npm install --global --production windows-build-tools</code> 可以自动安装跨平台的编译器：gym</p>
+<!--注：第二句执行下载好msi文件需要手动去对应的目录底下安装一下。-->
+<p><img src="./images/搭建Vue开发环境7.png" /></p>
+<p>3）执行<code>npm uninstall node-sass</code>，清除安装错误的缓存</p>
+<p>4）执行<code>npm install node-sass</code>重新安装node-sass</p>
+<p>5）重新执行<code>npm install</code></p>
+<p><strong>e.) 运行项目 <code>npm run dev</code></strong></p>
+<p><img src="./images/搭建Vue开发环境8.png" /></p>
+<p>浏览器中http://localhost:8080/显示vue页面则表明vue开发环境安装成功</p>
+<p><img src="./images/搭建Vue开发环境9.png" /></p>
+<h3 id="安装开发工具vs-code">7.安装开发工具VS Code</h3>
+<p>安装包下载地址： <a href="https://code.visualstudio.com/Download" class="uri">https://code.visualstudio.com/Download</a></p>
+<p>VS Code开发Vue Project时常用插件</p>
+<p><img src="./images/搭建Vue开发环境10.png" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

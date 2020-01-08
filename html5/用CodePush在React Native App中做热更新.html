@@ -1,0 +1,73 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修用CodePush在React Native App中做热更新' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>用CodePush在React Native App中做热更新</center></div><div class='banquan'>原文出处:本文由博客园博主真－张三疯提供。<br/>
+原文连接:https://www.cnblogs.com/mafengzi/p/11632498.html</div><br>
+    <p>最近在学React Native，学到了CodePush热更新。</p>
+<p>老师讲了两种实现的方法，现将其记录一下。</p>
+<p>相比较原生开发，使用React Native开发App不仅能节约开发成本，还能做原生开发不能实现的热更新功能。</p>
+<p>使用原生技术开发App时，每次代码做了改动后，都需要提交到应用商店进行审核，审核通过后，需要等用户重新下载安装后才会生效。而如果使用React Native开发App，开发者可随时发布新版本，不用经过应用商店的审核，用户即可使用到新版本，并且还可做到不用经过用户的同意就强制安装新版本。</p>
+<p>CodePush是微软的技术，因为服务器在国外，所以不太稳定。如果开发的App是针对国内市场的，应该使用<a href="http://code-push.cn/" target="_blank">CodePush中国</a>。</p>
+<p>要使用CodePush，需安装<a href="https://www.npmjs.com/package/cpcn-react-native" target="_blank">cpcn-react-native</a>依赖包。可使用官方提供的工具cpcn-client来安装依赖包。cpcn-client的下载地址是：<a href="http://code-push.cn/docs/1010.htm" target="_blank">http://code-push.cn/docs/1010.htm</a>　。</p>
+<p>代码实现比较简单。第一种方法是直接改变App.js组件：</p>
+<div class="cnblogs_code">
+<pre><code>import cpcn from 'cpcn-react-native'<span style="color: #000000;">;
+
+class App  extends Component {
+    
+}
+
+App </span>=<span style="color: #000000;"> cpcn(App);
+
+export </span><span style="color: #0000ff;">default</span> App;</pre>
+</div>
+<p>这种方法在有新版本更新时，会使用默认的提示框，提示框中的文字也是默认的。灵活性不够。</p>
+<p>第二种方法比较灵活，可以自定义对话框和进度条。这种方法使用 cpcn.check() 方法。</p>
+<div class="cnblogs_code">
+<pre><code>import cpcn from "cpcn-react-native"<span style="color: #000000;">;
+
+class App extends Component {
+    componentDidMount(){
+        cpcn.check({
+            checkCallback: (remotePackage, agreeContinueFun) </span>=&gt;<span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(remotePackage){
+
+                }
+            },
+            downloadProgressCallback: (downloadProgress) </span>=&gt;<span style="color: #000000;"> {
+
+            },
+            installedCallback: (restartFun) </span>=&gt;<span style="color: #000000;"> {
+
+            }
+        });
+    }
+}
+
+export </span><span style="color: #0000ff;">default</span> App;</pre>
+</div>
+<p>将 cpcn.check() 方法写在 App.js 的&nbsp;componentDidMount 方法内，当 App 组件加载后调用此依法。</p>
+<p>cpcn.check() 方法的参数：</p>
+<p><strong>checkCallback</strong>： 在检查是否有可更新的版本后调用这个方法，如果 remotePackage 不是 null，表示有可更新的版本。如果要继续更新，就调用 agreeContinueFun(true)，如果不想继续更新，就调用 agreeContinueFun(false)。</p>
+<p><strong>downloadProgressCallback</strong>： 在下载新版本的过程中调用这个方法。可用它的参数 downloadProgress 做进度条。downloadProgress.receivedBytes 是已经下载的字节数，downloadProgress.totalBytes 是总字节数。</p>
+<p><strong>installedCallback</strong>： 当新版本安装完成后调用这个方法。需调用 restartFun(true) 重启App，重启后新版本就生效了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

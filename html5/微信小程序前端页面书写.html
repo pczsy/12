@@ -1,0 +1,335 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序前端页面书写' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序前端页面书写</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11574295.html</div><br>
+    <h1 id="微信小程序前端页面书写">微信小程序前端页面书写</h1>
+<p>WXML（WeiXin Markup Language）是框架设计的一套标签语言，结合<a href="https://developers.weixin.qq.com/miniprogram/dev/component/index.html">基础组件</a>、<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/event.html">事件系统</a>，可以构建出页面的结构。</p>
+<h2 id="一.数据绑定">一.数据绑定</h2>
+<h3 id="普通写法">1. 普通写法</h3>
+<pre><code><code>&lt;view&gt; {{ message }} &lt;/view&gt;</code></pre>
+<pre class="js"><code>Page({
+  data: {
+    message: &#39;Hello MINA!&#39;
+  }
+})</code></pre>
+<h3 id="组件属性">2. 组件属性</h3>
+<pre><code><code>**简直和上面没区别啊**</code></pre>
+<pre><code><code>&lt;view id=&quot;item-{{id}}&quot;&gt; &lt;/view&gt;</code></pre>
+<pre class="js"><code>Page({
+  data: {
+    id: 0
+  }
+})</code></pre>
+<h3 id="bool类型">3. bool类型</h3>
+<p><strong>不要直接写 checked=&quot;false&quot;，其计算结果是一个字符串</strong></p>
+<pre><code><code>&lt;checkbox checked=&quot;{{false}}&quot;&gt; &lt;/checkbox&gt;</code></pre>
+<h2 id="二.-运算">二. 运算</h2>
+<h3 id="三元运算">1. 三元运算</h3>
+<pre><code><code>&lt;view hidden=&quot;{{flag ? true : false}}&quot;&gt; Hidden &lt;/view&gt;</code></pre>
+<h3 id="算数运算">2. 算数运算</h3>
+<pre><code><code>&lt;view&gt; {{a + b}} + {{c}} + d &lt;/view&gt;</code></pre>
+<pre class="js"><code>Page({
+  data: {
+    a: 1,
+    b: 2,
+    c: 3
+  }
+})</code></pre>
+<h3 id="逻辑判断">3. 逻辑判断</h3>
+<pre><code><code>&lt;view wx:if=&quot;{{length &gt; 5}}&quot;&gt; &lt;/view&gt;</code></pre>
+<h3 id="字符串运算">4. 字符串运算</h3>
+<pre><code><code>&lt;view&gt;{{&quot;hello&quot; + name}}&lt;/view&gt;</code></pre>
+<pre class="javascript"><code>Page({
+  data:{
+    name: &#39;MINA&#39;
+  }
+})</code></pre>
+<h2 id="三.-列表渲染">三. 列表渲染</h2>
+<h3 id="wxfor">1. wx:for</h3>
+<p>项的变量名默认为 <code>item</code> <code>wx:for-item</code> 可以指定数组当前元素的变量名</p>
+<p>下标变量名默认为 <code>index</code> <code>wx:for-index</code> 可以指定数组当前下标的变量名</p>
+<pre><code><code>&lt;view wx:for=&quot;{{array}}&quot;&gt;
+  {{index}}: {{item.message}}
+&lt;/view&gt;</code></pre>
+<pre class="js"><code>Page({
+  data: {
+    array: [{
+      message: &#39;foo&#39;,
+    }, {
+      message: &#39;bar&#39;
+    }]
+  }
+})</code></pre>
+<h3 id="wxfor-1">2. wx:for</h3>
+<p>渲染一个包含多节点的结构块 block最终不会变成真正的dom元素</p>
+<pre><code><code>&lt;block wx:for=&quot;{{[1, 2, 3]}}&quot;&gt;
+  &lt;view&gt; {{index}}: &lt;/view&gt;
+  &lt;view&gt; {{item}} &lt;/view&gt;
+&lt;/block&gt;</code></pre>
+<h3 id="wxkey">3. wx:key</h3>
+<p>提高效率使用的</p>
+<h2 id="四.-条件渲染">四. 条件渲染</h2>
+<h3 id="wxif">1. wx:if</h3>
+<p>在框架中，使用 <code>wx:if=&quot;{{condition}}&quot;</code> 来判断是否需要渲染该代码块：</p>
+<pre><code><code>&lt;view wx:if=&quot;{{condition}}&quot;&gt; True &lt;/view&gt;</code></pre>
+<p>也可以用 <code>wx:elif</code> 和 <code>wx:else</code> 来添加一个 else 块：</p>
+<pre><code><code>&lt;view wx:if=&quot;{{length &gt; 5}}&quot;&gt; 1 &lt;/view&gt;
+&lt;view wx:elif=&quot;{{length &gt; 2}}&quot;&gt; 2 &lt;/view&gt;
+&lt;view wx:else&gt; 3 &lt;/view&gt;</code></pre>
+<p>block wx:if</p>
+<p>因为 <code>wx:if</code> 是一个控制属性，需要将它添加到一个标签上。如果要一次性判断多个组件标签，可以使用一个 <code>&lt;block/&gt;</code> 标签将多个组件包装起来，并在上边使用 <code>wx:if</code> 控制属性。</p>
+<pre><code><code>&lt;block wx:if=&quot;{{true}}&quot;&gt;
+  &lt;view&gt; view1 &lt;/view&gt;
+  &lt;view&gt; view2 &lt;/view&gt;
+&lt;/block&gt;</code></pre>
+<p><strong>注意：</strong> <code>&lt;block/&gt;</code> 并不是一个组件，它仅仅是一个包装元素，不会在页面中做任何渲染，只接受控制属性。</p>
+<h3 id="hidden">2. hidden</h3>
+<p><code>hidden</code> 就简单的多，组件<code>始终会被渲染</code>，<code>只是简单的控制显示与隐藏</code>。</p>
+<pre><code><code>&lt;view hidden=&quot;{{condition}}&quot;&gt; True &lt;/view&gt;</code></pre>
+<p>类似 <code>wx:if</code> 不同是hiden控制显影,而if控制是否渲染</p>
+<p>因此，如果需要频繁切换的情景下，用 <code>hidden</code> 更好，如果在运行时条件不大可能改变则 <code>wx:if</code> 较好。</p>
+<h2 id="五.特殊标签">五.特殊标签</h2>
+<h3 id="text">1.text</h3>
+<pre><code><code>&lt;!-- &lt;text&gt; &lt;/text&gt;  相当于span标签 --&gt;</code></pre>
+<h3 id="view">2.view</h3>
+<pre><code><code>&lt;!-- &lt;view&gt;&lt;/view&gt;    相当于div标签 --&gt;</code></pre>
+<h3 id="block">3.block</h3>
+<pre><code><code> &lt;!--block标签就是只显示内容不会嵌套任何标签 --&gt;</code></pre>
+<h3 id="image">4. image</h3>
+<p>图片标签，<strong>image组件默认宽度320px、高度240px</strong></p>
+<p><strong>注意：该标签 其实是 web中的 图片标签 和 背景图片的结合！！！ 并且不支持以前的web中的背景图片的写法！！！ </strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>属性名</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>src</td>
+<td>String</td>
+<td></td>
+<td>图片资源地址，支持云文件ID（2.2.3起）</td>
+</tr>
+<tr class="even">
+<td>mode</td>
+<td>String</td>
+<td>'scaleToFill'</td>
+<td>图片裁剪、缩放的模式</td>
+</tr>
+<tr class="odd">
+<td>lazy-load</td>
+<td>Boolean</td>
+<td>false</td>
+<td>图片懒加载。只针对page与scroll-view下的image有效</td>
+</tr>
+</tbody>
+</table>
+<p><strong>mode 有效值：</strong></p>
+<p>mode 有 13 种模式，其中 4 种是缩放模式，9 种是裁剪模式。</p>
+<table>
+<thead>
+<tr class="header">
+<th>模式</th>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>缩放</td>
+<td>scaleToFill</td>
+<td>不保持纵横比缩放图片，使图片的宽高完全拉伸至填满 image 元素</td>
+</tr>
+<tr class="even">
+<td>缩放</td>
+<td>aspectFit</td>
+<td>保持纵横比缩放图片，使图片的长边能完全显示出来。</td>
+</tr>
+<tr class="odd">
+<td>缩放</td>
+<td>aspectFill</td>
+<td>保持纵横比缩放图片，只保证图片的短边能完全显示出来。</td>
+</tr>
+<tr class="even">
+<td>缩放</td>
+<td>widthFix</td>
+<td>宽度不变，高度自动变化，保持原图宽高比不变</td>
+</tr>
+<tr class="odd">
+<td>裁剪</td>
+<td>top</td>
+<td>不缩放图片，只显示图片的顶部区域</td>
+</tr>
+<tr class="even">
+<td>裁剪</td>
+<td>bottom</td>
+<td>不缩放图片，只显示图片的底部区域</td>
+</tr>
+<tr class="odd">
+<td>裁剪</td>
+<td>center</td>
+<td>不缩放图片，只显示图片的中间区域</td>
+</tr>
+<tr class="even">
+<td>裁剪</td>
+<td>left</td>
+<td>不缩放图片，只显示图片的左边区域</td>
+</tr>
+<tr class="odd">
+<td>裁剪</td>
+<td>right</td>
+<td>不缩放图片，只显示图片的右边区域</td>
+</tr>
+<tr class="even">
+<td>裁剪</td>
+<td>top left</td>
+<td>不缩放图片，只显示图片的左上边区域</td>
+</tr>
+<tr class="odd">
+<td>裁剪</td>
+<td>top right</td>
+<td>不缩放图片，只显示图片的右上边区域</td>
+</tr>
+<tr class="even">
+<td>裁剪</td>
+<td>bottom left</td>
+<td>不缩放图片，只显示图片的左下边区域</td>
+</tr>
+<tr class="odd">
+<td>裁剪</td>
+<td>bottom right</td>
+<td>不缩放图片，只显示图片的右下边区域</td>
+</tr>
+</tbody>
+</table>
+<h3 id="swiper">5, swiper</h3>
+<p>微信内置有轮播图组件</p>
+<p><strong>默认宽度 100% 高度 150px</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>属性名</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>indicator-dots</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否显示面板指示点</td>
+</tr>
+<tr class="even">
+<td>indicator-color</td>
+<td>Color</td>
+<td>rgba(0, 0, 0, .3)</td>
+<td>指示点颜色</td>
+</tr>
+<tr class="odd">
+<td>indicator-active-color</td>
+<td>Color</td>
+<td>#000000</td>
+<td>当前选中的指示点颜色</td>
+</tr>
+<tr class="even">
+<td>autoplay</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否自动切换</td>
+</tr>
+<tr class="odd">
+<td>interval</td>
+<td>Number</td>
+<td>5000</td>
+<td>自动切换时间间隔</td>
+</tr>
+<tr class="even">
+<td>circular</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否采用衔接滑动</td>
+</tr>
+</tbody>
+</table>
+<h3 id="swiper-item">6.swiper-item</h3>
+<p>滑块</p>
+<p>默认宽度和高度都是100%</p>
+<h3 id="video">7.video</h3>
+<p>视频。该组件是<a href="https://developers.weixin.qq.com/miniprogram/dev/component/native-component.html">原生组件</a>，使用时请注意相关限制。</p>
+<table>
+<thead>
+<tr class="header">
+<th>属性名</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>src</td>
+<td>String</td>
+<td></td>
+<td>要播放视频的资源地址，支持云文件ID（2.2.3起）</td>
+</tr>
+<tr class="even">
+<td>duration</td>
+<td>Number</td>
+<td></td>
+<td>指定视频时长</td>
+</tr>
+<tr class="odd">
+<td>controls</td>
+<td>Boolean</td>
+<td>true</td>
+<td>是否显示默认播放控件（播放/暂停按钮、播放进度、时间）</td>
+</tr>
+<tr class="even">
+<td>autoplay</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否自动播放</td>
+</tr>
+<tr class="odd">
+<td>loop</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否循环播放</td>
+</tr>
+<tr class="even">
+<td>muted</td>
+<td>Boolean</td>
+<td>false</td>
+<td>是否静音播放</td>
+</tr>
+</tbody>
+</table>
+<pre><code><code>&lt;video src=&quot;{{src}}&quot; controls&gt;&lt;/video&gt;</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

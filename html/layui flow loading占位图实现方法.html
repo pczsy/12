@@ -1,0 +1,69 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修layui flow loading占位图实现方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>layui flow loading占位图实现方法</center></div><div class='banquan'>原文出处:本文由博客园博主```...简单点提供。<br/>
+原文连接:https://www.cnblogs.com/yysbolg/p/11371529.html</div><br>
+    <p>&nbsp;如果流图片要加载失败, 就会显示找不到图片的裂痕</p>
+<p><img src="./images/layui flow loading占位图实现方法0.png" alt="" /></p>
+<p>代码如下:&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset=<span style="color: #800000;">"</span><span style="color: #800000;">UTF-8</span><span style="color: #800000;">"</span>&gt;
+    &lt;title&gt;Title&lt;/title&gt;
+    &lt;link rel=<span style="color: #800000;">"</span><span style="color: #800000;">stylesheet</span><span style="color: #800000;">"</span> href=<span style="color: #800000;">"</span><span style="color: #800000;">layui/css/layui.css</span><span style="color: #800000;">"</span> media=<span style="color: #800000;">"</span><span style="color: #800000;">all</span><span style="color: #800000;">"</span>&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;img lay-src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/aaa.jpg</span><span style="color: #800000;">"</span>&gt;
+&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/bbb.jpg</span><span style="color: #800000;">"</span> alt=<span style="color: #800000;">"</span><span style="color: #800000;">该图片不会加载</span><span style="color: #800000;">"</span>&gt;
+&lt;!--ddd.jpg 图片不存在--&gt;
+&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/ddd.jpg</span><span style="color: #800000;">"</span>&gt;
+&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/loading.gif</span><span style="color: #800000;">"</span> lay-src=<span style="color: #800000;">"</span><span style="color: #800000;">ddd.jpg</span><span style="color: #800000;">"</span>&gt;
+&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/loading.gif</span><span style="color: #800000;">"</span> lay-src=<span style="color: #800000;">"</span><span style="color: #800000;">loadingImg/aaa.jpg</span><span style="color: #800000;">"</span>&gt;
+
+&lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">layui/layui.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+&lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/javascript</span><span style="color: #800000;">"</span>&gt;
+    <span style="color: #0000ff;">var</span><span style="color: #000000;"> $;
+    layui.use([</span><span style="color: #800000;">'</span><span style="color: #800000;">flow</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">jquery</span><span style="color: #800000;">'</span><span style="color: #000000;">], function () {
+        </span><span style="color: #0000ff;">var</span> flow =<span style="color: #000000;"> layui.flow;
+        $ </span>=<span style="color: #000000;"> layui.jquery;
+        flow.lazyimg();
+    });
+</span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>图片目录:&nbsp;</p>
+<p><img src="./images/layui flow loading占位图实现方法1.png" alt="" /></p>
+<p>修改方法 :</p>
+<p> img标签src为loading占位图的地址，lay-src为正图地址，图片懒加载时会替换src<br />&lt;img src="loadingImg/loading.gif" lay-src="ddd.jpg"&gt;<br />    修改js<br />lay/modules/flow.js  检索 &amp;&amp;!e.attr("src")<br />    有三种修改方法<br />1.删除&amp;&amp;!e.attr("src")<br />2.改为&amp;&amp;e.attr("lay-src")<br />3.改为&amp;&amp;!e.attr("lay-src")</p>
+<p><img src="./images/layui flow loading占位图实现方法2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;修改完成后效果:&nbsp;</p>
+<p><img src="./images/layui flow loading占位图实现方法3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;注意:&nbsp;&nbsp;<img src="./images/layui flow loading占位图实现方法4.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

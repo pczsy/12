@@ -1,0 +1,80 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Angular中innerHTML标签的样式不起作用详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Angular中innerHTML标签的样式不起作用详解</center></div><div class='banquan'>原文出处:本文由博客园博主一只小彩笔提供。<br/>
+原文连接:https://www.cnblogs.com/robinw666/p/11039007.html</div><br>
+    <p>1.背景</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;在最近angular的项目中,需要用到[innerHTML]标签来指定一个div的样式：&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">//HTML部分
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="contents"</span><span style="color: #ff0000;"> [innerHTML]</span><span style="color: #0000ff;">="contents"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span> 
+<span style="color: #008080;">4</span> <span style="color: #000000;">//TS部分
+</span><span style="color: #008080;">5</span> contents = '<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>商品信息栏位<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="color:red;"</span><span style="color: #0000ff;">&gt;</span>商品信息介绍<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>';</pre>
+</div>
+<p><span style="color: #333399;">&nbsp; &nbsp; &nbsp; &nbsp; 但是上面的样式并不起作用，在Chorme中查看源码，发现style标签的样式在Angular编译的时候被屏蔽掉。这是为什么呢？客观别急，请往下看。</span></p>
+<p>2.解决方案</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;先说解决方案，最后再分析出现这种问题的原因。修改上面的TS：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;"> //  在使用的页面引入DomSanitizer 
+ import { DomSanitizer } from '@angular/platform-browser';
+
+
+//构造方法里注入sanitizer对象
+    constructor( private sanitizer: DomSanitizer
+    ) { }
+
+// 对HTML代码做处理
+    this.contents= this.sanitizer.bypassSecurityTrustHtml("&lt;p&gt;W3商品信息栏位&lt;br&gt;&lt;span style="color:red;"&gt;商品信息介绍&lt;/span&gt;&lt;/p&gt;");
+</pre>
+</div>
+<p>　　这样虽然可以解决问题，但是这样做还不够：</p>
+<ul>
+<li><span style="color: #ff0000;">代码冗余繁杂</span>：如果我们的contents内容过大，这样我们的代码就显得很乱，影响可读性和美观；</li>
+<li><span style="color: #ff0000;">不能复用</span>：如果其他ts中也要用到innerHTML标签，又要重新写一遍上面的TS内容，没有复用性；</li>
+</ul>
+<p>&nbsp; &nbsp; &nbsp; 基于以上两点，我们用<span style="color: #000000; background-color: #ff0000;">自定义管道（pipe）</span>来优化以上代码，使用<span style="background-color: #ff0000;">ng generate pipe safe-html</span>命令来生成一个pipe，并做适当的修改：</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;collapse:true;;gutter:true;">//  对safe-html.pipe.ts做适当修改<br /><br />import {Pipe, PipeTransform} from '@angular/core';
+import {DomSanitizer} from '@angular/platform-browser';
+
+@Pipe({name: 'safeHtml'})
+export class SafeHtmlPipe implements PipeTransform {
+    constructor(private sanitized: DomSanitizer) {
+    }
+
+    transform(value) {
+        return this.sanitized.bypassSecurityTrustHtml(value);
+    }
+}<br /><br />// 在使用innerHTML标签的属性里使用以上safeHtml管道</pre>
+<pre><code>&lt;div class="contents" [innerHTML]="contents|safeHtml"&gt;&lt;/div&gt;</pre>
+</div>
+<p>3.原因及原理</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;所以，为什么会出现上面的问题呢？原来，Angular中默认将所有输入值视为不受信任。当我们通过 property，attribute，样式，类绑定或插值等方式，</p>
+<p>&nbsp; &nbsp;将一个值从模板中插入到DOM中时，Angular会自帮我们清除和转义不受信任的值。在开头的例子中，span标签里的样式被屏蔽了，不信请看：</p>
+<p>&nbsp; &nbsp;<img src="./images/Angular中innerHTML标签的样式不起作用详解0.png" alt="" />　　</p>
+<p>&nbsp;&nbsp;Angular 在编译的时候，会自动清理 HTML 输入并转义不安全的代码，因此在这种情况下，style被屏蔽，样式失效。这时候如果需要将样式片段渲染出来，</p>
+<p>&nbsp;就需要用到DomSanitizer了。<span style="color: #ff0000;">DomSanitizer 可以把值净化为在不同 DOM 上下文中的安全内容，来帮我们防范跨站脚本攻击（XSS）类的安全问题</span>。</p>
+<p>&nbsp;</p>
+<p>参考：<a href="https://angular.cn/api/platform-browser/DomSanitizer#description">https://angular.cn/api/platform-browser/DomSanitizer#description</a></p>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

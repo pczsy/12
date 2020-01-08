@@ -1,0 +1,93 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue浏览器全屏实现' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue浏览器全屏实现</center></div><div class='banquan'>原文出处:本文由博客园博主稚于最初灬提供。<br/>
+原文连接:https://www.cnblogs.com/feifan1/p/11938299.html</div><br>
+    <p>1、项目中使用的是sreenfull插件，执行命令安装</p>
+<div class="cnblogs_code">
+<pre><code>npm install --save screenfull</pre>
+</div>
+<p>2、安装好后，引入项目，用一个按钮进行控制即可，按钮方法如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">toggleFullscreen() {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">screenfull.enabled) {
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$message({
+        message: </span>'you browser can not work'<span style="color: #000000;">,
+        type: </span>'warning'<span style="color: #000000;">
+      })
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">
+    }
+    screenfull.toggle()
+}</span></pre>
+</div>
+<p>试了一下可以全屏，我用的chrome，IE9以下不要考虑</p>
+<p>3、第一步完成之后就是怎么监听到全屏的变化，因为如果是通过Esc键退出全屏，此时是没办法监听到的。经过一番查找，解决办法如下：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;script&gt;<span style="color: #000000;">
+import screenfull from </span>'screenfull'<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  data () {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+        isFullscreen: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+      }
+   }，
+  methods: {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * 全屏事件
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    screenfull() {
+      </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">screenfull.enabled) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$message({
+          message: </span>'Your browser does not work'<span style="color: #000000;">,
+          type: </span>'warning'<span style="color: #000000;">
+        })
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">
+      }
+      screenfull.toggle()
+      </span><span style="color: #0000ff;">this</span>.isFullscreen = <span style="color: #0000ff;">true</span><span style="color: #000000;">
+    },
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * 是否全屏并按键ESC键的方法
+     </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    checkFull() {
+      </span><span style="color: #0000ff;">var</span> isFull = document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen ||<span style="color: #000000;"> document.msFullscreenEnabled
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> to fix : false || undefined == undefined</span>
+      <span style="color: #0000ff;">if</span> (isFull ===<span style="color: #000000;"> undefined) {
+          isFull </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">
+      }
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> isFull
+    }
+  },
+  mounted() {
+      window.onresize </span>= () =&gt;<span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 全屏下监控是否按键了ESC</span>
+            <span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.checkFull()) {
+              </span><span style="color: #008000;">//</span><span style="color: #008000;"> 全屏下按键esc后要执行的动作</span>
+              <span style="color: #0000ff;">this</span>.isFullscreen = <span style="color: #0000ff;">false</span><span style="color: #000000;">
+            }
+          }
+       }
+}
+</span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

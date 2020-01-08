@@ -1,0 +1,68 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修WordPress实现中英文数字之间自动加空格排版' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>WordPress实现中英文数字之间自动加空格排版</center></div><div class='banquan'>原文出处:本文由博客园博主赵sir阿提供。<br/>
+原文连接:https://www.cnblogs.com/zqw111/p/11255235.html</div><br>
+    <p>　　通常来说中文与英文、中文和数字之间加上空格的排版会更加好看，但是如果让我们在编辑文章的时候人工添加，感觉非常繁琐和让人厌烦，所以今天龙笑天下就来跟大家介绍一下WordPress如何实现中英文数字之间自动加空格的排版技巧。（PS：其实很早就想加上这个功能了，但奈何懒癌发作&hellip;）</p>
+<p>　　第一步：html或body标签中加入han-la类</p>
+<p>　　在html标签中添加class=&rdquo;han-la&rdquo;（一般在header.php文件中）。但是并不是硬性规定，现在很多博客都是通过功能函数动态加载class类，那么同样的，你也可以将这个han-la类动态加载到body中去。将类加载到html标签中的方法就不说了，这里说下怎么加载到body标签中，当然在这里，你的主题应该是使用了body_class()这个标准函数的。<br />　　/**</p>
+<p>　　*WordPress实现中英文数字之间自动加空格排版-龙笑天下</p>
+<p>　　*https://www.jkys120.com/article/95496/</p>
+<p>　　*在body标签中加入han-la类</p>
+<p>　　*/</p>
+<p>　　function lxtx_add_hanla_to_body_class($classes){</p>
+<p>　　$classes[]='han-la';</p>
+<p>　　return$classes;</p>
+<p>　　}</p>
+<p>　　add_filter('body_class','lxtx_add_hanla_to_body_class');</p>
+<p>　　另外，值得一提的是该函数也会暴露一个问题，具体见下文：</p>
+<p>　　（全网独家）如何正确的避免你的WordPress管理员登录用户名被暴露</p>
+<p>　　第二步：引入js文件</p>
+<p>　　在jquery文件后面引入text-autospace.min.js或text-autospace.js，下载地址为：https://github.com/mastermay/text-autospace.js</p>
+<p>　　/**</p>
+<p>　　*WordPress实现中英文数字之间自动加空格排版-龙笑天下</p>
+<p>　　*https://www.jkys120.com/article/95496/</p>
+<p>　　*加入text-autospace.min.js文件</p>
+<p>　　*/</p>
+<p>　　function lxtx_styles_scripts(){</p>
+<p>　　//全局加载js脚本</p>
+<p>　　wp_enqueue_script('han-la-js',get_template_directory_uri().'/includes/js/text-autospace.min.js',array('jquery'),'',true);</p>
+<p>　　}</p>
+<p>　　add_action('wp_enqueue_scripts','lxtx_styles_scripts');</p>
+<p>　　注意修改代码中第8行的文件引用路径哦~</p>
+<p>　　最后一步：添加CSS代码</p>
+<p>　　将以下代码加入你的style.css文件中。</p>
+<p>　　/*han-la xtx*/</p>
+<p>　　body.han-la hanla:after{</p>
+<p>　　content:"";</p>
+<p>　　display:inline;</p>
+<p>　　font-family:Arial;</p>
+<p>　　font-size:0.89em;</p>
+<p>　　}</p>
+<p>　　body.han-la code hanla,body.han-la pre hanla,body.han-la kbd hanla,body.han-la samp hanla{</p>
+<p>　　display:none;</p>
+<p>　　}</p>
+<p>　　body.han-la ol&amp;gt;hanla,body.han-la ul&amp;gt;hanla{</p>
+<p>　　display:none;</p>
+<p>　　}</p>
+<p>　　当然，如果在第一步中，你是将han-la类class加到html标签中的话，在这一步中你需要将以上CSS代码中的body全改为html。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

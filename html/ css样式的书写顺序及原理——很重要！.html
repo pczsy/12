@@ -1,0 +1,53 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修 css样式的书写顺序及原理——很重要！' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center> css样式的书写顺序及原理——很重要！</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11935362.html</div><br>
+    <p>记得刚开始学习前端的时候，每次写css样式都是用到什么就在样式表后添加什么，完全没有考虑到样式属性的书写顺序对网页加载代码的影响。后来逐渐才知道正确的样式顺序不仅易于查看，并且也属于css样式优化的一种方式。那么是怎么个顺序呢？</p>
+<p><br />（1）定位属性：position&nbsp; display&nbsp; float&nbsp; left&nbsp; top&nbsp; right&nbsp; bottom&nbsp; &nbsp;overflow&nbsp; clear&nbsp; &nbsp;z-index</p>
+<p>（2）自身属性：width&nbsp; height&nbsp; padding&nbsp; border&nbsp; margin&nbsp; &nbsp;background</p>
+<p>（3）文字样式：font-family&nbsp; &nbsp;font-size&nbsp; &nbsp;font-style&nbsp; &nbsp;font-weight&nbsp; &nbsp;font-varient&nbsp; &nbsp;color&nbsp; &nbsp;</p>
+<p>（4）文本属性：text-align&nbsp; &nbsp;vertical-align&nbsp; &nbsp;text-wrap&nbsp; &nbsp;text-transform&nbsp; &nbsp;text-indent&nbsp; &nbsp; text-decoration&nbsp; &nbsp;letter-spacing&nbsp; &nbsp; word-spacing&nbsp; &nbsp;&nbsp;white-space&nbsp; &nbsp;text-overflow</p>
+<p>（5）css3中新增属性：content&nbsp; &nbsp;box-shadow&nbsp; &nbsp;border-radius&nbsp; transform&hellip;&hellip;</p>
+<p>&nbsp;</p>
+<p>按照上述1 2 3 4 5的顺序进行书写。</p>
+<p>目的：减少浏览器reflow（回流），提升浏览器渲染dom的性能</p>
+<p>原理：浏览器的渲染流程为&mdash;&mdash;</p>
+<p>①解析html构建dom树，解析css构建css树：将html解析成树形的数据结构，将css解析成树形的数据结构</p>
+<p>②构建render树：DOM树和CSS树合并之后形成的render树。</p>
+<p>③布局render树：有了render树，浏览器已经知道那些网页中有哪些节点，各个节点的css定义和以及它们的从属关系，从而计算出每个节点在屏幕中的位置。</p>
+<p>④绘制render树：按照计算出来的规则，通过显卡把内容画在屏幕上。</p>
+<p>css样式解析到显示至浏览器屏幕上就发生在②③④步骤，可见浏览器并不是一获取到css样式就立马开始解析而是根据css样式的书写顺序将之按照dom树的结构分布render样式，完成第②步，然后开始遍历每个树结点的css样式进行解析，此时的css样式的遍历顺序完全是按照之前的书写顺序。在解析过程中，一旦浏览器发现某个元素的定位变化影响布局，则需要倒回去重新渲染正如按照这样的书写书序：</p>
+<p>width: 100px;</p>
+<p>height: 100px;</p>
+<p>background-color: red ;</p>
+<p>position: absolute;</p>
+<p>当浏览器解析到position的时候突然发现该元素是绝对定位元素需要脱离文档流，而之前却是按照普通元素进行解析的，所以不得不重新渲染，解除该元素在文档中所占位置，然而由于该元素的占位发生变化，其他元素也可能会受到它回流的影响而重新排位。最终导致③步骤花费的时间太久而影响到④步骤的显示，影响了用户体验。</p>
+<p>所以规范的的css书写顺序对于文档渲染来说一定是事半功倍的！</p>
+<p>扩展：还有一个会影响浏览器渲染性能的词汇&ldquo;repaint（重绘）&rdquo;</p>
+<p>repaint（重绘）：改变某个元素的背景色、文字颜色、边框颜色等等不影响它周围或内部布局的属性时，屏幕的一部分要重画，但是元素的几何尺寸没有变。</p>
+<p>注意：</p>
+<p>a.render树的结构不等同于DOM树的结构，一些设置display:none的节点不会被放在render树中，但会在dom树中。</p>
+<p>b.有些情况，比如修改了元素的样式，浏览器并不会理科reflow或repaint，而是把这些操作积攒一批，然后做一次reflow，这也叫做异步reflow.但在有些情况下，比如改变窗口，改变页面默认的字体等，对于这些情况，浏览器会马上进行reflow.</p>
+<p>c.为了更好的用户体验，渲染引擎将会尽可能早的将内容呈现到屏幕上，并不会等到所有的html都解析完成之后再去构建和布局render树。它是解析完一部分内容就显示一部分内容，同时，可能还在通过网络下载其余内容。<br /><br /></p>
+<p>相信很多人在刚接触前端或者中期时候总会遇到一些问题及瓶颈期，如学了一段时间没有方向感或者坚持不下去一个人学习枯燥乏味有问题也不知道怎么解决，对此我整理了一些资料 喜欢我的文章想与更多资深大牛一起讨论和学习的话 欢迎加入我的学习交流群<a class=" wrap external" href="https://link.zhihu.com/?target=https%3A//jq.qq.com/%3F_wv%3D1027%26k%3D59jir0A" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">907694362</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,340 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）</center></div><div class='banquan'>原文出处:本文由博客园博主魂断蓝桥666提供。<br/>
+原文连接:https://www.cnblogs.com/yeyunfei/p/11151890.html</div><br>
+    <p><span style="font-size: 18pt;">这节课我们主要讲解园区三维可视化炫酷感官技术方案</span></p>
+<p><span style="font-size: 18px;">前言：</span></p>
+<p><span style="font-size: 18px;">　　当基础技术达到普及状态，应用就趋向于极致，在三维可视化领域也是这个道理。各大可视化公司都追求美观最大化，这时候美工的作用就不容忽视了。</span></p>
+<p><span style="font-size: 18px;">　　背景说明：</span></p>
+<p><span style="font-size: 18px;">　　　　A、经济背景：经济下行的大环境下，各大有社会责任的企业与部门开始拉动内需，扩大预算，向有技术有情怀的科技公司派送订单，保证科技公司活下来，下一个科技风口能够继续战斗，国民经济能够挺住下行压力。所以可视化，科技风，炫酷风成为扩大预算的一项重要指标。（有钱）</span></p>
+<p><span style="font-size: 18px;">　　　　B、技术背景：三维技术很早在游戏方面就有应用，但是局限于客户端庞大，电脑硬件要求高，所以在行业应用方面一直没有普及，而当前民众用的电脑基本都带有独立显卡，包括市面上的手机也基本都带有GPU处理器，这为三维技术普及与应用奠定了很好的基石。还有就是webgl技术的发明与普及，浏览器直接支持gpu加速，轻客户端机制把一切封装在浏览器沙盒中。用户只需要解决业务相关的问题就可以。（有技术方案）</span></p>
+<p><span style="font-size: 18px;">　　　　C、项目背景：与本项目相关的背景就是各大可视化厂家发力做出越来越炫酷的效果，作为webgl爱好者，不能放过一切前沿的技术应用。着手研究与实施出炫酷效果，对于个人而言也是刻不容缓。（有人）<br /></span></p>
+<p><span style="font-size: 18px;">　　　　D、钱、技术、人都有了，just do it！！！</span></p>
+<p>&nbsp;<span style="font-size: 18px;">　　　　<span style="color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;">技术交流 1203193731@qq.com</span></span></p>
+<p><span style="font-size: 18pt;">一、闲话少叙，先看效果图</span></p>
+<p><span style="font-size: 18px;">1、外立面效果图加周遭环境特效。</span></p>
+<p>&nbsp;<img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）0.png" alt="" /></p>
+<p><span style="font-size: 18px;">2、单独楼层效果与过度动画</span></p>
+<p><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）1.png" alt="" /></p>
+<p><span style="font-size: 18px;">3、室内效果</span></p>
+<p><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）2.png" alt="" /></p>
+<p><span style="font-size: 18pt;">二、难点重点说明</span></p>
+<p><span style="font-size: 18px;">炫酷的效果最终在于技术的熟练应用与设计师的强大脑洞</span></p>
+<p><span style="font-size: 18px;">这里再次强调美工不可忽视的作用，尊称设计师。</span></p>
+<p><span style="font-size: 18px;">效果好坏以及工作量的多少全凭设计师前期的工作，专业的人干专业的事情，大部分程序猿没有审美能力，这时候就靠设计师想象出炸天的效果。程序猿这时候利用自己的知识能力实现设计师的设想。</span></p>
+<p><span style="font-size: 18px;">至于难点技术有粒子效果、着色器语言、线性代数与图片的灵活应用、瓦片化加载等。</span></p>
+<p><span style="font-size: 18pt;">三、完成步骤</span></p>
+<p><span style="font-size: 18px;">园区可视化方案的实施跟真实建筑楼宇的过程是一样的。从设计到地基到建筑，一步也不能少。一步也不能跳过</span></p>
+<p><span style="font-size: 18px;">1、先设计模型</span></p>
+<p><span style="font-size: 18px;">　　1.1、先设计，这里</span><span style="font-size: 18px;">设计师登场，首先设计师打开脑洞，想象出一款炫酷的设计，与风格方案，然后与程序猿交涉，输出程序猿需要的原图。</span></p>
+<p><span style="font-size: 18px;">　　1.2、开始&ldquo;打地基&rdquo;，根据设计师的设计，我们选的地基是科技虚幻话地基，就是科技网格</span></p>
+<p><span style="font-size: 18px;">　　　　效果：<img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）3.png" alt="" /></span></p>
+<p><span style="font-size: 18px;">　　　　代码：</span></p>
+<div class="cnblogs_code">
+<pre><code>{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_back_1","objType":"cube2","length":40000,"width":40000,"height":1,"x":0,"y":0,"z":0,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":16777215,"side":1,"opacity":0.4,"imgurl":"../../img/3dImg/bg2.png","repeatx":<span style="color: #0000ff;">true</span>,"width":5,"repeaty":<span style="color: #0000ff;">true</span>,"height":5},"skin_down":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/bg2.png"},"skin_fore":{"skinColor":16777215,"side":1,"opacity":1},"skin_behind":{"skinColor":16777215,"side":1,"opacity":1},"skin_left":{"skinColor":16777215,"side":1,"opacity":1},"skin_right":{"skinColor":16777215,"side":1,"opacity":1}}},"showSortNub":1,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":0.1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}</pre>
+</div>
+<p><span style="font-size: 18px;">　　　　技术点讲解：</span></p>
+<p><span style="font-size: 18px;">　　　　这里面有两种方案，1、用划线的方式画出网格，2、做一张网格透明图片作为网格。我建议使用第一种方案，具体优点我们后续再讲。</span></p>
+<p><span style="font-size: 18px;">　　1.3、实现周遭环境</span></p>
+<p><span style="font-size: 18px;">　　效果：<img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）4.png" alt="" /></span></p>
+<p><span style="font-size: 18px;">　　代码：</span></p>
+<div class="cnblogs_code">
+<pre><code>{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_back_2","objType":"cube2","length":6000,"width":3000,"height":1,"x":0,"y":10,"z":0,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/bak6.png"},"skin_down":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/bak6.png"},"skin_fore":{"skinColor":16777215,"side":1,"opacity":0},"skin_behind":{"skinColor":16777215,"side":1,"opacity":0},"skin_left":{"skinColor":16777215,"side":1,"opacity":0},"skin_right":{"skinColor":16777215,"side":1,"opacity":0}}},"showSortNub":1,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":0.1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}</pre>
+</div>
+<p><span style="font-size: 18px;">　　难点讲解：这里面主要涉及到虚化处理，uv处理时计算位置、在合适的位置将透明值设置为0</span></p>
+<p><span style="font-size: 18px;">&nbsp;1.4、添加道路特效</span></p>
+<p><span style="font-size: 18px;">　　效果：</span><span style="font-size: 18px;"><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）5.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">　　代码：</span></p>
+<div class="cnblogs_code">
+<pre><code>{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_road_2","objType":"flowTube","points":[{"x":0,"y":0,"z":0},{"x":-900,"y":0,"z":2300},{"x":-980,"y":0,"z":2600},{"x":-1050,"y":0,"z":3000},{"x":-1150,"y":0,"z":3225},{"x":-1350,"y":0,"z":3400},{"x":-1500,"y":0,"z":3430},{"x":-3000,"y":0,"z":3280},{"x":-3800,"y":0,"z":3300},{"x":-4700,"y":0,"z":3400},{"x":-7000,"y":0,"z":3850}],"position":{"x":2855.78,"y":20,"z":-2705.822},"scale":{"x":1,"y":0.1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"style":{"skinColor":16772846,"imgurl":"../../img/3dImg/right1.png","opacity":1,"canvasSkin":{"cwidth":1024,"cheight":128,"cwNub":4,"chNub":4,"cMarginW":0.2,"cMarginH":0.2,"speed":20,"fps":40,"direction":"w","forward":"f","side":2,"run":<span style="color: #0000ff;">true</span>,"bgcolor":"rgba(199, 103, 0, 0.6)"}},"segments":10,"radialSegments":4,"closed":<span style="color: #0000ff;">false</span>,"radius":20,"showSortNub":7,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}</pre>
+</div>
+<p><span style="font-size: 18px;">　　难点：如何让道路动起来，这里我封装了方法，具体如何封装由于篇幅原因，只能下节课详解，这节课主要讲宏观搭建。</span></p>
+<p><span style="font-size: 18px;">　　1.5、添加楼层</span></p>
+<p><span style="font-size: 18px;">　　效果：</span><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）6.png" alt="" /></p>
+<p><span style="font-size: 18px;">　　模型代码：</span></p>
+<div class="cnblogs_code">
+<pre><code>{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2","objType"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN81","objType":"cube2","length":20,"width":5,"height":100,"x":352.402,"y":124.455,"z":-920.173,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN82","objType":"cube2","length":20,"width":5,"height":100,"x":456.197,"y":124.455,"z":-921.622,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN83","objType":"cube2","length":20,"width":5,"height":100,"x":558.428,"y":124.455,"z":-923.05,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN84","objType":"cube2","length":60,"width":5,"height":100,"x":-1083.881,"y":124.455,"z":310.91,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":-3.141592653589793},{"direction":"y","degree":1.5411257295109928},{"direction":"z","degree":-3.141592653589793}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN85","objType":"cube2","length":20,"width":5,"height":100,"x":-575.755,"y":124.455,"z":-908.398,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b1_floor_2OBJCREN86","objType":"cube2","length":20,"width":5,"height":100,"x":-674.435,"y":124.455,"z":-905.836,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":1411309,"side":1,"opacity":1},"skin_down":{"skinColor":1411309,"side":1,"opacity":1},"skin_fore":{"skinColor":1411309,"side":1,"opacity":1},"skin_behind":{"skinColor":1411309,"side":1,"opacity":1},"skin_left":{"skinColor":1411309,"side":1,"opacity":1},"skin_right":{"skinColor":1411309,"side":1,"opacity":1}}},"showSortNub":23,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0.013962634015954637},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}],"showSortNub":1051,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}</pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）7.png" alt="" /></p>
+<p><span style="font-size: 18px;">　　技术难点：瓦片式加载，初步加载时只做外立面的加载与渲染，当点击时再做内部加载</span></p>
+<p><span style="font-size: 18px;">　　1.6、剩下部分全是楼层的叠加 这里不做累诉</span></p>
+<p><span style="font-size: 18px;">　　最终达到如下效果即可</span></p>
+<p><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）8.png" alt="" /></p>
+<p><span style="font-size: 18px;">　　1.7、瓦片是加载房间模型</span></p>
+<p><span style="font-size: 18px;">　　效果如下：　　</span><img src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）9.png" alt="" /></p>
+<p><span style="font-size: 18px;">　　代码如下：</span></p>
+<div class="cnblogs_code">
+<pre><code>[{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"be2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""}],"showSortNub":10000,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b3_pz_4","objType":"GroupObj","scale":{"x":0.2,"y":0.2,"z":0.2},"position":{"x":-1678.254,"y":-2.85,"z":-758.935},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"childrens":[{"name":"b3_pz_4OBJCREN0","objType":"cylinder","radiusTop":200,"radiusBottom":100,"height":800,"segmentsX":2,"segmentsY":0,"openEnded":<span style="color: #0000ff;">false</span>,"position":{"x":0,"y":715.352,"z":0},"scale":{"x":1,"y":1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"style":{"skinColor":16776960,"skin":{"skin_up":{"skinColor":16777215,"side":0,"opacity":1},"skin_down":{"skinColor":16777215,"side":1,"opacity":1},"skin_side":{"skinColor":16777215,"side":2,"opacity":1,"imgurl":"../../img/3dImg/flower.gif"}}},"showSortNub":40000,"show":<span style="color: #0000ff;">true</span>,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""},{"name":"b3_pz_4OBJCREN1","objType":"cylinder","radiusTop":200,"radiusBottom":100,"height":800,"segmentsX":2,"segmentsY":0,"openEnded":<span style="color: #0000ff;">false</span>,"position":{"x":0,"y":715.352,"z":0},"scale":{"x":1,"y":1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":1.0471975201093497},{"direction":"z","degree":0}],"style":{"skinColor":16776960,"skin":{"skin_up":{"skinColor":16777215,"side":0,"opacity":1},"skin_down":{"skinColor":16777215,"side":1,"opacity":1},"skin_side":{"skinColor":16777215,"side":2,"opacity":1,"imgurl":"../../img/3dImg/flower.gif"}}},"showSortNub":40000,"show":<span style="color: #0000ff;">true</span>,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""},{"name":"b3_pz_4OBJCREN2","objType":"cylinder","radiusTop":200,"radiusBottom":100,"height":800,"segmentsX":2,"segmentsY":0,"openEnded":<span style="color: #0000ff;">false</span>,"position":{"x":0,"y":715.352,"z":0},"scale":{"x":1,"y":1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":2.0943951023931953},{"direction":"z","degree":0}],"style":{"skinColor":16776960,"skin":{"skin_up":{"skinColor":16777215,"side":0,"opacity":1},"skin_down":{"skinColor":16777215,"side":1,"opacity":1},"skin_side":{"skinColor":16777215,"side":2,"opacity":1,"imgurl":"../../img/3dImg/flower.gif"}}},"showSortNub":40000,"show":<span style="color: #0000ff;">true</span>,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""},{"name":"b3_pz_4OBJCREN3","objType":"cylinder","radiusTop":150,"radiusBottom":100,"height":400,"segmentsX":12,"segmentsY":0,"openEnded":<span style="color: #0000ff;">false</span>,"position":{"x":0,"y":200,"z":0},"scale":{"x":1,"y":1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"style":{"skinColor":16776960,"skin":{"skin_up":{"skinColor":16777215,"side":0,"opacity":1,"imgurl":"../../img/3dImg/wall/nitu.jpg"},"skin_down":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/rack_inside.jpg"},"skin_side":{"skinColor":7027752,"side":2,"opacity":1,"imgurl":"../../img/3dImg/pump_metalreflect.jpg"}}},"showSortNub":10000,"show":<span style="color: #0000ff;">true</span>,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""},{"name":"b3_pz_4OBJCREN4","objType":"cylinder","radiusTop":146,"radiusBottom":100,"height":1,"segmentsX":12,"segmentsY":0,"openEnded":<span style="color: #0000ff;">false</span>,"position":{"x":0,"y":367.315,"z":0},"scale":{"x":1,"y":1,"z":1},"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"style":{"skinColor":16776960,"skin":{"skin_up":{"skinColor":3351586,"side":2,"opacity":1,"imgurl":"../../img/3dImg/wall/nitu.jpg","repeatx":<span style="color: #0000ff;">true</span>,"width":1,"repeaty":<span style="color: #0000ff;">true</span>,"height":1},"skin_down":{"skinColor":16777215,"side":2,"opacity":1},"skin_side":{"skinColor":7027752,"side":2,"opacity":1}}},"showSortNub":10000,"show":<span style="color: #0000ff;">true</span>,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":"10001","BindMeteName":""}],"showSortNub":10000,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b3_glasswall_1","objType":"cube2","length":10,"width":450,"height":300,"x":181.738,"y":150,"z":-457.712,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/rack_inside.jpg"},"skin_down":{"skinColor":16777215,"side":1,"opacity":1},"skin_fore":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png","repeatx":<span style="color: #0000ff;">true</span>,"width":2,"repeaty":<span style="color: #0000ff;">true</span>,"height":1},"skin_behind":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png","repeatx":<span style="color: #0000ff;">true</span>,"width":2,"repeaty":<span style="color: #0000ff;">true</span>,"height":1},"skin_left":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png"},"skin_right":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png"}}},"showSortNub":70000,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>},{"show":<span style="color: #0000ff;">true</span>,"uuid":"","name":"b3_glasswall_6","objType":"cube2","length":10,"width":260,"height":300,"x":-1726.631,"y":150,"z":-679.828,"style":{"skinColor":16777215,"skin":{"skin_up":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/rack_inside.jpg"},"skin_down":{"skinColor":16777215,"side":1,"opacity":1},"skin_fore":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png","repeatx":<span style="color: #0000ff;">true</span>,"width":1,"repeaty":<span style="color: #0000ff;">true</span>,"height":1},"skin_behind":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png","repeatx":<span style="color: #0000ff;">true</span>,"width":1,"repeaty":<span style="color: #0000ff;">true</span>,"height":1},"skin_left":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png"},"skin_right":{"skinColor":16777215,"side":1,"opacity":1,"imgurl":"../../img/3dImg/wall/glass-wall5.png"}}},"showSortNub":90000,"customType1":"","customType2":"","animation":<span style="color: #0000ff;">null</span>,"dbclickEvents":<span style="color: #0000ff;">null</span>,"rotation":[{"direction":"x","degree":0},{"direction":"y","degree":0},{"direction":"z","degree":0}],"thick":<span style="color: #0000ff;">null</span>,"scale":{"x":1,"y":1,"z":1},"BindDevId":<span style="color: #0000ff;">null</span>,"BindDevName":<span style="color: #0000ff;">null</span>,"devInfo":<span style="color: #0000ff;">null</span>,"BindMeteId":<span style="color: #0000ff;">null</span>,"BindMeteName":<span style="color: #0000ff;">null</span>}]</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;">2、业务逻辑</span></p>
+<p><span style="font-size: 18px;">　　2.1、场景设想</span></p>
+<p><span style="font-size: 18px;">　　　　我们设想场景是这样的 初始化时看到整个园区楼宇的概况，然后双击楼宇，加载单个楼层模型，再双击楼层、加载楼层内房间模型、双击房间、可以进入。</span></p>
+<p><span style="font-size: 18px;">　　2.2、代码实现</span></p>
+<p><span style="font-size: 18px;">　　　　</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> ModelBussiness() {
+    </span><span style="color: #0000ff;">this</span>.currentAnimationState = 0<span style="color: #000000;">;
+}
+ModelBussiness.prototype.init </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (roomName) {
+
+    WT3DObj.mouseOverCallBack </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.mouseOverCallBack;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">进入回调</span>
+    WT3DObj.mouseOverInCallBack = <span style="color: #0000ff;">this</span><span style="color: #000000;">.mouseOverInCallBack;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">离开回调</span>
+    WT3DObj.mouseOverLeaveCallBack = <span style="color: #0000ff;">this</span><span style="color: #000000;">.mouseOverLeaveCallBack;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">悬停触发时间长度</span>
+    WT3DObj.mouseOverTimeLong = 1000<span style="color: #000000;">;
+ 
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">单击选中</span>
+ModelBussiness.prototype.clickSelectCabinet = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (_obj, _face) {
+}
+ModelBussiness.prototype.currentShowCabinet </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.currentState </span>= 0<span style="color: #000000;">;
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">双击选中</span>
+ModelBussiness.prototype.dbClickSelectCabinet = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (_obj, _face) {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">_obj.visible) {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    }
+
+    </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("cube2_612") &gt;= 0<span style="color: #000000;">
+      ) {
+        modelBussiness.clickBuildAnimation();
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("b1_floor_") &gt;= 0<span style="color: #000000;">
+      ) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">显示楼层</span>
+<span style="color: #000000;">        modelBussiness.clickFloorAnimation(_obj);
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("floor_room_zt") &gt;= 0<span style="color: #000000;">
+      ) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">显示楼层</span>
+<span style="color: #000000;">        modelBussiness.clickRoomAnimation(_obj);
+        
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("b3_tv_2") &gt;= 0 || _obj.name.indexOf("messagePanel_2") &gt;= 0<span style="color: #000000;">) {
+        modelBussiness.resetBuild();
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">双击摄像机</span>
+    <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("camera") &gt;= 0<span style="color: #000000;">) {
+        modelBussiness.playVideo(</span>"ws://220.231.250.181:10080/streamv2/live.flv?ip=10.82.31.193&amp;port=5001&amp;profile=h264major&amp;channel=007ea8e5b1884dc6904ba0098ed1b569"<span style="color: #000000;">);
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">悬停</span>
+ModelBussiness.prototype.mouseOverCallBack = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (_obj, face) {
+}
+ModelBussiness.prototype.mouseInCurrentObj </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.lastMouseInCurrentObj </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.mouseOverInCallBack </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (_obj, face) {
+    </span><span style="color: #0000ff;">var</span> _this = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> color = 0xbfffea<span style="color: #000000;">;
+
+
+    console.log(_obj.name);
+    modelBussiness.lastMouseInCurrentObj </span>=<span style="color: #000000;"> _obj;
+    modelBussiness.mouseInCurrentObj </span>=<span style="color: #000000;"> _obj;
+    </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("b1_floor_") &gt;= 0 || _obj.name.indexOf("floor_room_") &gt;= 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> _sobj =<span style="color: #000000;"> _obj;
+        </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("OBJCREN") &gt; 0<span style="color: #000000;">) {
+            _sobj </span>=<span style="color: #000000;"> _obj.parent;
+        }
+        modelBussiness.mouseInCurrentObj </span>=<span style="color: #000000;"> _sobj;
+        WT3DObj.commonFunc.setSkinColorByObj(_sobj, </span>0x00ffff<span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("b3_tv_2") &gt;= 0<span style="color: #000000;">) {
+        layer.msg(</span>"双击该电视返回园区总览"<span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("messagePanel_2") &gt;= 0<span style="color: #000000;">) {
+        layer.msg(</span>"双击该信息牌返回园区总览"<span style="color: #000000;">);
+    }
+    
+}
+ModelBussiness.prototype.mouseOverLeaveCallBack </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (_obj, face, nowobj) {
+    </span><span style="color: #0000ff;">var</span> _this = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> color = 0x000000<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("b1_floor_") &gt;= 0 || _obj.name.indexOf("floor_room_") &gt;= 0<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> _sobj =<span style="color: #000000;"> _obj;
+        </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("OBJCREN") &gt; 0<span style="color: #000000;">) {
+            _sobj </span>=<span style="color: #000000;"> _obj.parent;
+        }
+        WT3DObj.commonFunc.setSkinColorByObj(_sobj, </span>0x000000<span style="color: #000000;">);
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("b3_tv_2") &gt;= 0<span style="color: #000000;">) {
+        layer.closeAll();
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (_obj.name.indexOf("messagePanel_2") &gt;= 0<span style="color: #000000;">) {
+        layer.closeAll();
+    }
+
+}
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">双击大楼时动画</span>
+ModelBussiness.prototype.outCube = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.clickBuildAnimation</span>=<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.outCube) {
+        </span><span style="color: #0000ff;">this</span>.outCube = WT3DObj.commonFunc.findObject("cube2_612"<span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">var</span> c = <span style="color: #0000ff;">this</span><span style="color: #000000;">.outCube;
+    WT3DObj.commonFunc.changeObjsOpacity([c], </span>1, 0.01, 600, <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    });
+    </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> TWEEN.Tween(c.scale).to({
+        x:</span>3<span style="color: #000000;">,
+        y:</span>3<span style="color: #000000;">,
+        z:</span>3<span style="color: #000000;">
+    }, </span>700).onUpdate(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    }).onComplete(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        WT3DObj.commonFunc.changeObjsOpacity([c], </span>0.01, 1, 10, <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        });
+        c.scale.x </span>= 1; c.scale.y = 1; c.scale.z = 1<span style="color: #000000;">;
+        c.visible </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    }).start();
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">获取楼层模型对象</span>
+ModelBussiness.prototype.floors = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.B1Models </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+ModelBussiness.prototype.getFloors </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.floors) {
+        </span><span style="color: #0000ff;">this</span>.floors =<span style="color: #000000;"> {};
+        </span><span style="color: #0000ff;">this</span>.B1Models =<span style="color: #000000;"> [];
+        $.each(WT3DObj.scene.children, </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (_index, _obj) {
+            </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("b1_floor_") == 0<span style="color: #000000;">) {
+                modelBussiness.floors[_obj.name] </span>=<span style="color: #000000;"> _obj;
+            }
+            </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("b1") == 0
+                || _obj.name.indexOf("cube2_612") == 0
+                || _obj.name.indexOf("messagePanel_1") == 0
+                || _obj.name.indexOf("messagePanel_2") == 0<span style="color: #000000;">) {
+                modelBussiness.B1Models.push(_obj);
+            }
+        });
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.floors;
+}
+ModelBussiness.prototype.resetBuild </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+
+    $.each(modelBussiness.B1Models, </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (findex, fobj) {
+        fobj.visible </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (fobj.od_position) {
+        </span><span style="color: #000000;">
+                 { x: </span>-172.72016085901143, y: 57.386418380824466, z: -75.19850675990654 }, 1000<span style="color: #000000;">,
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+
+                    });
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.hidefloorData();
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.hideRoomData();
+    layer.closeAll();
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">加载楼层模型</span>
+ModelBussiness.prototype.floorModels =<span style="color: #000000;"> {};
+ModelBussiness.prototype.loadFloor </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (floorNub, callBack) {
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.floorModels["f" +<span style="color: #000000;"> floorNub]) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (callBack) {
+            callBack();
+      </span><span style="color: #0000ff;">if</span> (_obj.name.indexOf("floor_") == 0<span style="color: #000000;">) {
+                    modelBussiness.floorModels[</span>"f" +<span style="color: #000000;"> floorNub].push(_obj);
+                }
+            });
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (callBack) {
+                callBack();
+            }
+        });
+        }
+    }
+}
+ModelBussiness.prototype.hidefloorData </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> fs <span style="color: #0000ff;">in</span><span style="color: #000000;"> modelBussiness.floorModels) {
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modelBussiness.floorModels[fs]) {
+            </span><span style="color: #0000ff;">var</span> fmodels =<span style="color: #000000;"> modelBussiness.floorModels[fs];
+            $.each(fmodels, </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (findex, fobj) {
+                fobj.visible </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+            });
+        }
+    };
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">双击楼层时动画</span>
+ModelBussiness.prototype.clickFloorAnimation = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (floor) {
+    </span><span style="color: #0000ff;">var</span> _floorNub = parseInt(floor.name.replace("b1_floor_", ""<span style="color: #000000;">));
+    </span><span style="color: #0000ff;">if</span> (floor.name.indexOf("b1_floor_top") &gt;= 0<span style="color: #000000;">) {
+        _floorNub </span>= "top"<span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.loadFloor(_floorNub);
+    }
+    console.log(_floorNub);
+    </span><span style="color: #0000ff;">var</span> _floors = <span style="color: #0000ff;">this</span><span style="color: #000000;">.getFloors();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">b1_floor_top</span>
+    <span style="color: #000000;">
+                });
+            });
+        });
+    }
+
+
+}
+ModelBussiness.prototype.distanceApartFloor </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (floorNub,callBack) {
+    </span><span style="color: #0000ff;">var</span> _floors = <span style="color: #0000ff;">this</span><span style="color: #000000;">.getFloors();
+    </span><span style="color: #0000ff;">var</span> objs =<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 1; i &lt;=6; i++<span style="color: #000000;">) {
+            objs.push(_floors[</span>"b1_floor_" +<span style="color: #000000;"> i]);
+  </span><span style="color: #000000;">
+        }
+    }).start();
+}
+ModelBussiness.prototype.shrinkageFloor </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (callBack) {
+    </span><span style="color: #0000ff;">var</span> _floors = <span style="color: #0000ff;">this</span><span style="color: #000000;">.getFloors();
+    </span><span style="color: #0000ff;">var</span> objs =<span style="color: #000000;"> [];
+   </span><span style="color: #000000;">
+    }).start();
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">加载房间模型</span>
+ModelBussiness.prototype.clickRoomAnimation = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (room) {
+    WT3DObj.commonFunc.flashObjs([room], room.name </span>+ "_flashanimation_", 0x00aa00, 10, 200, 0<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.loadRoom(room.name);
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.getFloors();
+</span><span style="color: #000000;"> 
+}
+ModelBussiness.prototype.roomModels </span>=<span style="color: #000000;"> {};
+ModelBussiness.prototype.currentShowRoomName </span>= "currentShowRoomName"<span style="color: #000000;">;
+ModelBussiness.prototype.currentShowroomFlagStr </span>= "currentShowroomFlagStr"<span style="color: #000000;">;
+ModelBussiness.prototype.loadRoom </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> (roomName, callBack) {
+    </span><span style="color: #0000ff;">var</span> jsonmodels = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    </span><span style="color: #000000;">
+}
+ModelBussiness.prototype.hideRoomData </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+</span><span style="color: #000000;"> 
+    };
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">播放摄像头</span>
+ModelBussiness.prototype.playVideo = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (wsSrc) {
+  </span><span style="color: #000000;">
+}
+
+</span><span style="color: #0000ff;">var</span> modelBussiness = <span style="color: #0000ff;">new</span> ModelBussiness();</pre>
+</div>
+<p>&nbsp;</p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;">&nbsp;<span style="font-size: 14pt;">由于篇幅原因，这一课先介绍到这里&nbsp;</span></p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;"><span style="font-size: 14pt;">后面我将继续讲解用webgl 建立 3D园区 3D智慧小区 炫酷效果等等</span></p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;"><span style="font-size: 14pt;">技术交流 1203193731@qq.com</span></p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;"><span style="font-size: 14pt;">交流微信：</span></p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;"><span style="font-size: 14pt;">　　　　<img style="border-width: initial; border-style: none; margin-top: 20px; margin-bottom: 20px; max-width: 650px; height: auto;" src="./images/使用webgl(three.js)搭建一个3D智慧园区、3D建筑，3D消防模拟，web版3D,bim管理系统——第四课（炫酷版一）10.png" alt="" width="177" height="183" /></span></p>
+<p style="padding: 0px; list-style-type: none; list-style-image: none; color: #444444; font-family: Tahoma, Arial, Helvetica, sans-serif;"><span style="font-size: 14pt;">如果你有什么要交流的心得 可邮件我</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,54 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修使用Vue-cli3.0创建的项目，如何发布npm包' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>使用Vue-cli3.0创建的项目，如何发布npm包</center></div><div class='banquan'>原文出处:本文由博客园博主海因斯坦提供。<br/>
+原文连接:https://www.cnblogs.com/yinhaiying/p/11646826.html</div><br>
+    <h1 id="使用vue-cli3.0创建的项目如何发布npm包">使用Vue-cli3.0创建的项目，如何发布npm包</h1>
+<blockquote>
+<p>在使用<code>vue</code>进行项目开发时，如果我们想要发布一个包，有时候会有点迷糊，不知道应该怎么修改脚手架的默认设置。这里记录一下一些常见的操作。</p>
+</blockquote>
+<h2 id="创建index.js进行模块的导出">创建index.js进行模块的导出</h2>
+<p>将我们需要导出的组件在<code>index.js</code>文件中进行统一导出，可能之前需要进行处理，是先进行全局注册<code>Vue.component</code>，还是用户自己注册。</p>
+<pre><code><code>import App from &#39;./App.vue&#39;
+export default App;</code></pre>
+<h2 id="修改vue.config.js配置文件">修改vue.config.js配置文件</h2>
+<p>修改<code>publicPath</code>的路径为相对路径</p>
+<pre><code><code>module.exports = {
+  lintOnSave: false,
+  runtimeCompiler:true,
+  publicPath: &#39;./&#39;,
+}</code></pre>
+<h2 id="修改package.json中的script">修改package.json中的script</h2>
+<p><code>vue-cli</code>默认给我们设置了<code>build</code>,但是我们不使用这个<code>build</code>，而是打包我们之前创建的<code>index.js</code>文件</p>
+<p>新增<code>build-bundle</code></p>
+<pre><code><code>  &quot;scripts&quot;: {
+    &quot;serve&quot;: &quot;vue-cli-service serve&quot;,
+    &quot;build&quot;: &quot;vue-cli-service build&quot;,
+    &quot;build-bundle&quot;: &quot;vue-cli-service build --target lib --name AutoForm ./src/index.js&quot;,
+    &quot;lint&quot;: &quot;vue-cli-service lint&quot;
+  },</code></pre>
+<h2 id="修改package.json中的main">修改package.json中的main</h2>
+<p>这里的main是打包后的程序入口，也就是我们通常下载一个包后使用<code>import xxx from YYY</code>默认从<code>node_modules</code>下查找的文件，因此，我们需要修改为我们打包后的文件名，否则查找不到这个文件。</p>
+<pre><code><code>&quot;main&quot;: &quot;dist/AutoForm.common.js&quot;,</code></pre>
+<p>这样的话，一个包就修改完成，打包后正常发布就可以使用了。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

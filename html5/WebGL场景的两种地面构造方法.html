@@ -1,0 +1,1266 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修WebGL场景的两种地面构造方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>WebGL场景的两种地面构造方法</center></div><div class='banquan'>原文出处:本文由博客园博主ljzc002提供。<br/>
+原文连接:https://www.cnblogs.com/ljzc002/p/11105496.html</div><br>
+    <p>总述：<br />大部分3D编程都涉及到地面元素，在场景中我们使用地面作为其他物体的承载基础，同时也用地面限制场景使用者的移动范围，还可以通过设置地块的属性为场景的不同位置设置对应的计算规则。本文在WebGL平台上借助Babylon.js库探索并实现了两种地面构造方法，除了两种确定的构造方法外，本文还包含了对一些其他选择的探讨和一些对电子游戏艺术的看法。建议在阅读本文前，先学习3D编程入门知识和Babylon.js的官方入门教程，前者可以在 https://space.bilibili.com/25346426/channel/detail?cid=14552找到一些介绍基础概念的视频教程，后者可以在https://github.com/ljzc002/ljzc002.github.io/tree/master/BABYLON101找到英中对照版本，本篇文章所用到的代码可以在https://github.com/ljzc002/ljzc002.github.io/tree/master/EmptyTalk下载。</p>
+<p>一、方法一&mdash;&mdash;使用标准地块拼装构造地面<br />1、我们先制作5种标准地块：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法0.png" alt="" /></p>
+<p>标准地块都是边长为1的正方体，每一种标准地块使用对应的纹理表示特定的地貌，我们可以用这些标准地块的复制体拼接成复杂的地面构造。在本文中我使用正方体作为标准地块，垂直排布的生成地形，你也可以使用六棱柱等其他形状作为标准地块，或者将地块绕y轴旋转一些角度后进行排布。<br />制作标准地块的代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>         <span style="color: #0000ff;">var</span> size_per=1;<span style="color: #008000;">//</span><span style="color: #008000;">每个单元格的尺寸</span>
+<span style="color: #008080;"> 2</span>         <span style="color: #0000ff;">var</span> obj_landtype=<span style="color: #000000;">{};
+</span><span style="color: #008080;"> 3</span> <span style="color: #008000;">//</span><span style="color: #008000;">建立网格</span>
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> box_grass=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateBox("box_grass"<span style="color: #000000;">,{size:size_per},scene);
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">var</span> box_tree=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateBox("box_tree"<span style="color: #000000;">,{size:size_per},scene);
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">var</span> box_stone=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateBox("box_stone"<span style="color: #000000;">,{size:size_per},scene);
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> box_shallowwater=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateBox("box_shallowwater"<span style="color: #000000;">,{size:size_per},scene);
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">var</span> box_deepwater=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateBox("box_deepwater"<span style="color: #000000;">,{size:size_per},scene);
+</span><span style="color: #008080;"> 9</span>         box_grass.renderingGroupId = 2<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>         box_tree.renderingGroupId = 2<span style="color: #000000;">;
+</span><span style="color: #008080;">11</span>         box_stone.renderingGroupId = 2<span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>         box_shallowwater.renderingGroupId = 2<span style="color: #000000;">;
+</span><span style="color: #008080;">13</span>         box_deepwater.renderingGroupId = 2<span style="color: #000000;">;
+</span><span style="color: #008080;">14</span>         box_grass.position.y=-100*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">15</span>         box_tree.position.y=-101*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">16</span>         box_stone.position.y=-102*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">17</span>         box_shallowwater.position.y=-103*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">18</span>         box_deepwater.position.y=-104*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">19</span>         obj_landtype.box_grass=<span style="color: #000000;">box_grass;
+</span><span style="color: #008080;">20</span>         obj_landtype.box_tree=<span style="color: #000000;">box_tree;
+</span><span style="color: #008080;">21</span>         obj_landtype.box_stone=<span style="color: #000000;">box_stone;
+</span><span style="color: #008080;">22</span>         obj_landtype.box_shallowwater=<span style="color: #000000;">box_shallowwater;
+</span><span style="color: #008080;">23</span>         obj_landtype.box_deepwater=<span style="color: #000000;">box_deepwater;
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">        OptimizeMesh(box_grass);
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">        OptimizeMesh(box_tree);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">        OptimizeMesh(box_stone);
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">        OptimizeMesh(box_shallowwater);
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">        OptimizeMesh(box_deepwater);
+</span><span style="color: #008080;">29</span> <span style="color: #008000;">//</span><span style="color: #008000;">建立材质</span>
+<span style="color: #008080;">30</span>         <span style="color: #0000ff;">var</span> mat_grass = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_grass", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">31</span>         mat_grass.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/grass.jpg"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">        mat_grass.freeze();
+</span><span style="color: #008080;">33</span>         box_grass.material=<span style="color: #000000;">mat_grass;
+</span><span style="color: #008080;">34</span>         <span style="color: #0000ff;">var</span> mat_tree = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_tree", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">35</span>         mat_tree.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/yulin.png"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">        mat_tree.freeze();
+</span><span style="color: #008080;">37</span>         box_tree.material=<span style="color: #000000;">mat_tree;
+</span><span style="color: #008080;">38</span>         <span style="color: #0000ff;">var</span> mat_stone = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_stone", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">39</span>         mat_stone.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/stone.png"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">        mat_stone.freeze();
+</span><span style="color: #008080;">41</span>         box_stone.material=<span style="color: #000000;">mat_stone;
+</span><span style="color: #008080;">42</span>         <span style="color: #0000ff;">var</span> mat_shallowwater = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_shallowwater", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">43</span>         mat_shallowwater.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/lake.png"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">        mat_shallowwater.freeze();
+</span><span style="color: #008080;">45</span>         box_shallowwater.material=<span style="color: #000000;">mat_shallowwater;
+</span><span style="color: #008080;">46</span>         <span style="color: #0000ff;">var</span> mat_deepwater = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_deepwater", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">47</span>         mat_deepwater.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/sea.png"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">        mat_deepwater.freeze();
+</span><span style="color: #008080;">49</span>         box_deepwater.material=mat_deepwater;        </pre>
+</div>
+<p>这段代码制作了&ldquo;草地&rdquo;、&ldquo;森林&rdquo;、&ldquo;岩石&rdquo;、&ldquo;浅水&rdquo;、&ldquo;深水&rdquo;五种标准地块，对于地块的网格，使用OptimizeMesh方法进行了一些显示优化，OptimizeMesh方法内容如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> OptimizeMesh(mesh)
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">3</span>         mesh.convertToFlatShadedMesh();<span style="color: #008000;">//</span><span style="color: #008000;">使用顶点颜色计算代替片元颜色计算</span>
+<span style="color: #008080;">4</span>         mesh.freezeWorldMatrix();<span style="color: #008000;">//</span><span style="color: #008000;">冻结世界坐标系</span>
+<span style="color: #008080;">5</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> mesh.material.needDepthPrePass = true;//启用深度预通过</span>
+<span style="color: #008080;">6</span>         <span style="color: #008000;">//</span><span style="color: #008000;">mesh.convertToUnIndexedMesh();//使用三角形绘制代替索引绘制</span>
+<span style="color: #008080;">7</span>     }</pre>
+</div>
+<p>对于地块材质，使用freeze方法冻结了材质对象的属性，避免渲染引擎频繁刷新材质状态。</p>
+<p>2、接下来我们用草地地块拼接一个最简单的平原地形<br />	地形渲染效果如下：</p>
+<p><span style="color: #888888;"><img src="./images/WebGL场景的两种地面构造方法1.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>这片草原是由10201个草地地块拼接而成的，这里我使用了OpenGL的&ldquo;多实例渲染&rdquo;技术，来降低绘制大量重复对象对计算性能的消耗，Babylon.js库在createInstance方法中封装了这一技术：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>     <span style="color: #0000ff;">var</span> arr_instance=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">var</span> segs_x=100;<span style="color: #008000;">//</span><span style="color: #008000;">横向分段次数</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">var</span> segs_y=100;<span style="color: #008000;">//</span><span style="color: #008000;">纵向分段次数</span>
+<span style="color: #008080;"> 4</span>     
+<span style="color: #008080;"> 5</span>     <span style="color: #008000;">//</span><span style="color: #008000;">以高度0为海平面，以xy00为大地原点</span>
+<span style="color: #008080;"> 6</span>         <span style="color: #008000;">//</span><span style="color: #008000;">形成初始地块:101*101个格子，中心格的中心是原点</span>
+<span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;=segs_x;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 9</span>             arr_instance[i]=<span style="color: #000000;">[];
+</span><span style="color: #008080;">10</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;=segs_y;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">12</span>                 arr_instance[i][j]=<span style="color: #000000;">[];
+</span><span style="color: #008080;">13</span>                 <span style="color: #0000ff;">var</span> instance=obj_landtype.box_grass.createInstance("ground_"+i+"_"+j+"_0"<span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>                 instance.mydata={i:i,j:j,k:0<span style="color: #000000;">,landclass:obj_landtype.box_grass};
+</span><span style="color: #008080;">15</span>                 instance.position=<span style="color: #0000ff;">new</span> BABYLON.Vector3((i-(segs_x/2))*size_per,0,(j-(segs_y/2))*size_per);<span style="color: #008000;">//</span><span style="color: #008000;">xz方向上都是从负向正堆叠</span>
+<span style="color: #008080;">16</span>                 arr_instance[i][j].push(instance);<span style="color: #008000;">//</span><span style="color: #008000;">把每个实例用全局对象保存起来</span>
+<span style="color: #008080;">17</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">18</span>         }</pre>
+</div>
+<p>这里我们为每个实例对象设置了一个mydata属性，将地块的一些信息保存到这个属性里，以备之后的场景交互使用。</p>
+<p>3、为单元格标记xz方向上的索引</p>
+<p>现在每个地块都是沿着x轴和z轴整齐排列的，为方便区分，我们将xz平面上的每个方块位置叫做&ldquo;单元格&rdquo;，每个单元格中可能有多个地块实例。每个单元格的位置以其x、z轴上的索引表示，我们现在需要一种方式将这一索引值显示出来。<br />	这里我们先尝试为每个单元格显示一个索引文本，渲染效果如下：（可以访问https://ljzc002.github.io/EmptyTalk/HTML/TEST/testfloor.html查看）</p>
+<p><img src="./images/WebGL场景的两种地面构造方法2.png" alt="" /></p>
+<p>可以看出标记效果并不是很理想，同时数以万计的索引文本也降低了场景的渲染速度，这种方法可能并不适用于当前的单元格标记需求，但包含的技术可能用在其他地方：</p>
+<p>a、首先建立一个精灵管理器以及一张包含数字和减号的图片</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">准备十种数字以及减号的纹理</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">var</span> can_temp=document.createElement("canvas"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 3</span>         can_temp.width=132<span style="color: #008000;">//</span><span style="color: #008000;">264;</span>
+<span style="color: #008080;"> 4</span>         can_temp.height=24<span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">var</span> context=can_temp.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span>         context.fillStyle="rgba(0,0,0,0)";<span style="color: #008000;">//</span><span style="color: #008000;">完全透明的背景</span>
+<span style="color: #008080;"> 7</span>         context.fillRect(0,0<span style="color: #000000;">,can_temp.width,can_temp.height);
+</span><span style="color: #008080;"> 8</span>         context.fillStyle = "#ffffff"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>         context.font = "bold 24px monospace"<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;10;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">12</span>             context.fillText(i,i*12,24<span style="color: #000000;">);
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">14</span>         context.fillText("-",120,24<span style="color: #000000;">);
+</span><span style="color: #008080;">15</span>         <span style="color: #008000;">//</span><span style="color: #008000;">context.fillText("0123456789-",0,24);//默认为半角，为了在作为精灵使用时整齐的分块必须一个一个单独绘制</span>
+<span style="color: #008080;">16</span>         <span style="color: #0000ff;">var</span> png=can_temp.toDataURL("image/png");<span style="color: #008000;">//</span><span style="color: #008000;">生成PNG图片</span>
+<span style="color: #008080;">17</span>         <span style="color: #008000;">//</span><span style="color: #008000;">建立精灵管理器</span>
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">var</span> spriteManager = <span style="color: #0000ff;">new</span> BABYLON.SpriteManager("spriteManager", png, (segs_x+1)*(segs_y+1)*7, 24<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">19</span>         spriteManager.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">20</span>         spriteManager.cellWidth=12<span style="color: #000000;">;
+</span><span style="color: #008080;">21</span>         spriteManager.cellHeight=24;</pre>
+</div>
+<p>b、在生成地块实例的循环里加入精灵生成代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">添加精灵，估计地图最大为1000*1000</span>
+<span style="color: #008080;"> 2</span>                 <span style="color: #0000ff;">var</span> number1 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number1"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 3</span>                 <span style="color: #0000ff;">var</span> number2 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number2"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 4</span>                 <span style="color: #0000ff;">var</span> number3 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number3"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 5</span>                 <span style="color: #0000ff;">var</span> number4 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number4"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 6</span>                 <span style="color: #0000ff;">var</span> number5 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number5"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 7</span>                 <span style="color: #0000ff;">var</span> number6 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number6"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 8</span>                 <span style="color: #0000ff;">var</span> number7 = <span style="color: #0000ff;">new</span> BABYLON.Sprite("number7"<span style="color: #000000;">, spriteManager);
+</span><span style="color: #008080;"> 9</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">为缺少的数位填充0，生成三位数字</span>
+<span style="color: #008080;">10</span>                 stri=(i+1000+"").substr(1<span style="color: #000000;">);
+</span><span style="color: #008080;">11</span>                 strj=(j+1000+"").substr(1<span style="color: #000000;">);
+</span><span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>                 number1.cellIndex=parseInt(stri[0<span style="color: #000000;">]);
+</span><span style="color: #008080;">14</span>                 number2.cellIndex=parseInt(stri[1<span style="color: #000000;">]);
+</span><span style="color: #008080;">15</span>                 number3.cellIndex=parseInt(stri[2<span style="color: #000000;">]);
+</span><span style="color: #008080;">16</span>                 number4.cellIndex=10;<span style="color: #008000;">//</span><span style="color: #008000;">减号</span>
+<span style="color: #008080;">17</span>                 number5.cellIndex=parseInt(strj[0<span style="color: #000000;">]);
+</span><span style="color: #008080;">18</span>                 number6.cellIndex=parseInt(strj[1<span style="color: #000000;">]);
+</span><span style="color: #008080;">19</span>                 number7.cellIndex=parseInt(strj[2<span style="color: #000000;">]);
+</span><span style="color: #008080;">20</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">定位精灵，7个精灵垂直排列作为一条文本</span>
+<span style="color: #008080;">21</span>                 number1.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">22</span>                 number1.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">23</span>                 number1.position.y=2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">24</span>                 number1.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">25</span>                 number1.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span>                 number2.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">28</span>                 number2.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">29</span>                 number2.position.y=1.8*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">30</span>                 number2.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">31</span>                 number2.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">32</span>                 number3.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">33</span>                 number3.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">34</span>                 number3.position.y=1.6*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">35</span>                 number3.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">36</span>                 number3.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">37</span>                 number4.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">38</span>                 number4.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">39</span>                 number4.position.y=1.4*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">40</span>                 number4.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">41</span>                 number4.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">42</span>                 number5.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">43</span>                 number5.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">44</span>                 number5.position.y=1.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">45</span>                 number5.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">46</span>                 number5.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">47</span>                 number6.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">48</span>                 number6.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">49</span>                 number6.position.y=1.0*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">50</span>                 number6.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">51</span>                 number6.position.z+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">52</span>                 number7.size=0.2*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">53</span>                 number7.position=<span style="color: #000000;">instance.position.clone();
+</span><span style="color: #008080;">54</span>                 number7.position.y=0.8*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">55</span>                 number7.position.x+=0.3*<span style="color: #000000;">size_per;
+</span><span style="color: #008080;">56</span>                 number7.position.z+=0.3*size_per;</pre>
+</div>
+<p>考虑到计算性能，这里使用精灵作为文本的载体（但建立了7万多个精灵之后，帧率还是降低了很多），因为水平排列的精灵在相机水平移动时会相互遮挡，所以垂直排列精灵来降低影响，也许可以通过重设精灵的旋转轴位置来彻底解决这一问题。</p>
+<p>除了为每个地块标注索引之外，我们还可以使用带有索引的小地图、在单独的视口中显示选定地块的特写、在选定地块旁边生成标记等等方式来标明地块的索引，后文将使用在场景中放置参考物的方式来标示地块索引。</p>
+<p>4、生成地形起伏<br />我们抬升了xz平面中左下角的两格单元格，并将这两个单元设为&ldquo;岩石&rdquo;地貌：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>a、首先建立两个工具方法：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">disposeCube(0,0)</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">function</span> disposeCube(i,j)<span style="color: #008000;">//</span><span style="color: #008000;">移除一个xz位置上的所有可能存在的方块</span>
+<span style="color: #008080;"> 3</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr_instance[i][j].length;
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> k=0;k&lt;len;k++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">var</span> instance=<span style="color: #000000;">arr_instance[i][j][k];
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">            instance.dispose();
+</span><span style="color: #008080;"> 9</span>             instance=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">13</span>     <span style="color: #008000;">//</span><span style="color: #008000;">在指定单元格、指定高度建立指定类型的地块</span>
+<span style="color: #008080;">14</span>     <span style="color: #008000;">//</span><span style="color: #008000;">createCube(0,0,2,obj_landtype.box_stone)</span>
+<span style="color: #008080;">15</span>     <span style="color: #008000;">//</span><span style="color: #008000;">i，j必定是整数，k可能是小数,都表示单位长度的数量</span>
+<span style="color: #008080;">16</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> createCube(i,j,k,landclass)
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">18</span>         <span style="color: #0000ff;">var</span> instance=landclass.createInstance("ground_"+i+"_"+j+"_"+<span style="color: #000000;">k);
+</span><span style="color: #008080;">19</span>         instance.mydata=<span style="color: #000000;">{i:i,j:j,k:k,landclass:landclass};
+</span><span style="color: #008080;">20</span>         instance.position=<span style="color: #0000ff;">new</span> BABYLON.Vector3((i-(segs_x/2))*size_per,k*size_per,(j-(segs_y/2))*size_per);<span style="color: #008000;">//</span><span style="color: #008000;">都是从负向正堆叠？-》规定每个单元格的地块数组都是从低到高排列</span>
+<span style="color: #008080;">21</span>         <span style="color: #008000;">//</span><span style="color: #008000;">arr_instance[i][j].push(instance);</span>
+<span style="color: #008080;">22</span> <span style="color: #000000;">        arr_instance[i][j].unshift(instance);
+</span><span style="color: #008080;">23</span>     }</pre>
+</div>
+<p>b、接下来修改一些被选中的单元格</p>
+<p>我们把&ldquo;被选中的单元格&rdquo;放在一个数组里，将这个数组命名为&ldquo;配置数组&rdquo;。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">用对应的方块填充一条路径上所有的xz单元格，先清空单元格内原有方块，然后在指定高度建立一个方块</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> ，接着比对所有周围方块的高度（比对四个方向），填补漏出的部分，在填补时注意越低的方块在数组中越靠前。</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #008000;">//</span><span style="color: #008000;">createCubePath([{i:0,j:0,k:1,landclass:obj_landtype.box_stone},{i:1,j:1,k:2.5,landclass:obj_landtype.box_stone}])</span>
+<span style="color: #008080;"> 4</span>    
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> createCubePath(cubepath)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">cubepath.length;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每一个xz单元格</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">10</span>             <span style="color: #0000ff;">var</span> cube=<span style="color: #000000;">cubepath[i];
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">            disposeCube(cube.i,cube.j);
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">            createCube(cube.i,cube.j,cube.k,cube.landclass);
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">14</span>         <span style="color: #008000;">//</span><span style="color: #008000;">初次绘制后进行二次对比，初次绘制的必定是xz单元格中的最高点</span>
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> index=0;index&lt;len;index++<span style="color: #000000;">)
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">17</span>             <span style="color: #0000ff;">var</span> cube=<span style="color: #000000;">cubepath[index];
+</span><span style="color: #008080;">18</span>             <span style="color: #0000ff;">var</span> i=<span style="color: #000000;">cube.i;
+</span><span style="color: #008080;">19</span>             <span style="color: #0000ff;">var</span> j=<span style="color: #000000;">cube.j;
+</span><span style="color: #008080;">20</span>             <span style="color: #0000ff;">var</span> k=<span style="color: #000000;">cube.k;
+</span><span style="color: #008080;">21</span>             <span style="color: #008000;">//</span><span style="color: #008000;">上右下左</span>
+<span style="color: #008080;">22</span>             <span style="color: #008000;">//</span><span style="color: #008000;">取四方的最高</span>
+<span style="color: #008080;">23</span>             <span style="color: #0000ff;">var</span> k1=999<span style="color: #000000;">;
+</span><span style="color: #008080;">24</span>             <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr_instance[i])
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">26</span>                 <span style="color: #0000ff;">var</span> arr1=arr_instance[i][j+1<span style="color: #000000;">];
+</span><span style="color: #008080;">27</span>                 <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr1)
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">29</span>                     <span style="color: #0000ff;">var</span> ins_cube1=arr1[arr1.length-1<span style="color: #000000;">];
+</span><span style="color: #008080;">30</span>                     k1=<span style="color: #000000;">ins_cube1.mydata.k;
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">33</span>             <span style="color: #0000ff;">var</span> k2=999<span style="color: #000000;">;
+</span><span style="color: #008080;">34</span>             <span style="color: #0000ff;">if</span>(arr_instance[i+1<span style="color: #000000;">])
+</span><span style="color: #008080;">35</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">36</span>                 <span style="color: #0000ff;">var</span> arr2=arr_instance[i+1<span style="color: #000000;">][j];
+</span><span style="color: #008080;">37</span>                 <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr2) {
+</span><span style="color: #008080;">38</span>                     <span style="color: #0000ff;">var</span> ins_cube2 = arr2[arr2.length - 1<span style="color: #000000;">];
+</span><span style="color: #008080;">39</span>                     k2=<span style="color: #000000;">ins_cube2.mydata.k;
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">42</span>             <span style="color: #0000ff;">var</span> k3=999<span style="color: #000000;">;
+</span><span style="color: #008080;">43</span>             <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr_instance[i])
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">45</span>                 <span style="color: #0000ff;">var</span> arr3=arr_instance[i][j-1<span style="color: #000000;">];
+</span><span style="color: #008080;">46</span>                 <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr3) {
+</span><span style="color: #008080;">47</span>                     <span style="color: #0000ff;">var</span> ins_cube3=arr3[arr3.length-1<span style="color: #000000;">];
+</span><span style="color: #008080;">48</span>                     k3=<span style="color: #000000;">ins_cube3.mydata.k;
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">51</span>             <span style="color: #0000ff;">var</span> k4=999<span style="color: #000000;">;
+</span><span style="color: #008080;">52</span>             <span style="color: #0000ff;">if</span>(arr_instance[i-1<span style="color: #000000;">])
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">54</span>                 <span style="color: #0000ff;">var</span> arr4=arr_instance[i-1][j+1<span style="color: #000000;">];
+</span><span style="color: #008080;">55</span>                 <span style="color: #0000ff;">if</span><span style="color: #000000;">(arr4) {
+</span><span style="color: #008080;">56</span>                     <span style="color: #0000ff;">var</span> ins_cube4=arr4[arr4.length-1<span style="color: #000000;">];
+</span><span style="color: #008080;">57</span>                     k4=<span style="color: #000000;">ins_cube4.mydata.k;
+</span><span style="color: #008080;">58</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">59</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">60</span>          
+<span style="color: #008080;">61</span>             <span style="color: #008000;">//</span><span style="color: #008000;">在四方最高中找最低</span>
+<span style="color: #008080;">62</span>             <span style="color: #0000ff;">var</span> mink=<span style="color: #000000;">Math.min(k1,k2,k3,k4);
+</span><span style="color: #008080;">63</span> 
+<span style="color: #008080;">64</span>             <span style="color: #0000ff;">var</span> len2=Math.floor((k-mink)/size_per);
+<span style="color: #008080;">65</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> index2=1;index2&lt;=len2;index2++<span style="color: #000000;">)
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">67</span>                 createCube(i,j,k-<span style="color: #000000;">index2,cube.landclass);
+</span><span style="color: #008080;">68</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">arr_instance[i][j].unshift()</span>
+<span style="color: #008080;">69</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">70</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">71</span>     }</pre>
+</div>
+<p>这段代码包含两个循环，第一个循环负责放置选中单元格中最高的那个地块，第二个循环则负责填充最高地块下面的支撑，比如高山的山体或者深谷的谷壁。这种填充是靠比较选中的单元格和四面单元格的高度实现的，这个算法的一个缺点是在需要生成低谷时，谷地周围的一圈高度不变的平地也需要放入配置数组，否则地形会出现断裂。<br />直接在浏览器控制台中执行createCubePath([{i:0,j:0,k:1,landclass:obj_landtype.box_stone},{i:1,j:1,k:2.5,landclass:obj_landtype.box_stone}])命令即可改变地形。这里你可能想要看到那种&ldquo;在场景中拖动鼠标地形随之起伏&rdquo;的效果，但我认为这种运行时代码注入的控制方式反而是WebGL技术相对于传统桌面3D程序的一大优势，借此我们可能实现远超传统ui的精细化控制。</p>
+<p>可以访问https://ljzc002.github.io/EmptyTalk/HTML/TEST/testfloor2.html进行测试</p>
+<p>5、小结<br />综上我们编写了一个简单的地形生成方法，但还有更多的工作没有做，我们需要一些根据某种规则生成配置数组的方法、一些根据规则在同一单元格的不同高度分配不同地块的方法（关于地形规则的制定也许可以参考这篇随机生成行星表面地形的文章https://www.cnblogs.com/ljzc002/p/9134272.html），对于不习惯控制台输入的使用者还要考虑编写实用的交互ui。这种空间上离散的地形比较适合编写时间上离散的回合制3D场景，接下来我们将要讨论更适合即时3D场景的连续地形。</p>
+<p>二、第二种方法&mdash;&mdash;改进的地面网格</p>
+<p>1、Babylon.js内置地面网格的不足<br />Babylon.js内置了一种平面地面网格和一种高度图地面网格，但这两钟网格存在一些不足：<br />甲：只能设置相同的x向分段数和z向分段数<br />乙：地面网格里没有xz索引信息，只能通过修改底层顶点位置改变地形<br />丙：无法表现垂直断崖和反斜面之类变化剧烈的地形</p>
+<p>详细解释一下问题丙，地面网格的顶点排布如下图所示：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法4.png" alt="" /></p>
+<p>使用者将发现他无法在HAOG单元格和ABCO单元格之间生成垂直断崖，因为地面网格使用的是&ldquo;简化的网格&rdquo;，在AO两处都各只有一个顶点，无法表现悬崖的上下两边，这时使用者只好使用尽量小的单元格生成尽量陡的斜坡来模拟悬崖（这一点正好和无法生成斜坡的地块拼接法完全相反）。另一方面，每个顶点（比如顶点O）周围的六条楞线夹角并不均匀，难以生成端正的形状。</p>
+<p>计划用&ldquo;条带网格&rdquo;替换地面网格来解决问题甲和问题乙，但条带网格的顶点排布规律与地面网格类似，问题丙仍然存在。<br />经过观察，问题丙只在地形变化剧烈时表现明显，所以决定用条带网格表现较为平缓的地形大势（代码里命名为ground_base），把一些专门定制的&ldquo;地形附着物网格&rdquo;（也就是模型）放置在ground_base之上表现剧烈变化的地形，如果需要，再使用某种方式将ground_base与地形附着物融合在一起。</p>
+<p>2、生成类似方法一的平坦草原地形，并标注xz索引<br />渲染效果如下：（可以访问https://ljzc002.github.io/EmptyTalk/HTML/TEST/testframe2.html查看效果）</p>
+<p><img src="./images/WebGL场景的两种地面构造方法5.png" alt="" /></p>
+<p>括号中是当前指示物坐标，括号后是xz索引值</p>
+<p>a、设置纹理重复<br />与地块拼接法不同，条带网默认用一张纹理图包覆全体顶点，为了能像方法一一样一格一格的显示地块，对地块材质代码做如下修改：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> mat_grass = <span style="color: #0000ff;">new</span> BABYLON.StandardMaterial("mat_grass", scene);<span style="color: #008000;">//</span><span style="color: #008000;">1</span>
+<span style="color: #008080;">2</span>         mat_grass.diffuseTexture = <span style="color: #0000ff;">new</span> BABYLON.Texture("../../ASSETS/IMAGE/LANDTYPE/grass.jpg"<span style="color: #000000;">, scene);
+</span><span style="color: #008080;">3</span>         mat_grass.diffuseTexture.uScale = segs_x+1;<span style="color: #008000;">//</span><span style="color: #008000;">纹理重复效果</span>
+<span style="color: #008080;">4</span>         mat_grass.diffuseTexture.vScale = segs_z+1<span style="color: #000000;">;
+</span><span style="color: #008080;">5</span>         mat_grass.freeze();</pre>
+</div>
+<p>b、生成条带网格地面</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">var</span> arr_path=[];<span style="color: #008000;">//</span><span style="color: #008000;">路径数组</span>
+<span style="color: #008080;"> 2</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;=segs_x+1;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 4</span>             <span style="color: #0000ff;">var</span> posx=(i-((segs_x+1)/2))*size_per;
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">var</span> path=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;=segs_z+1;j++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 8</span>                 <span style="color: #0000ff;">var</span> posz=(j-((segs_z+1)/2))*size_per;
+<span style="color: #008080;"> 9</span>                 path.push(<span style="color: #0000ff;">new</span> BABYLON.Vector3(posx,0<span style="color: #000000;">,posz));
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">            arr_path.push(path);
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">13</span>         ground_base=BABYLON.MeshBuilder.CreateRibbon("ground_base"
+<span style="color: #008080;">14</span>             ,{pathArray:arr_path,updatable:<span style="color: #0000ff;">true</span>,closePath:<span style="color: #0000ff;">false</span>,closeArray:<span style="color: #0000ff;">false</span><span style="color: #000000;">,sideOrientation:BABYLON.Mesh.DOUBLESIDE});
+</span><span style="color: #008080;">15</span>         ground_base.sideOrientation=<span style="color: #000000;">BABYLON.Mesh.DOUBLESIDE;
+</span><span style="color: #008080;">16</span>         ground_base.material=<span style="color: #000000;">mat_grass;
+</span><span style="color: #008080;">17</span>         ground_base.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">18</span>         ground_base.metadata=<span style="color: #000000;">{};
+</span><span style="color: #008080;">19</span>         ground_base.metadata.arr_path=<span style="color: #000000;">arr_path;
+</span><span style="color: #008080;">20</span>         obj_ground.ground_base=ground_base;</pre>
+</div>
+<p>注意需要把CreateRibbon方法参数中的updatable属性设为true，否则建立条带网格之后将不能修改地形。</p>
+<p>&nbsp;c、制作一些蓝色小球作为地形参照物：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">5个蓝色小球</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">var</span> mesh_sphereup=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateSphere("mesh_sphereup",{diameter:0.5<span style="color: #000000;">},scene);
+</span><span style="color: #008080;"> 3</span>         mesh_sphereup.material=<span style="color: #000000;">mat_blue;
+</span><span style="color: #008080;"> 4</span>         mesh_sphereup.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>         mesh_sphereup.direction=<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,-1,2<span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span>         mesh_sphereup.isPickable=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 7</span>         mesh_sphereup.rayHelper = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 8</span>         obj_plane.mesh_sphereup=<span style="color: #000000;">mesh_sphereup;
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">var</span> mesh_sphereright=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateSphere("mesh_sphereright",{diameter:0.5<span style="color: #000000;">},scene);
+</span><span style="color: #008080;">10</span>         mesh_sphereright.material=<span style="color: #000000;">mat_blue;
+</span><span style="color: #008080;">11</span>         mesh_sphereright.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>         mesh_sphereright.direction=<span style="color: #0000ff;">new</span> BABYLON.Vector3(2,-1,0<span style="color: #000000;">);
+</span><span style="color: #008080;">13</span>         mesh_sphereright.isPickable=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">14</span>         mesh_sphereright.rayHelper = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">15</span>         obj_plane.mesh_sphereright=<span style="color: #000000;">mesh_sphereright;
+</span><span style="color: #008080;">16</span>         <span style="color: #0000ff;">var</span> mesh_spheredown=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateSphere("mesh_spheredown",{diameter:0.5<span style="color: #000000;">},scene);
+</span><span style="color: #008080;">17</span>         mesh_spheredown.material=<span style="color: #000000;">mat_blue;
+</span><span style="color: #008080;">18</span>         mesh_spheredown.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">19</span>         mesh_spheredown.direction=<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,-1,-2<span style="color: #000000;">);
+</span><span style="color: #008080;">20</span>         mesh_spheredown.isPickable=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">21</span>         mesh_spheredown.rayHelper = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">22</span>         obj_plane.mesh_spheredown=<span style="color: #000000;">mesh_spheredown;
+</span><span style="color: #008080;">23</span>         <span style="color: #0000ff;">var</span> mesh_sphereleft=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateSphere("mesh_sphereleft",{diameter:0.5<span style="color: #000000;">},scene);
+</span><span style="color: #008080;">24</span>         mesh_sphereleft.material=<span style="color: #000000;">mat_blue;
+</span><span style="color: #008080;">25</span>         mesh_sphereleft.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">26</span>         mesh_sphereleft.direction=<span style="color: #0000ff;">new</span> BABYLON.Vector3(-2,-1,0<span style="color: #000000;">);
+</span><span style="color: #008080;">27</span>         mesh_sphereleft.isPickable=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">28</span>         mesh_sphereleft.rayHelper = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">29</span>         obj_plane.mesh_sphereleft=<span style="color: #000000;">mesh_sphereleft;
+</span><span style="color: #008080;">30</span>         <span style="color: #0000ff;">var</span> mesh_spheremiddle=<span style="color: #0000ff;">new</span> BABYLON.MeshBuilder.CreateSphere("mesh_spheremiddle",{diameter:0.5<span style="color: #000000;">},scene);
+</span><span style="color: #008080;">31</span>         mesh_spheremiddle.material=<span style="color: #000000;">mat_blue;
+</span><span style="color: #008080;">32</span>         mesh_spheremiddle.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">33</span>         mesh_spheremiddle.direction=<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,-1,0<span style="color: #000000;">);
+</span><span style="color: #008080;">34</span>         mesh_spheremiddle.isPickable=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">35</span>         mesh_spheremiddle.rayHelper = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">36</span>         obj_plane.mesh_spheremiddle=<span style="color: #000000;">mesh_spheremiddle;
+</span><span style="color: #008080;">37</span> <span style="color: #008000;">//</span><span style="color: #008000;">为每个小球绑定一个gui标签</span>
+<span style="color: #008080;">38</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_plane)
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">40</span>             <span style="color: #0000ff;">var</span> label = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.GUI.Rectangle(key);
+</span><span style="color: #008080;">41</span>             label.background = "black"<span style="color: #000000;">;
+</span><span style="color: #008080;">42</span>             label.height = "30px"<span style="color: #000000;">;
+</span><span style="color: #008080;">43</span>             label.alpha = 0.5<span style="color: #000000;">;
+</span><span style="color: #008080;">44</span>             label.width = "240px"<span style="color: #000000;">;
+</span><span style="color: #008080;">45</span>             label.cornerRadius = 20<span style="color: #000000;">;
+</span><span style="color: #008080;">46</span>             label.thickness = 1<span style="color: #000000;">;
+</span><span style="color: #008080;">47</span>             label.linkOffsetY = 30;<span style="color: #008000;">//</span><span style="color: #008000;">位置偏移量？？</span>
+<span style="color: #008080;">48</span> <span style="color: #000000;">            fsUI.addControl(label);
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">            label.linkWithMesh(obj_plane[key]);
+</span><span style="color: #008080;">50</span>             <span style="color: #0000ff;">var</span> text1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.GUI.TextBlock();
+</span><span style="color: #008080;">51</span>             text1.text = ""<span style="color: #000000;">;
+</span><span style="color: #008080;">52</span>             text1.color = "white"<span style="color: #000000;">;
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">            label.addControl(text1);
+</span><span style="color: #008080;">54</span>             label.isVisible=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">55</span>             <span style="color: #008000;">//</span><span style="color: #008000;">label.layerMask=2;</span>
+<span style="color: #008080;">56</span>             label.text=<span style="color: #000000;">text1;
+</span><span style="color: #008080;">57</span>             obj_plane[key].lab=<span style="color: #000000;">label;
+</span><span style="color: #008080;">58</span>         }</pre>
+</div>
+<p>可以访问https://www.cnblogs.com/ljzc002/p/7699162.html 查看Babylon.js gui功能的中文文档</p>
+<p>d、根据相机的位置修改路标的位置：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">scene.registerAfterRender(
+</span><span style="color: #008080;"> 2</span>             <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 3</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">更新5个标记球的位置</span>
+<span style="color: #008080;"> 4</span>                 <span style="color: #0000ff;">var</span> origin=<span style="color: #000000;">camera0.position;
+</span><span style="color: #008080;"> 5</span>                 <span style="color: #0000ff;">var</span> length=200<span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>                 <span style="color: #0000ff;">for</span>(key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_plane)
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;"> 8</span>                     <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">obj_plane[key];
+</span><span style="color: #008080;"> 9</span>                     <span style="color: #0000ff;">var</span> direction=<span style="color: #000000;">mesh.direction;
+</span><span style="color: #008080;">10</span>                     <span style="color: #0000ff;">var</span> ray = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Ray(origin, direction, length);
+</span><span style="color: #008080;">11</span>                     <span style="color: #008000;">/*</span><span style="color: #008000;">if(mesh.rayHelper)
+</span><span style="color: #008080;">12</span> <span style="color: #008000;">                    {
+</span><span style="color: #008080;">13</span> <span style="color: #008000;">                        mesh.rayHelper.dispose();
+</span><span style="color: #008080;">14</span> <span style="color: #008000;">                    }</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">15</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">mesh.rayHelper = new BABYLON.RayHelper(ray);//这时还没有_renderLine属性</span>
+<span style="color: #008080;">16</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">mesh.rayHelper._renderLine.renderingGroupId=2;</span>
+<span style="color: #008080;">17</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">mesh.rayHelper.show(scene);//连续使用两次show会崩溃？</span>
+<span style="color: #008080;">18</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">难道一帧里只能用一个pick？</span>
+<span style="color: #008080;">19</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">console.log(key);</span>
+<span style="color: #008080;">20</span>                     <span style="color: #0000ff;">var</span> hit =<span style="color: #000000;"> scene.pickWithRay(ray,predicate);
+</span><span style="color: #008080;">21</span>                     <span style="color: #0000ff;">if</span><span style="color: #000000;"> (hit.pickedMesh){
+</span><span style="color: #008080;">22</span>                         <span style="color: #008000;">//</span><span style="color: #008000;">console.log(key+"2");</span>
+<span style="color: #008080;">23</span>                         mesh.isVisible=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">24</span>                         <span style="color: #0000ff;">var</span> posp=<span style="color: #000000;">hit.pickedPoint;
+</span><span style="color: #008080;">25</span>                         mesh.position=<span style="color: #000000;">posp.clone();
+</span><span style="color: #008080;">26</span>                         mesh.lab.isVisible=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">27</span>                         <span style="color: #008000;">//</span><span style="color: #008000;">显示命中点的坐标以及命中点所在方块的左下角的两层索引</span>
+<span style="color: #008080;">28</span>                         <span style="color: #0000ff;">var</span> index_x=Math.floor((posp.x+(segs_x+1)*size_per/2)/<span style="color: #000000;">size_per);
+</span><span style="color: #008080;">29</span>                         <span style="color: #0000ff;">var</span> index_z=Math.floor((posp.z+(segs_z+1)*size_per/2)/<span style="color: #000000;">size_per);
+</span><span style="color: #008080;">30</span>                         mesh.lab.text.text="("+posp.x.toFixed(2)+","+posp.y.toFixed(2)+","+posp.z.toFixed(2)+")*"
+<span style="color: #008080;">31</span>                             +index_x+"-"+<span style="color: #000000;">index_z;
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">33</span>                     <span style="color: #0000ff;">else</span>
+<span style="color: #008080;">34</span>                     {<span style="color: #008000;">//</span><span style="color: #008000;">如果没命中地面则不显示路标</span>
+<span style="color: #008080;">35</span>                         mesh.lab.isVisible=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">36</span>                         mesh.isVisible=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">39</span> 
+<span style="color: #008080;">40</span> 
+<span style="color: #008080;">41</span> 
+<span style="color: #008080;">42</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">        )
+</span><span style="color: #008080;">44</span>     <span style="color: #0000ff;">function</span> predicate(mesh){<span style="color: #008000;">//</span><span style="color: #008000;">过滤网格，只允许射线击中地面系网格，</span>
+<span style="color: #008080;">45</span>         <span style="color: #0000ff;">if</span> (mesh.name.substr(0,6)=="ground"<span style="color: #000000;">){
+</span><span style="color: #008080;">46</span>             <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">48</span>         <span style="color: #0000ff;">else</span>
+<span style="color: #008080;">49</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">50</span>             <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">51</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">52</span> 
+<span style="color: #008080;">53</span>     }</pre>
+</div>
+<p>这段代码在每次渲染后执行，从相机出发向五个方位发射5条射线，将射线和地面的交点做为路标放置点，同时修改gui文本内容。曾经尝试在这里使用RayHelper功能显示射线，但发现在未渲染前RayHelper无法设置渲染组，而渲染后的RayHelper又需立刻换成新对象，旧的渲染组属性作废，希望官方能够优化rayHelper的用法，如果确实需要显示射线，也许可以用Line功能代替rayHelper。</p>
+<p>e、对一些选定的顶点施加矩阵变化：</p>
+<p>在控制台中执行TransVertex(obj_ground.ground_base,[[0,0],[0,1],[1,0]],BABYLON.Matrix.Translation(0,2,0))抬起了左下角的三个顶点：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法6.png" alt="" /></p>
+<p>TransVertex方法如下</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> TransVertex(mesh,arr,matrix)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr.length;
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> arr_path=<span style="color: #000000;">mesh.metadata.arr_path;
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">移动路径数组里的每个顶点</span>
+<span style="color: #008080;"> 6</span>         {<span style="color: #008000;">//</span><span style="color: #008000;">注意这里操纵的是路径数组而非底层的顶点数据</span>
+<span style="color: #008080;"> 7</span>             arr_path[arr[i][0]][arr[i][1]]=BABYLON.Vector3.TransformCoordinates(arr_path[arr[i][0]][arr[i][1<span style="color: #000000;">]],matrix);
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 9</span>         mesh=<span style="color: #000000;">BABYLON.MeshBuilder.CreateRibbon(mesh.name
+</span><span style="color: #008080;">10</span>             ,{pathArray:arr_path,updatable:<span style="color: #0000ff;">true</span>,instance:mesh,closePath:<span style="color: #0000ff;">false</span>,closeArray:<span style="color: #0000ff;">false</span><span style="color: #000000;">,sideOrientation:BABYLON.Mesh.DOUBLESIDE});
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span>     }</pre>
+</div>
+<p>与方法一的地块抬升类似，这里也需要一些生成&ldquo;配置数组&rdquo;和分配变化方式的方法，下面将编写几个简单的此类方法。</p>
+<p>2、生成带有随机起伏的圆形山丘</p>
+<p>渲染效果如图所示：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法7.png" alt="" /></p>
+<p>代码实现：<br />a、选取一定范围内的顶点：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">选取区域，将区域条件转为路径索引，这里应该有多种多样的选取方法</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;">选取距某个点一定距离的顶点</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #008000;">//</span><span style="color: #008000;">FindZoneBYDistance(obj_ground.ground_base,new BABYLON.Vector3(-50,0,-50),45)</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> FindZoneBYDistance(mesh,pos,distance)
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">var</span> arr_res=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> arr_path=<span style="color: #000000;">mesh.metadata.arr_path;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr_path.length;
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每一条路径</span>
+<span style="color: #008080;">10</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">11</span>             <span style="color: #0000ff;">var</span> path=<span style="color: #000000;">arr_path[i];
+</span><span style="color: #008080;">12</span>             <span style="color: #0000ff;">var</span> len2=<span style="color: #000000;">path.length;
+</span><span style="color: #008080;">13</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;len2;j++)<span style="color: #008000;">//</span><span style="color: #008000;">对于路径上的每一个顶点</span>
+<span style="color: #008080;">14</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">15</span>                 <span style="color: #0000ff;">var</span> vec=<span style="color: #000000;">path[j];
+</span><span style="color: #008080;">16</span>                 <span style="color: #0000ff;">var</span> length=pos.clone().subtract(vec).length();<span style="color: #008000;">//</span><span style="color: #008000;">取到这个顶点到参数位置的距离</span>
+<span style="color: #008080;">17</span>                 <span style="color: #0000ff;">if</span>(length&lt;=distance)<span style="color: #008000;">//</span><span style="color: #008000;">如果在参数位置的一定范围内</span>
+<span style="color: #008080;">18</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">                    arr_res.push([i,j,length]);
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">23</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> arr_res;
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">25</span>     <span style="color: #008000;">//</span><span style="color: #008000;">只考虑XZ平面上的距离</span>
+<span style="color: #008080;">26</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> FindZoneBYDistanceXZ(mesh,pos,distance)
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">28</span>         <span style="color: #0000ff;">var</span> arr_res=<span style="color: #000000;">[];
+</span><span style="color: #008080;">29</span>         <span style="color: #0000ff;">var</span> arr_path=<span style="color: #000000;">mesh.metadata.arr_path;
+</span><span style="color: #008080;">30</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr_path.length;
+</span><span style="color: #008080;">31</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每一条路径</span>
+<span style="color: #008080;">32</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">33</span>             <span style="color: #0000ff;">var</span> path=<span style="color: #000000;">arr_path[i];
+</span><span style="color: #008080;">34</span>             <span style="color: #0000ff;">var</span> len2=<span style="color: #000000;">path.length;
+</span><span style="color: #008080;">35</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;len2;j++)<span style="color: #008000;">//</span><span style="color: #008000;">对于路径上的每一个顶点</span>
+<span style="color: #008080;">36</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">37</span>                 <span style="color: #0000ff;">var</span> vec=<span style="color: #000000;">path[j];
+</span><span style="color: #008080;">38</span>                 <span style="color: #0000ff;">var</span> vec2=<span style="color: #000000;">pos.clone().subtract(vec)
+</span><span style="color: #008080;">39</span>                 <span style="color: #0000ff;">var</span> length=Math.pow(vec2.x*vec2.x+vec2.z*vec2.z,0.5);<span style="color: #008000;">//</span><span style="color: #008000;">取到这个顶点到参数位置的距离</span>
+<span style="color: #008080;">40</span>                 <span style="color: #0000ff;">if</span>(length&lt;=(distance))<span style="color: #008000;">//</span><span style="color: #008000;">如果在参数位置的一定范围内</span>
+<span style="color: #008080;">41</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">                    arr_res.push([i,j,length]);
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">46</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> arr_res;
+</span><span style="color: #008080;">47</span>     }</pre>
+</div>
+<p>b、用梯度随机法生成起伏不平但又符合大势的山头：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">按照一定规则进行矩阵变换：这里应该有多种多样的插值方法</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;">这个是越靠近pos点提高的越多，仿照粒子系统的梯度用法</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> TransVertexGradiently(mesh,arr,arr_gradient)
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr.length;
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">var</span> len2=<span style="color: #000000;">arr_gradient.length;
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> arr_path=<span style="color: #000000;">mesh.metadata.arr_path;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每一个要变换的顶点</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">10</span>             <span style="color: #0000ff;">var</span> matrix=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">11</span>             <span style="color: #0000ff;">var</span> arr2=<span style="color: #000000;">arr[i];
+</span><span style="color: #008080;">12</span>             <span style="color: #0000ff;">var</span> vec=arr_path[arr2[0]][arr2[1]];<span style="color: #008000;">//</span><span style="color: #008000;">vec并非基础量，但为什么不能直接修改？</span>
+<span style="color: #008080;">13</span>             <span style="color: #0000ff;">var</span> dis=arr2[2<span style="color: #000000;">];
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">if</span>(dis&lt;arr_gradient[0][0<span style="color: #000000;">])
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">16</span>                 dis=arr_gradient[0][0<span style="color: #000000;">];
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">18</span>             <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(dis&gt;arr_gradient[len2-1][0<span style="color: #000000;">])
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">20</span>                 dis=arr_gradient[len2-1][0<span style="color: #000000;">];
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">22</span>             <span style="color: #008000;">//</span><span style="color: #008000;">接下来遍历梯度数组，规定梯度必是从低到高排列的</span>
+<span style="color: #008080;">23</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=1;j&lt;len2;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">25</span>                 <span style="color: #0000ff;">var</span> gradient=<span style="color: #000000;">arr_gradient[j];
+</span><span style="color: #008080;">26</span>                 <span style="color: #0000ff;">if</span>(dis&lt;=gradient[0<span style="color: #000000;">])
+</span><span style="color: #008080;">27</span>                 {<span style="color: #008000;">//</span><span style="color: #008000;">计算这一梯度插值层级</span>
+<span style="color: #008080;">28</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">前一个梯度</span>
+<span style="color: #008080;">29</span>                     <span style="color: #0000ff;">var</span> gradient0=arr_gradient[j-1<span style="color: #000000;">];
+</span><span style="color: #008080;">30</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">比率</span>
+<span style="color: #008080;">31</span>                     <span style="color: #0000ff;">var</span> ratio=((dis-gradient0[0])/(gradient[0]-gradient0[0]));
+<span style="color: #008080;">32</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">小端</span>
+<span style="color: #008080;">33</span>                     <span style="color: #0000ff;">var</span> a=gradient0[1]+(gradient[1]-gradient0[1])*<span style="color: #000000;">ratio;
+</span><span style="color: #008080;">34</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">大端</span>
+<span style="color: #008080;">35</span>                     <span style="color: #0000ff;">var</span> b=gradient0[2]+(gradient[2]-gradient0[2])*<span style="color: #000000;">ratio;
+</span><span style="color: #008080;">36</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">在范围内取随机高度</span>
+<span style="color: #008080;">37</span>                     <span style="color: #0000ff;">var</span> c=b-<span style="color: #000000;">a;
+</span><span style="color: #008080;">38</span>                     <span style="color: #0000ff;">var</span> res=a+c*<span style="color: #000000;">Math.random();
+</span><span style="color: #008080;">39</span>                     matrix=<span style="color: #0000ff;">new</span> BABYLON.Matrix.Translation(0,res,0<span style="color: #000000;">);
+</span><span style="color: #008080;">40</span>                     <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">43</span>             <span style="color: #0000ff;">if</span><span style="color: #000000;">(matrix)
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">45</span>                 arr_path[arr2[0]][arr2[1]]=BABYLON.Vector3.TransformCoordinates(arr_path[arr2[0]][arr2[1<span style="color: #000000;">]],matrix);
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">48</span>         mesh=<span style="color: #000000;">BABYLON.MeshBuilder.CreateRibbon(mesh.name
+</span><span style="color: #008080;">49</span>             ,{pathArray:arr_path,updatable:<span style="color: #0000ff;">true</span>,instance:mesh,closePath:<span style="color: #0000ff;">false</span>,closeArray:<span style="color: #0000ff;">false</span><span style="color: #000000;">,sideOrientation:BABYLON.Mesh.DOUBLESIDE});
+</span><span style="color: #008080;">50</span>     }</pre>
+</div>
+<p>代码中的梯度随机算法可以参考Babylon.js入门教程中关于粒子系统的章节。</p>
+<p>实现图中效果所用的命令为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> TransVertexGradiently(obj_ground.ground_base,FindZoneBYDistance(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(-50,0,-50),45<span style="color: #000000;">)
+</span><span style="color: #008080;"> 2</span>             ,[[0,29,30],[15,14,15],[30,11,12],[45,0,1<span style="color: #000000;">]]);
+</span><span style="color: #008080;"> 3</span>         TransVertexGradiently(obj_ground.ground_base,FindZoneBYDistance(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(-50,0,50),30<span style="color: #000000;">)
+</span><span style="color: #008080;"> 4</span>             ,[[0,14,15],[15,4,5],[30,0,1<span style="color: #000000;">]]);
+</span><span style="color: #008080;"> 5</span>         TransVertexGradiently(obj_ground.ground_base,FindZoneBYDistance(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(50,0,-50),30<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span>             ,[[0,14,15],[15,4,5],[30,0,1<span style="color: #000000;">]]);
+</span><span style="color: #008080;"> 7</span>         TransVertexGradiently(obj_ground.ground_base,FindZoneBYDistance(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(-50,0,0),30<span style="color: #000000;">)
+</span><span style="color: #008080;"> 8</span>             ,[[0,14,15],[15,4,5],[30,0,1<span style="color: #000000;">]]);
+</span><span style="color: #008080;"> 9</span>         TransVertexGradiently(obj_ground.ground_base,FindZoneBYDistance(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,0,-50),30<span style="color: #000000;">)
+</span><span style="color: #008080;">10</span>             ,[[0,14,15],[15,4,5],[30,0,1]]);</pre>
+</div>
+<p>你也可以直接把这些命令写在程序的地形初始化部分，这会比运行时注入代码执行更快。<br />ground_base处理完毕后，我们开始添加地形附着物。</p>
+<p>3、贴合丘陵地形的森林和保持水平的湖泊<br />森林和湖泊的效果如图所示：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法8.png" alt="" /></p>
+<p>树木随着地势生长，所以表示森林的地形附着物要具备和山丘相同的地形起伏，水面则平滑如镜，无论水下情况如何地形附着物都要保持平整。同时这两种地形附着物还应具有和ground_base同步的纹理重复效果。<br />代码实现：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">  1</span> <span style="color: #008000;">//</span><span style="color: #008000;">关键难点在于如何提取和重组地形网格的顶点、索引、uv，这种贴合纹理也可以用在模型表面绘制上</span>
+<span style="color: #008080;">  2</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> MakeLandtype1(mesh,arr,mat,name,sameheight,height)
+</span><span style="color: #008080;">  3</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">  4</span>         <span style="color: #008000;">//</span><span style="color: #008000;">ground_base的顶点数据</span>
+<span style="color: #008080;">  5</span>         <span style="color: #0000ff;">var</span> vb=mesh.geometry._vertexBuffers;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的顶点数据</span>
+<span style="color: #008080;">  6</span>         <span style="color: #0000ff;">var</span> data_pos=vb.position._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">顶点位置数据</span>
+<span style="color: #008080;">  7</span>         <span style="color: #0000ff;">var</span> data_index=mesh.geometry._indices;<span style="color: #008000;">//</span><span style="color: #008000;">网格索引数据</span>
+<span style="color: #008080;">  8</span>         <span style="color: #0000ff;">var</span> data_uv=vb.uv._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的纹理坐标数据</span>
+<span style="color: #008080;">  9</span>         <span style="color: #0000ff;">var</span> len_index=<span style="color: #000000;">data_index.length;
+</span><span style="color: #008080;"> 10</span> 
+<span style="color: #008080;"> 11</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr.length;
+</span><span style="color: #008080;"> 12</span>         <span style="color: #0000ff;">var</span> arr_path=mesh.metadata.arr_path;<span style="color: #008000;">//</span><span style="color: #008000;">路径数组</span>
+<span style="color: #008080;"> 13</span> 
+<span style="color: #008080;"> 14</span>         <span style="color: #008000;">//</span><span style="color: #008000;">要生成的地形附着物的顶点数据</span>
+<span style="color: #008080;"> 15</span>         <span style="color: #0000ff;">var</span> arr_index=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 16</span>         <span style="color: #0000ff;">var</span> data_pos2=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 17</span>         <span style="color: #0000ff;">var</span> data_index2=[];<span style="color: #008000;">//</span><span style="color: #008000;">第二次循环时填充</span>
+<span style="color: #008080;"> 18</span>         <span style="color: #0000ff;">var</span> data_uv2=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 19</span>         console.log("开始生成地形附着物"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 20</span>         <span style="color: #008000;">//</span><span style="color: #008000;">生成顶点数组、纹理坐标数组</span>
+<span style="color: #008080;"> 21</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++){<span style="color: #008000;">//</span><span style="color: #008000;">对于每一个选中的路径节点</span>
+<span style="color: #008080;"> 22</span> 
+<span style="color: #008080;"> 23</span>             <span style="color: #0000ff;">var</span> int0=arr[i][0<span style="color: #000000;">];
+</span><span style="color: #008080;"> 24</span>             <span style="color: #0000ff;">var</span> int1=arr[i][1<span style="color: #000000;">];
+</span><span style="color: #008080;"> 25</span>             <span style="color: #0000ff;">var</span> vec=arr_path[int0][int1];<span style="color: #008000;">//</span><span style="color: #008000;">获取到路径数组中的一个Vector3对象</span>
+<span style="color: #008080;"> 26</span>             <span style="color: #008000;">//</span><span style="color: #008000;">这里有两种思路，一是从顶点数据入手，完全复刻地形的高度；二是从条带的路径索引入手，可以更贴近的生成附着物的多边形轮廓，但在高度方面可能不精确（不贴合），</span>
+<span style="color: #008080;"> 27</span>             <span style="color: #008000;">//</span><span style="color: #008000;">-&gt;结合使用二者？《-可以实现但过于复杂</span>
+<span style="color: #008080;"> 28</span>             <span style="color: #008000;">//</span><span style="color: #008000;">假设路径数组和顶点数据是一一对应的？同时假设每一条路径的长度都和第一条相同，如果先剔除三角形就无法这样使用了！</span>
+<span style="color: #008080;"> 29</span>             <span style="color: #0000ff;">var</span> index_v=int0*arr_path[0].length+int1<span style="color: #008000;">//</span><span style="color: #008000;">这个顶点的索引</span>
+<span style="color: #008080;"> 30</span>             arr_index.push(index_v);<span style="color: #008000;">//</span><span style="color: #008000;">将ground_base中的每次对应的顶点绘制保存起来</span>
+<span style="color: #008080;"> 31</span> <span style="color: #000000;">            data_pos2.push(vec.x);
+</span><span style="color: #008080;"> 32</span>             <span style="color: #0000ff;">if</span>(sameheight)<span style="color: #008000;">//</span><span style="color: #008000;">如果要求所有顶点等高，则取设定高度</span>
+<span style="color: #008080;"> 33</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 34</span> <span style="color: #000000;">                data_pos2.push(height);
+</span><span style="color: #008080;"> 35</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 36</span>             <span style="color: #0000ff;">else</span>
+<span style="color: #008080;"> 37</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 38</span> <span style="color: #000000;">                data_pos2.push(vec.y);
+</span><span style="color: #008080;"> 39</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 40</span> <span style="color: #000000;">            data_pos2.push(vec.z);
+</span><span style="color: #008080;"> 41</span>             data_uv2.push(data_uv[index_v*2<span style="color: #000000;">]);
+</span><span style="color: #008080;"> 42</span>             data_uv2.push(data_uv[index_v*2+1<span style="color: #000000;">]);
+</span><span style="color: #008080;"> 43</span> 
+<span style="color: #008080;"> 44</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 45</span>         <span style="color: #008000;">//</span><span style="color: #008000;">生成附着物的索引数组</span>
+<span style="color: #008080;"> 46</span>         len=<span style="color: #000000;">arr_index.length;
+</span><span style="color: #008080;"> 47</span>         console.log("开始设定地形附着物的索引"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 48</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每个顶点索引，它可能被用到多次</span>
+<span style="color: #008080;"> 49</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 50</span>             console.log(i+"/"+<span style="color: #000000;">len);
+</span><span style="color: #008080;"> 51</span>             <span style="color: #0000ff;">var</span> index_v=<span style="color: #000000;">arr_index[i];
+</span><span style="color: #008080;"> 52</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;len_index;j+=3)<span style="color: #008000;">//</span><span style="color: #008000;">遍历ground_base的索引数组，找到所有被绘制的顶点</span>
+<span style="color: #008080;"> 53</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 54</span>                 <span style="color: #0000ff;">var</span> num2=-1<span style="color: #000000;">;
+</span><span style="color: #008080;"> 55</span>                 <span style="color: #0000ff;">var</span> num3=-1<span style="color: #000000;">;
+</span><span style="color: #008080;"> 56</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">var arr_temp=[];</span>
+<span style="color: #008080;"> 57</span>                 <span style="color: #0000ff;">var</span> flag_type=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 58</span>                     <span style="color: #0000ff;">if</span>(index_v==data_index[j])<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第一个顶点</span>
+<span style="color: #008080;"> 59</span>                     {<span style="color: #008000;">//</span><span style="color: #008000;">在这里要考虑另两个顶点是否在附着物范围内，如果在，则使用附着物纹理，如果不在则使用混合纹理？？</span>
+<span style="color: #008080;"> 60</span>                         num2=data_index[j+1];<span style="color: #008000;">//</span><span style="color: #008000;">*3;//实际去顶点数组中取顶点时要乘以3，但作为顶点索引时不用乘以3</span>
+<span style="color: #008080;"> 61</span>                         num3=data_index[j+2<span style="color: #000000;">];
+</span><span style="color: #008080;"> 62</span>                         flag_type=1<span style="color: #000000;">;
+</span><span style="color: #008080;"> 63</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;"> 64</span>                     <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(index_v==data_index[j+1])<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第二个顶点</span>
+<span style="color: #008080;"> 65</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;"> 66</span>                         num2=<span style="color: #000000;">data_index[j];
+</span><span style="color: #008080;"> 67</span>                         num3=data_index[j+2<span style="color: #000000;">];
+</span><span style="color: #008080;"> 68</span>                         flag_type=2<span style="color: #000000;">;
+</span><span style="color: #008080;"> 69</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;"> 70</span>                     <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(index_v==data_index[j+2])<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第三个顶点</span>
+<span style="color: #008080;"> 71</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;"> 72</span>                         num2=<span style="color: #000000;">data_index[j];
+</span><span style="color: #008080;"> 73</span>                         num3=data_index[j+1<span style="color: #000000;">];
+</span><span style="color: #008080;"> 74</span>                         flag_type=3<span style="color: #000000;">;
+</span><span style="color: #008080;"> 75</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;"> 76</span>                 <span style="color: #0000ff;">if</span>(num2!=-1&amp;&amp;num3!=-1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 77</span>                 {<span style="color: #008000;">//</span><span style="color: #008000;">查看num2和num3这两个索引对应的顶点，在不在选定顶点范围内，如果不在则不在附着物里绘制这个三角形</span>
+<span style="color: #008080;"> 78</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">(其实更好的方案是，如果不在，则绘制地形网格和附着物的混合纹理)</span>
+<span style="color: #008080;"> 79</span>                     <span style="color: #0000ff;">var</span> flag2=-1<span style="color: #000000;">;
+</span><span style="color: #008080;"> 80</span>                     <span style="color: #0000ff;">var</span> flag3=-1<span style="color: #000000;">;
+</span><span style="color: #008080;"> 81</span>                     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i2=0;i2&lt;len;i2++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 82</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;"> 83</span>                         <span style="color: #0000ff;">var</span> index2=<span style="color: #000000;">arr_index[i2];
+</span><span style="color: #008080;"> 84</span>                         <span style="color: #0000ff;">if</span>(index2==<span style="color: #000000;">num2)
+</span><span style="color: #008080;"> 85</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;"> 86</span>                             flag2=i2;<span style="color: #008000;">//</span><span style="color: #008000;">在新的顶点数组中找到这个顶点的索引</span>
+<span style="color: #008080;"> 87</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;"> 88</span>                         <span style="color: #0000ff;">if</span>(index2==<span style="color: #000000;">num3)
+</span><span style="color: #008080;"> 89</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;"> 90</span>                             flag3=<span style="color: #000000;">i2;
+</span><span style="color: #008080;"> 91</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;"> 92</span>                         <span style="color: #0000ff;">if</span>(flag2!=-1&amp;&amp;flag3!=-1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 93</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;"> 94</span>                             <span style="color: #0000ff;">break</span>;<span style="color: #008000;">//</span><span style="color: #008000;">都已经找到</span>
+<span style="color: #008080;"> 95</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;"> 96</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;"> 97</span>                     <span style="color: #0000ff;">if</span>(flag2!=-1&amp;&amp;flag3!=-1<span style="color: #000000;">)
+</span><span style="color: #008080;"> 98</span>                     {<span style="color: #008000;">//</span><span style="color: #008000;">如果这个三角形的三个顶点都属于地形附着物</span>
+<span style="color: #008080;"> 99</span>                         <span style="color: #0000ff;">if</span>(flag_type==1<span style="color: #000000;">)
+</span><span style="color: #008080;">100</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">101</span> <span style="color: #000000;">                            data_index2.push(i);
+</span><span style="color: #008080;">102</span> <span style="color: #000000;">                            data_index2.push(flag2);
+</span><span style="color: #008080;">103</span> <span style="color: #000000;">                            data_index2.push(flag3);
+</span><span style="color: #008080;">104</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">105</span>                         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(flag_type==2<span style="color: #000000;">)
+</span><span style="color: #008080;">106</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">107</span> <span style="color: #000000;">                            data_index2.push(flag2);
+</span><span style="color: #008080;">108</span> <span style="color: #000000;">                            data_index2.push(i);
+</span><span style="color: #008080;">109</span> <span style="color: #000000;">                            data_index2.push(flag3);
+</span><span style="color: #008080;">110</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">111</span>                         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(flag_type==3<span style="color: #000000;">)
+</span><span style="color: #008080;">112</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">113</span> <span style="color: #000000;">                            data_index2.push(flag2);
+</span><span style="color: #008080;">114</span> <span style="color: #000000;">                            data_index2.push(flag3);
+</span><span style="color: #008080;">115</span> <span style="color: #000000;">                            data_index2.push(i);
+</span><span style="color: #008080;">116</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">117</span> 
+<span style="color: #008080;">118</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">119</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">120</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">121</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">122</span>         <span style="color: #008000;">//</span><span style="color: #008000;">数据整理完毕，开始生成几何体</span>
+<span style="color: #008080;">123</span>         <span style="color: #0000ff;">var</span> normals=<span style="color: #000000;">[];
+</span><span style="color: #008080;">124</span>         BABYLON.VertexData.ComputeNormals(data_pos2, data_index2, normals);<span style="color: #008000;">//</span><span style="color: #008000;">计算法线</span>
+<span style="color: #008080;">125</span>         BABYLON.VertexData._ComputeSides(0, data_pos2, data_index2, normals, data_uv2);<span style="color: #008000;">//</span><span style="color: #008000;">根据法线分配纹理朝向</span>
+<span style="color: #008080;">126</span>         <span style="color: #0000ff;">var</span> vertexData= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.VertexData();
+</span><span style="color: #008080;">127</span>         vertexData.indices = data_index2;<span style="color: #008000;">//</span><span style="color: #008000;">索引</span>
+<span style="color: #008080;">128</span>         vertexData.positions =<span style="color: #000000;"> data_pos2;
+</span><span style="color: #008080;">129</span>         vertexData.normals = normals;<span style="color: #008000;">//</span><span style="color: #008000;">position改变法线也要改变！！！！</span>
+<span style="color: #008080;">130</span>         vertexData.uvs =<span style="color: #000000;"> data_uv2;
+</span><span style="color: #008080;">131</span> 
+<span style="color: #008080;">132</span>         <span style="color: #0000ff;">var</span> mesh=<span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Mesh(name,scene);
+</span><span style="color: #008080;">133</span>         vertexData.applyToMesh(mesh, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">134</span>         mesh.vertexData=<span style="color: #000000;">vertexData;
+</span><span style="color: #008080;">135</span>         mesh.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">136</span>         mesh.material=<span style="color: #000000;">mat;
+</span><span style="color: #008080;">137</span>         obj_ground[name]=<span style="color: #000000;">mesh;
+</span><span style="color: #008080;">138</span>     }</pre>
+</div>
+<p>提取ground_base的地形时有多种可选的算法，假设ground_base的顶点排布如图所示：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法9.png" alt="" /></p>
+<p>设ABF右上侧包括ABF在内的所有顶点都被选中，则我们可能只提取图中画斜线的单元格，也可能提取ACF右上的所有三角形（比前者多了ABC部分），还可能提取AF右上的所有区域（这时需要添加额外的三角形，假设JIHG与CDEF高度不同，则又要考虑不同的额外三角形生成方式），或者提取所有和ABCDEF相邻的单元格。。。不同的提取方法会产生不同的地形细节效果，这里我选择第二种提取方法。</p>
+<p>在处理不同纹理交界处时也存在多种不同的选择，比如基于三角形的实际位置让纹理相互交错，或者在交界处使用混合两种纹理图的过渡纹理等等，这里我简单的保持每种地貌的原本纹理，用后绘制的覆盖先绘制的，用靠近相机的遮挡远离相机的。</p>
+<p>生成上图的命令如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> MakeLandtype1(obj_ground.ground_base,FindZoneBYDistanceXZ(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(-50,0,10),30<span style="color: #000000;">)
+</span><span style="color: #008080;">2</span>             ,mat_tree,"ground_tree1"<span style="color: #000000;">);
+</span><span style="color: #008080;">3</span>         MakeLandtype1(obj_ground.ground_base,FindZoneBYDistanceXZ(obj_ground.ground_base,<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,0,0),35<span style="color: #000000;">)
+</span><span style="color: #008080;">4</span>             ,mat_shallowwater,"ground_shallowwater1",<span style="color: #0000ff;">true</span>,0);</pre>
+</div>
+<p>&nbsp;</p>
+<p>4、向地形中导入预制的模型生成剧烈变化的地形<br />向场景中加入了一个&ldquo;坠毁的宇宙飞船&rdquo;模型：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法10.png" alt="" /></p>
+<p>从下面看：（左边只显示森林纹理并不是因为草地三角形不存在，而是因为网格位置和渲染组都相同时，后绘制的三角形会覆盖先绘制的三角形）</p>
+<p><img src="./images/WebGL场景的两种地面构造方法11.png" alt="" /></p>
+<p>使用单纯的地面网格是难以生成图中的反斜面地形的。<br />导入Babylon格式模型的代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">如果这里load一个相同内容的txt文件，会报警告，但似乎也成功导入了！！</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> ImportMesh(objname,filepath,filename,obj_p)
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">        BABYLON.SceneLoader.ImportMesh(objname, filepath, filename, scene
+</span><span style="color: #008080;"> 5</span>             , <span style="color: #0000ff;">function</span><span style="color: #000000;"> (newMeshes, particleSystems, skeletons)
+</span><span style="color: #008080;"> 6</span>             {<span style="color: #008000;">//</span><span style="color: #008000;">载入完成的回调函数</span>
+<span style="color: #008080;"> 7</span>                 <span style="color: #0000ff;">var</span> mesh=newMeshes[0<span style="color: #000000;">];
+</span><span style="color: #008080;"> 8</span>                 mesh.position=<span style="color: #000000;">obj_p.position;
+</span><span style="color: #008080;"> 9</span>                 mesh.rotation=<span style="color: #000000;">obj_p.rotation;
+</span><span style="color: #008080;">10</span>                 mesh.scaling=<span style="color: #000000;">obj_p.scaling;
+</span><span style="color: #008080;">11</span>                 mesh.name=<span style="color: #000000;">obj_p.name;
+</span><span style="color: #008080;">12</span>                 mesh.id=<span style="color: #000000;">obj_p.name;
+</span><span style="color: #008080;">13</span>                 <span style="color: #0000ff;">var</span> mat=<span style="color: #000000;">obj_p.material.clone();
+</span><span style="color: #008080;">14</span>                 mat.backFaceCulling=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">15</span>                 mat.name=<span style="color: #000000;">obj_p.material.name;
+</span><span style="color: #008080;">16</span>                 mesh.material=<span style="color: #000000;">mat;
+</span><span style="color: #008080;">17</span>                 mesh.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">18</span>                 mesh.sideOrientation=<span style="color: #000000;">BABYLON.Mesh.DOUBLESIDE;
+</span><span style="color: #008080;">19</span>                 obj_ground[obj_p.name]=<span style="color: #000000;">mesh;
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        );
+</span><span style="color: #008080;">22</span>     }</pre>
+</div>
+<p>调用命令如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> ImportMesh("","../../ASSETS/SCENE/","SpaceCraft.babylon"
+<span style="color: #008080;">2</span>             ,{position:<span style="color: #0000ff;">new</span> BABYLON.Vector3(10,-2,10),rotation:<span style="color: #0000ff;">new</span> BABYLON.Vector3(0,-Math.PI/4,Math.PI/6<span style="color: #000000;">)
+</span><span style="color: #008080;">3</span>                 ,scaling:<span style="color: #0000ff;">new</span> BABYLON.Vector3(1,1,1),name:"ground_spacecraft"
+<span style="color: #008080;">4</span>                 ,material:mat_stone});</pre>
+</div>
+<p>5、保存地面编辑进度<br />你可能想在做完一些操作后将当前的场景保存起来以备再次载入。</p>
+<p>a、存档代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">导出正在编辑的地面工程，其中地面网格保持metadata属性，下载文本时参考xlsx的方式</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> ExportObjGround()
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> obj_scene=MakeBasicBabylon();<span style="color: #008000;">//</span><span style="color: #008000;">建立一个基础场景所需的全部属性</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(key <span style="color: #0000ff;">in</span> obj_ground)<span style="color: #008000;">//</span><span style="color: #008000;">在Babylon文件中不配置材质，在导入后能否自动对应新场景中的材质id?-》可以，但是会报警告</span>
+<span style="color: #008080;"> 6</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">var</span> obj_mesh=<span style="color: #000000;">{};
+</span><span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">obj_ground[key];
+</span><span style="color: #008080;"> 9</span>             obj_mesh.name=<span style="color: #000000;">mesh.name;
+</span><span style="color: #008080;">10</span>             obj_mesh.id=<span style="color: #000000;">mesh.id;
+</span><span style="color: #008080;">11</span>             obj_mesh.materialId=<span style="color: #000000;">mesh.material.name;
+</span><span style="color: #008080;">12</span>             obj_mesh.position=<span style="color: #000000;">[mesh.position.x,mesh.position.y,mesh.position.z];
+</span><span style="color: #008080;">13</span>             obj_mesh.rotation=<span style="color: #000000;">[mesh.rotation.x,mesh.rotation.y,mesh.rotation.z];
+</span><span style="color: #008080;">14</span>             obj_mesh.scaling=<span style="color: #000000;">[mesh.scaling.x,mesh.scaling.y,mesh.scaling.z];
+</span><span style="color: #008080;">15</span>             obj_mesh.isVisible=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">16</span>             obj_mesh.isEnabled=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">17</span>             obj_mesh.checkCollisions=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">18</span>             obj_mesh.billboardMode=0<span style="color: #000000;">;
+</span><span style="color: #008080;">19</span>             obj_mesh.receiveShadows=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">20</span>             obj_mesh.renderingGroupId=<span style="color: #000000;">mesh.renderingGroupId;
+</span><span style="color: #008080;">21</span>             obj_mesh.metadata=<span style="color: #000000;">mesh.metadata;
+</span><span style="color: #008080;">22</span>             obj_mesh.sideOrientation=<span style="color: #000000;">mesh.sideOrientation;
+</span><span style="color: #008080;">23</span>             <span style="color: #0000ff;">if</span>(mesh.geometry)<span style="color: #008000;">//</span><span style="color: #008000;">是有实体的网格</span>
+<span style="color: #008080;">24</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">25</span>                 <span style="color: #0000ff;">var</span> vb=<span style="color: #000000;">mesh.geometry._vertexBuffers;
+</span><span style="color: #008080;">26</span>                 obj_mesh.positions=<span style="color: #000000;">BuffertoArray2(vb.position._buffer._data);
+</span><span style="color: #008080;">27</span>                 obj_mesh.normals=<span style="color: #000000;">BuffertoArray2(vb.normal._buffer._data);
+</span><span style="color: #008080;">28</span>                 obj_mesh.uvs=<span style="color: #000000;"> BuffertoArray2(vb.uv._buffer._data);
+</span><span style="color: #008080;">29</span>                 obj_mesh.indices=<span style="color: #000000;">BuffertoArray2(mesh.geometry._indices);
+</span><span style="color: #008080;">30</span>                 obj_mesh.subMeshes=<span style="color: #000000;">[{
+</span><span style="color: #008080;">31</span>                     'materialIndex': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">32</span>                     'verticesStart': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">33</span>                     'verticesCount'<span style="color: #000000;">: mesh.geometry._totalVertices,
+</span><span style="color: #008080;">34</span>                     'indexStart': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">35</span>                     'indexCount'<span style="color: #000000;">: mesh.geometry._indices.length,
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">                }];
+</span><span style="color: #008080;">37</span>                 obj_mesh.parentId=mesh.parent?mesh.parent.id:<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">39</span>             <span style="color: #0000ff;">else</span><span style="color: #008000;">//</span><span style="color: #008000;">非实体网格</span>
+<span style="color: #008080;">40</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">41</span>                 obj_mesh.positions=<span style="color: #000000;">[];
+</span><span style="color: #008080;">42</span>                 obj_mesh.normals=<span style="color: #000000;">[];
+</span><span style="color: #008080;">43</span>                 obj_mesh.uvs=<span style="color: #000000;">[];
+</span><span style="color: #008080;">44</span>                 obj_mesh.indices=<span style="color: #000000;">[];
+</span><span style="color: #008080;">45</span>                 obj_mesh.subMeshes=<span style="color: #000000;">[{
+</span><span style="color: #008080;">46</span>                     'materialIndex': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">47</span>                     'verticesStart': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">48</span>                     'verticesCount': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">49</span>                     'indexStart': 0<span style="color: #000000;">,
+</span><span style="color: #008080;">50</span>                     'indexCount': 0
+<span style="color: #008080;">51</span> <span style="color: #000000;">                }];
+</span><span style="color: #008080;">52</span>                 obj_mesh.parentId=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">            obj_scene.meshes.push(obj_mesh);
+</span><span style="color: #008080;">55</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">56</span>         <span style="color: #0000ff;">var</span> str_data=<span style="color: #000000;">JSON.stringify(obj_scene);
+</span><span style="color: #008080;">57</span>         <span style="color: #008000;">//</span><span style="color: #008000;">试试看行不行-》行</span>
+<span style="color: #008080;">58</span>         <span style="color: #0000ff;">var</span> tmpDown = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Blob([s2ab(str_data)]
+</span><span style="color: #008080;">59</span> <span style="color: #000000;">            ,{
+</span><span style="color: #008080;">60</span>                 type: ""
+<span style="color: #008080;">61</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">62</span> <span style="color: #000000;">        );
+</span><span style="color: #008080;">63</span>         saveAs(tmpDown,"ObjGround.babylon"<span style="color: #000000;">)
+</span><span style="color: #008080;">64</span>     }</pre>
+</div>
+<p>其中MakeBasicBabylon方法保存了一个最基础的场景对象所需的数据：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">建立一个最基础的Babylon对象结构</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> MakeBasicBabylon()
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> obj_scene=
+<span style="color: #008080;"> 5</span>             {<span style="color: #008000;">//</span><span style="color: #008000;">最简场景对象</span>
+<span style="color: #008080;"> 6</span>                 'autoClear': <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+</span><span style="color: #008080;"> 7</span>                 'clearColor': [0,0,0<span style="color: #000000;">],
+</span><span style="color: #008080;"> 8</span>                 'ambientColor': [0,0,0<span style="color: #000000;">],
+</span><span style="color: #008080;"> 9</span>                 'gravity': [0,-9.81,0<span style="color: #000000;">],
+</span><span style="color: #008080;">10</span>                 'cameras'<span style="color: #000000;">:[],
+</span><span style="color: #008080;">11</span>                 'activeCamera': <span style="color: #0000ff;">null</span><span style="color: #000000;">,
+</span><span style="color: #008080;">12</span>                 'lights'<span style="color: #000000;">:[],
+</span><span style="color: #008080;">13</span>                 'materials'<span style="color: #000000;">:[],
+</span><span style="color: #008080;">14</span>                 'geometries'<span style="color: #000000;">: {},
+</span><span style="color: #008080;">15</span>                 'meshes'<span style="color: #000000;">: [],
+</span><span style="color: #008080;">16</span>                 'multiMaterials'<span style="color: #000000;">: [],
+</span><span style="color: #008080;">17</span>                 'shadowGenerators'<span style="color: #000000;">: [],
+</span><span style="color: #008080;">18</span>                 'skeletons'<span style="color: #000000;">: [],
+</span><span style="color: #008080;">19</span>                 'sounds': []<span style="color: #008000;">//</span><span style="color: #008000;">,</span>
+<span style="color: #008080;">20</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">'metadata':{'walkabilityMatrix':[]}</span>
+<span style="color: #008080;">21</span> <span style="color: #000000;">            };
+</span><span style="color: #008080;">22</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> obj_scene;
+</span><span style="color: #008080;">23</span>     }</pre>
+</div>
+<p>BuffertoArray2是一个将buffer型数据转为数组的方法：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> BuffertoArray2(arr)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">var</span> arr2=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr.length;
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">            arr2.push(arr[i]);
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">return</span><span style="color: #000000;"> arr2;
+</span><span style="color: #008080;">10</span>     }</pre>
+</div>
+<p>保存Babylon模型文件时使用了 https://www.jianshu.com/p/9a465d7d1448博客介绍的文件导出方法：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> s2ab(s) {
+</span><span style="color: #008080;"> 2</span>         <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> ArrayBuffer !== 'undefined'<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 3</span>             <span style="color: #0000ff;">var</span> buf = <span style="color: #0000ff;">new</span><span style="color: #000000;"> ArrayBuffer(s.length);
+</span><span style="color: #008080;"> 4</span>             <span style="color: #0000ff;">var</span> view = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Uint8Array(buf);
+</span><span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) &amp; 0xFF<span style="color: #000000;">;
+</span><span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;"> buf;
+</span><span style="color: #008080;"> 7</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">var</span> buf = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Array(s.length);
+</span><span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) &amp; 0xFF<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;"> buf;
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">13</span>     saveAs=<span style="color: #0000ff;">function</span><span style="color: #000000;">(obj, fileName)
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">15</span>         <span style="color: #0000ff;">var</span> tmpa = document.createElement("a"<span style="color: #000000;">);
+</span><span style="color: #008080;">16</span>         tmpa.download = fileName || "下载"<span style="color: #000000;">;
+</span><span style="color: #008080;">17</span>         tmpa.href =<span style="color: #000000;"> URL.createObjectURL(obj);
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">        tmpa.click();
+</span><span style="color: #008080;">19</span>         setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">            URL.revokeObjectURL(obj);
+</span><span style="color: #008080;">21</span>         }, 100<span style="color: #000000;">);
+</span><span style="color: #008080;">22</span>     };</pre>
+</div>
+<p>&nbsp;</p>
+<p>6、小结：</p>
+<p>以上内容可以访问https://ljzc002.github.io/EmptyTalk/HTML/TEST/testframe3.html进行测试</p>
+<p>在之前研究基于编程的模型编辑器时（&nbsp;https://www.cnblogs.com/ljzc002/p/9353101.html，https://www.cnblogs.com/ljzc002/p/9473438.html&nbsp;&nbsp;），如何在自定义的模型上绘制纹理一直是一个难题，曾经在更早期的编辑器Demo（https://www.cnblogs.com/ljzc002/p/6884252.html）中尝试过用选择三角形设置图素，之后按照图素生成图片的方式绘制纹理图，但也只能作为原理解释Demo而难以实用。这里编写的贴合表面的附着物算法在稍加修改后将可以解决在一个模型上绘制多种纹理的难题。当然，这种&ldquo;纹理附着物&rdquo;的方法会在一个模型中建立多个网格，并且在网格相互覆盖的地方产生一些多余的三角形，在后文中我将尝试用&ldquo;降雨法&rdquo;剔除这些多余的三角形。（事实上剔除多余三角形后渲染速度并没有提升很多。。。）</p>
+<p>三、</p>
+<p>使用降雨法剔除被遮挡的三角形 <br />1、首先导入我们之前保存的存档，执行以下命令导入之前做好的一个存档：</p>
+<p>ImportObjGround("../../ASSETS/SCENE/","ObjGround.babylon",webGLStart3);</p>
+<p>ImportObjGround方法代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> ImportObjGround(filepath,filename,func)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         BABYLON.SceneLoader.ImportMesh(""<span style="color: #000000;">, filepath, filename, scene
+</span><span style="color: #008080;"> 4</span>             , <span style="color: #0000ff;">function</span><span style="color: #000000;"> (newMeshes, particleSystems, skeletons)
+</span><span style="color: #008080;"> 5</span>             {<span style="color: #008000;">//</span><span style="color: #008000;">载入完成的回调函数</span>
+<span style="color: #008080;"> 6</span>                 <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">newMeshes.length;
+</span><span style="color: #008080;"> 7</span>                 <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;len;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;"> 9</span>                     <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">newMeshes[i];
+</span><span style="color: #008080;">10</span>                     mesh.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">11</span>                     mesh.sideOrientation=<span style="color: #000000;">BABYLON.Mesh.DOUBLESIDE;
+</span><span style="color: #008080;">12</span>                     obj_ground[mesh.name]=<span style="color: #000000;">mesh;
+</span><span style="color: #008080;">13</span>                     <span style="color: #0000ff;">if</span>(mesh.name=="ground_base"<span style="color: #000000;">)
+</span><span style="color: #008080;">14</span>                     {<span style="color: #008000;">//</span><span style="color: #008000;">声明顶点位置是可变的！！</span>
+<span style="color: #008080;">15</span>                         mesh.markVerticesDataAsUpdatable(BABYLON.VertexBuffer.PositionKind<span style="color: #008000;">//</span><span style="color: #008000;">其实就是&ldquo;position&rdquo;，除此之外还有&ldquo;normal&rdquo;等</span>
+<span style="color: #008080;">16</span>                             ,<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">18</span>                     <span style="color: #0000ff;">if</span>(mesh.metadata&amp;&amp;<span style="color: #000000;">mesh.metadata.arr_path)
+</span><span style="color: #008080;">19</span>                     {<span style="color: #008000;">//</span><span style="color: #008000;">要把array重新变成Vector3！！！！</span>
+<span style="color: #008080;">20</span>                         <span style="color: #0000ff;">var</span> arr_path=<span style="color: #000000;">mesh.metadata.arr_path;
+</span><span style="color: #008080;">21</span>                         <span style="color: #0000ff;">var</span> len1=<span style="color: #000000;">arr_path.length;
+</span><span style="color: #008080;">22</span>                         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;len1;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">24</span>                             <span style="color: #0000ff;">var</span> path=<span style="color: #000000;">arr_path[j];
+</span><span style="color: #008080;">25</span>                             <span style="color: #0000ff;">var</span> len2=<span style="color: #000000;">path.length;
+</span><span style="color: #008080;">26</span>                             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> k=0;k&lt;len2;k++<span style="color: #000000;">)
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">                            {
+</span><span style="color: #008080;">28</span>                                 <span style="color: #0000ff;">var</span> vec=<span style="color: #000000;">path[k];
+</span><span style="color: #008080;">29</span>                                 <span style="color: #0000ff;">var</span> vec2=<span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Vector3(vec.x,vec.y,vec.z);
+</span><span style="color: #008080;">30</span>                                 path[k]=<span style="color: #000000;">vec2;
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">                            }
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">35</span>                 func();<span style="color: #008000;">//</span><span style="color: #008000;">导入完成后执行</span>
+<span style="color: #008080;">36</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">        );
+</span><span style="color: #008080;">38</span>     }</pre>
+</div>
+<p>这里要注意的是，导入模型后网格的updatable属性会自动变为false，这时需要使用markVerticesDataAsUpdatable方法重新激活网格的更新能力。同时Babylon.js的Vector3对象在转为JSON字符串时，会自动的退化为JavaScript的Object对象，我们在载入时需要重新将它转为Vector3。</p>
+<p>2、准备下雨</p>
+<p>降雨算法并不复杂，思路是从相机可能的观察方向发出密集的射线，如果射线击中某一三角形，则把三角形的三个顶点&ldquo;淋湿&rdquo;（所有淋湿的顶点组成&ldquo;淋湿数组&rdquo;），在降雨完成后，剔除掉没有淋湿的顶点及对应顶点索引，使模型得到简化。<br />与传统的网格融合方法相比，降雨法不会在网格的接口处生成大量不受控的三角形；与传统网格简化方法相比，则不会丢弃可见的三角形细节；缺点则是计算耗时较长（也许可以优化？）<br />首先准备下雨：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> PrepareRain()
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         console.log("准备下雨"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 4</span>         mesh_DropFrom=<span style="color: #0000ff;">new</span> BABYLON.Mesh("mesh_DropFrom"<span style="color: #000000;">,scene);
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_ground)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">obj_ground[key];
+</span><span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">var</span> obj=<span style="color: #000000;">{};
+</span><span style="color: #008080;"> 9</span>             obj.vb=mesh.geometry._vertexBuffers;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的顶点数据</span>
+<span style="color: #008080;">10</span>             obj.data_pos=obj.vb.position._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">顶点位置数据</span>
+<span style="color: #008080;">11</span>             obj.data_index=mesh.geometry._indices;<span style="color: #008000;">//</span><span style="color: #008000;">网格索引数据</span>
+<span style="color: #008080;">12</span>             obj.data_uv=obj.vb.uv._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的纹理坐标数据</span>
+<span style="color: #008080;">13</span>             obj.len_index=<span style="color: #000000;">obj.data_index.length;
+</span><span style="color: #008080;">14</span>             obj.len_pos=obj.data_pos.length/3;
+<span style="color: #008080;">15</span>             obj.data_wet=[];<span style="color: #008000;">//</span><span style="color: #008000;">每个顶点是否被淋湿</span>
+<span style="color: #008080;">16</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;obj.len_pos;i+=1<span style="color: #000000;">)
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">18</span>                 obj.data_wet.push(0<span style="color: #000000;">);
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">20</span>             obj.arr_index=<span style="color: #000000;">[];
+</span><span style="color: #008080;">21</span>             obj.data_pos2=<span style="color: #000000;">[];
+</span><span style="color: #008080;">22</span>             obj.data_index2=[];<span style="color: #008000;">//</span><span style="color: #008000;">第二次循环时填充</span>
+<span style="color: #008080;">23</span>             obj.data_uv2=<span style="color: #000000;">[];
+</span><span style="color: #008080;">24</span>             obj_wet[key]=<span style="color: #000000;">obj;
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">26</span>         console.log("准备完毕"<span style="color: #000000;">);
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">28</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> PrepareRain2()
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">30</span>         console.log("读取本地淋湿数组"<span style="color: #000000;">);
+</span><span style="color: #008080;">31</span>         mesh_DropFrom=<span style="color: #0000ff;">new</span> BABYLON.Mesh("mesh_DropFrom"<span style="color: #000000;">,scene);
+</span><span style="color: #008080;">32</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_ground)
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">34</span>             <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">obj_ground[key];
+</span><span style="color: #008080;">35</span>             <span style="color: #0000ff;">var</span> obj=<span style="color: #000000;">{};
+</span><span style="color: #008080;">36</span>             obj.vb=mesh.geometry._vertexBuffers;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的顶点数据</span>
+<span style="color: #008080;">37</span>             obj.data_pos=obj.vb.position._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">顶点位置数据</span>
+<span style="color: #008080;">38</span>             obj.data_index=mesh.geometry._indices;<span style="color: #008000;">//</span><span style="color: #008000;">网格索引数据</span>
+<span style="color: #008080;">39</span>             obj.data_uv=obj.vb.uv._buffer._data;<span style="color: #008000;">//</span><span style="color: #008000;">地面网格的纹理坐标数据</span>
+<span style="color: #008080;">40</span>             obj.len_index=<span style="color: #000000;">obj.data_index.length;
+</span><span style="color: #008080;">41</span>             obj.len_pos=obj.data_pos.length/3;
+<span style="color: #008080;">42</span>             obj.data_wet=localStorage.getItem(key);<span style="color: #008000;">//</span><span style="color: #008000;">每个顶点是否被淋湿</span>
+<span style="color: #008080;">43</span>             obj.arr_index=<span style="color: #000000;">[];
+</span><span style="color: #008080;">44</span>             obj_wet[key]=<span style="color: #000000;">obj;
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">46</span>         console.log("准备完毕"<span style="color: #000000;">);
+</span><span style="color: #008080;">47</span>     }</pre>
+</div>
+<p>第一个方法提取出了降雨所需的地面对象中的每个网格的数据，其中obj.data_wet是一个长度与顶点数组相同的的全零数组，0表示没有淋湿。第二个方法，则从浏览器的本地存储中读取已经算好的淋湿数组，用预先算好的数据节省下雨所需的时间。mesh_DropFrom网格则是后面降雨所用到的参照物网格。</p>
+<p>3、开始下雨（这时一个非常耗时的计算）</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">宽度分段、深度分段、每块尺寸（在这个尺寸内有四条射线）,&ldquo;射线&rdquo;长度,所有射线出发点的中心</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;">DropRain(100,100,1,100,new BABYLON.Vector3(0,50,0),new BABYLON.Vector3(0,0,0))</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #008000;">//</span><span style="color: #008000;">DropRain(200,200,0.5,100,new BABYLON.Vector3(0,50,0),new BABYLON.Vector3(0,0,0))</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> DropRain(count_x,count_z,size,length,from,to)
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 6</span>         mesh_DropFrom.position=<span style="color: #000000;">from;
+</span><span style="color: #008080;"> 7</span>         mesh_DropFrom.lookAt(to);<span style="color: #008000;">//</span><span style="color: #008000;">这时网格的WorldMatrix和AbsoulutPosition还未改变！！</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #008000;">//</span><span style="color: #008000;">其实应该是网格的负Y方向指向to！！！！这个矩阵的最终效果应该是x，y，z左移一位</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">        mesh_DropFrom.computeWorldMatrix();
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">var</span> matrix=mesh_DropFrom.getWorldMatrix();<span style="color: #008000;">//</span><span style="color: #008000;">取参考网格的世界矩阵</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">var</span> size41=size/4;
+<span style="color: #008080;">12</span>         <span style="color: #0000ff;">var</span> direction=to.subtract(from);<span style="color: #008000;">//</span><span style="color: #008000;">雨丝在世界坐标系中的方向</span>
+<span style="color: #008080;">13</span>         <span style="color: #008000;">//</span><span style="color: #008000;">遍历101*101个方块，降雨角度不同时设计不同的分段数</span>
+<span style="color: #008080;">14</span>         console.log("开始下雨"<span style="color: #000000;">);
+</span><span style="color: #008080;">15</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;=count_x;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">17</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;=count_z;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">19</span>                 console.log(i+"/"+count_x+"_"+j+"/"+<span style="color: #000000;">count_z);
+</span><span style="color: #008080;">20</span>                 <span style="color: #0000ff;">var</span> arr_wet=<span style="color: #000000;">[];
+</span><span style="color: #008080;">21</span>                 <span style="color: #0000ff;">var</span> pos0=<span style="color: #0000ff;">new</span> BABYLON.Vector3((j-(count_z/2))*size,(i-(count_x/2))*size,0);<span style="color: #008000;">//</span><span style="color: #008000;">预先右移一位？</span>
+<span style="color: #008080;">22</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">左上，右上，右下，左下</span>
+<span style="color: #008080;">23</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">建立四条射线，局部坐标系中的变换</span>
+<span style="color: #008080;">24</span>                 <span style="color: #0000ff;">var</span> pos1=BABYLON.Vector3.TransformCoordinates(pos0.clone().add(<span style="color: #0000ff;">new</span> BABYLON.Vector3(size41,-size41,0<span style="color: #000000;">)),matrix);
+</span><span style="color: #008080;">25</span>                 <span style="color: #0000ff;">var</span> pos2=BABYLON.Vector3.TransformCoordinates(pos0.clone().add(<span style="color: #0000ff;">new</span> BABYLON.Vector3(size41,size41,0<span style="color: #000000;">)),matrix);
+</span><span style="color: #008080;">26</span>                 <span style="color: #0000ff;">var</span> pos3=BABYLON.Vector3.TransformCoordinates(pos0.clone().add(<span style="color: #0000ff;">new</span> BABYLON.Vector3(-size41,size41,0<span style="color: #000000;">)),matrix);
+</span><span style="color: #008080;">27</span>                 <span style="color: #0000ff;">var</span> pos4=BABYLON.Vector3.TransformCoordinates(pos0.clone().add(<span style="color: #0000ff;">new</span> BABYLON.Vector3(-size41,-size41,0<span style="color: #000000;">)),matrix);
+</span><span style="color: #008080;">28</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">var ray=new BABYLON.Ray(new BABYLON.Vector3(-50,50,0), new BABYLON.Vector3(0,-1,0), 100);</span>
+<span style="color: #008080;">29</span>                 <span style="color: #0000ff;">var</span> ray1 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Ray(pos1, direction, length);
+</span><span style="color: #008080;">30</span>                 <span style="color: #0000ff;">var</span> ray2 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Ray(pos2, direction, length);
+</span><span style="color: #008080;">31</span>                 <span style="color: #0000ff;">var</span> ray3 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Ray(pos3, direction, length);
+</span><span style="color: #008080;">32</span>                 <span style="color: #0000ff;">var</span> ray4 = <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Ray(pos4, direction, length);
+</span><span style="color: #008080;">33</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">对于每一束射线，如果击中的第一个网格不是"ground_alpha",则只淋湿第一个网格</span>
+<span style="color: #008080;">34</span>                 <span style="color: #008000;">//</span><span style="color: #008000;"> ，否则还如此检查第二个，四条射线的检查结果都放在同一数组中</span>
+<span style="color: #008080;">35</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">，击中了处于相同位置的ground_base和其他ground，优先选拔其他ground</span>
+<span style="color: #008080;">36</span>                 testRay(ray1,size);<span style="color: #008000;">//</span><span style="color: #008000;">检查射线淋湿的网格</span>
+<span style="color: #008080;">37</span> <span style="color: #000000;">                testRay(ray2,size);
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">                testRay(ray3,size);
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">                testRay(ray4,size);
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">42</span>         <span style="color: #008000;">//</span><span style="color: #008000;">为了节省时间，把淋湿数组保存在本地存储里</span>
+<span style="color: #008080;">43</span>         <span style="color: #0000ff;">for</span>(key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_wet)
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">            localStorage.setItem(key,obj_wet[key].data_wet);
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">47</span>         console.log("降雨结束"<span style="color: #000000;">);
+</span><span style="color: #008080;">48</span>     }</pre>
+</div>
+<p>考虑到可能斜着下雨，我们使用矩阵变换调整每一条雨丝的起点和方向，在mesh_DropFrom的局部坐标系中，每条雨丝的降雨起点都像地块单元格一样平整的排列，用lookAt方法将mesh_DropFrom倾斜一些则所有雨丝也跟着倾斜了。这里要注意的是lookAt方法默认将mesh_DropFrom的&ldquo;正面&rdquo;指向目标（to），而我们需要的则是将mesh_DropFrom的&ldquo;下面&rdquo;指向目标，这一差异会使得最终世界坐标系中的的坐标左移一位，也就是（x,y,z）变成了（y,z,x）,所以我们在mesh_DropFrom的局部坐标系内计算时就预先将坐标右移一位。</p>
+<p>降雨的示意图：</p>
+<p><img src="./images/WebGL场景的两种地面构造方法12.png" alt="" /></p>
+<p>从每个mesh_DropFrom的&ldquo;单元格&rdquo;中射出四条射线，使用testRay方法判断这些射线与地面网格的接触情况：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> sort_compare(a,b)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">return</span> a.distance-<span style="color: #000000;">b.distance;
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> testRay(ray,size)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> arr=scene.multiPickWithRay(ray,predicate);<span style="color: #008000;">//</span><span style="color: #008000;">射线的多重选取，这样获取的arr并不是按distance顺序排序的！！！！</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">arr.length;
+</span><span style="color: #008080;"> 9</span>         arr.sort(sort_compare)<span style="color: #008000;">//</span><span style="color: #008000;">按距离从近到远排序</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">var</span> lastHit=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">11</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> k=0;k&lt;len;k++)<span style="color: #008000;">//</span><span style="color: #008000;">对于这条射线击中的每个三角形</span>
+<span style="color: #008080;">12</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">13</span>             <span style="color: #0000ff;">var</span> hit=<span style="color: #000000;">arr[k];
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">hit.pickedMesh;
+</span><span style="color: #008080;">15</span>             <span style="color: #0000ff;">var</span> distance=<span style="color: #000000;">hit.distance;
+</span><span style="color: #008080;">16</span>             <span style="color: #0000ff;">if</span><span style="color: #000000;">(mesh)
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">18</span>                 <span style="color: #0000ff;">if</span>(lastHit)<span style="color: #008000;">//</span><span style="color: #008000;">已经有上一层</span>
+<span style="color: #008080;">19</span>                 {<span style="color: #008000;">//</span><span style="color: #008000;">如果上一层是半透明的，则下一层必定被淋湿，如果上一层是ground_base，则要看两层之间的距离</span>
+<span style="color: #008080;">20</span>                     <span style="color: #0000ff;">if</span>(lastHit.pickedMesh.name.substr(0,11)=="ground_base"<span style="color: #000000;">)
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;">22</span>                         <span style="color: #0000ff;">if</span>((distance-lastHit.distance)&gt;(size/1000))//如果距离太大，则不会淋湿
+<span style="color: #008080;">23</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">                            getWet(lastHit);
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">26</span>                         <span style="color: #0000ff;">else</span><span style="color: #008000;">//</span><span style="color: #008000;">如果距离较近，则优先淋湿地形附着物</span>
+<span style="color: #008080;">27</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">                            getWet(hit);
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">32</span>                 <span style="color: #0000ff;">else</span><span style="color: #008000;">//</span><span style="color: #008000;">没有上一层</span>
+<span style="color: #008080;">33</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">34</span>                     <span style="color: #0000ff;">if</span>(mesh.name.substr(0,11)!="ground_base")<span style="color: #008000;">//</span><span style="color: #008000;">如果是地面网格，则还不确定是否淋湿，其他网格必定淋湿</span>
+<span style="color: #008080;">35</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">                        getWet(hit);
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">38</span>                     <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(k==(len-1))<span style="color: #008000;">//</span><span style="color: #008000;">已经遍历到最后一层</span>
+<span style="color: #008080;">39</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">                        getWet(hit);
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">43</span>                 <span style="color: #0000ff;">var</span> name=<span style="color: #000000;">mesh.name;
+</span><span style="color: #008080;">44</span>                 <span style="color: #0000ff;">if</span>(name&amp;&amp;(name.substr(0,12)=="ground_alpha"||name.substr(0,11)=="ground_base"<span style="color: #000000;">))
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">46</span>                     lastHit=<span style="color: #000000;">hit;
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">48</span>                 <span style="color: #0000ff;">else</span>
+<span style="color: #008080;">49</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">50</span>                     lastHit=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">51</span>                     <span style="color: #0000ff;">break</span>;<span style="color: #008000;">//</span><span style="color: #008000;">如果上一层就是其他类型的网格，则不再继续深入检测</span>
+<span style="color: #008080;">52</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">54</span>             <span style="color: #0000ff;">else</span>
+<span style="color: #008080;">55</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">56</span>                 lastHit=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+</span><span style="color: #008080;">57</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">58</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">59</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">60</span>     }</pre>
+</div>
+<p>这里将可能出现的地形网格分为三类：半透明地形网格(以ground_alpha为前缀)，基础地形网格（以ground_base为前缀），地形附着物网格（以ground为前缀），规定半透明网格不会阻挡雨水，附着物网格和基础网格距离较近时附着物网格优先淋湿。<br />确定会淋湿后，用getWet方法将三角形的顶点放入淋湿数组：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> getWet(hit)
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">hit.pickedMesh;
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">var</span> name=<span style="color: #000000;">mesh.name;
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">var</span> faceId=<span style="color: #000000;">hit.faceId;
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">var</span> indices =<span style="color: #000000;"> mesh.getIndices();
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> index0 = indices[faceId * 3<span style="color: #000000;">];
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">var</span> index1 = indices[faceId * 3 + 1<span style="color: #000000;">];
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">var</span> index2 = indices[faceId * 3 + 2<span style="color: #000000;">];
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">var</span> wet=obj_wet[name];<span style="color: #008000;">//</span><span style="color: #008000;">这个顶点被淋湿</span>
+<span style="color: #008080;">11</span>         wet.data_wet[index0]=1<span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>         wet.data_wet[index1]=1<span style="color: #000000;">;
+</span><span style="color: #008080;">13</span>         wet.data_wet[index2]=1<span style="color: #000000;">;
+</span><span style="color: #008080;">14</span>     }</pre>
+</div>
+<p>4、根据淋湿数组剔除三角形：（这是一个更加耗时的计算）</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span> SpliceRain(obj_ground)<span style="color: #008000;">//</span><span style="color: #008000;">通过改变数据结构，可以只测试其中的一个网格</span>
+<span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj_ground)
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;"> 5</span>             console.log("清理"+<span style="color: #000000;">key);
+</span><span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">var</span> obj=<span style="color: #000000;">obj_wet[key];
+</span><span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">var</span> len=<span style="color: #000000;">obj.len_pos;
+</span><span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">var</span> data_wet=obj.data_wet;<span style="color: #008000;">//</span><span style="color: #008000;">淋湿数组，长度是顶点数组的三分之一</span>
+<span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">var</span> data_pos=obj.data_pos;<span style="color: #008000;">//</span><span style="color: #008000;">顶点数组</span>
+<span style="color: #008080;">10</span>             <span style="color: #0000ff;">var</span> data_index=obj.data_index<span style="color: #008000;">//</span><span style="color: #008000;">顶点索引</span>
+<span style="color: #008080;">11</span>             <span style="color: #0000ff;">var</span> data_uv=obj.data_uv<span style="color: #008000;">//</span><span style="color: #008000;">纹理坐标</span>
+<span style="color: #008080;">12</span>             <span style="color: #008000;">//</span><span style="color: #008000;">var count_splice=0;</span>
+<span style="color: #008080;">13</span>             <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;data_wet.length;i++)<span style="color: #008000;">//</span><span style="color: #008000;">对于每一个顶点,这里一定要注意顺序</span>
+<span style="color: #008080;">14</span>             {<span style="color: #008000;">//</span><span style="color: #008000;">如果这个顶点没有被淋湿，则要清除这个顶点，如果不清除顶点只是清除索引，能不能快一些？</span>
+<span style="color: #008080;">15</span>                 console.log(i+"/"+<span style="color: #000000;">data_wet.length);
+</span><span style="color: #008080;">16</span>                 <span style="color: #0000ff;">if</span>(!data_wet[i])<span style="color: #008000;">//</span><span style="color: #008000;">如果没有淋湿</span>
+<span style="color: #008080;">17</span> <span style="color: #000000;">                {
+</span><span style="color: #008080;">18</span>                     data_pos.splice(i*3,3<span style="color: #000000;">);
+</span><span style="color: #008080;">19</span>                     data_uv.splice(i*2,2<span style="color: #000000;">);
+</span><span style="color: #008080;">20</span>                     data_wet.splice(i,1<span style="color: #000000;">);
+</span><span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">count_splice++;</span>
+<span style="color: #008080;">23</span>                     <span style="color: #0000ff;">var</span> len2=<span style="color: #000000;">obj.len_index;
+</span><span style="color: #008080;">24</span>                     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j=0;j&lt;obj.len_index;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">                    {
+</span><span style="color: #008080;">26</span>                         <span style="color: #0000ff;">if</span>(data_index[j]&gt;i)<span style="color: #008000;">//</span><span style="color: #008000;">如果这个索引值大于被剔除的顶点</span>
+<span style="color: #008080;">27</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">28</span>                             data_index[j]-=1;<span style="color: #008000;">//</span><span style="color: #008000;">count_splice;</span>
+<span style="color: #008080;">29</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">30</span>                         <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(data_index[j]==i)<span style="color: #008000;">//</span><span style="color: #008000;">如果这个索引正是被剔除的顶点</span>
+<span style="color: #008080;">31</span> <span style="color: #000000;">                        {
+</span><span style="color: #008080;">32</span>                             <span style="color: #0000ff;">var</span> int_temp=j%3<span style="color: #000000;">;
+</span><span style="color: #008080;">33</span>                             <span style="color: #0000ff;">if</span>(int_temp==0)<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第一个顶点</span>
+<span style="color: #008080;">34</span> <span style="color: #000000;">                            {
+</span><span style="color: #008080;">35</span>                                 data_index.splice(j,3<span style="color: #000000;">);
+</span><span style="color: #008080;">36</span>                                 j-=1<span style="color: #000000;">;
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">                            }
+</span><span style="color: #008080;">38</span>                             <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(int_temp==1)<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第二个顶点</span>
+<span style="color: #008080;">39</span> <span style="color: #000000;">                            {
+</span><span style="color: #008080;">40</span>                                 data_index.splice(j-1,3<span style="color: #000000;">);
+</span><span style="color: #008080;">41</span>                                 j-=2<span style="color: #000000;">;
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">                            }
+</span><span style="color: #008080;">43</span>                             <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(int_temp==2)<span style="color: #008000;">//</span><span style="color: #008000;">三角形的第三个顶点</span>
+<span style="color: #008080;">44</span> <span style="color: #000000;">                            {
+</span><span style="color: #008080;">45</span>                                 data_index.splice(j-2,3<span style="color: #000000;">);
+</span><span style="color: #008080;">46</span>                                 j-=3<span style="color: #000000;">;
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">                            }
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">                        }
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">50</span>                     i--<span style="color: #000000;">;
+</span><span style="color: #008080;">51</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">52</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">53</span>             <span style="color: #008000;">//</span><span style="color: #008000;">剔除之后开始生成网格</span>
+<span style="color: #008080;">54</span>             <span style="color: #0000ff;">var</span> normals=<span style="color: #000000;">[];
+</span><span style="color: #008080;">55</span>             BABYLON.VertexData.ComputeNormals(data_pos, data_index, normals);<span style="color: #008000;">//</span><span style="color: #008000;">计算法线</span>
+<span style="color: #008080;">56</span>             BABYLON.VertexData._ComputeSides(0, data_pos, data_index, normals, data_uv);<span style="color: #008000;">//</span><span style="color: #008000;">根据法线分配纹理朝向</span>
+<span style="color: #008080;">57</span>             <span style="color: #0000ff;">var</span> vertexData= <span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.VertexData();
+</span><span style="color: #008080;">58</span>             vertexData.indices = data_index;<span style="color: #008000;">//</span><span style="color: #008000;">索引</span>
+<span style="color: #008080;">59</span>             vertexData.positions =<span style="color: #000000;"> data_pos;
+</span><span style="color: #008080;">60</span>             vertexData.normals = normals;<span style="color: #008000;">//</span><span style="color: #008000;">position改变法线也要改变！！！！</span>
+<span style="color: #008080;">61</span>             vertexData.uvs =<span style="color: #000000;"> data_uv;
+</span><span style="color: #008080;">62</span> 
+<span style="color: #008080;">63</span>             <span style="color: #0000ff;">var</span> mesh=<span style="color: #000000;">obj_ground[key];
+</span><span style="color: #008080;">64</span>             <span style="color: #0000ff;">var</span> mat=<span style="color: #000000;">mesh.material;
+</span><span style="color: #008080;">65</span>             <span style="color: #0000ff;">var</span> pos=<span style="color: #000000;">mesh.position;
+</span><span style="color: #008080;">66</span>             <span style="color: #0000ff;">var</span> rot=<span style="color: #000000;">mesh.rotation;
+</span><span style="color: #008080;">67</span>             <span style="color: #0000ff;">var</span> scal=<span style="color: #000000;">mesh.scaling;
+</span><span style="color: #008080;">68</span> <span style="color: #000000;">            mesh.dispose();
+</span><span style="color: #008080;">69</span>             mesh=<span style="color: #0000ff;">new</span><span style="color: #000000;"> BABYLON.Mesh(key,scene);
+</span><span style="color: #008080;">70</span>             <span style="color: #008000;">//</span><span style="color: #008000;">mesh</span>
+<span style="color: #008080;">71</span>             <span style="color: #008000;">//</span><span style="color: #008000;">mesh=new BABYLON.Mesh(name,scene);</span>
+<span style="color: #008080;">72</span>             vertexData.applyToMesh(mesh, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">73</span>             mesh.vertexData=<span style="color: #000000;">vertexData;
+</span><span style="color: #008080;">74</span>             mesh.sideOrientation=<span style="color: #000000;">BABYLON.Mesh.DOUBLESIDE;
+</span><span style="color: #008080;">75</span>             mesh.renderingGroupId=2<span style="color: #000000;">;
+</span><span style="color: #008080;">76</span>             mesh.material=<span style="color: #000000;">mat;
+</span><span style="color: #008080;">77</span>             mesh.position=<span style="color: #000000;">pos;
+</span><span style="color: #008080;">78</span>             mesh.rotation=<span style="color: #000000;">rot;
+</span><span style="color: #008080;">79</span>             mesh.scaling=<span style="color: #000000;">scal;
+</span><span style="color: #008080;">80</span>             obj_ground[key]=<span style="color: #000000;">mesh;
+</span><span style="color: #008080;">81</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">82</span>     }</pre>
+</div>
+<p>这里需要从顶点数组和顶点索引数组中剔除未淋湿的顶点，同时要根据顶点数目的变化减小顶点索引数组中所有超过剔除顶点的值。其他的计算和生成地形附着物相似。<br />剔除之后的渲染效果如图所示：</p>
+<p>较稀疏的雨丝：（DropRain(100,100,1,100,new BABYLON.Vector3(0,50,0),new BABYLON.Vector3(0,0,0))）</p>
+<p><img src="./images/WebGL场景的两种地面构造方法13.png" alt="" /></p>
+<p><img src="./images/WebGL场景的两种地面构造方法14.png" alt="" /></p>
+<p>可以看到，没有被淋湿的浅水三角形被剔除了，另一方面因为飞船的网格比雨丝更密集，很多网格没有被淋湿。</p>
+<p>较密集的雨丝：（DropRain(200,200,0.5,100,new BABYLON.Vector3(0,50,0),new BABYLON.Vector3(0,0,0))）</p>
+<p><img src="./images/WebGL场景的两种地面构造方法15.png" alt="" /></p>
+<p><img src="./images/WebGL场景的两种地面构造方法16.png" alt="" /></p>
+<p>可以看到模型中还存在一些空洞，再添加一些其他方向的小规模降雨即可解决。<br />除了这种类似&ldquo;方向光&rdquo;的降雨方法外，还可以根据实际需要编写其他的降雨方式，比如参考&ldquo;点光源&rdquo;从一个点向周围发出射线，也可以使用一些边界判断方法直接剔除一定范围内的所有顶点（边界判断方法可以参考 https://www.cnblogs.com/ljzc002/p/10168547.html）</p>
+<p>总结：</p>
+<p>地基已经搭好，接下来可以向场景中添加各种角色并进行互动了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

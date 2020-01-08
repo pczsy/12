@@ -1,0 +1,245 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Web前端——css' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Web前端——css</center></div><div class='banquan'>原文出处:本文由博客园博主Stars-one提供。<br/>
+原文连接:https://www.cnblogs.com/stars-one/p/11068557.html</div><br>
+    <h2 id="css">css</h2>
+<p>推荐的样式编写顺序：</p>
+<ol>
+<li>Positioning：定位</li>
+<li>Box model：盒子模型、大小等</li>
+<li>Typographic：文字系列、排印等</li>
+<li>Visual：可视化、背景等</li>
+<li>Misc：其它混杂模式</li>
+</ol>
+<h3 id="居中">居中</h3>
+<p>垂直居中，设置line-height<br />
+水平方向 text-align</p>
+<h3 id="flex-弹性盒子">flex 弹性盒子</h3>
+<p>其实就是一个百分比布局，使用这个的时候，子元素的宽高会受限制于弹性盒子</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt; 
+&lt;title&gt;菜鸟教程(runoob.com)&lt;/title&gt; 
+&lt;style&gt; 
+.flex-container {
+    display: -webkit-flex;/*谷歌浏览器内核*/
+    display: flex;
+    width: 500px;
+    height: 250px;
+    background-color: lightgrey;
+}
+
+.flex-item {
+    background-color: cornflowerblue;
+    width: 350px;/*这里其实是无效的，具体的宽度得看父布局，子控件将平分父布局的宽度平分*/
+    height: 100px;
+    margin: 10px;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;div class=&quot;flex-container&quot;&gt;
+  &lt;div class=&quot;flex-item&quot;&gt;flex item 1&lt;/div&gt;
+  &lt;div class=&quot;flex-item&quot;&gt;flex item 2&lt;/div&gt;
+  &lt;div class=&quot;flex-item&quot;&gt;flex item 3&lt;/div&gt;  
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="设置背景为图片的一部分">设置背景为图片的一部分</h3>
+<pre><code><code>background-image:url() -140px 0px;</code></pre>
+<p>计算机中，左上角为原点，x正方向是右，y轴正方向是下<br />
+图片偏移设置背景 -140 以html底部作为参考物，图片自身向左移动，所以是负的</p>
+<h3 id="鼠标滑过更改样式">鼠标滑过更改样式</h3>
+<p>:hover也是属于css选择器中的一种，鼠标悬浮在元素上，元素的样式，可以使用这个来达到鼠标滑动改变样式的效果</p>
+<p>“&gt;” 代表着是只选择子代元素，而空格则代表选中后代元素</p>
+<ul>
+<li>a:link {color: #FF0000} /* 未访问的链接 */</li>
+<li>a:visited {color: #00FF00} /* 已访问的链接 */</li>
+<li>a:hover {color: #FF00FF} /* 鼠标移动到链接上 */</li>
+<li>a:active {color: #0000FF} /* 选定的链接 */</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Transitional//EN&quot; &quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+.nav ul{
+    display: flex;
+    flex-direction: row; /* 盒子内元素的排列方向 */
+    padding-left: 100px;
+    list-style: none;
+}
+&lt;!-- “&gt;” 代表着是只选择子代元素，而空格则代表选中后代元素 --&gt;
+.nav ul &gt; li:hover{
+    border-left: 1px solid #F27B04;
+    border-top: 1px solid #F27B04;
+    border-right: 1px solid #F27B04;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    cursor: pointer;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;div class=&quot;nav&quot;&gt;
+        &lt;ul&gt;
+            &lt;li&gt;首页&lt;/li&gt;
+            &lt;li&gt;女人&lt;/li&gt;
+            &lt;li&gt;箱包&lt;/li&gt;
+            &lt;li&gt;美容&lt;/li&gt;
+            &lt;li&gt;男人&lt;/li&gt;
+            &lt;li&gt;运动&lt;/li&gt;
+            &lt;li&gt;数码&lt;/li&gt;
+            &lt;li&gt;热销榜&lt;/li&gt;
+            &lt;li&gt;婚庆&lt;/li&gt;
+            &lt;li&gt;户外&lt;/li&gt;
+            &lt;li&gt;美食&lt;/li&gt;
+        &lt;/ul&gt;
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="float-浮动与clear">float 浮动与clear</h3>
+<p>使用此样式的元素需要设置宽度，否则，它们会尽可能地窄。</p>
+<p>使用float浮动，会影响到其他的元素，所以使用clear属性</p>
+<p>clear可以both，left，right</p>
+<p>both两边都不能出现浮动元素，left是左边不能出现浮动元素，right是右边不能出现浮动元素</p>
+<p>下面的效果链接中的<code>.text_line</code>如果没有<code>clear</code>属性，文字就会挤在尾部，宽度不够大的话，文字还会变成竖排<br />
+<a href="https://www.runoob.com/try/try.php?filename=trycss_float_clear">float效果链接</a></p>
+<h4 id="例子1竖排三个div">例子1：竖排三个div</h4>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;ff&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+        .left_body{
+            width: 200px;
+            height: 200px;
+        }
+    &lt;/style&gt;
+        &lt;div id=&quot;con&quot;&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: red;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: beige;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: #008000;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/Web前端——css0.png" /></p>
+<h4 id="例子2使用float水平排列div">例子2：使用float，水平排列div</h4>
+<p>如果宽度不够的话，会自动换行</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;ff&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .left_body{
+                width: 200px;
+                height: 200px;
+                float: left;
+            }
+            
+        &lt;/style&gt;
+        &lt;div id=&quot;con&quot;&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: red;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: beige;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: #008000;&quot;&gt;&lt;/div&gt;
+            
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p><img src="./images/Web前端——css1.png" /></p>
+<p><img src="./images/Web前端——css2.png" /></p>
+<h4 id="例子3外层div包含浮动元素使用clear">例子3:外层div包含浮动元素（使用clear)</h4>
+<p>修改外层div的位置，浮动元素的位置也会随之改变</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;ff&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .left_body{
+                width: 200px;
+                height: 200px;
+                float: left;
+            }
+            #con{
+                border: 1px  solid #0000FF;
+            }
+            .clearfix{
+                clear: both;
+            }
+        &lt;/style&gt;
+        &lt;div id=&quot;con&quot;&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: red;&quot;&gt;&lt;/div&gt;
+            &lt;!-- 如果在这里加一个下面的注释的div，可以达到换行的效果 --&gt;
+            &lt;!--&lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;  --&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: beige;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: #008000;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;clearfix&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/Web前端——css3.png" /></p>
+<h4 id="例子4外层div包含浮动元素外层div也设置为float">例子4：外层div包含浮动元素（外层div也设置为float)</h4>
+<p>修改外层div的位置，浮动元素的位置也会随之改变</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot;&gt;
+        &lt;title&gt;ff&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            .left_body{
+                width: 200px;
+                height: 200px;
+                float: left;
+            }
+            #con{
+                border: 1px  solid #0000FF;
+                float:left;
+            }
+            
+        &lt;/style&gt;
+        &lt;div id=&quot;con&quot;&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: red;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: beige;&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;left_body&quot; style=&quot;background: #008000;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p><img src="./images/Web前端——css3.png" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

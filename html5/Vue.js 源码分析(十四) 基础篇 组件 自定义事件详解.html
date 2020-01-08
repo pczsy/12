@@ -1,0 +1,302 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11091402.html</div><br>
+    <p>我们在开发组件时有时需要和父组件沟通，此时可以用自定义事件来实现</p>
+<p>组件的事件分为自定义事件和原生事件，前者用于子组件给父组件发送消息的，后者用于在组件的根元素上直接监听一个原生事件，区别就是绑定原生事件需要加一个.native修饰符。</p>
+<p>子组件里通过过this.$emit()将自定义事件以及需要发出的数据通过以下代码发送出去，第一个参数是自定义事件的名称，后面的参数是依次想要发送出去的数据,例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>    
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="d"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">com </span><span style="color: #ff0000;">@myclick</span><span style="color: #0000ff;">="MyClick"</span><span style="color: #ff0000;"> @mouseenter.native</span><span style="color: #0000ff;">="Enter"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">com</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;<br /></span><span style="color: #000000;">        Vue.config.productionTip<span style="color: #000000;">=<span style="color: #0000ff;">false<span style="color: #000000;">;
+        Vue.config.devtools<span style="color: #000000;">=<span style="color: #0000ff;">false<span style="color: #000000;">;</span></span></span></span></span></span></span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">com</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{
+            template:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;button @click="childclick"&gt;Click&lt;/button&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            methods:{
+                childclick:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$emit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">myclick</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">gege</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">123</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)}                               </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">子组件的事件，通过this.$emit触发父组件的myclick事件</span>
+<span style="background-color: #f5f5f5; color: #000000;">            }
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">debugger</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#d</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            methods:{
+                MyClick:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">parent MyClick method:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,arguments)},                    </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">响应子组件的事件函数</span>
+<span style="background-color: #f5f5f5; color: #000000;">                Enter:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">MouseEnter</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)}                                             </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">子组件的原生DOM事件</span>
+<span style="background-color: #f5f5f5; color: #000000;">            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span> 
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>子组件就是一个按钮，渲染如下:</p>
+<p><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解0.png" alt="" /></p>
+<p>我们给整个组件绑定了两个事件，一个DOM原生的mouseenter事件和自定义的<span style="color: #000000;">MyClick组件事件，当鼠标移动到按钮上时，打印出:MouseEnter，如下:</span></p>
+<p><span style="color: #000000;"><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解1.png" alt="" /></span></p>
+<p>当点击按钮时输出子组件传递过来的信息，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解2.png" alt="" /></p>
+<p>自定义事件其实是存储在组件实例的_events属性上的，我们在控制台输入console.log(app.$children[0]["_events"])就可以打印出来，如下:</p>
+<p><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解3.png" alt="" /></p>
+<p>myclick就是我们自定义的事件对象</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;父组件在解析模板时会执行processAttrs()函数，会在AST对象上增加一个events和nativeevents属性，如下</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {      <span style="color: #008000;">//</span><span style="color: #008000;">第9526行 对属性进行解析</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList; 
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {              <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性名</span>
+    name = rawName =<span style="color: #000000;"> list[i].name;
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (dirRE.test(name)) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on                   //如果name以@或v-on:开头，表示绑定了事件</span>
+        name = name.replace(onRE, ''<span style="color: #000000;">);
+        addHandler(el, name, value, modifiers, </span><span style="color: #0000ff;">false</span>, warn$2<span style="color: #000000;">);    调用addHandler()函数将事件相关信息保存到el.events或nativeEvents里面
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> addHandler (                <span style="color: #008000;">//</span><span style="color: #008000;">第6573行 给el这个AST对象增加event或nativeEvents</span>
+<span style="color: #000000;">  el,
+  name,
+  value,
+  modifiers,
+  important,
+  warn
+) {
+  modifiers </span>= modifiers ||<span style="color: #000000;"> emptyObject;
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> events;
+  </span><span style="color: #0000ff;">if</span> (modifiers.native) {                       <span style="color: #008000;">//</span><span style="color: #008000;">如果存在native修饰符，则保存到el.nativeEvents里面</span>
+    <span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.native;
+    events </span>= el.nativeEvents || (el.nativeEvents =<span style="color: #000000;"> {});
+  } </span><span style="color: #0000ff;">else</span> {                                      <span style="color: #008000;">//</span><span style="color: #008000;">否则保存到el.events里面</span>
+    events = el.events || (el.events =<span style="color: #000000;"> {});
+  }
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">var</span> handlers = events[name];                  <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取已经存在的该事件对象</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span> 
+  <span style="color: #0000ff;">if</span> (Array.isArray(handlers)) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果是数组，表示已经插入了两次了，则再把newHandler添加进去</span>
+    important ?<span style="color: #000000;"> handlers.unshift(newHandler) : handlers.push(newHandler);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (handlers) {                        <span style="color: #008000;">//</span><span style="color: #008000;">如果handlers存在且不是数组，则表示只插入过一次，则把events[name]变为数组</span>
+    events[name] = important ?<span style="color: #000000;"> [newHandler, handlers] : [handlers, newHandler];
+  } </span><span style="color: #0000ff;">else</span> {                                      <span style="color: #008000;">//</span><span style="color: #008000;">否则表示是第一次新增该事件，则值为对应的newHandler</span>
+    events[name] =<span style="color: #000000;"> newHandler;
+  }
+
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>例子里执行完后AST对象里对应的信息如下:(<span style="color: #ff0000;">AST可以这样认为:Vue把模板通过正则解析后以对象的形式表现出来</span>)</p>
+<p><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解4.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候会调用genHandlers函数根据不同修饰符等生成对应的属性(作为_c函数的第二个data参数一部分),如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genData$2 (el, state) {  <span style="color: #008000;">//</span><span style="color: #008000;">第10274行  拼凑data值</span>
+  <span style="color: #0000ff;">var</span> data = '{'<span style="color: #000000;">; 
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> event handlers</span>
+  <span style="color: #0000ff;">if</span> (el.events) {               <span style="color: #008000;">//</span><span style="color: #008000;">如果el有绑定事件(没有native修饰符时)</span>
+    data += (genHandlers(el.events, <span style="color: #0000ff;">false</span>, state.warn)) + ","<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">if</span> (el.nativeEvents) {        <span style="color: #008000;">//</span><span style="color: #008000;">如果el有绑定事件(native修饰符时)</span>
+    data += (genHandlers(el.nativeEvents, <span style="color: #0000ff;">true</span>, state.warn)) + ","<span style="color: #000000;">;
+  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">return</span><span style="color: #000000;"> data
+}</span></pre>
+</div>
+<p>genHandlers会根据参数2的值将事件存储在nativeOn或on属性里，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genHandlers (      <span style="color: #008000;">//</span><span style="color: #008000;">第9992行 拼凑事件的data函数</span>
+<span style="color: #000000;">  events,
+  isNative,
+  warn
+) {
+  </span><span style="color: #0000ff;">var</span> res = isNative ? 'nativeOn:{' : 'on:{';       <span style="color: #008000;">//</span><span style="color: #008000;">如果参数isNative为true则设置res为:nativeOn:{，否则为:on:{</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> name <span style="color: #0000ff;">in</span><span style="color: #000000;"> events) {
+    res </span>+= "\"" + name + "\":" + (genHandler(name, events[name])) + ","<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">return</span> res.slice(0, -1) + '}'<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>例子里执行到这里时等于:</p>
+<p><img src="./images/Vue.js 源码分析(十四) 基础篇 组件 自定义事件详解5.png" alt="" /></p>
+<p>&nbsp;_render将rendre函数转换为VNode时候会调用createComponent()函数创建组件占位符VNode，此时会有</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createComponent (  <span style="color: #008000;">//</span><span style="color: #008000;">第4182行</span>
+<span style="color: #000000;">  Ctor, 
+  data,
+  context,
+  children,
+  tag
+) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">var</span> listeners = data.on;          <span style="color: #008000;">//</span><span style="color: #008000;">对自定义事件(没有native修饰符)的处理，则保存到listeners里面，一会儿存到占位符VNode的配置信息里</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> replace with listeners with .native modifier</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> so it gets processed during parent component patch.</span>
+  data.on = data.nativeOn;          <span style="color: #008000;">//</span><span style="color: #008000;">对原生DOM事件，则保存到data.on里面，这样等该DOM渲染成功后会执行event模块的初始化，就会绑定对应的函数了</span>
+
+  <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/<br /><span style="color: #000000;">&nbsp; var name = Ctor.options.name || tag;</span><br /><span style="color: #000000;">&nbsp; var vnode = new VNode(</span><br /><span style="color: #000000;">&nbsp;&nbsp;&nbsp; ("vue-component-" + (Ctor.cid) + (name ? ("-" + name) : '')),</span><br /><span style="color: #000000;">&nbsp;&nbsp;&nbsp; data, undefined, undefined, undefined, context,</span><br /><span style="color: #000000;">&nbsp;&nbsp;&nbsp; { Ctor: Ctor, propsData: propsData, listeners: listeners, tag: tag, children: children },&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #339966;"> &nbsp; //自定义事件作为listeners属性存储在组件Vnode的配置参数里了</span></span><br /><span style="color: #000000;">&nbsp;&nbsp;&nbsp; asyncFactory</span><br /><span style="color: #000000;">&nbsp; );</span><br /><br /><span style="color: #000000;">&nbsp; // Weex specific: invoke recycle-list optimized @render function for</span><br /><span style="color: #000000;">&nbsp; // extracting cell-slot template.</span><br /><span style="color: #000000;">&nbsp; // https://github.com/Hanks10100/weex-native-directive/tree/master/component</span><br /><span style="color: #000000;">&nbsp; /* istanbul ignore if */</span><br /><span style="color: #000000;">&nbsp; return vnode</span><br /></span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>原生事件存储在on属性上，后面介绍v-on指令时再详细介绍，对于自定义事件存储在组件Vnode配置参数的<span style="color: #008000;"><span style="color: #000000;">listeners属性里了。</span></span></p>
+<p><span style="color: #008000;"><span style="color: #000000;">当组件实例化的时候执行_init()时首先执行initInternalComponent()函数，该函数会获取<span style="color: #008000;"><span style="color: #000000;">listeners</span></span>属性，如下:</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initInternalComponent (vm, options) {        <span style="color: #008000;">//</span><span style="color: #008000;">第4632行  初始化子组件</span>
+  <span style="color: #0000ff;">var</span> opts = vm.$options =<span style="color: #000000;"> Object.create(vm.constructor.options);
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> doing this because it's faster than dynamic enumeration.</span>
+  <span style="color: #0000ff;">var</span> parentVnode = options._parentVnode;                          <span style="color: #008000;">//</span><span style="color: #008000;">该组件的占位符VNode</span>
+  opts.parent =<span style="color: #000000;"> options.parent;
+  opts._parentVnode </span>=<span style="color: #000000;"> parentVnode;
+  opts._parentElm </span>=<span style="color: #000000;"> options._parentElm;
+  opts._refElm </span>=<span style="color: #000000;"> options._refElm;
+
+  </span><span style="color: #0000ff;">var</span> vnodeComponentOptions = parentVnode.componentOptions;         <span style="color: #008000;">//</span><span style="color: #008000;">占位符VNode初始化传入的配置信息</span>
+  opts.propsData =<span style="color: #000000;"> vnodeComponentOptions.propsData;
+  opts._parentListeners </span>= vnodeComponentOptions.listeners;          <span style="color: #008000;">//</span><span style="color: #008000;">将组件的自定义事件保存到_parentListeners属性里面</span>
+  opts._renderChildren =<span style="color: #000000;"> vnodeComponentOptions.children;
+  opts._componentTag </span>=<span style="color: #000000;"> vnodeComponentOptions.tag;
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (options.render) {
+    opts.render </span>=<span style="color: #000000;"> options.render;
+    opts.staticRenderFns </span>=<span style="color: #000000;"> options.staticRenderFns;
+  }
+}</span></pre>
+</div>
+<p>&nbsp;回到_init函数，接着执行initEvents()函数，该函数会初始化组件的自定义事件，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initEvents (vm) {      <span style="color: #008000;">//</span><span style="color: #008000;">第2412行 初始化自定义事件</span>
+  vm._events = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+  vm._hasHookEvent </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> init parent attached events</span>
+  <span style="color: #0000ff;">var</span> listeners = vm.$options._parentListeners;       <span style="color: #008000;">//</span><span style="color: #008000;">获取占位符VNode上的自定义事件</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (listeners) {                                    
+    updateComponentListeners(vm, listeners);          </span><span style="color: #008000;">//</span><span style="color: #008000;">执行updateComponentListeners()新增事件</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>&nbsp; <span style="color: #000000;">updateComponentListeners函数用于新增/更新组件的事件，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> add (event, fn, once) {      <span style="color: #008000;">//</span><span style="color: #008000;">第2424行</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (once) {
+    target.$once(event, fn);            </span><span style="color: #ff0000;">//自定义事件最终调用$once绑定事件的</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    target.$on(event, fn);
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> remove$1<span style="color: #000000;"> (event, fn) {
+  target.$off(event, fn);
+}
+
+</span><span style="color: #0000ff;">function</span> updateComponentListeners (       <span style="color: #008000;">//</span><span style="color: #008000;">第2436行</span>
+<span style="color: #000000;">  vm,
+  listeners,
+  oldListeners
+) {
+  target </span>=<span style="color: #000000;"> vm;
+  updateListeners(listeners, oldListeners </span>|| {}, add, remove$1, vm);    <span style="color: #008000;">//</span><span style="color: #008000;">调用updateListeners()更新DOM事件，传入add函数</span>
+  target =<span style="color: #000000;"> undefined;
+}</span></pre>
+</div>
+<p><span style="color: #ff0000;">updateListeners内部会调用add()函数，这里用了一个优化措施，实际上我们绑定的是Vue内部的createFnInvoker函数，该函数会遍历传给updateListeners的函数，依次执行。</span></p>
+<p>add()最终执行的是<span style="color: #000000;">$on</span>()函数，该函数定义如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.prototype.$on = <span style="color: #0000ff;">function</span> (event, fn) {  <span style="color: #008000;">//</span><span style="color: #008000;">第2448行 自定义事件的新增  event:函数名 fn:对应的函数</span>
+    <span style="color: #0000ff;">var</span> <span style="color: #0000ff;">this</span>$1 = <span style="color: #0000ff;">this</span><span style="color: #000000;">; 
+
+    </span><span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (Array.isArray(event)) {                         <span style="color: #008000;">//</span><span style="color: #008000;">如果event是一个数组</span>
+      <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0, l = event.length; i &lt; l; i++) {       <span style="color: #008000;">//</span><span style="color: #008000;">则遍历该数组</span>
+        <span style="color: #0000ff;">this</span>$1.$on(event[i], fn);                               <span style="color: #008000;">//</span><span style="color: #008000;">依次调用this$1.$on</span>
+<span style="color: #000000;">      }
+    } </span><span style="color: #0000ff;">else</span> {                                             <span style="color: #008000;">//</span><span style="color: #008000;">如果不是数组</span>
+      (vm._events[event] || (vm._events[event] = [])).push(fn);     <span style="color: #008000;">//</span><span style="color: #008000;">则将事件保存到ev._event上</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> optimize hook:event cost by using a boolean flag marked at registration</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> instead of a hash lookup</span>
+      <span style="color: #0000ff;">if</span> (hookRE.test(event)) {                                  <span style="color: #008000;">//</span><span style="color: #008000;">如果事件名以hook:开头                    </span>
+        vm._hasHookEvent = <span style="color: #0000ff;">true</span>;                                    <span style="color: #008000;">//</span><span style="color: #008000;">则设置vm._hasHookEvent为true,这样生命周期函数执行时也会执行这些函数</span>
+<span style="color: #000000;">      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vm
+  };</span></pre>
+</div>
+<p>从这里可以看到自定义事件其实是保存到组件实例的_events属性上的</p>
+<p>当子组件通过$emit触发当前实例上的事件时，会从_events上拿到对应的自定义事件并执行，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.prototype.$emit = <span style="color: #0000ff;">function</span> (event) {  <span style="color: #008000;">//</span><span style="color: #008000;">第2518行  子组件内部通过$emit()函数执行到这里</span>
+    <span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    {
+      </span><span style="color: #0000ff;">var</span> lowerCaseEvent = event.toLowerCase();                       <span style="color: #008000;">//</span><span style="color: #008000;">先将事件名转换为小写    </span>
+      <span style="color: #0000ff;">if</span> (lowerCaseEvent !== event &amp;&amp; vm._events[lowerCaseEvent]) {   <span style="color: #008000;">//</span><span style="color: #008000;">如果lowerCaseEvent不等于event则报错(即事件名只能是小写)</span>
+<span style="color: #000000;">        tip(
+          </span>"Event \"" + lowerCaseEvent + "\" is emitted in component " +<span style="color: #000000;">
+          (formatComponentName(vm)) </span>+ " but the handler is registered for \"" + event + "\". " +
+          "Note that HTML attributes are case-insensitive and you cannot use " +
+          "v-on to listen to camelCase events when using in-DOM templates. " +
+          "You should probably use \"" + (hyphenate(event)) + "\" instead of \"" + event + "\"."<span style="color: #000000;">
+        );
+      }
+    }
+    </span><span style="color: #0000ff;">var</span> cbs = vm._events[event];                                      <span style="color: #ff0000;">//从_events属性里</span><span style="color: #ff0000;">获取对应的函数数组</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (cbs) {
+      cbs </span>= cbs.length &gt; 1 ? toArray(cbs) : cbs;                        <span style="color: #008000;">//</span><span style="color: #008000;">获取所有函数</span>
+      <span style="color: #0000ff;">var</span> args = toArray(arguments, 1);                                 <span style="color: #008000;">//</span><span style="color: #008000;">去掉第一个参数，后面的都作为事件的参数</span>
+      <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0, l = cbs.length; i &lt; l; i++) {                     <span style="color: #008000;">//</span><span style="color: #008000;">遍历cbs</span>
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+          cbs[i].apply(vm, args);                                           </span><span style="color: #008000;">//</span><span style="color: #008000;">依次执行每个函数，值为子组件的vm实例</span>
+        } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+          handleError(e, vm, (</span>"event handler for \"" + event + "\""<span style="color: #000000;">));
+        }
+      }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vm
+  };</span></pre>
+</div>
+<p>大致流程跑完了，有点繁琐，多调试一下就好了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

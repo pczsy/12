@@ -1,0 +1,126 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修使用lodop.js打印控件打印table并分页等' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>使用lodop.js打印控件打印table并分页等</center></div><div class='banquan'>原文出处:本文由博客园博主hpr提供。<br/>
+原文连接:https://www.cnblogs.com/hprBlog/p/11676184.html</div><br>
+    <div class="cnblogs_code">
+<pre><code>import {getLodop} from '@/utils/LodopFuncs.js'
+<span style="color: #008000;">//</span><span style="color: #008000;">打印表格</span>
+export <span style="color: #0000ff;">default</span><span style="color: #000000;">{
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> num 打印还是打印预览 conData 对象形式 传入需要的值 自定义 (自己添加的属性要在下面备注)</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> conData  title 标题  OrgName科室名字</span>
+    lodopTable:<span style="color: #0000ff;">function</span><span style="color: #000000;">(num,conData){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">原始table</span>
+        <span style="color: #0000ff;">var</span> table = document.getElementsByClassName("tablePrin")[0<span style="color: #000000;">]
+        </span><span style="color: #0000ff;">var</span> thead = table.getElementsByTagName("thead")[0<span style="color: #000000;">]
+        </span><span style="color: #0000ff;">var</span> tbody = table.getElementsByTagName("tbody")[0<span style="color: #000000;">]
+        </span><span style="color: #0000ff;">var</span> clnThead = thead.cloneNode(<span style="color: #0000ff;">true</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">var</span> clnTbody = tbody.cloneNode(<span style="color: #0000ff;">true</span><span style="color: #000000;">)
+        document.getElementsByClassName(</span>"colneTable")[0<span style="color: #000000;">].appendChild(clnThead)
+        document.getElementsByClassName(</span>"colneTable")[0<span style="color: #000000;">].appendChild(clnTbody)
+
+        </span><span style="color: #0000ff;">var</span> printTable = document.getElementsByClassName("printTable")[0<span style="color: #000000;">]
+        </span><span style="color: #0000ff;">var</span> printTableTbody = printTable.getElementsByTagName("tbody")[0<span style="color: #000000;">]
+
+        </span><span style="color: #0000ff;">var</span> tbodyChild =<span style="color: #000000;"> printTableTbody.children
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 循环tbody的子元素</span>
+        <span style="color: #0000ff;">for</span> (let i = 0; i &lt; tbodyChild.length; i++<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">var</span> tbodyTrChild =<span style="color: #000000;"> tbodyChild[i].children
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">循环tbody子元素的子元素</span>
+            <span style="color: #0000ff;">for</span> (let a = 0; a &lt; tbodyTrChild.length; a++<span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> let tbodyTrChildSpan = tbodyTrChild[a].getElementsByTagName("span")</span>
+<span style="color: #000000;">                let text
+                
+                text </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.xhTbodySpan(tbodyTrChild[a])
+                
+                tbodyTrChild[a].innerHTML </span>=<span style="color: #000000;"> text
+                tbodyTrChild[a].style </span>= "text-align:center;width:80px;word-break: break-all;padding:5px 0;font-size:15px;font-style:normal"<span style="color: #000000;">
+            }
+        }
+        
+        LODOP </span>=<span style="color: #000000;"> getLodop()
+        LODOP.PRINT_INIT(</span>""<span style="color: #000000;">);
+        LODOP.SET_PRINT_PAGESIZE(</span>2, 0, 0, "A4"); <span style="color: #008000;">//</span><span style="color: #008000;">1竖版 2横版</span>
+        LODOP.SET_PRINT_MODE("FULL_WIDTH_FOR_OVERFLOW", <span style="color: #0000ff;">true</span>); <span style="color: #008000;">//</span><span style="color: #008000;">宽度溢出缩放</span>
+        
+        <span style="color: #008000;">//</span><span style="color: #008000;">创建表格打印 表头自动每页都有</span>
+        LODOP.ADD_PRINT_TABLE(40,10,"RightMargin:0.9cm",600,document.getElementsByClassName("printTable")[0<span style="color: #000000;">].innerHTML);
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">创建页码 每页都有</span>
+        LODOP.ADD_PRINT_TEXT("98%", "90%", 200, 22, "第#页/共&amp;页"<span style="color: #000000;">);
+        LODOP.SET_PRINT_STYLEA(</span>0,"FontSize",10<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">2代表页码类型 1代表其他类型 每页都显示必须函数</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">标题</span>
+        LODOP.SET_PRINT_STYLEA(0, "ItemType", 2<span style="color: #000000;">);
+        LODOP.ADD_PRINT_TEXT(</span>10, 400, 300, 100<span style="color: #000000;">, `${conData.title}`);
+        LODOP.SET_PRINT_STYLEA(</span>0,"FontSize",16<span style="color: #000000;">);
+        LODOP.SET_PRINT_STYLEA(</span>0, "ItemType", 1<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">科室</span>
+        LODOP.ADD_PRINT_TEXT(10, 10, 300, 100<span style="color: #000000;">, `科室:${conData.OrgName}`);
+        LODOP.SET_PRINT_STYLEA(</span>0,"FontSize",16<span style="color: #000000;">);
+        LODOP.SET_PRINT_STYLEA(</span>0, "ItemType", 1<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> LODOP.ADD_PRINT_TEXT('97%', 10, '100%', 100, `病区护士长:${this.noteForm.HeadNurseName}  灭火:${this.noteForm.FireFight}  报告:${this.noteForm.Presentation}  疏散:${this.noteForm.Evacuate}`);</span>
+        LODOP.SET_PRINT_STYLEA(0,"FontSize",14<span style="color: #000000;">);
+        LODOP.SET_PRINT_STYLEA(</span>0, "ItemType", 1<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(num){
+            LODOP.PREVIEW();
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            LODOP.PRINT();
+        }
+        location.reload();
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">遍历子元素直到最后一个子元素</span>
+    xhTbodySpan:<span style="color: #0000ff;">function</span><span style="color: #000000;"> (ele) {
+        let con
+        let eleChild </span>=<span style="color: #000000;"> ele.children
+        </span><span style="color: #0000ff;">if</span> (eleChild.length &gt; 0<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.xhTbodySpan(eleChild[0<span style="color: #000000;">])
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            con </span>=<span style="color: #000000;"> ele.innerHTML
+        }
+        
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> con
+    }
+}</span></pre>
+</div>
+<p>lodopTable.js</p>
+<p>官网下载lodop.js</p>
+<ol>
+<li><span style="font-family: 宋体;">在</span>min.js<span style="font-family: 宋体;">设置全局</span></li>
+</ol>
+<p>import&nbsp;lodopTable&nbsp;from&nbsp;'./utils/lodopTable'</p>
+<p>Vue.prototype.$lodopTable&nbsp;=&nbsp;lodopTable</p>
+<ol>
+<li><span style="font-family: 宋体;">在需要调用的页面</span> <span style="font-family: 宋体;">找到需要打印的那个表格</span> <span style="font-family: 宋体;">添加</span>class &nbsp;tablePrin</li>
+<li>添加一下段落到最后面</li>
+</ol>
+<p>&nbsp;&lt;div&nbsp;class="printTable"&nbsp;hidden&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;table&nbsp;class="colneTable"&nbsp;border="1"&nbsp;width="100%"&nbsp;cellspacing="0"&nbsp;cellpadding="0"&nbsp;style="border-collapse:collapse"&nbsp;bordercolor="#000000"&gt;&lt;/table&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;</p>
+<p align="justify">5.<span style="font-family: 宋体;">在</span><span style="font-family: Calibri;">methods</span><span style="font-family: 宋体;">中加上这段代码 &nbsp;</span><span style="font-family: Calibri;">title</span><span style="font-family: 宋体;">自己定义 </span>OrgName<span style="font-family: 宋体;">更加实际情况改变</span> num 0<span style="font-family: 宋体;">代表打印 </span><span style="font-family: Calibri;">1</span><span style="font-family: 宋体;">代表打印预览</span></p>
+<p>lodopTable(num){</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.$lodopTable.lodopTable(num,{</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"title":"工作量日报",</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"OrgName":this.$cookies.get("orgInfo").OrgName</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;})</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;},</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

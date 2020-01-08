@@ -1,0 +1,148 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue最全指令大集合————VUE' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue最全指令大集合————VUE</center></div><div class='banquan'>原文出处:本文由博客园博主陈嗯嗯提供。<br/>
+原文连接:https://www.cnblogs.com/cth0/p/11564416.html</div><br>
+    <p># Vue指令大集合（无slot）</p>
+<p>#### 包含内容：</p>
+<p>1. v-cloak<br />2. v-html<br />3. v-text<br />4. v-bind<br />5. v-show<br />6. v-model<br />7. v-for<br />8. v-if v-else-if v-else<br />9. v-pre</p>
+<p>&nbsp;</p>
+<p>代码如下：（可以自己复制去看一下）</p>
+<p>html</p>
+<div class="cnblogs_code">
+<pre><code>  1 &lt;!DOCTYPE html&gt;
+  2 &lt;html&gt;
+  3 
+  4 &lt;head&gt;
+  5 &lt;meta charset="UTF-8"&gt;
+  6 &lt;title&gt;Vue指令大集合（无 slot）&lt;/title&gt;
+  7 &lt;/head&gt;
+  8 &lt;style&gt;
+  9 [v-cloak]<span>{
+ 10 display<span>: none<span>;
+ 11 <span>}
+ 12 .css<span>{
+ 13 color<span>: red<span>;
+ 14 <span>}
+ 15 &lt;/style&gt;
+ 16 &lt;body&gt;
+ 17 &lt;div id="domo" v-cloak&gt;
+ 18 &lt;p style="color: red;"&gt;v-html 标签有效&lt;/p&gt;
+ 19 &lt;p v-html="name"&gt;&lt;/p&gt;
+ 20 &lt;p style="color: red;"&gt;v-text 标签无效&lt;/p&gt;
+ 21 &lt;p v-text="name"&gt;&lt;/p&gt;
+ 22 &lt;hr /&gt;
+ 23 &lt;p style="color: red;"&gt;style&lt;/p&gt;
+ 24 &lt;p :style="objCss"&gt;使用style从数据拿视图，v-bind====:&lt;/p&gt;
+ 25 &lt;p style="color: red;"&gt;v-bind可以简写成： ,动态地绑定一个或多个特性，或一个组件 prop 到表达式。&lt;/p&gt;
+ 26 &lt;img v-bind:src='src'&gt;v-bind可以省&lt;/img&gt;
+ 27 &lt;p :style="{
+ 28 color: 'yellow',
+ 29 fontSize: '11px'
+ 30 }"&gt;自己改,数据&lt;/p&gt;
+ 31 &lt;p :class="{
+ 32 'css':!bool
+ 33 }"&gt;我不是红色的&lt;/p&gt;
+ 34 &lt;hr /&gt;
+ 35 &lt;p style="color: red"&gt;v-show&lt;/p&gt;
+ 36 &lt;p v-show="bool"&gt;v-show可以控制出现或者隐藏&lt;/p&gt;
+ 37 &lt;button @click='showClick'&gt;v-on:click====@click点击，隐藏&lt;/button&gt;
+ 38 &lt;hr /&gt;
+ 39 &lt;p style="color: red"&gt;v-model 双向绑定！&lt;/p&gt;
+ 40 &lt;input v-model="name"&gt;&lt;/input&gt;
+ 41 &lt;hr /&gt;
+ 42 &lt;p style="color: red"&gt;v-for&lt;/p&gt;
+ 43 &lt;ul&gt;
+ 44 &lt;li v-for="a in arr" v-html="'姓名：'+a.name+'；年龄:'+a.age"&gt;&lt;/li&gt;
+ 45 &lt;/ul&gt;
+ 46 &lt;p v-for="a in arr" v-html="'姓名：'+a.name+'；年龄:'+a.age"&gt;&lt;/p&gt;
+ 47 &lt;table v-for="a in arr"&gt;
+ 48 &lt;tr&gt;&lt;td&gt;{{a.name}}&lt;/td&gt;&lt;td&gt;{{a.age}}&lt;/td&gt;&lt;td&gt;&lt;img v-for="i in a.imgs" :src="i" /&gt;&lt;/td&gt;&lt;/tr&gt;
+ 49 &lt;/table&gt;
+ 50 &lt;hr /&gt;
+ 51 &lt;p style="color: red"&gt;v-if&lt;/p&gt;
+ 52 &lt;p v-if="type==='A'" v-text="name1"&gt;&lt;/p&gt;
+ 53 &lt;div v-else-if="type==='B'" v-text="name2"&gt;&lt;/div&gt;
+ 54 &lt;div v-else-if="type==='C'" v-text="name3"&gt;&lt;/div&gt;
+ 55 &lt;div v-else="type==='D'" v-text="name4"&gt;&lt;/div&gt;
+ 56 &lt;hr /&gt;
+ 57 &lt;p style="color: red"&gt;v-pre 这是一个跳过这个元素和它的子元素的编译过程&lt;/p&gt;
+ 58 &lt;p&gt;&lt;span v-pre&gt;{{ 被包括的vue语言全都无效化！！ }}&lt;/span&gt;&lt;/p&gt;
+ 59 &lt;/div&gt;
+ 60 &lt;script type="text/javascript" src="js/vue.js"&gt;&lt;/script&gt;
+ 61 &lt;script&gt;
+ 62 new<span> Vue({
+ 63 <span>el: <span>"<span>#domo<span>"<span>,
+ 64 <span>data: {
+ 65 <span>name: <span>'<span>&lt;em&gt;我爱你&lt;span&gt;而&lt;/span&gt;你爱他&lt;/em&gt;<span>'<span>,
+ 66 <span>src:<span>'<span>img/发生的事_画板 1.png<span>'<span>,
+ 67 <span>objCss:{
+ 68 <span>color: <span>'<span>blue<span>'<span>,
+ 69 <span>fontSize: <span>'<span>28px<span>'
+ 70 <span>},
+ 71 <span>bool:false<span>,
+ 72 <span>arr: [{
+ 73 <span>name: <span>"<span>大哥<span>"<span>,
+ 74 <span>age: <span>18<span>,
+ 75 <span>imgs: [<span>'<span>img/image (24).gif<span>'<span>]
+ 76 <span>}, {
+ 77 <span>name: <span>"<span>二哥<span>"<span>,
+ 78 <span>age: <span>17<span>,
+ 79 <span>imgs: [<span>'<span>img/image (25).gif<span>'<span>]
+ 80 <span>}, {
+ 81 <span>name: <span>"<span>三弟<span>"<span>,
+ 82 <span>age: <span>19<span>,
+ 83 <span>imgs: [<span>'<span>img/image (26).gif<span>'<span>]
+ 84 <span>}, {
+ 85 <span>name: <span>"<span>四弟<span>"<span>,
+ 86 <span>age: <span>20<span>,
+ 87 <span>imgs: [<span>'<span>img/image (27).gif<span>'<span>]
+ 88 <span>}],
+ 89 <span>name1: <span>"<span>lemon<span>"<span>,
+ 90 <span>name2: <span>"<span>enenenen<span>"<span>,
+ 91 <span>name3: <span>"<span>DASDA<span>"<span>,
+ 92 <span>name4: <span>"<span>eDASDASF<span>"<span>,
+ 93 <span>type:<span>'<span>B<span>'<span>,
+ 94 <span>},
+ 95 <span>methods:{
+ 96 <span>showClick(){
+ 97 this<span>.name<span>=<span>"<span>ddddd<span>"<span>,
+ 98 this<span>.bool<span>=!this<span>.bool,
+ 99 <span>alert(<span>"<span>取消隐藏<span>"<span>)
+100 this<span>.type<span>=<span>'<span>D<span>'
+101 <span>}
+102 <span>},
+103 
+104 
+105 <span>})
+106 &lt;/script&gt;
+107 &lt;/body&gt;
+108 
+109 &lt;/html&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>展示地址：[http://cth1688.qicp.vip/vue%20api.html]</p>
+<p>#### 这是一个VUE指令的用法大集合，后面再深入说下他的路由功能。</p>
+<p>#### 觉得有帮助的话给个赞呗！</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

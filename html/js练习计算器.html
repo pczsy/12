@@ -1,0 +1,261 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修js练习计算器' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>js练习计算器</center></div><div class='banquan'>原文出处:本文由博客园博主神者X奇迹提供。<br/>
+原文连接:https://www.cnblogs.com/ovsexia/p/10796436.html</div><br>
+    <p>js练习计算器，支持鼠标点击、键盘操作</p>
+<p>&nbsp;</p>
+<p><img src="./images/js练习计算器0.png" alt="" /></p>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"&gt;
+&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=utf-8" /&gt;
+&lt;title&gt;计算器2.2&lt;/title&gt;
+
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;input id="a1" disabled="disabled" /&gt;
+&lt;input id="a2" disabled="disabled" /&gt;
+&lt;input id="a3" disabled="disabled" /&gt;
+ 
+&lt;p id="counter"&gt;&lt;/p&gt;
+
+&lt;script type="text/javascript"&gt;
+function addnum(id)
+{
+	b2 = document.getElementById("a2").value;
+	if(!b2){
+		document.getElementById("a1").value += id;
+	}else{
+		document.getElementById("a3").value += id;
+	}
+}
+
+function addtype(id)
+{
+	b1 = document.getElementById("a1").value;
+	if(!b1){
+		alert("请输入数字1");
+		return false;
+	}
+	if(id=='*'){
+		type = '&times;';
+	}else if(id=='/'){
+		type = '&divide;';
+	}else{
+		type = id;
+	}
+	document.getElementById("a2").value = type;
+}
+
+function backspace()
+{
+	b1 = document.getElementById("a1").value;
+	b2 = document.getElementById("a2").value;
+	b3 = document.getElementById("a3").value;
+	
+	if(b3){
+		b3 = b3.substring(0,b3.length-1);
+		document.getElementById("a3").value = b3;
+	}else if(b2){
+		b2 = b2.substring(0,b2.length-1);
+		document.getElementById("a2").value = b2;
+	}else if(b1){
+		b1 = b1.substring(0,b1.length-1);
+		document.getElementById("a1").value = b1;
+	}
+}
+
+function clean()
+{
+	document.getElementById("a1").value="";
+	document.getElementById("a2").value="";
+	document.getElementById("a3").value="";
+}
+
+function suan()
+{
+	var b1 = document.getElementById("a1").value;
+	var b2 = document.getElementById("a2").value;
+	if(b2=="&times;"){
+		b2 = "*";
+	}else if(b2=="&divide;"){
+		b2 = '/';
+	}
+	var b3 = document.getElementById("a3").value;
+	var bbb = new Array(["+"],["-"],["*"],["/"]);
+	
+	if(!b1){
+		alert("请输入数字1");
+		return false;
+	}
+	if(b2!=bbb[0] &amp;&amp; b2!=bbb[1] &amp;&amp; b2!=bbb[2] &amp;&amp; b2!=bbb[3]){
+		alert("请输入运算符");
+		return false;
+	}
+	if(!b3){
+		alert("请输入数字2");
+		return false;
+	}
+	if(b2==bbb[0]){
+		var b4=Number(b1)+Number(b3);
+	}
+	else if(b2==bbb[1]){
+		var b4=Number(b1)-Number(b3);
+	}
+	else if(b2==bbb[2]){
+		//js乘法不精确会有很多小数点，整体乘一个数再除去它
+		b1 = Number(b1)*10000;
+		b3 = Number(b3)*10000;
+		b4=b1*b3/100000000;
+		b1 = b1/10000;
+		b3 = b3/10000;
+	}
+	else if(b2==bbb[3]){
+		if(b3==0){
+			b4="[除数不能为零]";
+		}else{
+			b4 = Math.round(Number(b1)/Number(b3));
+			var b5=Number(b1)%Number(b3);
+			b4=b4+" 余数"+b5;
+		}
+	}
+	if(b2=="*"){
+		b2 = "&times;";
+	}else if(b2=="/"){
+		b2 = '&divide;';
+	}
+	document.getElementById("counter").innerHTML = b1+b2+b3+"="+b4;
+	document.getElementById("a1").value="";
+	document.getElementById("a2").value="";
+	document.getElementById("a3").value="";
+}
+
+//keyCode对应键位
+keyarr = new Array()
+//数字
+keyarr[48] = keyarr[96] = "0";
+keyarr[49] = keyarr[97] = 1;
+keyarr[50] = keyarr[98] = 2;
+keyarr[51] = keyarr[99] = 3;
+keyarr[52] = keyarr[100] = 4;
+keyarr[53] = keyarr[101] = 5;
+keyarr[54] = keyarr[102] = 6;
+keyarr[55] = keyarr[103] = 7;
+keyarr[56] = keyarr[104] = 8;
+keyarr[57] = keyarr[105] = 9;
+keyarr[110] = keyarr[190] = ".";
+//运算符
+keyarr[107] = "+";
+keyarr[109] = "-";
+keyarr[106] = "*";
+keyarr[111] = "/";
+//退格
+keyarr[8] = "backspace";
+//结果
+keyarr[13] = "=";
+
+/*键盘事件*/
+var isPiss = 0;
+document.onkeydown = function(event) {
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+	id = keyarr[e.keyCode];
+	if(id){		
+		if(id=="+" || id=="-" || id=="*" || id=="/"){ //运算
+			addtype(id);
+		}else if(id=="backspace"){ //退格
+			backspace();
+		}else if(id=="="){ //结果
+			suan();
+		}else{ //输入数字
+			addnum(id);
+		}
+	}
+};
+&lt;/script&gt;
+
+&lt;style&gt;
+.clear {clear:both; height:0 !important; width:0 !important; overflow:hidden; font-size:0;}
+.jisuanqi {width:303px; height:450px; background:#000; overflow:hidden; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none; font-family:"Microsoft Yahei";}
+.jrow {padding-bottom:5px;}
+.num, .type {width:72px; height:86px; overflow:hidden; line-height:86px; text-align:center; float:left; color:#fff; font-size:38px; cursor:pointer;}
+.num {background:#343432; margin-right:5px;}
+.num:active {background:#181818;}
+.type {background:#181818;}
+.type:active {background:#343432;}
+.clean, .backspace {width:149px; height:86px; overflow:hidden; line-height:86px; text-align:center; color:#fff; font-size:38px; cursor:pointer;}
+.clean {background:#343432; float:left;}
+.clean:active {background:#181818;}
+.backspace {background:#181818; float:right;}
+.backspace:active {background:#343432;}
+&lt;/style&gt;
+
+&lt;div class="jisuanqi"&gt;
+  &lt;div class="jrow"&gt;
+    &lt;div class="num" onclick="addnum(7)"&gt;7&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(8)"&gt;8&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(9)"&gt;9&lt;/div&gt;
+    &lt;div class="type" onclick="addtype('/')"&gt;&divide;&lt;/div&gt;
+    &lt;div class="clear"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="jrow"&gt;
+    &lt;div class="num" onclick="addnum(4)"&gt;4&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(5)"&gt;5&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(6)"&gt;6&lt;/div&gt;
+    &lt;div class="type" onclick="addtype('*')"&gt;&times;&lt;/div&gt;
+    &lt;div class="clear"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="jrow"&gt;
+    &lt;div class="num" onclick="addnum(1)"&gt;1&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(2)"&gt;2&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(3)"&gt;3&lt;/div&gt;
+    &lt;div class="type" onclick="addtype('-')"&gt;-&lt;/div&gt;
+    &lt;div class="clear"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="jrow"&gt;
+    &lt;div class="num" onclick="addnum('.')"&gt;.&lt;/div&gt;
+    &lt;div class="num" onclick="addnum(0)"&gt;0&lt;/div&gt;
+    &lt;div class="num" onclick="suan()"&gt;=&lt;/div&gt;
+    &lt;div class="type" onclick="addtype('+')"&gt;+&lt;/div&gt;
+    &lt;div class="clear"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="jrow"&gt;
+    &lt;div class="clean" onclick="clean()"&gt;C&lt;/div&gt;
+    &lt;div class="backspace" onclick="backspace()"&gt;&larr;&lt;/div&gt;
+    &lt;div class="clear"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,269 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修ECharts动态获取后台传过来的json数据进行多个折线图的显示，折线的数据由后台传过来' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>ECharts动态获取后台传过来的json数据进行多个折线图的显示，折线的数据由后台传过来</center></div><div class='banquan'>原文出处:本文由博客园博主vaelcy提供。<br/>
+原文连接:https://www.cnblogs.com/vaelcy/p/11864647.html</div><br>
+    <p><span style="font-size: 14pt;">ECharts动态获取后台传过来的json数据进行多个折线图的显示，折线的数据由后台传过来</span></p>
+<p><span style="font-size: 14pt;">ECharts 多个折线图动态获取json数据</span></p>
+<p><span style="font-size: 14pt;">效果图如下：</span></p>
+<p><img src="./images/ECharts动态获取后台传过来的json数据进行多个折线图的显示，折线的数据由后台传过来0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="font-size: 18pt;">js部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> mychart1(datetime,dateNums1,dateNums2,dateNums3,dateNums4) {
+    myChart1 </span>= echarts.init(document.getElementById('main1'<span style="color: #000000;">));
+    option </span>=<span style="color: #000000;"> {
+        title: {
+            text: </span>''<span style="color: #000000;">,
+            left: </span>'left'<span style="color: #000000;">,
+            top: </span>'4%'<span style="color: #000000;">,
+            textStyle: {
+                color: </span>'#000000'<span style="color: #000000;">,
+                fontSize: </span>16<span style="color: #000000;">
+            },
+        },
+        tooltip: {
+            trigger: </span>'item'<span style="color: #000000;">,
+            formatter: </span>'{a} &lt;br/&gt;{b} : {c}'<span style="color: #000000;">
+        },
+        legend: {
+            data:[</span>'湿垃圾收运量','可回收收运量','有毒有害收运量','干垃圾收运量'<span style="color: #000000;">]
+        },
+        xAxis: {
+            type: </span>'category'<span style="color: #000000;">,
+            boundaryGap: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+            name: </span>'天'<span style="color: #000000;">,
+            splitLine: {
+                show: </span><span style="color: #0000ff;">true</span>, <span style="color: #008000;">//</span><span style="color: #008000;">网格线是否显示</span>
+<span style="color: #000000;">                lineStyle: {
+                    color: </span>'#323B4E' <span style="color: #008000;">//</span><span style="color: #008000;"> 修改网格线颜色     </span>
+<span style="color: #000000;">                }
+            },
+            axisLine: {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">                        symbol: ['none', 'arrow'], //箭头</span>
+<span style="color: #000000;">                lineStyle: {
+                    color: </span>'#696C72'<span style="color: #000000;">,
+                }
+            },
+            axisTick: { </span><span style="color: #008000;">//</span><span style="color: #008000;">qu刻度线</span>
+                show: <span style="color: #0000ff;">false</span><span style="color: #000000;">
+            },
+            axisLabel: { </span><span style="color: #008000;">//</span><span style="color: #008000;">x轴时间文字显示不全问题</span>
+                interval: 0<span style="color: #000000;">,
+                rotate: </span>40<span style="color: #000000;">
+            },
+            data: datetime
+        },
+        grid: {
+            left: </span>'5%'<span style="color: #000000;">,
+            right: </span>'8%'<span style="color: #000000;">,</span>
+            bottom: '0%'<span style="color: #000000;">,
+            top: </span>'16%'<span style="color: #000000;">,
+            containLabel: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">
+        },
+        yAxis: {
+            type: </span>'value'<span style="color: #000000;">,
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">            min: 0, //y轴最小值设置</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;">            max: 100, //y轴最大值设置</span>
+                                name: 'kg'<span style="color: #000000;">,
+            nameLocation: </span>'end'<span style="color: #000000;">,
+            nameTextStyle: {
+                padding: </span>-10<span style="color: #000000;">,
+            },
+            splitLine: {
+                show: </span><span style="color: #0000ff;">true</span>, <span style="color: #008000;">//</span><span style="color: #008000;">网格线是否显示</span>
+<span style="color: #000000;">                lineStyle: {
+                    color: </span>'#323B4E' <span style="color: #008000;">//</span><span style="color: #008000;"> 修改网格线颜色     </span>
+<span style="color: #000000;">                }
+            },
+            axisLine: {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">                        symbol: ['none', 'arrow'],</span>
+<span style="color: #000000;">                lineStyle: {
+                    color: </span>'#696C72' <span style="color: #008000;">//</span><span style="color: #008000;">0c3b71</span>
+<span style="color: #000000;">                }
+            },
+            axisTick: {
+                show: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+            },
+        },
+        series: [{
+            symbol: </span>'circle'<span style="color: #000000;">,
+            symbolSize: </span>8<span style="color: #000000;">,
+            itemStyle: {
+                normal: {
+                    color: </span>"#01ff19"<span style="color: #000000;">,
+                    lineStyle: {
+                        color: </span>"#01ff19"<span style="color: #000000;">,
+                    }
+                }
+            },
+            name: </span>'湿垃圾收运量'<span style="color: #000000;">,
+            type: </span>'line'<span style="color: #000000;">,
+            data: dateNums1
+        },{
+            symbol: </span>'circle'<span style="color: #000000;">,
+            symbolSize: </span>8<span style="color: #000000;">,
+            itemStyle: {
+                normal: {
+                    color: </span>"#31A4FF"<span style="color: #000000;">,
+                    lineStyle: {
+                        color: </span>"#31A4FF"<span style="color: #000000;">,
+                    }
+                }
+            },
+            name: </span>'可回收收运量'<span style="color: #000000;">,
+            type: </span>'line'<span style="color: #000000;">,
+            data: dateNums2
+        },{
+            symbol: </span>'circle'<span style="color: #000000;">,
+            symbolSize: </span>8<span style="color: #000000;">,
+            itemStyle: {
+                normal: {
+                    color: </span>"#F13A30"<span style="color: #000000;">,
+                    lineStyle: {
+                        color: </span>"#F13A30"<span style="color: #000000;">,
+                    }
+                }
+            },
+            name: </span>'有毒有害收运量'<span style="color: #000000;">,
+            type: </span>'line'<span style="color: #000000;">,
+            data: dateNums3
+        },{
+            symbol: </span>'circle'<span style="color: #000000;">,
+            symbolSize: </span>8<span style="color: #000000;">,
+            itemStyle: {
+                normal: {
+                    color: </span>"#C7C7C7"<span style="color: #000000;">,
+                    lineStyle: {
+                        color: </span>"#C7C7C7"<span style="color: #000000;">,
+                    }
+                }
+            },
+            name: </span>'干垃圾收运量'<span style="color: #000000;">,
+            type: </span>'line'<span style="color: #000000;">,
+            data: dateNums4
+        }]
+    };
+    myChart1.setOption(option);
+}
+
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> echarsfun1() {
+    </span><span style="color: #0000ff;">var</span> param =<span style="color: #000000;"> {
+        </span>"name"<span style="color: #000000;">: houseName
+    }
+    </span><span style="color: #0000ff;">var</span> paramStr =<span style="color: #000000;"> $.param(param)
+    ajaxGet(</span>"largeScreenDisplayController.do?todayTrend&amp;" + paramStr, <span style="color: #0000ff;">function</span><span style="color: #000000;">(data) {
+        </span><span style="color: #0000ff;">var</span> data =<span style="color: #000000;"> JSON.parse(data)
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(data) {
+            </span><span style="color: #0000ff;">var</span> data =<span style="color: #000000;"> data.data
+            console.log(data)
+            </span><span style="color: #0000ff;">var</span> datetime = []; <span style="color: #008000;">//</span><span style="color: #008000;">时间</span>
+            <span style="color: #0000ff;">var</span> dateNums1 = []; <span style="color: #008000;">//</span><span style="color: #008000;">湿垃圾</span>
+            <span style="color: #0000ff;">var</span> dateNums2 = []; <span style="color: #008000;">//</span><span style="color: #008000;">可回收</span>
+            <span style="color: #0000ff;">var</span> dateNums3 = []; <span style="color: #008000;">//</span><span style="color: #008000;">有毒有害</span>
+            <span style="color: #0000ff;">var</span> dateNums4 = []; <span style="color: #008000;">//</span><span style="color: #008000;">干垃圾</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;">湿垃圾</span>
+            $.each(data.yfgarWeightMapList, <span style="color: #0000ff;">function</span><span style="color: #000000;"> (index, item) {<br />　　　　　　　　　 datetime.push(item.times);&nbsp; &nbsp; //挨个取出类别并填入类别数组
+                dateNums1.push(item.yfgarWeight);
+            });
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">可回收</span>
+            $.each(data.recycleWeightMapList, <span style="color: #0000ff;">function</span><span style="color: #000000;"> (index, item) {
+                dateNums2.push(item.recycleWeight);
+            });
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">有毒有害</span>
+            $.each(data.youduWeightMapList, <span style="color: #0000ff;">function</span><span style="color: #000000;"> (index, item) {
+                dateNums3.push(item.youduWeight);
+            });
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">干垃圾</span>
+            $.each(data.otherWeightMapList, <span style="color: #0000ff;">function</span><span style="color: #000000;"> (index, item) {</span>
+<span style="color: #000000;">                dateNums4.push(item.otherWeight);
+            });</span>
+<span style="color: #000000;">            mychart1(datetime,dateNums1,dateNums2,dateNums3,dateNums4)
+        }
+    })
+}</span></pre>
+</div>
+<pre><code><span style="font-size: 18pt;">后台传过来的json数据格式</span></pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">后台传过来的json数据格式<br />{
+ </span>"msg": "获取成功"<span style="color: #000000;">,
+ </span>"code": 0<span style="color: #000000;">,
+ </span>"data"<span style="color: #000000;">: {
+  </span>"otherWeightMapList"<span style="color: #000000;">: [{
+   </span>"times": "2019-11-07"<span style="color: #000000;">,
+   </span>"otherWeight": "160"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-08"<span style="color: #000000;">,
+   </span>"otherWeight": "170"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-09"<span style="color: #000000;">,
+   </span>"otherWeight": "165"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-10"<span style="color: #000000;">,
+   </span>"otherWeight": "163"<span style="color: #000000;">
+  }</span><span style="color: #000000;">],
+  </span>"recycleWeightMapList"<span style="color: #000000;">: [{
+   </span>"times": "2019-11-07"<span style="color: #000000;">,
+   </span>"recycleWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-08"<span style="color: #000000;">,
+   </span>"recycleWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-09"<span style="color: #000000;">,
+   </span>"recycleWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-10"<span style="color: #000000;">,
+   </span>"recycleWeight": "0"<span style="color: #000000;">
+  }</span><span style="color: #000000;">],
+  </span>"youduWeightMapList"<span style="color: #000000;">: [{
+   </span>"times": "2019-11-07"<span style="color: #000000;">,
+   </span>"youduWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-08"<span style="color: #000000;">,
+   </span>"youduWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-09"<span style="color: #000000;">,
+   </span>"youduWeight": "0"<span style="color: #000000;">
+  }, {
+   </span>"times": "2019-11-10"<span style="color: #000000;">,
+   </span>"youduWeight": "0"<span style="color: #000000;">
+  }</span><span style="color: #000000;">],
+  </span>"yfgarWeightMapList"<span style="color: #000000;">: [{
+   </span>"yfgarWeight": "156"<span style="color: #000000;">,
+   </span>"times": "2019-11-07"<span style="color: #000000;">
+  }, {
+   </span>"yfgarWeight": "169"<span style="color: #000000;">,
+   </span>"times": "2019-11-08"<span style="color: #000000;">
+  }, {
+   </span>"yfgarWeight": "136"<span style="color: #000000;">,
+   </span>"times": "2019-11-09"<span style="color: #000000;">
+  }, {
+   </span>"yfgarWeight": "137"<span style="color: #000000;">,
+   </span>"times": "2019-11-10"<span style="color: #000000;">
+  }</span><span style="color: #000000;">]
+ }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

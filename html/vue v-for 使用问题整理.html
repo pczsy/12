@@ -1,0 +1,80 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue v-for 使用问题整理' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue v-for 使用问题整理</center></div><div class='banquan'>原文出处:本文由博客园博主大稳&#183;杨提供。<br/>
+原文连接:https://www.cnblogs.com/dawenyang/p/11275552.html</div><br>
+    <h1>今天使用v-for指令的时候遇到一个错误</h1>
+<p><strong><span style="color: #ff0000;">[Vue warn]: Error in render: "TypeError: Cannot read property 'children' of undefined"</span></strong></p>
+<p><span style="color: #000000;"><img src="./images/vue v-for 使用问题整理0.png" alt="" /></span></p>
+<h2>页面使用代码</h2>
+<div class="cnblogs_code">
+<pre><code>            &lt;template v-<span style="color: #0000ff;">for</span>="(c,i) in modelList.Course.children"&gt;
+              &lt;div :key="i" class="course-block"&gt;
+                &lt;CourseStruct :process="isbuy" :course="c" /&gt;
+              &lt;/div&gt;
+            &lt;/template&gt;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><code>&lt;script&gt;<span style="color: #000000;">
+
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+        methods: {
+            async getList(id) {
+                const res </span>=<span style="color: #000000;"> await GetChapterListByProductID(id);
+                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (res.data) {
+                    </span><span style="color: #0000ff;">this</span>.modelList =<span style="color: #000000;"> res.data;
+                 }
+            }
+      }
+}
+
+</span>&lt;/script&gt;</pre>
+</div>
+<h2>报错原因：</h2>
+<p>　　<span style="font-family: 'Microsoft YaHei'; font-size: 18px;">我猜测使用了嵌套属性的原因，在页面中无法解析出具体属性值，这个原因是我尝试出来的，但是不知道深层次的原因了，有知道的希望评论下。</span></p>
+<h2>解决方案：</h2>
+<p>　　<span style="font-family: 'Microsoft YaHei'; font-size: 18px;">既然知道了原因，那么就好解决了，解决方法如下.</span></p>
+<div class="cnblogs_code">
+<pre><code>            &lt;template v-<span style="color: #0000ff;">for</span>="(c,i) in <em><strong><span style="color: red;">cls</span></strong></em>"&gt;
+              &lt;div :key="i" class="course-block"&gt;
+                &lt;CourseStruct :process="isbuy" :course="c" /&gt;
+              &lt;/div&gt;
+            &lt;/template&gt;<br />
+            &lt;script&gt;<span style="color: #000000;">
+
+             export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+                methods: {
+            　　　    async getList(id) {
+                　　 const res </span>=<span style="color: #000000;"> await GetChapterListByProductID(id);
+                　　 </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (res.data) {
+                      </span><span style="color: #0000ff;">this</span>.modelList =<span style="color: #000000;"> res.data;
+                      </span><em><strong><span style="color: red;">var co</span> = <span style="color: red;">this</span><span style="color: red;">.modelList.Course
+                      </span><span style="color: red;">this.cls</span> =</strong></em><span style="color: red;"><em><strong> co.children</strong></em>
+                 　　}
+            　　　}
+      　　　　 }
+　　　　　　 }
+
+　　　　　　</span>&lt;/script&gt;</pre>
+</div>
+<p style="margin-left: 30px;">&nbsp;<span style="font-family: 'Microsoft YaHei'; font-size: 18px;">通过变量中转一下，放到另一个临时变量中，如果有嵌套引用属性的话，大家记得通过js操作放到一个临时变量中，不然就会报错哟。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

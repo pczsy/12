@@ -1,0 +1,68 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP Referer' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP Referer</center></div><div class='banquan'>原文出处:本文由博客园博主小呼喜提供。<br/>
+原文连接:https://www.cnblogs.com/Shellcoochi/p/11735327.html</div><br>
+    <p><strong><img src="./images/HTTP Referer0.png" alt="" /></strong></p>
+<p><strong>什么是Referer?</strong></p>
+<p>Referer是HTTP请求头信息里面的一个常见字段，它提供了访问来源的信息。比如说，在某网站上看到一个广告并点了进去，那么我就可能会在HTTP 协议在请求（request）的头信息里面看到Referer这一字段给出&ldquo;引荐网页&rdquo;的URL，让人知道我们是通过&ldquo;某网站&rdquo;进入的这个广告页。</p>
+<p><strong>Referer存在的条件</strong></p>
+<p>在浏览器向服务器请求资源的时候，Referer字段并不是总是存在的，其中在以下几种情况中会<strong>发送Referer字段</strong>。</p>
+<p>1.点击网页上的连接</p>
+<p>2.提交表单（post或get）</p>
+<p>3.网页加载静态资源，比如加载图片、脚本、样式（js的script标签及html中img标签的src属性）。</p>
+<p>以下是几种<strong>获取不到Referer</strong>的几种情况</p>
+<p>1.直接在浏览器内输入URL</p>
+<p>2.通过浏览器内的书签或收藏</p>
+<p>3.第三方软件内容中的连接（如Word,Excel等）</p>
+<p>4.从HTTPS的网站跳转到HTTP的网站或SSL认证网站跳入</p>
+<p><strong>那么Referer有什么作用呢？</strong></p>
+<p>1.通过Referer我们可以知道访问来源的信息，所以可以用来做一些网站流量的来路统计</p>
+<p>2.防止图片盗链，当我们不希望自家网站图片外链被其他网站加载时，就可以基于Referer字段来实现，可以通过判断该字段是否是自家URL或者是属于白名单里的URL如果是则放行允许加载。</p>
+<p>3.在某些情境下我们不希望暴露当前的原始网址，比如一个社交网站会有每个用户的简介页面，用户会在他们的个人主页中添加一些链接。社交网站可能不希望泄露用户的个人主页URL给被链接的网站（因为个人主页URL可能会泄露其主人的身份信息）。<br />一些社交网站可能想通知其他网站该链接是从社交网站发起的，但不想泄露包含用户信息的链接（例如，微博中的链接希望告诉对方该链接是在微博中连接过来的，但不希望告诉对方从谁的微博连接过来）。</p>
+<p><strong>referrer策略</strong></p>
+<p>Referrer策略包含以下值：</p>
+<ol>
+<li>空字符串：空字符串表示没有referrer策略，默认为no-referrer-when-downgrade。</li>
+<li>no-referrer：最简单的策略是&ldquo;no-referrer&rdquo;，表示所有的请求都不带referrer。</li>
+<li>no-referrer-when-downgrade：主要针对于受TLS保护的URL（如https），简单的说就是https的页面中，当连接的资源也是https的，则发送完整的referrer，如果连接的资源是http的，就不发送referrer</li>
+<li>same-origin:对于同源的链接，会发送referrer，其他的不会。</li>
+<li>origin:这个策略对于任何资源来说只发送源的信息，不发送完整的url。</li>
+<li>strict-origin:这个策略类似于origin和no-referrer-when-downgrade的合体，如果一个https页面中链接到http的页面或资源，则不会发送referrer。http页面链接以及https链接到https都只发送来源页面的源信息。</li>
+<li>origin-when-cross-origin:该策略在同源的链接中发送完整的URL，其他情况仅发送源信息。相同的域名，http和https协议被认为是非同源的。</li>
+<li>strict-origin-when-cross-origin:对于同源请求，发送完整的URL；对于同为https的，只发送源信息；对于http页面只发送源信息；https页面中的http请求不发送referrer。</li>
+<li>unsafe-url:这个主要是解决https页面中的http资源不发referrer的问题，它会使在https页面中http资源发送完整的referrer。</li>
+
+
+
+
+
+</ol>
+<p>Referrer策略可以通过以下方法声明：<br />1.通过http请求头中的Referrer-Policy字段,例：Referrer-Policy: no-referrer<br />2.通过meta标签，name为referrer，例：&lt;meta name=&rdquo;referrer&rdquo; content=&rdquo;no-referrer&rdquo; /&gt;<br />3.通过&lt;a&gt;、&lt;area&gt;、&lt;img&gt;、&lt;iframe&gt;、&lt;link&gt;元素的referrerpolicy属性。例：<span class="nt">&lt;a&nbsp;<span class="na">href=<span class="s">&ldquo;http://example.com&rdquo;&nbsp;<span class="na">referrerpolicy=<span class="s">&ldquo;origin&rdquo;<span class="nt">&gt;</span></span></span></span></span></span><br />4.通过&lt;a&gt;、&lt;area&gt;&lt;link&gt;元素的rel=noreferrer属性，例：&lt;a href='http://example.com' rel="noreferrer" target="_blank"&gt;test&lt;/a&gt;<br />5.通过隐式继承</p>
+<p><strong>注意事项</strong><br />Referrer策略还有其他历史遗留的值：<br />1.never等价于no-referrer<br />2.default等价于no-referrer-when-downgrade<br />3.always等价于unsafe-url<br />4.不建议使用上面三个值，建议使用后面的新值</p>
+<p><strong>兼容性</strong><br />IE：不支持（IE高版本中隐式支持default，https页面拉取的http资源不会加referrer）<br />Edge：仅支持较早版本的值（never、always、origin、default）<br />Firefox：36+<br />Chrome：21+<br />Safari：7.1+（仅支持较早版本的4个值）<br />Opera：15+<br />iOS Safari：8+（仅支持较早版本的4个值）</p>
+<p><strong>参考：</strong></p>
+<p><a href="http://www.ruanyifeng.com/blog/2019/06/http-referer.html">http://www.ruanyifeng.com/blog/2019/06/http-referer.html</a></p>
+<p><a href="https://blog.lyz810.com/article/2016/08/referrer-policy-and-anti-leech/">https://blog.lyz810.com/article/2016/08/referrer-policy-and-anti-leech/</a></p>
+<p><a href="https://blog.csdn.net/fjb2080/article/details/80975115">https://blog.csdn.net/fjb2080/article/details/80975115</a></p>
+<p><img src="./images/HTTP Referer1.png" alt="" width="600" height="200" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,426 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修正则表达式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>正则表达式</center></div><div class='banquan'>原文出处:本文由博客园博主悦耳pn提供。<br/>
+原文连接:https://www.cnblogs.com/677a/p/11731973.html</div><br>
+    <p>参考：<a href="https://baike.baidu.com/item/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/1700215?fr=aladdin">https://baike.baidu.com/item/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/1700215?fr=aladdin</a></p>
+<p>&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">是对字符串进行操作的一种逻辑公式；应用对象是文本。 </span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">正则表达式可以用来判断用户名输入的格式等是否正确，预防机制，避免错误格式的数据直接传送到后端才进行判断排除</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">元字符</span></span></th><th><span class="td-span"><span class="md-plain">描述</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\</span></span></td>
+<td><span class="td-span"><span class="md-plain">将下一个字符标记符、或一个向后引用、或一个八进制转义符。例如，&ldquo;<span>\<span class="md-plain">n&rdquo;匹配\n。&ldquo;\n&rdquo;匹配换行符。序列&ldquo;<span>\<span class="md-plain">&rdquo;匹配&ldquo;\&rdquo;而&ldquo;<span>(<span class="md-plain">&rdquo;则匹配&ldquo;(&rdquo;。即相当于多种编程语言中都有的&ldquo;转义字符&rdquo;的概念。</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">^</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配字符串的开头。如果设置了RegExp对象的Multiline属性，^也表示匹配行的开始处。必须为5位到12位数字时：：^\d{5,12}$。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">$</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配字符串的结尾。如果设置了RegExp对象的Multiline属性，$也表示匹配行的结束处。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">.*</span></span></td>
+<td><span class="td-span"><span class="md-plain">表示数量。指<span><em>前面的内容可以重复出现无数次。\bhi\b.</em><span class="md-plain"> *\blucky\b表示：先是一个单词hi,然后是任意个任意字符(但不能是换行)，最后是Lucy这个单词。重复0次或更多次</span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">+</span></span></td>
+<td><span class="td-span"><span class="md-plain">重复一次或更多次。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">?</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配前面的子表达式零次或一次。例如，&ldquo;do(es)?&rdquo;可以匹配&ldquo;do&rdquo;或&ldquo;does&rdquo;。?等价于{0,1}。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">{<span><em>n</em><span class="md-plain">}</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配确定的<span><em>n</em><span class="md-plain">次。</span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">{<span><em>n</em><span class="md-plain">,}</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">重复n次或更多次。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">{<span><em>n</em><span class="md-plain">,<span><em>m</em><span class="md-plain">}</span></span></span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">重复n到m次。请注意在逗号和两个数之间不能有空格。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">?</span></span></td>
+<td><span class="td-span"><span class="md-plain">当该字符紧跟在任何一个其他限制符（<span><em>,+,?，{</em><span class="md-plain">n<span><em>}，{</em><span class="md-plain">n<span><em>,}，{</em><span class="md-plain">n<span><em>,</em><span class="md-plain">m*}）后面时，匹配模式是非贪婪的。非贪婪模式尽可能少地匹配所搜索的字符串，而默认的贪婪模式则尽可能多地匹配所搜索的字符串。例如，对于字符串&ldquo;oooo&rdquo;，&ldquo;o+&rdquo;将尽可能多地匹配&ldquo;o&rdquo;，得到结果[&ldquo;oooo&rdquo;]，而&ldquo;o+?&rdquo;将尽可能少地匹配&ldquo;o&rdquo;，得到结果 ['o', 'o', 'o', 'o']</span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">.点</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配除&ldquo;\n&rdquo;和"\r"之外的任何单个字符。要匹配包括&ldquo;\n&rdquo;和"\r"在内的任何字符，请使用像&ldquo;[\s\S]&rdquo;的模式。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(pattern)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配pattern并获取这一匹配。所获取的匹配可以从产生的Matches集合得到，在VBScript中使用SubMatches集合，在JScript中则使用$0&hellip;$9属性。要匹配圆括号字符，请使用&ldquo;<span>(<span class="md-plain">&rdquo;或&ldquo;<span>)<span class="md-plain">&rdquo;。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?:pattern)</span></span></td>
+<td><span class="td-span"><span class="md-plain">非获取匹配，匹配pattern但不获取匹配结果，不进行存储供以后使用。这在使用或字符&ldquo;(<span>|<span class="md-plain">)&rdquo;来组合一个模式的各个部分时很有用。例如&ldquo;industr(?:y<span>|<span class="md-plain">ies)&rdquo;就是一个比&ldquo;industry<span>|<span class="md-plain">industries&rdquo;更简略的表达式。</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?=pattern)</span></span></td>
+<td><span class="td-span"><span class="md-plain">非获取匹配，正向肯定预查，在任何匹配pattern的字符串开始处匹配查找字符串，该匹配不需要获取供以后使用。例如，&ldquo;Windows(?=95<span>|<span class="md-plain">98<span>|<span class="md-plain">NT<span>|<span class="md-plain">2000)&rdquo;能匹配&ldquo;Windows2000&rdquo;中的&ldquo;Windows&rdquo;，但不能匹配&ldquo;Windows3.1&rdquo;中的&ldquo;Windows&rdquo;。预查不消耗字符，也就是说，在一个匹配发生后，在最后一次匹配之后立即开始下一次匹配的搜索，而不是从包含预查的字符之后开始。</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?!pattern)</span></span></td>
+<td><span class="td-span"><span class="md-plain">非获取匹配，正向否定预查，在任何不匹配pattern的字符串开始处匹配查找字符串，该匹配不需要获取供以后使用。例如&ldquo;Windows(?!95<span>|<span class="md-plain">98<span>|<span class="md-plain">NT<span>|<span class="md-plain">2000)&rdquo;能匹配&ldquo;Windows3.1&rdquo;中的&ldquo;Windows&rdquo;，但不能匹配&ldquo;Windows2000&rdquo;中的&ldquo;Windows&rdquo;。</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?&lt;=pattern)</span></span></td>
+<td><span class="td-span"><span class="md-plain">非获取匹配，反向肯定预查，与正向肯定预查类似，只是方向相反。例如，&ldquo;(?&lt;=95<span>|<span class="md-plain">98<span>|<span class="md-plain">NT<span>|<span class="md-plain">2000)Windows&rdquo;能匹配&ldquo;2000Windows&rdquo;中的&ldquo;Windows&rdquo;，但不能匹配&ldquo;3.1Windows&rdquo;中的&ldquo;Windows&rdquo;。*python的正则表达式没有完全按照正则表达式规范实现，所以一些高级特性建议使用其他语言如java、scala等</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?&lt;!patte_n)</span></span></td>
+<td><span class="td-span"><span class="md-plain">非获取匹配，反向否定预查，与正向否定预查类似，只是方向相反。例如&ldquo;(?&lt;!95<span>|<span class="md-plain">98<span>|<span class="md-plain">NT<span>|<span class="md-plain">2000)Windows&rdquo;能匹配&ldquo;3.1Windows&rdquo;中的&ldquo;Windows&rdquo;，但不能匹配&ldquo;2000Windows&rdquo;中的&ldquo;Windows&rdquo;。*python的正则表达式没有完全按照正则表达式规范实现，所以一些高级特性建议使用其他语言如java、scala等</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">x<span>|<span class="md-plain">y</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配x或y。例如，&ldquo;z<span>|<span class="md-plain">food&rdquo;能匹配&ldquo;z&rdquo;或&ldquo;food&rdquo;(此处请谨慎)。&ldquo;[z<span>|<span class="md-plain">f]ood&rdquo;则匹配&ldquo;zood&rdquo;或&ldquo;food&rdquo;。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">[xyz]</span></span></td>
+<td><span class="td-span"><span class="md-plain">字符集合。匹配所包含的任意一个字符。例如，&ldquo;[abc]&rdquo;可以匹配&ldquo;plain&rdquo;中的&ldquo;a&rdquo;。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">[^xyz]</span></span></td>
+<td><span class="td-span"><span class="md-plain">负值字符集合。匹配未包含的任意字符。例如，&ldquo;<span class="md-footnote"><span class="md-text"><span class="md-plain">abc<span class="md-plain">&rdquo;可以匹配&ldquo;plain&rdquo;中的&ldquo;plin&rdquo;任一字符。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">[a-z]</span></span></td>
+<td><span class="td-span"><span class="md-plain">字符范围。匹配指定范围内的任意字符。例如，&ldquo;[a-z]&rdquo;可以匹配&ldquo;a&rdquo;到&ldquo;z&rdquo;范围内的任意小写字母字符。注意:只有连字符在字符组内部时,并且出现在两个字符之间时,才能表示字符的范围; 如果出字符组的开头,则只能表示连字符本身.</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">[^a-z]</span></span></td>
+<td><span class="td-span"><span class="md-plain">负值字符范围。匹配任何不在指定范围内的任意字符。例如，&ldquo;<span class="md-footnote"><span class="md-text"><span class="md-plain">a-z<span class="md-plain">&rdquo;可以匹配任何不在&ldquo;a&rdquo;到&ldquo;z&rdquo;范围内的任意字符。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\b</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个单词的边界，开始或结束。代表单词的分界处</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\B</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配非单词开头或结尾的边界。&ldquo;er\B&rdquo;能匹配&ldquo;verb&rdquo;中的&ldquo;er&rdquo;，但不能匹配&ldquo;never&rdquo;中的&ldquo;er&rdquo;。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\cx</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配由x指明的控制字符。例如，\cM匹配一个Control-M或回车符。x的值必须为A-Z或a-z之一。否则，将c视为一个原义的&ldquo;c&rdquo;字符。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\d</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个数字字符。[0-9] 匹配这样的字符串：以0开头，然后是两个数字，然后是一个连字号&ldquo;-&rdquo;，最后是8个数字=======： 0\d{2}-\d{8} ；0\d\d-\d\d\d\d\d\d\d\d。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\D</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配任意非数字的字符。等价于<span class="md-footnote"><span class="md-text"><span class="md-plain">0-9<span class="md-plain">。grep要加上-P，perl正则支持</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\f</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个换页符。等价于\x0c和\cL。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\n</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个换行符。等价于\x0a和\cJ。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\r</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个回车符。等价于\x0d和\cM。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\s</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配任何空白符，包括空格、制表符、换页符等等。等价于[ \f\n\r\t\v]。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\S</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配任何非空白符的字符。等价于<span class="md-footnote"><span class="md-text"><span class="md-plain"> \f\n\r\t\v<span class="md-plain">。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\t</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个制表符。等价于\x09和\cI。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\v</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配一个垂直制表符。等价于\x0b和\cK。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\w</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配数字或字母或下划线或汉字。[a-z0-9A-Z_] 可以理解为表示单词</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\W</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配任何非数字字母下划线汉字的字符。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\x<span><em>n</em></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配<span><em>n</em><span class="md-plain">，其中<span><em>n</em><span class="md-plain">为十六进制转义值。十六进制转义值必须为确定的两个数字长。例如，&ldquo;\x41&rdquo;匹配&ldquo;A&rdquo;。&ldquo;\x041&rdquo;则等价于&ldquo;\x04&amp;1&rdquo;。正则表达式中可以使用ASCII编码。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>*<span class="md-plain">num*</span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配<span><em>num</em><span class="md-plain">，其中<span><em>num</em><span class="md-plain">是一个正整数。对所获取的匹配的引用。例如，&ldquo;(.)\1&rdquo;匹配两个连续的相同字符。</span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>*<span class="md-plain">n*</span></span></span></td>
+<td><span class="td-span"><span class="md-plain">标识一个八进制转义值或一个向后引用。如果<span>*<span class="md-plain">n<span><em>之前至少</em><span class="md-plain">n<span><em>个获取的子表达式，则</em><span class="md-plain">n<span><em>为向后引用。否则，如果</em><span class="md-plain">n<span><em>为八进制数字（0-7），则</em><span class="md-plain">n*为一个八进制转义值。</span></span></span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>*<span class="md-plain">nm*</span></span></span></td>
+<td><span class="td-span"><span class="md-plain">标识一个八进制转义值或一个向后引用。如果<span>*<span class="md-plain">nm<span><em>之前至少有</em><span class="md-plain">nm<span><em>个获得子表达式，则</em><span class="md-plain">nm<span><em><span class="md-plain">为向后引用。如果<span>*<span class="md-plain">nm</span></span></span></em><span class="md-plain">之前至少有<span><em>n</em><span class="md-plain">个获取，则<span><em>n</em><span class="md-plain">为一个后跟文字<span><em>m</em><span class="md-plain">的向后引用。如果前面的条件都不满足，若<span><em>n</em><span class="md-plain">和<span><em>m</em><span class="md-plain">均为八进制数字（0-7），则<span>*<span class="md-plain">nm<span><em>将匹配八进制转义值</em><span class="md-plain">nm*。</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>*<span class="md-plain">nml*</span></span></span></td>
+<td><span class="td-span"><span class="md-plain">如果<span><em>n</em><span class="md-plain">为八进制数字（0-7），且<span><em>m</em><span class="md-plain">和<span><em>l</em><span class="md-plain">均为八进制数字（0-7），则匹配八进制转义值<span><em>nml</em><span class="md-plain">。</span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\u<span><em>n</em></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配<span><em>n</em><span class="md-plain">，其中<span><em>n</em><span class="md-plain">是一个用四个十六进制数字表示的Unicode字符。例如，\u00A9匹配版权符号（<span class="md-entity" data-content="&copy;">&copy;<span class="md-plain">）。</span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\p{P}</span></span></td>
+<td><span class="td-span"><span class="md-plain">小写 p 是 property 的意思，表示 Unicode 属性，用于 Unicode 正表达式的前缀。中括号内的&ldquo;P&rdquo;表示Unicode 字符集七个字符属性之一：标点字符。其他六个属性：L：字母；M：标记符号（一般不会单独出现）；Z：分隔符（比如空格、换行等）；S：符号（比如数学符号、货币符号等）；N：数字（比如阿拉伯数字、罗马数字等）；C：其他字符。<span><em>*注：此语法部分语言不支持，例：javascript。</em></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>&lt;<span>&gt;</span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配词（word）的开始（<span>&lt;<span class="md-plain">）和结束（<span>&gt;<span class="md-plain">）。例如正则表达式<span>&lt;<span class="md-plain">the<span>&gt;<span class="md-plain">能够匹配字符串"for the wise"中的"the"，但是不能匹配字符串"otherwise"中的"the"。注意：这个元字符不是所有的软件都支持的。</span></span></span></span></span></span></span></span></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">( )</span></span></td>
+<td><span class="td-span"><span class="md-plain">将( 和 ) 之间的表达式定义为&ldquo;组&rdquo;（group），并且将匹配这个表达式的字符保存到一个临时区域（一个正则表达式中最多可以保存9个），它们可以用 \1 到\9 的符号来引用。</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>|</span></span></td>
+<td><span class="td-span"><span class="md-plain">将两个匹配条件进行逻辑&ldquo;或&rdquo;（or）运算。例如正则表达式(him<span>|<span class="md-plain">her) 匹配"it belongs to him"和"it belongs to her"，但是不能匹配"it belongs to them."。注意：这个元字符不是所有的软件都支持的。</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-link"><a href="https://sourceforge.net/projects/regextester/">https://sourceforge.net/projects/regextester/</a><span class="md-plain"> regex tester下载地址</span></span></p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span>\<span class="md-plain">(?0\d{2}[) -]?\d{8} <span>\<span class="md-plain">( --------表示转义字符； ?0-----表示前面的括号出现0次或1次； \d{2}-----表示两个数字； [)- ]? ---表示括号或-或空格，出现0次或1次； <span>\<span class="md-plain">d{8}-----表示8个数字。</span></span></span></span></span></span></p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">分枝条件是从左到右地测试每个条件的，如果满足了某个分枝的话，就不会再去管其他的条件了。</span></p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">后向引用：用于重复搜索前面某个分组匹配的文本</span></p>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">指定一个子表达式的组名，请使用这样的语法：(?<span class="md-tag md-raw-inline">&lt;Word&gt;<span class="md-plain">\w+)(或者把尖括号换成'也行：(?'Word'\w+)),这样就把\w+的组名指定为Word了</span></span></span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">分类</span></span></th><th><span class="td-span"><span class="md-plain">代码/语法</span></span></th><th><span class="td-span"><span class="md-plain">说明</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">捕获</span></span></td>
+<td><span class="td-span"><span class="md-plain">(exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配exp,并捕获文本到自动命名的组里</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?<span class="md-tag md-raw-inline">&lt;name&gt;<span class="md-plain">exp)</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配exp,并捕获文本到名称为name的组里，也可以写成(?'name'exp)</span></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?:exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配exp,不捕获匹配的文本，也不给此分组分配组号</span></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">零宽断言</span></span></td>
+<td><span class="td-span"><span class="md-plain">(?=exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配exp前面的位置</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?&lt;=exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配exp后面的位置</span></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?!exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配后面跟的不是exp的位置</span></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?&lt;!exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">匹配前面不是exp的位置</span></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">注释</span></span></td>
+<td><span class="td-span"><span class="md-plain">(?#comment)</span></span></td>
+<td><span class="td-span"><span class="md-plain">这种类型的分组不对正则表达式的处理产生任何影响，用于提供注释让人阅读</span></span></td>
+</tr>
+</tbody>
+</table>
+<p class="md-end-block md-p">&nbsp;</p>
+<p class="md-end-block md-p"><span class="md-plain">：(?&lt;=&lt;(\w+)&gt;).*(?=&lt;\/\1&gt;)</span></p>
+<p class="md-end-block md-p"><span class="md-plain">尚未详细讨论的语法</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th><span class="td-span"><span class="md-plain">代码/语法</span></span></th><th><span class="td-span"><span class="md-plain">说明</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\a</span></span></td>
+<td><span class="td-span"><span class="md-plain">报警字符(打印它的效果是电脑嘀一声)</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\b</span></span></td>
+<td><span class="td-span"><span class="md-plain">通常是单词分界位置，但如果在字符类里使用代表退格</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\t</span></span></td>
+<td><span class="td-span"><span class="md-plain">制表符，Tab</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\r</span></span></td>
+<td><span class="td-span"><span class="md-plain">回车</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\v</span></span></td>
+<td><span class="td-span"><span class="md-plain">竖向制表符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\f</span></span></td>
+<td><span class="td-span"><span class="md-plain">换页符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\n</span></span></td>
+<td><span class="td-span"><span class="md-plain">换行符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\e</span></span></td>
+<td><span class="td-span"><span class="md-plain">Escape</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\0nn</span></span></td>
+<td><span class="td-span"><span class="md-plain">ASCII代码中八进制代码为nn的字符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\xnn</span></span></td>
+<td><span class="td-span"><span class="md-plain">ASCII代码中十六进制代码为nn的字符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\unnnn</span></span></td>
+<td><span class="td-span"><span class="md-plain">Unicode代码中十六进制代码为nnnn的字符</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\cN</span></span></td>
+<td><span class="td-span"><span class="md-plain">ASCII控制字符。比如\cC代表Ctrl+C</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\A</span></span></td>
+<td><span class="td-span"><span class="md-plain">字符串开头(类似^，但不受处理多行选项的影响)</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\Z</span></span></td>
+<td><span class="td-span"><span class="md-plain">字符串结尾或行尾(不受处理多行选项的影响)</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\z</span></span></td>
+<td><span class="td-span"><span class="md-plain">字符串结尾(类似$，但不受处理多行选项的影响)</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\G</span></span></td>
+<td><span class="td-span"><span class="md-plain">当前搜索的开头</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">\p{name}</span></span></td>
+<td><span class="td-span"><span class="md-plain">Unicode中命名为name的字符类，例如\p{IsGreek}</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?&gt;exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">贪婪子表达式</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?<span class="md-tag md-raw-inline">&lt;x&gt;<span class="md-plain">-<span class="md-tag md-raw-inline">&lt;y&gt;<span class="md-plain">exp)</span></span></span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">平衡组</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?im-nsx:exp)</span></span></td>
+<td><span class="td-span"><span class="md-plain">在子表达式exp中改变处理选项</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?im-nsx)</span></span></td>
+<td><span class="td-span"><span class="md-plain">为表达式后面的部分改变处理选项</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?(exp)yes<span>|<span class="md-plain">no)</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">把exp当作零宽正向先行断言，如果在这个位置能匹配，使用yes作为此组的表达式；否则使用no</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?(exp)yes)</span></span></td>
+<td><span class="td-span"><span class="md-plain">同上，只是使用空表达式作为no</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?(name)yes<span>|<span class="md-plain">no)</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">如果命名为name的组捕获到了内容，使用yes作为表达式；否则使用no</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">(?(name)yes)</span></span></td>
+<td><span class="td-span"><span class="md-plain">同上，只是使用空表达式作为no</span></span></td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">　常用的正则表达式主要有以下几种：
+　　匹配中文字符的正则表达式： [\u4e00-\u9fa5]  &ldquo;\u4e00 &rdquo;  一
+　　获取日期正则表达式：\d{4}[年|\-|\.]\d{1,2}[月|\-|\.]\d{1,2}日?
+　　匹配双字节字符(包括汉字在内)：[^\x00-\xff]
+　　匹配空白行的正则表达式：\n\s*\r       评注：可以用来删除空白行
+　　匹配HTML标记的正则表达式：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">(\S</span><span style="color: #ff0000;">*?)[^</span><span style="color: #0000ff;">&gt;</span>]*&gt;.*?<span style="color: #0000ff;">&lt;/&gt;</span>|<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">.*? </span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+　　匹配首尾空白字符的正则表达式：^\s*|\s*$      评注：可以用来删除行首行尾的空白字符(包括空格、制表符、换页符等等)，非常有用的表达式
+　　匹配Email地址的正则表达式：\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*              评注：表单验证时很实用
+　　匹配网址URL的正则表达式：[a-zA-z]+://[^\s]*
+　　匹配帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：^[a-zA-Z][a-zA-Z0-9_]{4,15}$          评注：表单验证时很实用
+　　匹配国内电话号码：\d{4}-\d{7}|\d{3}-\d{8}      评注：匹配形式如 0511-4405222 或 021-87888822         ^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\\d{8}$
+　　匹配腾讯QQ号：[1-9][0-9]\{4,\}          　评注：腾讯QQ号从10000开始
+　　匹配中国邮政编码：[1-9]\d(?!\d)        　评注：中国邮政编码为6位数字
+　　匹配身份证：\d{17}[\d|X]|\d{15}　　评注：中国的身份证为15位或18位
+　　匹配ip地址：((2[0-4]\d|25[0-5]|[01]?\d\d?)\.){3}(2[0-4]\d|25[0-5]|[01]?\d\d?)。　　评注：提取ip地址时有用
+　　<br />　　匹配特定数字：
+　　^[1-9]\d*$　//匹配正整数
+　　^-[1-9]\d*$ //匹配负整数
+　　^-?[1-9]\d*$　//匹配整数
+　　^[1-9]\d*|0$　//匹配非负整数（正整数 + 0）
+　　^-[1-9]\d*|0$　//匹配非正整数（负整数 + 0）
+　　^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$　//匹配正浮点数
+　　^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$　//匹配负浮点数
+　　^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$　//匹配浮点数
+　　^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$　//匹配非负浮点数（正浮点数 + 0）
+　　^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$　//匹配非正浮点数（负浮点数 + 0）
+
+　　匹配特定字符串：
+　　^[A-Za-z]+$　//匹配由26个英文字母组成的字符串
+　　^[A-Z]+$　//匹配由26个英文字母的大写组成的字符串
+　　^[a-z]+$　//匹配由26个英文字母的小写组成的字符串
+　　^[A-Za-z0-9]+$　//匹配由数字和26个英文字母组成的字符串
+　　^\w+$　//匹配由数字、26个英文字母或者下划线组成的字符串</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

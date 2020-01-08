@@ -1,0 +1,96 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML5深入学习之数据存储' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML5深入学习之数据存储</center></div><div class='banquan'>原文出处:本文由博客园博主小方哥&#183;提供。<br/>
+原文连接:https://www.cnblogs.com/duxiu-fang/p/11109520.html</div><br>
+    <h1>概述</h1>
+<p>　　本来，数据存储都是由 cookie 完成的，但是 cookie 不适合大量数据的存储，cookie 速度慢且效率低。</p>
+<p>　　现在，HMLT5提供了两种在客户端存储数据的办法：</p>
+<ol>
+<li>localStorage(没有时间限制的数据存储，即当我们设置了之后浏览器关闭后再去访问它依然存在)</li>
+<li>sessionStorage(针对一个session的数据存储，当我们设置了之后浏览器关闭后再去访问他就消失了)</li>
+</ol>
+<h1>两者之间的实测对比</h1>
+<h2>　　localStorage</h2>
+<p>　　　　　　<span style="background-color: #00ff00;">首先我们先运行这段代码：　</span>　　　</p>
+<div class="cnblogs_code">
+<pre><code>localStorage.setItem('name', 'lisi'<span style="color: #000000;">);
+alert(localStorage.getItem(</span>'name'));</pre>
+</div>
+<p>&nbsp;　　　　　　<span style="background-color: #00ff00;">然后浏览器则弹出显示：</span></p>
+<p><img src="./images/HTML5深入学习之数据存储0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>　　　　　　<span style="background-color: #00ff00;">接着，我们注释掉localStorage.setItem('name', 'lisi');，关闭浏览器重新访问，依然可以显示：</span></p>
+<p><span style="background-color: #c0c0c0;"><span style="background-color: #ffffff;"><img src="./images/HTML5深入学习之数据存储1.png" alt="" /></span></span></p>
+<p>　　</p>
+<h2>&nbsp;　　sessionStorage</h2>
+<p>　　　　　　步骤大概和设置 localStorage 一样，但是浏览器关闭后再次访问已不见 sessionStorage</p>
+<p>　　　　　　浏览器关闭前：</p>
+<p>　　　　　　<img src="./images/HTML5深入学习之数据存储2.png" alt="" /></p>
+<p>　　　　　　浏览器关闭后再次访问：</p>
+<p>　　　　　　<img src="./images/HTML5深入学习之数据存储3.png" alt="" /></p>
+<p>&nbsp;</p>
+<h1>实例(记住用户名与密码)-----使用 localStorage</h1>
+<p>常用API:</p>
+<ul>
+<li>setItem() =&gt; 设置要存储得数据</li>
+<li>getItem() =&gt; 获取存储的数据</li>
+<li>removeItem() =&gt; 移除存储的数据</li>
+</ul>
+<p>代码：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8" /&gt;
+    &lt;title&gt;独秀不爱秀&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;<span style="color: #000000;">
+    用户名: </span>&lt;input type="text" name="username" id="username"&gt;&lt;br&gt;<span style="color: #000000;">
+    密码：  </span>&lt;input type="password" name="pwd" id="pwd"&gt;&lt;br&gt;<span style="color: #000000;">
+    记住用户名与密码:  </span>&lt;input type="checkbox" name="save" id="save"&gt;
+    &lt;script type="text/javascript"&gt;
+        <span style="color: #0000ff;">var</span> username = document.getElementsByName('username')[0<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">var</span> pwd = document.getElementsByName('pwd')[0<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">var</span> save = document.getElementsByName('save')[0<span style="color: #000000;">];
+
+        </span><span style="color: #0000ff;">if</span> (localStorage.getItem('username') &amp;&amp; localStorage.getItem('pwd'<span style="color: #000000;">)) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 将获取到的值添加到 HTML</span>
+            username.value = localStorage.getItem('username'<span style="color: #000000;">);
+            pwd.value </span>= localStorage.getItem('pwd'<span style="color: #000000;">);
+        }
+
+        save.addEventListener(</span>'click', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (save.checked) {
+                localStorage.setItem(</span>'username'<span style="color: #000000;">, username.value);
+                localStorage.setItem(</span>'pwd'<span style="color: #000000;">, pwd.value);
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                localStorage.removeItem(</span>'username'<span style="color: #000000;">);
+                localStorage.removeItem(</span>'pwd'<span style="color: #000000;">);
+            }
+        });
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

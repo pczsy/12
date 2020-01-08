@@ -1,0 +1,100 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP请求模型' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP请求模型</center></div><div class='banquan'>原文出处:本文由博客园博主.hjx提供。<br/>
+原文连接:https://www.cnblogs.com/Ghjx/p/11002501.html</div><br>
+    <p style="text-align: center;" align="left"><span style="color: #333300; font-size: medium; font-family: 'comic sans ms', sans-serif;"><strong><strong>HTTP请求模型</strong></strong></span></p>
+<p align="left"><span style="color: #333300; font-size: medium; font-family: 'comic sans ms', sans-serif;"><strong>HTTP请求模型</strong></span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>一、连接至Web服务器</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">一个客户端应用（如Web浏览器）打开到Web服务器的HTTP端口的一个套接字（缺省为80）。</span><br /><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">例如：<a href="http://www.myweb.com:8080/index.html"><span style="color: #333300;">http://www.myweb.com:8080/index.html</span></a></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">在Java中，这将等同于代码：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1 Soceet socket=new Socket("www.myweb.com",8080);
+2 InputStream in=socket.getInputStream();
+3 OutputStream out=socket.getOutputStream();</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>二、发送HTTP请求</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">通过连接，客户端写一个ASCII文本请求行，后跟0或多个HTTP头标，一个空行和实现请求的任意数据。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">一个请求由四个部分组成：<strong>请求行、请求头标、空行和请求数据</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1.请求行：请求行由三个标记组成：请求方法、请求URI和HTTP版本，它们用空格分隔。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">例如：GET&nbsp;/index.html&nbsp;HTTP/1.1</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">HTTP规范定义了8种可能的请求方法：</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　GET　　　&nbsp; &nbsp;　　　检索URI中标识资源的一个简单请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　HEAD　　&nbsp; &nbsp; 　　　与GET方法相同，服务器只返回状态行和头标，并不返回请求文档</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　POST&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 　　&nbsp; &nbsp;服务器接受被写入客户端输出流中的数据的请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　PUT&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;　　 &nbsp; &nbsp;服务器保存请求数据作为指定URI新内容的请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　DELETE&nbsp; &nbsp; &nbsp; &nbsp;　　 &nbsp; 服务器删除URI中命名的资源的请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　OPTIONS&nbsp; &nbsp; 　　&nbsp; &nbsp; 关于服务器支持的请求方法信息的请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　TRACE&nbsp; &nbsp; &nbsp; &nbsp; 　　&nbsp; &nbsp; Web服务器反馈Http请求和其头标的请求</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　CONNECT&nbsp; &nbsp; 　　&nbsp; 已文档化但当前未实现的一个方法，预留做隧道处理</span></p>
+<p align="left"><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">2.请求头标：由关键字/值对组成，每行一对，关键字和值用冒号（:）分隔。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">请求头标通知服务器有关于客户端的功能和标识，典型的请求头标有：</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　User-Agent&nbsp; &nbsp; &nbsp; &nbsp;　　 &nbsp; 客户端厂家和版本</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　Accept&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 　　&nbsp; &nbsp; &nbsp;客户端可识别的内容类型列表</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　Content-Length&nbsp;&nbsp;　　&nbsp;附加到请求的数据字节数</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">3.空行：最后一个请求头标之后是一个空行，发送回车符和退行，通知服务器以下不再有头标。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">4.请求数据：使用POST传送数据，最常使用的是Content-Type和Content-Length头标。</span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>三、服务端接受请求并返回HTTP响应</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">Web服务器解析请求，定位指定资源。服务器将资源副本写至套接字，在此处由客户端读取。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">一个响应由四个部分组成:<strong>状态行、响应头标、空行、响应数据</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1.状态行：状态行由三个标记组成：HTTP版本、响应代码和响应描述。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">HTTP版本：向客户端指明其可理解的最高版本。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">响应代码：3位的数字代码，指出请求的成功或失败，如果失败则指出原因。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">响应描述：为响应代码的可读性解释。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">例如：HTTP/1.1&nbsp;200&nbsp;OK</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">HTTP响应码：</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　1xx：信息，请求收到，继续处理</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　2xx：成功，行为被成功地接受、理解和采纳</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　3xx：重定向，为了完成请求，必须进一步执行的动作</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">　　4xx：客户端错误：</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">2.响应头标：像请求头标一样，它们指出服务器的功能，标识出响应数据的细节。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">3.空行：最后一个响应头标之后是一个空行，发送回车符和退行，表明服务器以下不再有头标。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">4.响应数据：HTML文档和图像等，也就是HTML本身。</span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>四、服务器关闭连接，浏览器解析响应</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1.浏览器首先解析状态行，查看表明请求是否成功的状态代码。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">2.然后解析每一个响应头标，头标告知以下为若干字节的HTML。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">3.读取响应数据HTML，根据HTML的语法和语义对其进行格式化，并在浏览器窗口中显示它。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">4.一个HTML文档可能包含其它需要被载入的资源引用，浏览器识别这些引用，对其它的资源再进行额外的请求，此过程循环多次。</span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>五、无状态连接</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">HTTP模型是无状态的，表明在处理一个请求时，Web服务器并不记住来自同一客户端的请求。</span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>六、实例</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1.浏览器发出请求</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">GET /index.html HTTP/1.1</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">服务器返回响应</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #333300; font-family: 'comic sans ms', sans-serif;">HTTP /1.1 200 OK
+Date: Apr 11 2006 15:32:08 GMT
+Server: Apache/2.0.46(win32)
+Content-Length: 119
+Content-Type: text/html</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1 &lt;HTML&gt;
+2 &lt;HEAD&gt;
+3       &lt;LINK REL="stylesheet" HREF="index.css"&gt;
+4 &lt;/HEAD&gt;
+5 &lt;BODY&gt;
+6     &lt;IMG SRC="image/logo.png"&gt;
+7 &lt;/BODY&gt;
+8 &lt;/HTML&gt;    </span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">2.浏览器发出请求</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">GET /index.css HTTP/1.1</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">服务器返回响应</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1 HTTP /1.1 200 OK
+2 Date: Apr 11 2006 15:32:08 GMT
+3 Server: Apache/2.0.46(win32)
+4 Connection: Keep-alive, close
+5 Content-Length: 70
+6 Content-Type: text/plane</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">h3{
+    font-size:20px;
+    font-weight:bold;
+    color:#005A9C;
+}</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">3.浏览器发出请求</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">GET image/logo.png HTTP/1.1</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">服务器返回响应</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #333300; font-family: 'comic sans ms', sans-serif;">HTTP /1.1 200 OK
+Date: Apr 11 2006 15:32:08 GMT
+Server: Apache/2.0.46(win32)
+Connection: Keep-alive, close
+Content-Length: 1280
+Content-Type: text/plane</span></pre>
+</div>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">{Binary&nbsp;image&nbsp;data&nbsp;follows}</span></p>
+<p align="left"><span style="color: #333300;">&nbsp;</span></p>
+<p align="left"><span style="font-family: 'comic sans ms', sans-serif; color: #333300;"><strong>（附录）</strong></span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">1.HTTP规范：Internet工程制定组织（IETF）发布的RFC指定Internet标准，这些RFC被Internet研究发展机构广泛接受。因为它们是标准文档，故一般用正规语言编写，如立法文标一样。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">2.RFC：RFC一旦被提出，就被编号且不会再改变，当一个标准被修改时，则给出一个新的RFC。作为标准，RFC在Internet上被广泛采用。</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">3.HTTP的几个重要RFC：</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">&nbsp;&nbsp;&nbsp;&nbsp;RFC1945&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;1.0&nbsp;描述</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">&nbsp;&nbsp;&nbsp;&nbsp;RFC2068&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;1.1&nbsp;初步描述</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">&nbsp;&nbsp;&nbsp;&nbsp;RFC2616&nbsp;&nbsp;&nbsp;&nbsp;HTTP&nbsp;1.1&nbsp;标准</span><br /><span style="font-family: 'comic sans ms', sans-serif; color: #333300;">4.资源标识符URI（Uniform&nbsp;Resource&nbsp;Identifter，URI）</span></p>
+<p align="left"><span style="color: #333300;">&nbsp;</span></p>
+<p align="left"><span style="color: #333300;">2019-06-11</span></p>
+<p align="left"><span style="font-size: 18px; color: #333300;">[转]</span></p>
+<p align="left"><span style="color: #333300;">&nbsp;</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

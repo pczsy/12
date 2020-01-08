@@ -1,0 +1,217 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS3 制作魔方 - 玩转魔方' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS3 制作魔方 - 玩转魔方</center></div><div class='banquan'>原文出处:本文由博客园博主三人行工作室提供。<br/>
+原文连接:https://www.cnblogs.com/timeddd/p/10870822.html</div><br>
+    <p>在上一篇<a href="https://www.cnblogs.com/timeddd/p/10867818.html">《CSS3 制作魔方 - 形成魔方》</a>中介绍了一个完整魔方的绘制实现，本文将介绍魔方的玩转，支持上下左右每一层独立地旋转。先来一睹玩转的风采。</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方0.png" /></p>
+<h1 id="一个问题">1.一个问题</h1>
+<p>由于魔方格的位置与转动的路径相关，仅依靠 rotateX，rotateY，rotateZ 单个的值无法直接表明其定位。如下图，第一个魔方格进行了特殊化处理。</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方1.png" /></p>
+<p>当使用路径 rotateY(90)-&gt;rotateY(90)-&gt;rotateX(90)-&gt;rotateY(-90)  来旋转这个特殊魔方格时，Y 最终是 90度，X 是90 度，按路径旋转的结果如下图。</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方2.png" /></p>
+<p><strong>它并不等于</strong></p>
+<p>Y  90度，X 90 度的旋转结果：rotateY(90)-&gt;rotateX(90)</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方3.png" /></p>
+<h1 id="解决办法">2.解决办法</h1>
+<p>不能直接表示，就换一种方式。可以根据旋转的方向 <strong>重算魔方格在魔方中的坐标</strong> 并重绘魔方格，而旋转动画效果可以采用 <strong>逆向90度重绘再 transition 回来</strong> 的方式，详见后述。</p>
+<h1 id="自上而下实现旋转">3.自上而下实现旋转</h1>
+<h2 id="顶层视角">3.1顶层视角</h2>
+<p>纵观魔方，实现各层的旋转它应该开放什么接口呢？进行旋转需要指定的数据是什么呢？这便形成了功能的顶层描述与接口需求：指定x，y，z轴向、给定第几层、规定转向完成90度的旋转。</p>
+<p>于是在 MagicBox 类中可以增加方法：功能接口名称使用 Rotate，其参数为 轴向(axis)、层(level)、转向(turn)。</p>
+<p>其中：</p>
+<ul>
+<li>轴向可取值 x、y、z</li>
+<li>层根据坐标体系从0开始 至 魔方阶数-1</li>
+<li>转向因为一层只会有两个方向，为了统一描述，总以<strong>朝轴正方向视角</strong>来分左向(left)与右向(right)。</li>
+</ul>
+<p>旋转的层所包含的具体魔方格，对于顶层而言，则只需要 <strong>对旋转要求通知到位即可</strong>，而通知的内容为轴向(axis)、转向(turn)，以及魔方阶数(dimension)。</p>
+<p>有此描述，顶层 Rotate 方法非常简单，功能为找出指定的层进行通知即可：</p>
+<pre><code><code>/** MagicBox.Rotate 旋转
+  * axis 轴向
+  * level 层
+  * turn 转向
+ **/
+this.Rotate = function(axis, level, turn){
+    for(var i=0; i &lt; this.cubes.length; i++) { 
+        if(this.cubes[i][axis] == level) {    // 该轴该层的才旋转
+            this.cubes[i].Rotate(axis, turn, dimension);   
+        }
+    }
+};</code></pre>
+<h2 id="魔方格接口实现">3.2魔方格接口实现</h2>
+<h3 id="旋转坐标变换">3.2.1旋转坐标变换</h3>
+<p>轴向有x,y,z，但每层的旋转只涉及到两个轴向，有(x,y)、(y,z)、(x,z)，尽管魔方格看上去很多的，但坐标的转换却都遵循非常简单的变换规律，以4阶的 (x,y) 坐标转换为例，如下，黄色为同一个坐标旋转变换的值：</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方4.png" /></p>
+<p>很容易得出规律，旋转前后的坐标中，<strong>总有一个是相同的，另两个的和是固定的</strong>，而且刚好为魔方阶数减1。</p>
+<p>假设旋转前后坐标分别为(x1,y1)、(x2,y2)，则：</p>
+<p><strong>往左旋转</strong>，坐标变换规律为：x2 = y1, y2 = 3 - x1，这其中的 3 为魔方阶数减1。</p>
+<p><strong>往右旋转</strong>，坐标变换规律为：x2 = 3 - y1, y2 = x1。</p>
+<p>这恰是：<strong>我成为了你，而你是我的补</strong>！</p>
+<p>于是有了以下转换过程：</p>
+<pre><code><code>/** 坐标转换
+ * axis 轴向
+ * turn 转向
+ * dimension 阶数
+ **/
+this.TransCoordinate = function(axis, turn, dimension){ 
+    if(axis == &#39;x&#39;){              
+        if( turn == &#39;left&#39; ){
+            var oriy = this.y;
+            this.y = this.z;
+            this.z = dimension - 1 - oriy;
+        } else {
+            var oriz = this.z;
+            this.z = this.y;
+            this.y = dimension - 1 - oriz;
+        }
+    } else if(axis == &#39;y&#39;){
+        if( turn == &#39;right&#39; ){
+            var orix = this.x;
+            this.x = this.z;
+            this.z = dimension - 1 - orix;
+        } else {
+            var oriz = this.z;
+            this.z = this.x;
+            this.x = dimension - 1 - oriz;
+        }
+    } else if(axis == &#39;z&#39;){ 
+        if( turn == &#39;right&#39; ){
+            var orix = this.x;
+            this.x = this.y;
+            this.y = dimension - 1 - orix;
+        } else {
+            var oriy = this.y;
+            this.y = this.x;
+            this.x = dimension - 1 - oriy;
+        }
+    } 
+}
+</code></pre>
+<h3 id="旋转重绘">3.2.2旋转重绘</h3>
+<p>在魔方格里，通过版面（block）在旋转方向上的变换达到旋转的效果，方式为根据旋转方向同向移动方向即可。</p>
+<pre><code><code>/** 将各 block 调整位置，重绘魔方格
+* axis 轴向
+* turn 转向
+**/
+this.ReDrawBlocks = function(axis, turn){
+    var xyzDirects = [];
+    xyzDirects[&#39;x&#39;] = [&quot;front&quot;, &quot;up&quot;, &quot;back&quot;, &quot;down&quot;]; 
+    xyzDirects[&#39;y&#39;] = [&quot;front&quot;, &quot;right&quot;, &quot;back&quot;, &quot;left&quot;]; 
+    xyzDirects[&#39;z&#39;] = [&quot;up&quot;, &quot;right&quot;, &quot;down&quot;, &quot;left&quot;]; 
+    var curDirects = xyzDirects[axis];
+
+    for(var i=0; i &lt; this.blocks.length; i++) { 
+        var index = curDirects.indexOf( this.blocks[i].direct );
+        if(index &gt; -1){
+            var newIndex = turn == &#39;left&#39; ? (index + 1) % 4 : (index + 4 - 1) % 4;
+            this.blocks[i].direct = curDirects[newIndex]; 
+            this.blocks[i].DrawIn(this.Element);
+        }    
+    }
+}
+</code></pre>
+<h3 id="动画体现">3.2.3动画体现</h3>
+<p>调整好的魔方格，逆向旋转90度，则外观保持跟旋转前一样，这就有了进行动画的基础，动画的实质就是欺骗眼睛。</p>
+<p>然后，利用 transition 让其过滤到不旋转的（即调整好的）外观即可达到效果。这样的好处是，魔方格不论在什么位置，每次相关的旋转角度仅是逆向的 90 度，<strong>问题局部化时，事情就变得简单</strong>。</p>
+<pre><code><code>// 先停止动画效果，逆向 90 度，此时外观跟旋转前一致
+this.Element.style[&quot;transition&quot;] = &quot;&quot;;
+var rotateDegs = new Object();
+rotateDegs[axis] = (turn == &#39;left&#39; ? -90 : 90);  
+this.Element.style[&quot;transform&quot;] = this.FormatTransform(rotateDegs); 
+// 旋转原点旋转的层都需要以魔方的中心点旋转
+// 旋转原点是以元素自身来计算的，因所有魔方格都是从(0,0,0)平衡的，因此计算结果都一样
+var centerX = this.blockSize * dimension / 2;
+var centerY = this.blockSize * dimension / 2;
+var centerZ = -this.blockSize * dimension / 2;
+this.Element.style[&quot;transformOrigin&quot;] = centerX + &quot;px &quot; + centerY + &quot;px &quot; + centerZ + &quot;px&quot;;
+
+// 这样才能触发动画
+setTimeout(function(obj){
+    return function(){
+        obj.Element.style[&quot;transform&quot;] = obj.FormatTransform(); 
+        obj.Element.style[&quot;transition&quot;] = &quot;transform 0.3s&quot;;  // 0.3 秒
+    };
+}(this), 1);
+
+// 以下为transfrom 属性格式化的一个方法，这个属性值太长了又是旋转平移多组合
+// 格式化 transform 属性
+// css3 把旋转与平移混一起（真不好用）
+this.FormatTransform = function (rotateDegs){ 
+    var rotatePart = &quot;rotateX(0deg) rotateY(0deg) rotateZ(0deg)&quot;;
+    if(rotateDegs){
+        rotatePart = &quot;rotateX(&quot; + (rotateDegs.x | 0) + &quot;deg) rotateY(&quot; + (rotateDegs.y | 0) + &quot;deg) rotateZ(&quot; + (rotateDegs.z | 0) + &quot;deg)&quot;;
+    }   
+
+    return rotatePart + &quot; translate3d(&quot; + (this.x * this.blockSize) + &quot;px,&quot; + (this.y * this.blockSize) + &quot;px,-&quot; + (this.z * this.blockSize) + &quot;px) &quot;;      
+} 
+</code></pre>
+<h1 id="旋转控制实例效果">4.旋转控制实例效果</h1>
+<p>有了这个旋转的方法，通过给定一组旋转参数序列，可以让魔方自动运转，并且自动复原。</p>
+<pre><code><code>function onload(){
+
+    //* 魔方绘制示例
+    var magicBox = new MagicBox(5, 50);
+    magicBox.DrawIn( document.querySelector(&quot;.wrap&quot;) ); 
+
+    var rotates = GenRotateActions(5, 10);
+    for(var i=0; i&lt;rotates.length; i++){    
+        setTimeout(function(magicBox, rotate){
+            return function(){
+                magicBox.Rotate(rotate.axis, rotate.level, rotate.turn);
+            };
+        }(magicBox, rotates[i]), 500 * i);
+    }
+
+    /* 反向旋转，就能复原魔方 */
+    for(var i=0; i&lt;rotates.length; i++){    
+        setTimeout(function(magicBox, rotate){
+            return function(){
+                magicBox.Rotate(rotate.axis, rotate.level, (rotate.turn == &#39;left&#39; ? &#39;right&#39; : &#39;left&#39;));
+            };
+        }(magicBox, rotates[rotates.length -1 - i]), 5500 + 500 * i);
+    }
+}
+
+/** 产生一个指定数量的旋转序列数组
+ * dimension 魔方阶数
+ * count 序列数量
+ **/
+function GenRotateActions(dimension, count){
+    var result = [];
+    for(var i=0; i&lt;count; i++){
+        result[i] = {
+            axis  : [&#39;x&#39;,&#39;y&#39;,&#39;z&#39;][Math.floor(Math.random() * 3)],
+            level : Math.floor(Math.random() * dimension), 
+            turn  : [&#39;left&#39;,&#39;right&#39;][Math.floor(Math.random() * 2)]
+        };
+    }
+    return result;
+}</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 玩转魔方5.png" /></p>
+<h1 id="小结与附件">5.小结与附件</h1>
+<p>寻找共性向上抽象，形成统一的处理模式能够让处理模型变得简单。</p>
+<p>本文实例，支持动态建立多阶的魔方，但对参数缺少边界检查，同时对旋转的是否结束未作标记或判断，感兴趣的朋友可以进一步完善它。</p>
+<p>本实例代码发布在 <a href="https://github.com/triplestudio/magicbox" class="uri">https://github.com/triplestudio/magicbox</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

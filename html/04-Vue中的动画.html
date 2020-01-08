@@ -1,0 +1,188 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修04-Vue中的动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>04-Vue中的动画</center></div><div class='banquan'>原文出处:本文由博客园博主bignewbie提供。<br/>
+原文连接:https://www.cnblogs.com/CGWTQ/p/10973650.html</div><br>
+    <h2 id="vue%E4%B8%AD%E7%9A%84%E5%8A%A8%E7%94%BB" class="code-line" data-line="440">Vue中的动画</h2>
+<p>为什么要有动画：动画能够提高用户的体验，帮助用户更好的理解页面中的功能；</p>
+<h3 id="%E4%BD%BF%E7%94%A8%E8%BF%87%E6%B8%A1%E7%B1%BB%E5%90%8D" class="code-line" data-line="443">-使用过渡类名</h3>
+<p>1.html</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="动起来"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="myAnimate"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 使用 transition 将需要过渡的元素包裹起来 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="fade"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="isshow"</span><span style="color: #0000ff;">&gt;</span>动画哦<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>2.VM实例</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 创建 Vue 实例，得到 ViewModel</span>
+<span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+  el: </span>'#app'<span style="color: #000000;">,
+  data: {
+    isshow: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+  },
+  methods: {
+    myAnimate() {
+      </span><span style="color: #0000ff;">this</span>.isshow = !<span style="color: #0000ff;">this</span><span style="color: #000000;">.isshow;
+    }
+  }
+});</span></pre>
+</div>
+<p>3.定义两组动画</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 定义进入和离开时候的过渡状态 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .fade-enter-active,
+    .fade-leave-active </span>{<span style="color: #ff0000;">
+      transition</span>:<span style="color: #0000ff;"> all 0.2s ease</span>;<span style="color: #ff0000;">
+      position</span>:<span style="color: #0000ff;"> absolute</span>;
+    }
+
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 定义进入过渡的开始状态 和 离开过渡的结束状态 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .fade-enter,
+    .fade-leave-to </span>{<span style="color: #ff0000;">
+      opacity</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+      transform</span>:<span style="color: #0000ff;"> translateX(100px)</span>;
+    }</pre>
+</div>
+<h3 id="%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9-css-%E5%8A%A8%E7%94%BB%E5%BA%93" class="code-line" data-line="486">-使用第三方 CSS 动画库</h3>
+<p>1.导入动画类库</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="./lib/animate.css"</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>2.定义transition属性</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition
+    </span><span style="color: #ff0000;">enter-active-class</span><span style="color: #0000ff;">="fadeInRight"</span><span style="color: #ff0000;">
+    leave-active-class</span><span style="color: #0000ff;">="fadeOutRight"</span><span style="color: #ff0000;">
+    :duration</span><span style="color: #0000ff;">="{ enter: 500, leave: 800 }"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="animated"</span><span style="color: #ff0000;"> v-show</span><span style="color: #0000ff;">="isshow"</span><span style="color: #0000ff;">&gt;</span>动画哦<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3 id="%E4%BD%BF%E7%94%A8%E5%8A%A8%E7%94%BB%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0" class="code-line" data-line="501">-使用动画钩子函数</h3>
+<p class="code-line" data-line="502">1.定义 transition 组件以及三个钩子函数：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="切换动画"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="isshow = !isshow"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition
+    </span><span style="color: #ff0000;">@before-enter</span><span style="color: #0000ff;">="beforeEnter"</span><span style="color: #ff0000;">
+    @enter</span><span style="color: #0000ff;">="enter"</span><span style="color: #ff0000;">
+    @after-enter</span><span style="color: #0000ff;">="afterEnter"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="isshow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>OK<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p class="code-line" data-line="514">2.定义三个 methods 钩子方法：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">methods: {
+        beforeEnter(el) { </span><span style="color: #008000;">//</span><span style="color: #008000;"> 动画进入之前的回调</span>
+          el.style.transform = 'translateX(500px)'<span style="color: #000000;">;
+        },
+        enter(el, done) { </span><span style="color: #008000;">//</span><span style="color: #008000;"> 动画进入完成时候的回调</span>
+<span style="color: #000000;">          el.offsetWidth;
+          el.style.transform </span>= 'translateX(0px)'<span style="color: #000000;">;
+          done();
+        },
+        afterEnter(el) { </span><span style="color: #008000;">//</span><span style="color: #008000;"> 动画进入完成之后的回调</span>
+          <span style="color: #0000ff;">this</span>.isshow = !<span style="color: #0000ff;">this</span><span style="color: #000000;">.isshow;
+        }
+      }</span></pre>
+</div>
+<p class="code-line" data-line="530">3.定义动画过渡时长和样式：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.show{
+      transition: all </span>0<span style="color: #000000;">.4s ease;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3 id="v-for-%E7%9A%84%E5%88%97%E8%A1%A8%E8%BF%87%E6%B8%A1" class="code-line" data-line="538">--v-for 的列表过渡</h3>
+<ol>
+<li class="code-line" data-line="539">定义过渡样式</li>
+</ol>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">&lt;style&gt;
+    .list-enter,
+    .list-leave-to </span>{<span style="color: #ff0000;">
+      opacity</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+      transform</span>:<span style="color: #0000ff;"> translateY(10px)</span>;
+    }<span style="color: #800000;">
+
+    .list-enter-active,
+    .list-leave-active </span>{<span style="color: #ff0000;">
+      transition</span>:<span style="color: #0000ff;"> all 0.3s ease</span>;
+    }<span style="color: #800000;">
+&lt;/style&gt;</span></pre>
+</div>
+<ol start="2">
+<li class="code-line" data-line="554">定义DOM结构，其中，需要使用 transition-group 组件把v-for循环的列表包裹起来：</li>
+</ol>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> v-model</span><span style="color: #0000ff;">="txt"</span><span style="color: #ff0000;"> @keyup.enter</span><span style="color: #0000ff;">="add"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition-group </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="ul"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="list"</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item, i) in list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="i"</span><span style="color: #0000ff;">&gt;</span>{{item}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition-group</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<ol start="3">
+<li class="code-line" data-line="564">定义 VM中的结构：</li>
+</ol>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #008000;">//</span><span style="color: #008000;"> 创建 Vue 实例，得到 ViewModel</span>
+    <span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+      el: </span>'#app'<span style="color: #000000;">,
+      data: {
+        txt: </span>''<span style="color: #000000;">,
+        list: [</span>1, 2, 3, 4<span style="color: #000000;">]
+      },
+      methods: {
+        add() {
+          </span><span style="color: #0000ff;">this</span>.list.push(<span style="color: #0000ff;">this</span><span style="color: #000000;">.txt);
+          </span><span style="color: #0000ff;">this</span>.txt = ''<span style="color: #000000;">;
+        }
+      }
+    });</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3 id="%E5%88%97%E8%A1%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E8%BF%87%E6%B8%A1" class="code-line" data-line="583">--列表的排序过渡</h3>
+<p><code>&lt;transition-group&gt;</code>&nbsp;组件还有一个特殊之处。不仅可以进入和离开动画，<strong>还可以改变定位</strong>。要使用这个新功能只需了解新增的&nbsp;<code>v-move</code>&nbsp;特性，<strong>它会在元素的改变定位的过程中应用</strong>。</p>
+<ul>
+<li class="code-line" data-line="585"><code>v-move</code>&nbsp;和&nbsp;<code>v-leave-active</code>&nbsp;结合使用，能够让列表的过渡更加平缓柔和：</li>
+</ul>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.v-move</span>{<span style="color: #ff0000;">
+  transition</span>:<span style="color: #0000ff;"> all 0.8s ease</span>;
+}<span style="color: #800000;">
+.v-leave-active</span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> absolute</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p class="code-line" data-line="514">&nbsp;</p>
+<p class="code-line" data-line="514">&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

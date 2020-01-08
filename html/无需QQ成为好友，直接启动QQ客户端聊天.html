@@ -1,0 +1,43 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修无需QQ成为好友，直接启动QQ客户端聊天' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>无需QQ成为好友，直接启动QQ客户端聊天</center></div><div class='banquan'>原文出处:本文由博客园博主enjoryWeb提供。<br/>
+原文连接:https://www.cnblogs.com/gonghui2016/p/12127101.html</div><br>
+    <div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="color:#fff; margin-left:8px; padding-top:12px;"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="_parent"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">='tencent://message/?Menu=yes&amp;uin=&lt;%#Eval("QQ") </span><span style="color: #ff0000;">%</span><span style="color: #0000ff;">&gt;</span><span style="color: #ff0000;">&amp;Site</span>=说明文字<span style="color: #ff0000;">&amp;Service</span>=200<span style="color: #ff0000;">&amp;sigT</span>=2a0e37386280486ada2b5d5e69ee49186ccae1257fd9e1c9598af1f0b9c916067002a57aaaec8c8d'&gt;</pre>
+</div>
+<p>注意：<span style="color: #ff0000;">uin=&lt;%#Eval("QQ")%&gt;</span>,这里动态绑定qq号，也可以直接填写qq，如果动态绑定qq号，绑定后的html代码添加<span style="color: #ff0000;">&lt;p&gt;&lt;/p&gt;</span>标签.</p>
+<p>这时，点击会弹出版本不支持，如下图</p>
+<p><img src="./images/无需QQ成为好友，直接启动QQ客户端聊天0.png" alt="" /></p>
+<p>然后我下载了最新版本，这时，点击还是会弹出上图的同样问题。</p>
+<p>最终查看html源代码，发现<span style="color: #ff0000;">uin=qq号,发现多了个&lt;p&gt;&lt;/p&gt;标签。<span style="color: #000000;">于是修改如下：</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:javascript;gutter:true;">$(function () {        
+        $("#divId").find("a").each(function () {
+            var hrefVal = $(this).attr("href");
+            if (hrefVal.indexOf("&lt;p&gt;") &gt; -1) {
+                $(this).attr("href", hrefVal.replace("&lt;p&gt;", "").replace("&lt;/p&gt;", ""));//注意这行代码把&lt;p&gt;&lt;/p&gt;标签替换掉
+            }
+        });
+    });</pre>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

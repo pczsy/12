@@ -1,0 +1,128 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vuex 源码解析(三) getter属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vuex 源码解析(三) getter属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11429856.html</div><br>
+    <p>有时候我们需要从store中的state中派生出一些状态，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{reverseMessage}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    const store </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vuex.Store({
+        state:{reverseMessage:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue!</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">}
+    })
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+        el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+        store,
+        computed:{
+            reverseMessage:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$store.state.reverseMessage.split(</span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">).reverse().join(</span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">)}
+        }
+    })
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>如果多个组件需要用到此属性，我们要么复制这个函数，或者抽取到一个共享函数然后在多处导入它---无论哪种方式都不是很理想</p>
+<p class="hwi">writer by:大沙漠 QQ:22969969</p>
+<p>Vuex允许我们在store中定义"getter"(可以认为是store的计算属性),就像计算属性一样，getter 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算</p>
+<p>每个getter对应的匿名函数可以带四个参数，分别是当前模块的state、getter和根模块的state、getter,例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{reverseMessage}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+    const store </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vuex.Store({
+        state:{reverseMessage:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue!</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">},
+        getters:{
+            reverseMessage:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(state){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> state.reverseMessage.split(</span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">).reverse().join(</span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">);}
+        }
+    })
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+        el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+        store,
+        computed:{
+            reverseMessage:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.$store.getters.reverseMessage}
+        }
+    })
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>这样在vuex内部就把<span style="color: #000000;">reverseMessage</span>这个属性给实现了，还是很好用的，vuex官网里说我们可以把getter当作计算属性一样来使用,事实上vuex内部也是把getter定义为vue的computed计算属性来实现的。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;在创建Vuex.Store()初始化时会执行installModule()安装根模块，和getter相关的如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> installModule (store, rootState, path, module, hot) {    <span style="color: #008000;">//</span><span style="color: #008000;">安装模块</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  module.forEachGetter(</span><span style="color: #0000ff;">function</span> (getter, key) {                     <span style="color: #008000;">//</span><span style="color: #008000;">遍历module模块的getters对象，如果找到了，则执行这个匿名函数 参数1:每个getter值 key:对应的键名</span>
+    <span style="color: #0000ff;">var</span> namespacedType = namespace + key;                             <span style="color: #008000;">//</span><span style="color: #008000;">拼凑命名空间+键名，例如:a/computedCount</span>
+    registerGetter(store, namespacedType, getter, local);             <span style="color: #008000;">//</span><span style="color: #008000;">依次执行registerGetter</span>
+<span style="color: #000000;">  });
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>&nbsp;registerGetter用于注册每个getter，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> registerGetter (store, type, rawGetter, local) {         <span style="color: #008000;">//</span><span style="color: #008000;">注册getter</span>
+  <span style="color: #0000ff;">if</span> (store._wrappedGetters[type]) {                                <span style="color: #008000;">//</span><span style="color: #008000;">如果store._wrappedGetters下已经有key了</span>
+<span style="color: #000000;">    {
+      console.error((</span>"[vuex] duplicate getter key: " + type));        <span style="color: #008000;">//</span><span style="color: #008000;">则报错，即不允许重复</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  store._wrappedGetters[type] </span>= <span style="color: #0000ff;">function</span> wrappedGetter (store) {    <span style="color: #008000;">//</span><span style="color: #008000;">保存到store._wrappedGetters对应的type里</span>
+    <span style="color: #0000ff;">return</span> rawGetter(                                                 <span style="color: #008000;">//</span><span style="color: #008000;">执行store函数 四个参数分别为local state、local getters、root state、root getters</span>
+      local.state, <span style="color: #008000;">//</span><span style="color: #008000;"> local state</span>
+      local.getters, <span style="color: #008000;">//</span><span style="color: #008000;"> local getters</span>
+      store.state, <span style="color: #008000;">//</span><span style="color: #008000;"> root state</span>
+      store.getters <span style="color: #008000;">//</span><span style="color: #008000;"> root getters</span>
+<span style="color: #000000;">    )
+  };
+}</span></pre>
+</div>
+<p>这样在 store.<span style="color: #000000;">_wrappedGetters</span>中就存储了对应的getter了，是一个匿名函数，函数有一个参数是store,这个是vuex.store()的实例，一会创建vue实例时会传入的，这样在geter里就能访问到根模块的state和getters了</p>
+<p>例子执行到这里对应的<span style="color: #000000;">_wrappedGetters如下:</span></p>
+<p><img src="./images/vuex 源码解析(三) getter属性详解0.png" alt="" /></p>
+<p>最后Vuex走到resetStoreVM()去创建一个Vue实例时，和getter有关的逻辑如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> resetStoreVM (store, state, hot) {           <span style="color: #008000;">//</span><span style="color: #008000;">重新存储数据</span>
+    <span style="color: #0000ff;">var</span> oldVm =<span style="color: #000000;"> store._vm;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> bind store public getters</span>
+    store.getters =<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">var</span> wrappedGetters = store._wrappedGetters;               <span style="color: #008000;">//</span><span style="color: #008000;">获取store的所有getter信息，也就是上面保存的数据，每个值是一个匿名函数</span>
+    <span style="color: #0000ff;">var</span> computed = {};                                        <span style="color: #008000;">//</span><span style="color: #008000;">用于存储最后的计算属性</span>
+    forEachValue(wrappedGetters, <span style="color: #0000ff;">function</span> (fn, key) {         <span style="color: #008000;">//</span><span style="color: #008000;">遍历wrappedGetters</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> use computed to leverage its lazy-caching mechanism</span>
+      computed[key] = <span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span> fn(store); };        <span style="color: #008000;">//</span><span style="color: #008000;">将computed[key]定义为一个函数表达式，内部返回fn()执行后的结果，传入store参数，这样在geter里就能访问到根模块的state和getters了</span>
+      Object.defineProperty(store.getters, key, {               <span style="color: #008000;">//</span><span style="color: #008000;">设置store.getters的key的访问器属性,这样就可以通过store.getters.aaa访问到某个具体的值了</span>
+        get: <span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span><span style="color: #000000;"> store._vm[key]; },
+        enumerable: </span><span style="color: #0000ff;">true</span> <span style="color: #008000;">//</span><span style="color: #008000;"> for local getters</span>
+<span style="color: #000000;">      });
+    });
+
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  }</span></pre>
+</div>
+<p>之后如果有修改了state里的信息，getter里的信息都会自动更新的，这个归功于Vue的响应式设计了。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

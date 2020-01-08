@@ -1,0 +1,110 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修VUE程序调试的方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>VUE程序调试的方法</center></div><div class='banquan'>原文出处:本文由博客园博主JerryMouseLi提供。<br/>
+原文连接:https://www.cnblogs.com/JerryMouseLi/p/11032840.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#vue程序调试的方法">VUE程序调试的方法</a></li>
+        <li><a href="#写本文的背景">1.写本文的背景</a></li>
+        <li><a href="#调试与测试">2.调试与测试</a></li>
+        <li><a href="#console调试法">3.Console调试法</a><ul>
+        <li><a href="#添加console.log指令">3.1 添加console.log指令</a></li>
+        <li><a href="#调出温度界面如下">3.2 调出温度界面如下</a></li>
+        <li><a href="#google浏览器的console窗口">3.3 Google浏览器的Console窗口</a></li>
+        <li><a href="#console.error输出">3.4 console.error输出</a></li>
+        <li><a href="#浏览器输出">3.5 浏览器输出</a></li>
+        </ul></li>
+        <li><a href="#alert-调试法">4.alert 调试法</a><ul>
+        <li><a href="#alert方法代码">4.1 alert方法代码</a></li>
+        <li><a href="#alert提示效果">4.2 alert提示效果</a></li>
+        </ul></li>
+        <li><a href="#断点调试法">5 断点调试法</a><ul>
+        <li><a href="#设置断点">5.1 设置断点</a></li>
+        <li><a href="#运行代码">5.2 运行代码</a></li>
+        <li><a href="#输入关心的属性">5.3 输入关心的属性</a><ul>
+        <li><a href="#watch中观察数据">5.3.1 Watch中观察数据</a></li>
+        <li><a href="#console中观察数据">5.3.2 Console中观察数据</a></li>
+        </ul></li>
+        <li><a href="#输入想要执行的方法">5.4 输入想要执行的方法</a><ul>
+        <li><a href="#写一个调试方法output">5.4.1 写一个调试方法output()</a></li>
+        <li><a href="#设置断点并运行程序">5.4.2 设置断点并运行程序</a></li>
+        <li><a href="#执行方法运行程序">5.4.3 执行方法运行程序</a></li>
+        </ul></li>
+        </ul></li>
+        </ul>
+    </div>
+</div>
+<h1 id="vue程序调试的方法">VUE程序调试的方法</h1>
+<h1 id="写本文的背景">1.写本文的背景</h1>
+<p>因为程序的调试非常重要，程序猿可以利用好的调试方法去查找定位自己的问题所在之处。从而，达到纠正自己程序错误的地方，健壮自己的程序，让问题变得越来越少，程序变得越来越健康。故作此文，而且日后会将实用的调试程序方法不断进行迭代更新。</p>
+<h1 id="调试与测试">2.调试与测试</h1>
+<p>调式与测试实际有异曲同工之妙，只不过对象不同。测试面向的是产品级，系统级；而调试往往是程序里的某一部分，某个方法，某个属性或者对象。最终效果也很类似，好的测试人员，测试方案可以将产品系统的问题解决在摇篮中；好的调试方法也会让你对程序的运行理解很深刻，对问题的查找定位变得很容易，让软件运行得更稳定。</p>
+<h1 id="console调试法">3.Console调试法</h1>
+<h2 id="添加console.log指令">3.1 添加console.log指令</h2>
+<p>在代码中添加console.log()方法，这里例子输出从数据库读回来的最高最低温，详见如下：<br />
+<img src="./images/VUE程序调试的方法0.png" /></p>
+<h2 id="调出温度界面如下">3.2 调出温度界面如下</h2>
+<p><img src="./images/VUE程序调试的方法1.png" /></p>
+<h2 id="google浏览器的console窗口">3.3 Google浏览器的Console窗口</h2>
+<p>在Google浏览器中按F12，调出Console窗口如下。<br />
+<img src="./images/VUE程序调试的方法2.png" /></p>
+<h2 id="console.error输出">3.4 console.error输出</h2>
+<p>将代码改成Error输出如下<br />
+<img src="./images/VUE程序调试的方法3.png" /></p>
+<h2 id="浏览器输出">3.5 浏览器输出</h2>
+<p>则浏览器的Console输出会变成红色如下。<br />
+<img src="./images/VUE程序调试的方法4.png" /></p>
+<p><strong>如果输出的是一个JS对象或者数组，则需要用JSON.stringify方法将其转换成json数组再输出,如下<br />
+<code>console.log(JSON.stringify(resolve));</code></strong></p>
+<h1 id="alert-调试法">4.alert 调试法</h1>
+<h2 id="alert方法代码">4.1 alert方法代码</h2>
+<p><img src="./images/VUE程序调试的方法5.png" /></p>
+<h2 id="alert提示效果">4.2 alert提示效果</h2>
+<p><img src="./images/VUE程序调试的方法6.png" /></p>
+<p><strong>备注：alert方法为阻塞式，点击确定之后，前端代码才会继续运行</strong></p>
+<h1 id="断点调试法">5 断点调试法</h1>
+<h2 id="设置断点">5.1 设置断点</h2>
+<p>设置断点debugger如下图<br />
+<img src="./images/VUE程序调试的方法7.png" /></p>
+<h2 id="运行代码">5.2 运行代码</h2>
+<p>则运行代码之后，代码会自动跳到断点，停止运行如下<br />
+<img src="./images/VUE程序调试的方法8.png" /></p>
+<h2 id="输入关心的属性">5.3 输入关心的属性</h2>
+<h3 id="watch中观察数据">5.3.1 Watch中观察数据</h3>
+<p>Watch中点“+”,然后点击回车即可，看到对应数据的值。<br />
+<img src="./images/VUE程序调试的方法9.png" /></p>
+<h3 id="console中观察数据">5.3.2 Console中观察数据</h3>
+<p>F12选择浏览器Console窗口，输入需要观察的变量名，点击回车，即可看到其对应值。<br />
+<img src="./images/VUE程序调试的方法10.png" /></p>
+<h2 id="输入想要执行的方法">5.4 输入想要执行的方法</h2>
+<p>在断点设置，停止运行后，断点之前的方法可在Console窗口中运行输出。</p>
+<h3 id="写一个调试方法output">5.4.1 写一个调试方法output()</h3>
+<p><img src="./images/VUE程序调试的方法11.png" /></p>
+<h3 id="设置断点并运行程序">5.4.2 设置断点并运行程序</h3>
+<p>详见5.1，5.2</p>
+<h3 id="执行方法运行程序">5.4.3 执行方法运行程序</h3>
+<p>可观察到执行结果如下。<br />
+<img src="./images/VUE程序调试的方法12.png" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

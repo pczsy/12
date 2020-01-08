@@ -1,0 +1,356 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器</center></div><div class='banquan'>原文出处:本文由博客园博主心悦君兮君不知-睿提供。<br/>
+原文连接:https://www.cnblogs.com/ruigege0000/p/11111902.html</div><br>
+    <p>一、id选择器和classable选择器的区别</p>
+<table border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" nowrap="nowrap" width="89">
+<p>选择器</p>
+</td>
+<td valign="top" nowrap="nowrap" width="109">
+<p>CSS中的开头</p>
+</td>
+<td valign="top" nowrap="nowrap" width="168">
+<p>HTML标签可以绑定几个</p>
+</td>
+<td valign="top" nowrap="nowrap" width="241">
+<p>是否可重复</p>
+</td>
+<td valign="top" nowrap="nowrap" width="376">
+<p>用途</p>
+</td>
+</tr>
+<tr>
+<td valign="top" nowrap="nowrap" width="89">
+<p>id选择器</p>
+</td>
+<td valign="top" nowrap="nowrap" width="109">
+<p>#</p>
+</td>
+<td valign="top" nowrap="nowrap" width="168">
+<p>仅能一个</p>
+</td>
+<td valign="top" nowrap="nowrap" width="241">
+<p>不可以重复（一个标签里仅有一个）</p>
+</td>
+<td valign="top" nowrap="nowrap" width="376">
+<p>一般情况下是给JS用的，除非特殊情况下才给设置样式用</p>
+</td>
+</tr>
+<tr>
+<td valign="top" nowrap="nowrap" width="89">
+<p>class选择器</p>
+</td>
+<td valign="top" nowrap="nowrap" width="109">
+<p>.</p>
+</td>
+<td valign="top" nowrap="nowrap" width="168">
+<p>可以多个</p>
+</td>
+<td valign="top" nowrap="nowrap" width="241">
+<p>可以重复（多对多的关系）</p>
+</td>
+<td valign="top" nowrap="nowrap" width="376">
+<p>专门用来设置样式的</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>二、选择器的技巧可以节省代码行数</p>
+<p>看好问题：做一个网页</p>
+<p>&ldquo;我是好人&rdquo;（颜色：红色；格式：宋体）</p>
+<p>&ldquo;我是学生&rdquo;（颜色：绿色；格式：宋体）</p>
+<p>&rdquo;我是坏人&ldquo;（颜色：红色；格式：楷体）</p>
+<p>正常的编码是：就是按照一段一段的写</p>
+<p>好处是清晰，每一段知道设置的什么，互不干扰，但是冗余代码太多。</p>
+<p>我们需要转换思路，以属性为中心，先设置好，在配到标签上去，可以节省代码。</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        .d1{           
+
+            color:red;
+
+            font-family: 宋体;
+
+        }
+
+        .d2{
+
+            color:green;
+
+            font-family: 宋体;
+
+        }
+
+        .d3{
+
+            color:red;
+
+            font-family: 楷体;
+
+        }
+
+        ......省略代码......
+
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="d1"</span><span style="color: #0000ff;">&gt;</span>我是好人<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="d2"</span><span style="color: #0000ff;">&gt;</span>我是学生<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="d3"</span><span style="color: #0000ff;">&gt;</span>我是坏人<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>我们改进代码：显示的一致，这也是对class性质（多标签可对多个class选择器）的应用，否则我们全用id选择器不也一样，一旦大网站开发，涉及到文本图片是庞大，先定义好格式，配到文本图片</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">.color_red{
+
+            color: red;
+
+        }
+
+        .color_green{
+
+            color:green;
+
+        }
+
+        .ff_songti{
+
+            font-family: 宋体;
+
+        }
+
+        .ff_kaiti{
+
+            font-family: 楷体;
+
+        }
+
+        ......省略代码......
+
+        </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="color_red ff_songti"</span><span style="color: #0000ff;">&gt;</span>我是好人<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="color_green ff_songti"</span><span style="color: #0000ff;">&gt;</span>我是学生<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="color_red ff_kaiti"</span><span style="color: #0000ff;">&gt;</span>我是坏人<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+ </pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器1.png" alt="" /></p>
+<p> <br clear="ALL" />
+</p>
+<p>二、后代选择器</p>
+<p>1.定义：找到指定标签的所有后代标签然后设置属性。用途即为：企业开发会有上千上万标签，因此挨个写class或者id就累死了，因此div应运而生。</p>
+<p>2.格式：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">标签属性1  标签属性2｛
+
+            属性：值；
+
+ 
+
+｝</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>3.含义：先找到名称叫做标签名称1的标签，然后在这个标签下面去查找所有名称为标签名称2的标签，然后再设置属性</p>
+<p>4.注意：</p>
+<p>（1）后代选择器必须使用空格隔开</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">       div p{
+
+            color:red;
+
+        }
+
+..........省略代码........
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是段落1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器2.png" alt="" /></p>
+<p>
+  
+  
+ <br clear="ALL" />
+</p>
+<p>（2）后代不仅仅是儿子，也包括孙子/重孙子等等</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">  div p{
+
+            color:red;
+
+        }
+
+..........省略代码......
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>重孙子标签p，试一试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p> <br clear="ALL" />
+</p>
+<p>（3）后代选择器不仅仅可以使用标签名称，还可以使用其他选择器（这个性质更具扩展性，代表div下面一堆各种标签都统一了格式，选择器样式会有这么就是为了减轻我们的编码负担，能够适配各种场景，找到最优解）</p>
+<p>一个id的例子：</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">   #test1 p{
+
+            color:blue;
+
+        }
+
+ ..........省略代码......      
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="test1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="test2"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p> <br clear="ALL" />
+</p>
+<p>另一个class的例子：</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> .test2{
+
+            color:green;
+
+        }
+
+ ..........省略代码......      
+
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="test1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="test2"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器5.png" alt="" /></p>
+<p>&nbsp;</p>
+<p> <br clear="ALL" />
+</p>
+<p>（4）div标签里面的标签也可以使用id，class属性也都能搭配</p>
+<p>格式：只演示id的，class的把#换成.就行了</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">#div的id名称   #div里面的标签的id名称｛
+
+        属性：名称；
+
+        ｝</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>（5）div标签可以向下无限延伸</p>
+<p>格式：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">div ul li p{
+
+    属性：值：
+
+｝
+
+ </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例如：</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">   div ul li p{
+
+            color:red;
+
+        }
+
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是段落1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="test1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="test2"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>我是红的2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>重孙子标签p，试一试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器6.png" alt="" /></p>
+<p>&nbsp;</p>
+<p> <br clear="ALL" />
+</p>
+<p>二、源码：</p>
+<p>d70_id_selector&amp;class_selector</p>
+<p>d71_posterity_selector</p>
+<p>地址:</p>
+<p>https://github.com/ruigege66/HTML_learning/tree/master</p>
+<p>2.CSDN：https://blog.csdn.net/weixin_44630050（心悦君兮君不知-睿）</p>
+<p>3.博客园：https://www.cnblogs.com/ruigege0000/</p>
+<p>4.欢迎关注微信公众号：傅里叶变换，后台回复&ldquo;礼包&rdquo;获取Java大数据学习视频礼包</p>
+<p><img src="./images/HTML连载18-id选择器与class区别&amp;class选择器使用思路&amp;后代选择器7.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,122 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序开发--页面之间的跳转' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序开发--页面之间的跳转</center></div><div class='banquan'>原文出处:本文由博客园博主个人升级打怪提供。<br/>
+原文连接:https://www.cnblogs.com/DreamchaserHe/p/11214433.html</div><br>
+    <h3>一、navigator--完成页面之间的跳转</h3>
+<p>1、新建一个页面文件夹</p>
+<p><img src="./images/微信小程序开发--页面之间的跳转0.png" alt="" /></p>
+<div>2、在app.json文件中引入页面</div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">"</span><span style="color: #800000;">pages</span><span style="color: #800000;">"</span><span style="color: #000000;">: [
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">pages/index/index</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">pages/ranking/ranking</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  ],</span></pre>
+</div>
+<p>3、在wxml页面中用navgator标签实现跳转</p>
+<div>
+<div class="cnblogs_code">
+<pre><code>&lt;navigator url=<span style="color: #800000;">"</span><span style="color: #800000;">../ranking/ranking</span><span style="color: #800000;">"</span>&gt;排行榜&lt;/navigator&gt;</pre>
+</div>
+<h3>二、页面间跳转和传值</h3>
+<p>1、在地址后面用<strong> ?属性=属性值&nbsp;</strong> 的方式传值，多个属性之间用 <strong>&amp;</strong> 连接</p>
+<div class="cnblogs_code">
+<pre><code>&lt;navigator url=<span style="color: #800000;">"</span><span style="color: #800000;">../ranking/ranking?name=月排行榜&amp;age=1</span><span style="color: #800000;">"</span>&gt;排行榜&lt;/navigator&gt;</pre>
+</div>
+<p>2、在跳转后的页面的&nbsp;<strong>.js&nbsp;</strong>文件中接收值,<strong>options</strong>中数据就是页面跳转时传递的值</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">Page({
+    onLoad: function (options) {
+    console.log(options)
+  }
+})</span></pre>
+</div>
+<h4>注:reditect跳转，这个跳转是没有过度的，不能返回，适用于只出现一次的页面</h4>
+<div class="cnblogs_code">
+<pre><code>  &lt;navigator url=<span style="color: #800000;">"</span><span style="color: #800000;">../ranking/ranking?name=月排行榜&amp;age=1</span><span style="color: #800000;">"</span> redirect&gt;排行榜&lt;/navigator&gt;</pre>
+</div>
+<h3>&nbsp;三、微信小程序使用API跳转</h3>
+<p><img src="./images/微信小程序开发--页面之间的跳转1.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>&lt;!-- index.wxml --&gt;
+&lt;view&gt;
+  &lt;navigator url=<span style="color: #800000;">'</span><span style="color: #800000;">../demo1/demo1</span><span style="color: #800000;">'</span>&gt;普通页面跳转&lt;/navigator&gt;
+  &lt;button bindtap=<span style="color: #800000;">'</span><span style="color: #800000;">ondemo1</span><span style="color: #800000;">'</span>&gt;通过API跳转&lt;/button&gt;
+  &lt;button bindtap=<span style="color: #800000;">'</span><span style="color: #800000;">ondemo2</span><span style="color: #800000;">'</span>&gt;通过API跳转，不能返回&lt;/button&gt;
+&lt;/view&gt;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">index.js
+</span><span style="color: #008000;">//</span><span style="color: #008000;">获取应用实例</span>
+<span style="color: #0000ff;">const</span> app =<span style="color: #000000;"> getApp()
+
+Page({
+  ondemo1:function(){
+    wx:wx.navigateTo({
+      url: </span><span style="color: #800000;">'</span><span style="color: #800000;">../demo1/demo1</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+      success: function(res) {
+        console.log(</span><span style="color: #800000;">"</span><span style="color: #800000;">通过API跳转成功</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+      },
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> 成功时的回调函数</span>
+<span style="color: #000000;">      fail: function(res) {},
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">失败时的回调函数</span>
+<span style="color: #000000;">      complete: function(res) {},
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">完成时的回调函数，无论成功或失败都会执行</span>
+<span style="color: #000000;">    })
+  },
+  ondemo2:function(){
+    wx:wx.redirectTo({
+      url: </span><span style="color: #800000;">'</span><span style="color: #800000;">../demo2/demo2</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+      success: function(res) {},
+      fail: function(res) {},
+      complete: function(res) {},
+    })
+  }
+})</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code>&lt;!--pages/demo1/demo1.wxml--&gt;
+&lt;text&gt;pages/demo1/demo1.wxml&lt;/text&gt;
+&lt;button bindtap=<span style="color: #800000;">'</span><span style="color: #800000;">toback</span><span style="color: #800000;">'</span>&gt;返回上一级&lt;/button&gt;</pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> pages/demo1/demo1.js</span>
+<span style="color: #000000;">Page({
+  toback:function(){
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> wx:wx.navigateBack()</span>
+<span style="color: #000000;">    wx:wx.navigateBack({
+      delta: </span><span style="color: #800080;">1</span><span style="color: #000000;">,
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">delta指定返回的页面，默认是1</span>
+<span style="color: #000000;">    })
+  }
+})</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,413 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修使用Eclipse开发Web项目（JSP）——简单登录、无sql' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>使用Eclipse开发Web项目（JSP）——简单登录、无sql</center></div><div class='banquan'>原文出处:本文由博客园博主Neumann97提供。<br/>
+原文连接:https://www.cnblogs.com/dream-by-dream/p/11699088.html</div><br>
+    <h2 class="md-end-block md-heading"><span class="md-plain md-expand">1.使用Eclipse开发Web项目（JSP）<span class="md-tab"> <span class="md-plain">tomcat</span></span></span></h2>
+<h2 class="md-end-block md-heading"><span class="md-plain">2.在Eclipse中创建的Web项目：</span></h2>
+<p class="md-end-block md-p"><span class="md-plain">浏览器可以直接访问webContent中的文件</span></p>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">例如<span class="md-link"><a href="http://localhost:8080/MyJspProject/index1.jsp">http://localhost:8080/MyJspProject/index1.jsp</a></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">其中的index1.jsp就在WebContent目录中；</span></p>
+<p class="md-end-block md-p"><span class="md-plain">但是WEB-INF中的文件 无法通过客户端（浏览器）直接访问，只能通过请求转发来访问</span></p>
+<p class="md-end-block md-p"><span class="md-plain">注意：并不是任何的内部跳转都能访问WEB-INF；原因是跳转有两种方式：请求转发、重定向</span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">3.配置tomcat运行时环境</span></h2>
+<p class="md-end-block md-p"><span class="md-plain">jsp &lt;-&gt;Servlet</span></p>
+<p class="md-end-block md-p"><span class="md-plain">a.将tomcat/lib中的servlet-api.jar加入项目的构建路径（只加一个）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">b.右键项目 -&gt; Build Path -&gt; Add library - Server Runtime（加一堆jar）【推荐】</span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">4.部署tomcat</span></h2>
+<p class="md-end-block md-p"><span class="md-plain">在servers面板新建一个tomcat实例，再在该实例中部署项目（右键-add）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">注意：一般建议将eclipse中的tomcat与本地tomcat保持一致；</span></p>
+<p class="md-end-block md-p"><span class="md-plain">将eclipse中的tomcat设置为托管模式：【第一次】创建tomcat实例之后，双击，选择Server Location的第二个</span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">5.统一字符集编码</span></h2>
+<h3 class="md-end-block md-heading"><span class="md-plain">a.编码分类：</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">设计jsp文件的编码（jsp文件中的pageEncodeing属性）：jsp -&gt; java</span></p>
+<p class="md-end-block md-p"><span class="md-plain">设置浏览器读取jsp文件的编码（jsp文件中content属性）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">一般将上述设置成一致的编码，推荐使用UTF-8</span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">b.文本编码：</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">i.将整个Eclipse中的文件统一设置（以后的jsp编码都会utf-8）【推荐】</span></p>
+<p class="md-end-block md-p"><span class="md-plain">ii.设置某一项目（右键文件-properties）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">iii.设置单独文件</span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">6.JSP的页面元素</span></h2>
+<p class="md-end-block md-p"><span><strong><span class="md-plain">HTML<span class="md-tab"> <span class="md-plain">java代码（脚本Scriptlet）<span class="md-tab"> <span class="md-plain">指令<span class="md-tab"> <span class="md-plain">注释</span></span></span></span></span></span></span></strong></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">a.脚本Scriptlet</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">i.</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">2</span> <span style="background-color: #f5f5f5; color: #000000;">    局部变量、java语句
+</span><span style="color: #008080;">3</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">ii.</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">!
+</span><span style="color: #008080;">2</span> <span style="background-color: #f5f5f5; color: #000000;">    全局变量、定义方法
+</span><span style="color: #008080;">3</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">iii.</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">=</span>
+<span style="color: #008080;">2</span> <span style="background-color: #f5f5f5; color: #000000;">    输出表达式
+</span><span style="color: #008080;">3</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">修改web.xml、配置文件、java需要重启tomcat服务，但是如果修改Jsp/html/js/css代码不需要重启</span></p>
+<p class="md-end-block md-p"><span class="md-plain">注意：out.println()不能回车；要想回车：<span><code>&lt;br\&gt;</code><span class="md-plain">，即out.print()<span class="md-tab"> <span><code>&lt;%= %&gt;</code><span class="md-plain">可以直接解析html代码</span></span></span></span></span></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">b.指令</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">page指令</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;">2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> import</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java.util.Date</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">属性：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">language：jsp页面使用的脚本语言</span></p>
+<p class="md-end-block md-p"><span class="md-plain">import：导入类</span></p>
+<p class="md-end-block md-p"><span class="md-plain">pageEnconding：jsp文件自身编码<span class="md-tab"> <span class="md-plain">jsp -&gt; java</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">contentType:浏览器解析自身的编码</span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">c.注释</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">html注释</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">可以被客户通过浏览器查看源码所观察到</span><span style="color: #008000;">--&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">java注释</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">//
+</span><span style="color: #008080;">2</span> /*...*/</pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">jsp注释</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">--</span>    <span style="background-color: #f5f5f5; color: #000000;">--</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<h2 class="md-end-block md-heading"><span class="md-plain">7.JSP九大内置对象</span></h2>
+<p class="md-end-block md-p"><span><strong>（自带，无需new也能使用的对象）</strong></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">out:输出对象，向客户端输出内容</span></h3>
+<h3 class="md-end-block md-heading"><span class="md-plain">request：请求对象；存储&ldquo;客户端向服务端发送的请求消息&ldquo;</span></h3>
+<h4 class="md-end-block md-heading"><span class="md-plain">request对象的常见方法：</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">String getParameter(String name);<span class="md-tab"> <span class="md-plain">根据请求的字段名key（input标签的name属性），返回字段值value（input标签的value属性）</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">String[] getParameterValues(String name);<span class="md-tab"> <span class="md-plain">根据请求的字段名key，返回多个字段值value（checkbox）</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">void setCharacterEncoding("编码格式utf-8");<span class="md-tab"> <span class="md-plain">设置post请求编码（tomcat7以前默认iso-8859-1，tomcat8以后改成了utf-8）</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">getRequestDispartcher("b.jsp").forward(request,response);<span class="md-tab"> <span class="md-plain">请求转发的方式跳转页面<span class="md-tab"> <span class="md-plain">A -&gt; B</span></span></span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">ServletContext getServerContext();<span class="md-tab"> <span class="md-plain">获取项目的ServletContext对象</span></span></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">示例：注册</span></h4>
+<h5 class="md-end-block md-heading"><span class="md-plain">register.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="show.jsp"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         用户名：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uname"</span><span style="color: #0000ff;">/&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">12</span>         密<span style="color: #ff0000;">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>码：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="upwd"</span><span style="color: #0000ff;">/&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">13</span>         年<span style="color: #ff0000;">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>龄：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uage"</span><span style="color: #0000ff;">/&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">14</span>         爱<span style="color: #ff0000;">&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>好：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="checkbox"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uhobbies"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="足球"</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">足球
+</span><span style="color: #008080;">16</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="checkbox"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uhobbies"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="篮球"</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">篮球
+</span><span style="color: #008080;">17</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="checkbox"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uhobbies"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="乒乓球"</span><span style="color: #0000ff;">/&gt;</span>乒乓球<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="注册"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">20</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h5 class="md-end-block md-heading"><span class="md-plain">show.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">11</span>         <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">设置编码
+</span><span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #000000;">        request.setCharacterEncoding(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">utf-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">13</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> name </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">14</span>         <span style="background-color: #f5f5f5; color: #0000ff;">int</span><span style="background-color: #f5f5f5; color: #000000;"> age </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">Integer</span><span style="background-color: #f5f5f5; color: #000000;">.parseInt(request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uage</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">));
+</span><span style="color: #008080;">15</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> pwd </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">upwd</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">16</span>         
+<span style="color: #008080;">17</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;">[] hobbies </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameterValues(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uhobbies</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">18</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">19</span>     注册成功，信息如下：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">20</span>     姓名：<span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">name </span><span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">21</span>     年龄：<span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">age </span><span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">22</span>     密码：<span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">pwd </span><span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">23</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">24</span>         <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(hobbies !</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">){     </span><span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">控制没有爱好则不显示
+</span><span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #000000;">            out.print(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">爱好：</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">26</span>             <span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;">(</span><span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> hobby:hobbies){
+</span><span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #000000;">                out.print(hobby </span><span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">&amp;nbsp;</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #000000;">        }
+</span><span style="color: #008080;">30</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">31</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">32</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-link"><a href="http://localhost:8080/MyJspProject/show.jsp?uname=zs&amp;upwd=abc&amp;uage=22&amp;uhobbies=%E7%AF%AE%E7%90%83&amp;uhobbies=%E4%B9%92%E4%B9%93%E7%90%83">http://localhost:8080/MyJspProject/show.jsp?uname=zs&amp;upwd=abc&amp;uage=22&amp;uhobbies=%E7%AF%AE%E7%90%83&amp;uhobbies=%E4%B9%92%E4%B9%93%E7%90%83</a></span></p>
+<p class="md-end-block md-p"><span class="md-plain">连接/文件?参数名1=参数值1&amp;参数名2=参数值2&amp;参数名3=参数值3</span></p>
+<p class="md-end-block md-p"><span class="md-plain">get提交方式：method="get"和地址栏、超链接（<span><code>&lt;a href="xx"&gt;</code><span class="md-plain">）请求方式默认都属于get提交方式</span></span></span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">get与post请求方式的区别：</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">a.get方式在地址栏显示请求信息（但是地址栏能够容纳的信息有限，4-5KB；如果请求数据存在大文件）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">b.文件上传操作，必须是post【推荐】</span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">response：响应对象</span></h3>
+<h4 class="md-end-block md-heading"><span class="md-plain">提供的方法：</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">void addCookie(Cookie cookie);<span class="md-tab"> <span class="md-plain">服务端向客户端增加cookie对象</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">void sendRedirect(String location) throws IOException;<span class="md-tab"> <span class="md-plain">页面跳转的一种方式（重定向）</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">void setContentType(String type);设置服务端响应的代码（设置服务端的contentType类型）</span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">示例：登录</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">login.jsp -&gt; check.jsp -&gt; success.jsp</span></p>
+<h5 class="md-end-block md-heading"><span class="md-plain">login.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="check.jsp"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         用户名：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uname"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">12</span>         密码:<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="upwd"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="登录"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">14</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h5 class="md-end-block md-heading"><span class="md-plain">check.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">        request.setCharacterEncoding(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">utf-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">12</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> name </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">13</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> pwd </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">upwd</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">14</span>         <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(name.equals(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">zs</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)</span><span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;">pwd.equals(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">abc</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)){
+</span><span style="color: #008080;">15</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">通过重定向跳转,结果导致数据丢失
+</span><span style="color: #008080;">16</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">response.sendRedirect(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">success.jsp</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">17</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">请求转发跳转:可以获取到数据，并且地址栏没有改变（仍然保留转发时的页面）
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">            request.getRequestDispatcher(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">success.jsp</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).forward(request, response);
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">        }</span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;">{
+</span><span style="color: #008080;">20</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">登录失败
+</span><span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #000000;">            out.print(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">用户名或密码错误！</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #000000;">        }
+</span><span style="color: #008080;">23</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">24</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">25</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h5 class="md-end-block md-heading"><span class="md-plain">success.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     登陆成功！<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">11</span> <span style="color: #000000;">    欢迎您：
+</span><span style="color: #008080;">12</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">13</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> name </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">        out.print(name);
+</span><span style="color: #008080;">15</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">16</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h4 class="md-end-block md-heading"><span class="md-plain">请求转发和重定向的区别</span></h4>
+<table class="md-table">
+<thead>
+<tr class="md-end-block"><th>&nbsp;</th><th><span class="td-span"><span class="md-plain">请求转发</span></span></th><th><span class="td-span"><span class="md-plain">重定向</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">地址栏是否改变</span></span></td>
+<td><span class="td-span"><span class="md-plain">不变（check.jsp）</span></span></td>
+<td><span class="td-span"><span class="md-plain">改变（success.jsp）</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">是否保留第一次请求时的数据</span></span></td>
+<td><span class="td-span"><span class="md-plain">保留</span></span></td>
+<td><span class="td-span"><span class="md-plain">不保留 --4种范围对象</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">请求的次数</span></span></td>
+<td><span class="td-span"><span class="md-plain">1</span></span></td>
+<td><span class="td-span"><span class="md-plain">2</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">跳转发生的位置</span></span></td>
+<td><span class="td-span"><span class="md-plain">服务端</span></span></td>
+<td><span class="td-span"><span class="md-plain">客户端发起的第二次跳转</span></span></td>
+</tr>
+</tbody>
+</table>
+<p class="md-end-block md-p"><span class="md-plain">转发、重定向：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">转发：张三（客户端） -&gt; 【服务窗口A（服务器） -&gt; 服务窗口B】</span></p>
+<p class="md-end-block md-p"><span class="md-plain">重定向：张三（客户端） -&gt; 服务窗口A（服务端） -&gt; 去找B</span></p>
+<p class="md-end-block md-p"><span class="md-tab"> <span class="md-plain">张三（客户端） -&gt;服务窗口B（服务端） -&gt; 结束</span></span></p>
+<h3 class="md-end-block md-heading"><span class="md-plain">session（服务端，内置对象）</span></h3>
+<h4 class="md-end-block md-heading"><span class="md-plain">Cookie（客户端，不是内置对象）：</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">Cookie是由服务端生成的，再发给客户端保存</span></p>
+<p class="md-end-block md-p"><span class="md-plain">相当于<span><strong>本地缓存</strong><span class="md-plain">的作用：客户端（hello.jsp）-&gt;服务端（hello.mp4；zs/abc）</span></span></span></p>
+<h5 class="md-end-block md-heading"><span class="md-plain">作用：提高访问服务器的效率，但是安全性较差。</span></h5>
+<p class="md-end-block md-p"><span class="md-plain">Cookie：key=value</span></p>
+<p class="md-end-block md-p"><span class="md-plain">javax.servlet.http.Cookie</span></p>
+<p class="md-end-block md-p"><span class="md-plain">public Cookie(String name,String value)</span></p>
+<p class="md-end-block md-p"><span class="md-plain">String getName()<span class="md-tab"> <span class="md-plain">获取name</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">String getValue()<span class="md-tab"> <span class="md-plain">获取value</span></span></span></p>
+<p class="md-end-block md-p"><span class="md-plain">void setMaxAge(int expiry);<span class="md-tab"> <span class="md-plain">最大有效期（s）</span></span></span></p>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">服务器准备Cookie：</span></p>
+<p class="md-end-block md-p"><span class="md-plain">response.addCookie(Cookie cookie)</span></p>
+<p class="md-end-block md-p"><span class="md-plain">页面跳转（转发、重定向）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">客户端获取Cookie：request.getCookies();</span></p>
+</blockquote>
+<p class="md-end-block md-p"><span class="md-plain">a.服务端增加Cookie：response对象；客户端获取对象：request对象</span></p>
+<p class="md-end-block md-p"><span class="md-plain">b.不能直接获取某一个单独对象，只能一次性将全部的Cookie拿到</span></p>
+<blockquote>
+<p class="md-end-block md-p"><span class="md-plain">通过F12可以发现，除了自己设置的Cookie对象外，还有一个name为JSESSIONID的cookie</span></p>
+<p class="md-end-block md-p"><span class="md-plain">建议cookie中只保存英文、数字，否则需要进行编码、解码处理</span></p>
+<p class="md-end-block md-p"><span class="md-plain">使用Cookie实现记住用户名操作</span></p>
+</blockquote>
+<h5 class="md-end-block md-heading"><span class="md-plain">login.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">!
+</span><span style="color: #008080;">11</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> uname;
+</span><span style="color: #008080;">12</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">13</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">        Cookie[] cookies </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getCookies();
+</span><span style="color: #008080;">15</span>         <span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;">(Cookie cookie:cookies){
+</span><span style="color: #008080;">16</span>             <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(cookie.getName().equals(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)){
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">                uname </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> cookie.getValue();
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">        }
+</span><span style="color: #008080;">20</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">21</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">="check.jsp"</span><span style="color: #ff0000;"> method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>         用户名：<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uname"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="&lt;%=(uname==null?"</span><span style="color: #ff0000;">":uname)%</span><span style="color: #0000ff;">&gt;</span>"&gt;<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">23</span>         密码:<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="upwd"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">24</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="登录"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">25</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">26</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">27</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h5 class="md-end-block md-heading"><span class="md-plain">check.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">        request.setCharacterEncoding(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">utf-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">12</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> name </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">13</span>         <span style="background-color: #f5f5f5; color: #0000ff;">String</span><span style="background-color: #f5f5f5; color: #000000;"> pwd </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> request.getParameter(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">upwd</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">14</span>         
+<span style="color: #008080;">15</span>         <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">将用户名加入到Cookie中
+</span><span style="color: #008080;">16</span>         <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">Cookie cookie </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Cookie(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">key</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">value</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">        Cookie cookie </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Cookie(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">uname</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,name);
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">        response.addCookie(cookie);
+</span><span style="color: #008080;">19</span>         
+<span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">        response.sendRedirect(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">result.jsp</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">21</span>         
+<span style="color: #008080;">22</span>         <span style="background-color: #f5f5f5; color: #000000;">/*</span> <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">(name.equals(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">zs</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)</span><span style="background-color: #f5f5f5; color: #000000;">&amp;&amp;</span><span style="background-color: #f5f5f5; color: #000000;">pwd.equals(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">abc</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)){
+</span><span style="color: #008080;">23</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">通过重定向跳转,结果导致数据丢失
+</span><span style="color: #008080;">24</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">response.sendRedirect(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">success.jsp</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">25</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">请求转发跳转:可以获取到数据，并且地址栏没有改变（仍然保留转发时的页面）
+</span><span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #000000;">            request.getRequestDispatcher(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">success.jsp</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).forward(request, response);
+</span><span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #000000;">        }</span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;">{
+</span><span style="color: #008080;">28</span>             <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">登录失败
+</span><span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #000000;">            out.print(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">用户名或密码错误！</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">30</span> <span style="background-color: #f5f5f5; color: #000000;">        } </span><span style="background-color: #f5f5f5; color: #000000;">*/</span>
+<span style="color: #008080;">31</span>     <span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;">32</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h5 class="md-end-block md-heading"><span class="md-plain">result.jsp</span></h5>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span><span style="background-color: #f5f5f5; color: #000000;">@ page language</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">java</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> contentType</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">text/html; charset=UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span>
+<span style="color: #008080;"> 2</span> <span style="background-color: #f5f5f5; color: #000000;">    pageEncoding</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">UTF-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span>
+<span style="color: #008080;"> 3</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html; charset=UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Insert title here<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> <span style="color: #000000;">    仅供测试使用
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">pageContext（后面讲）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">application（后面讲）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">config（后面讲）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">page（后面讲）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">exception（后面讲）</span></p>
+<h2 class="md-end-block md-heading"><span class="md-plain">8.统一请求的编码request</span></h2>
+<h3 class="md-end-block md-heading"><span class="md-plain">get方式请求</span></h3>
+<p class="md-end-block md-p"><span class="md-plain">如果出现乱码的解决方法：</span></p>
+<h4 class="md-end-block md-heading"><span class="md-plain">a.统一改每一个变量的编码</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">new String(旧编码，新编码)</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> name = new String(name.getBytes("iso-8859-1"),"utf-8")</pre>
+</div>
+<h4 class="md-end-block md-heading"><span class="md-plain">b.修改server.xml，一次性的更改tomcat默认get提交方式的编码（utf-8）</span></h4>
+<p class="md-end-block md-p"><span class="md-plain">建议使用tomcat时，首先在server.xml中统一get方式的编码</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Connector </span><span style="color: #ff0000;">connectionTimeout</span><span style="color: #0000ff;">="20000"</span><span style="color: #ff0000;"> port</span><span style="color: #0000ff;">="8080"</span><span style="color: #ff0000;"> protocol</span><span style="color: #0000ff;">="HTTP/1.1"</span><span style="color: #ff0000;"> redirectPort</span><span style="color: #0000ff;">="8443"</span><span style="color: #ff0000;"> URIEncoding</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">2</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">添加URIEncoding="UTF-8"以后所有的get方式都是utf-8</span><span style="color: #008000;">--&gt;</span></pre>
+</div>
+<h3 class="md-end-block md-heading"><span class="md-plain">post方式请求</span></h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="background-color: #ffff00; color: #000000;">&lt;%</span>
+<span style="color: #008080;">2</span>     <span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;">设置编码
+</span><span style="color: #008080;">3</span> <span style="background-color: #f5f5f5; color: #000000;">    request.setCharacterEncoding(</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #800000;">utf-8</span><span style="background-color: #f5f5f5; color: #800000;">"</span><span style="background-color: #f5f5f5; color: #000000;">);
+</span><span style="color: #008080;">4</span> <span style="background-color: #ffff00; color: #000000;">%&gt;</span></pre>
+</div>
+<p class="md-end-block md-p"><span class="md-plain">tomcat7（iso-8859-1）</span></p>
+<p class="md-end-block md-p"><span class="md-plain">tomcat8（utf-8）</span></p>
+<p><span class="md-plain">&nbsp;</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

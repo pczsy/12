@@ -1,0 +1,258 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修响应式开发' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>响应式开发</center></div><div class='banquan'>原文出处:本文由博客园博主小咸鱼|大梦想提供。<br/>
+原文连接:https://www.cnblogs.com/SSPOFA/p/11960214.html</div><br>
+    <h3 id="响应式开发">响应式开发</h3>
+<ol>
+<li><p>响应式开发原理</p>
+<ul>
+<li><p>使用媒体查询针对不同宽度的设备进行布局和样式的设置，从而适配不同设备的目的</p>
+<table>
+<thead>
+<tr class="header">
+<th>设备划分</th>
+<th>尺寸区间</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>超小屏幕（手机）</td>
+<td>&lt;768px</td>
+</tr>
+<tr class="even">
+<td>小屏设备（平板）</td>
+<td>&gt;=768px~&lt;992px</td>
+</tr>
+<tr class="odd">
+<td>中等屏幕（桌面显示器）</td>
+<td>&gt;=992px~&lt;1200px</td>
+</tr>
+<tr class="even">
+<td>宽屏设备（大桌面显示器）</td>
+<td>&gt;=1200px</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+<li><p>响应式布局容器</p>
+<ul>
+<li>响应式需要一个父级作为布局容器，来配合子级元素来实现变化的效果</li>
+<li>【原理】在不同屏幕下，通过媒体查询来改变这个布局容器的大小，在改变里面子元素的排列方式和大小，从而实现不同屏幕下，看到不同的页面布局和样式变化</li>
+<li>响应式尺寸划分
+<ul>
+<li>超小屏幕（手机/小于768px）：设置宽度为100%</li>
+<li>小屏幕（平板，大于等于768px）：设置宽度为750px</li>
+<li>中等屏幕（桌面显示其，大于等于992px）：宽度设置为970px</li>
+<li>大屏幕（打桌面显示器，大于等于1200px）：宽度设置为1170px</li>
+</ul></li>
+</ul></li>
+<li><p>Bootstrap简介</p>
+<ul>
+<li>Bootstrap来自Twitter，是目前最受欢迎的前端框架。Bootstrap是基于HTML、CSS和JAVASCRIPT,他的简介灵活，使得Web开发更加快捷</li>
+<li>中文官网：http://www.bootcss.com/</li>
+<li>官网：http://getbootstrap.com/</li>
+<li>推荐使用：http://bootstrap.css88.com/</li>
+<li>【优点】
+<ul>
+<li>标准化的html+css编码规范</li>
+<li>提供一套简洁、直观、强悍的组件</li>
+<li>有自己的生态圈，不断的更新迭代</li>
+<li>让开发更简单，提高开发效率</li>
+</ul></li>
+</ul></li>
+<li><p>bootstrap使用</p>
+<ul>
+<li><p>创建文件夹结构</p></li>
+<li><p>创建html骨架结构</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+     &lt;!--要求当前网页使用IE浏览器最高版本的内核渲染--&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+    &lt;!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ --&gt;
+    &lt;title&gt;Bootstrap 101 Template&lt;/title&gt;
+
+    &lt;!-- Bootstrap --&gt;
+    &lt;link href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+
+    &lt;!-- HTML5 shim 和 Respond.js 是为了让 IE8 支持 HTML5 元素和媒体查询（media queries）功能 --&gt;
+    &lt;!-- 警告：通过 file:// 协议（就是直接将 html 页面拖拽到浏览器中）访问页面时 Respond.js 不起作用 --&gt;
+    &lt;!--[if lt IE 9]&gt;
+ &lt;!--解决ie9以下浏览器对html5新增标签的不识别，并导致CSS不起作用的问题--&gt;
+      &lt;script src=&quot;https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js&quot;&gt;&lt;/script&gt;
+       &lt;!--解决ie9一下浏览器对css3 Media Query的不识别--&gt;
+      &lt;script src=&quot;https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js&quot;&gt;&lt;/script&gt;
+    &lt;![endif]--&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;h1&gt;你好，世界！&lt;/h1&gt;
+
+    &lt;!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) --&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js&quot;&gt;&lt;/script&gt;
+    &lt;!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 --&gt;
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre></li>
+<li><p>引入相关样式文件</p></li>
+<li><p>书写内容</p></li>
+</ul></li>
+<li><p>bootstrap布局容器</p>
+<ul>
+<li>Bootstrap需要为页面内容和栅格系统包裹一个.container容器，Bootstrap预定义好的类</li>
+<li>.container类
+<ul>
+<li>响应式布局的容器 固定宽度</li>
+<li>大屏（&gt;=1200px）宽度定位1170px</li>
+<li>中屏（&gt;=992px）宽度定位970px</li>
+<li>小屏（&gt;=768px）宽度定位750px</li>
+<li>超小屏（100%）</li>
+</ul></li>
+<li>.contaimer-fluidlei
+<ul>
+<li>流式布局容器 百分比宽度</li>
+<li>占据全部视口（vieport）的容器</li>
+<li>适合于单独做移动端开发</li>
+</ul></li>
+</ul></li>
+<li><p>栅格系统简介</p>
+<ul>
+<li>栅格系统英文为“grid systems”,也有人翻译为“网格系统”，他是指将页面布局划分为等宽的列，然后通过列数的定义来模块化页面布局</li>
+<li>Bootstrap提供了一套响应式/移动设备优先的流式栅格系统，随着屏幕或者视口尺寸的增加，系统会自动分为最多12列</li>
+<li>Bootstrap里面container宽度是固定的，但是不同屏幕下，container的宽度不同，我们再把container划分为12等分</li>
+</ul></li>
+<li><p>栅格化选项参数</p>
+<ul>
+<li><p>栅格化系统用于通过一系列的行（row）与列（column）的组合来创建页面布局，页面内容就可以放入这些创建好的布局中。</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>超小屏幕（手机）&lt;768px</th>
+<th>小屏设备（平板）&gt;=768px</th>
+<th>中等屏幕（桌面显示器）&gt;=992px</th>
+<th>宽屏设备（大桌面显示器）&gt;=1200px</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>.container最大宽度</td>
+<td>自动（100%）</td>
+<td>750px</td>
+<td>970px</td>
+<td>1170px</td>
+</tr>
+<tr class="even">
+<td>类前缀</td>
+<td>.col-xs-</td>
+<td>.col-sm-</td>
+<td>.col-md-</td>
+<td>.col-lg-</td>
+</tr>
+<tr class="odd">
+<td>列（column）数</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>行（row）必须放在container布局容器里面</li>
+<li>实现列的平均划分 需要给列添加类前缀</li>
+<li>xs-extra small:超小；sm-small:小；md-medium:中等；lg-large:大</li>
+<li>列（column）大于12，多余的“列（column）”所在的元素将被作为一个整体另起一行排列</li>
+<li>每一列默认有左右15像素的padding</li>
+<li>可以同时为一列制定多个设备的雷鸣，以便划分不同分数，例如class=“col-md-4 col-sm-6”</li>
+</ul></li>
+</ul></li>
+<li><p>栅格列嵌套</p>
+<ul>
+<li><p>栅格系统内置的栅格系统将内容再次嵌套。简单理解就是一个列内再分成若干份小列。可以通过添加一个新的.row元素和一系列.col-sm-*元素到已经存在的.col-sm-*元素内</p></li>
+<li><p>列嵌套最好加1个row这样可以取消父元素的padding值 而且高度自动和父级一样高</p></li>
+<li><pre><code><code>&lt;div class=&quot;col-sm-4&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-sm-6&quot;&gt;a&lt;/div&gt;
+        &lt;div class=&quot;col-sm-6&quot;&gt;a&lt;/div&gt;
+    &lt;/div&gt;
+
+&lt;/div&gt;</code></pre></li>
+</ul></li>
+<li><p>栅格列偏移</p>
+<ul>
+<li>使用.col-md-offset-* 类可以将列向右侧偏移。这些类实际是通过使用* 选择器为当前元素增加了左侧的边距</li>
+</ul></li>
+<li><p>栅格列排序</p>
+<ul>
+<li>通过使用.col-md-push-* 和.col-md-pull-* 类就可以很容易的改变列（column）的顺序</li>
+</ul></li>
+<li><p>响应式工具</p>
+<ul>
+<li><p>为了加快对移动设备友好的页面开发工作，利用媒体查询功能，并使用这些工具可以方便的针对不同设备展示或隐藏页面内容</p>
+<table>
+<thead>
+<tr class="header">
+<th>类名</th>
+<th>超小屏</th>
+<th>小屏</th>
+<th>中屏</th>
+<th>大屏</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>.hidden-xs</td>
+<td>隐藏</td>
+<td>可见</td>
+<td>可见</td>
+<td>可见</td>
+</tr>
+<tr class="even">
+<td>.hidden-sm</td>
+<td>可见</td>
+<td>隐藏</td>
+<td>可见</td>
+<td>可见</td>
+</tr>
+<tr class="odd">
+<td>.hidden-md</td>
+<td>可见</td>
+<td>可见</td>
+<td>隐藏</td>
+<td>可见</td>
+</tr>
+<tr class="even">
+<td>.hidden-lg</td>
+<td>可见</td>
+<td>可见</td>
+<td>可见</td>
+<td>隐藏</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

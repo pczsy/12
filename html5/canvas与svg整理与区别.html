@@ -1,0 +1,256 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas与svg整理与区别' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas与svg整理与区别</center></div><div class='banquan'>原文出处:本文由博客园博主硅谷之火提供。<br/>
+原文连接:https://www.cnblogs.com/jinfeixiang/p/10902284.html</div><br>
+    <p><span style="font-size: 18px;">1.canvas画布(位图)</span></p>
+<p><span style="font-size: 18px;">2.绘制矢量图</span></p>
+<p><span style="font-size: 18px;">1.不要在style中给canvas设置宽高 会有位移差</span></p>
+<p><span style="font-size: 18px;">2.</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>         //获取元素
+	var c=document.getElementById("c")
+	//获取绘图环境
+	var c=c.getContext("2d")                                    
+</pre>
+</div>
+<p>　　</p>
+<p><span style="font-size: 18px;">fillRect() 绘制一个填充的方块 默认颜色是黑色</span></p>
+<p><span style="font-size: 18px;">strokeRect() 绘制带边框的方块</span></p>
+<p><span style="font-size: 18px;">绘制线条</span></p>
+<p><span style="font-size: 18px;">moveTo() 绘制线段起点</span></p>
+<p><span style="font-size: 18px;">lineTo() 绘制线段的领点</span></p>
+<p><span style="font-size: 18px;">每个线条只能有一个 moveTo可以有多个 lineTo</span></p>
+<p><span style="font-size: 18px;">stroke() 绘制线段</span></p>
+<p><span style="font-size: 18px;">beginPath() closePath() 二者同时出现 将绘制路径闭合<span style="font-size: medium;">（起始点 结尾点首位相连）</span></span>&nbsp;</p>
+<p><span style="font-size: 18px;">Rect() 绘制方块</span></p>
+<p><span style="font-size: 18px;">clearRect（0,0,width,height）清楚画布</span></p>
+<p><span style="font-size: 18px;">save() restore() 二者成对出现 中间属性样式只影响内部，不影响外部</span></p>
+<p><span style="color: #ff0000; font-size: 18px;">1.画圆</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>c.closePath()
+c.fill()
+c.restore()
+c.moveTo(200,200)
+c.arc(200,200,150,0,360*Math.PI/180,true)
+c.stroke()</pre>
+</div>
+<p><span style="font-size: 18px;">200,200是圆形坐标 50是半径</span></p>
+<p><span style="font-size: 18px;">0是起始弧度 Math.PI是结束弧度</span></p>
+<p><span style="font-size: 18px;">true是逆时针 flase是顺时针</span></p>
+<p><span style="font-size: 18px;"><span style="color: #ff0000;">注意：</span>角度有正负之分 顺时针角度是正的，逆时针角度是负的</span></p>
+<p><span style="color: #ff0000; font-size: 18px;">2.画布的平移和旋转</span></p>
+<p><span style="font-size: 18px;">平移translate 画布大小位置不变 起始坐标变了</span></p>
+<p><img src="./images/canvas与svg整理与区别0.png" alt="" width="335" height="246" />相当于坐标平移</p>
+<p><span style="font-size: 18px;"><span style="color: #ff0000;">rotate()</span> 画布的旋转都是以00起始点为中心点旋转</span></p>
+<p><span style="font-size: 18px;"><span style="color: #ff0000;">scale(0.5,0.5)</span> 画布的缩放 就是将画布向后移动 跟人的视距就变远了 近大远小</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>c.fillStyle='lightpink'
+c.scale(0.5,0.5)
+c.fillRect(0,0,100,100)
+</pre>
+</div>
+<p><span style="color: #ff0000;"><span style="font-size: 18px;">画布中插入图片</span>　</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>//获取元素
+	var c=document.getElementById("c")
+	//获取绘图环境
+	var c=c.getContext("2d")
+	
+	var img=new Image;
+	
+	img.src="img/02.jpg"
+	img.onload=function(){
+		c.drawImage(img,10,20,160,200)
+	}
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">插入字体</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>//字体大小 样式
+	c.font="30px imapct"
+	c.fillText("全站最强",200,200)
+	//字体空心
+	c.strokeText("Big smile!",200,200)
+</pre>
+</div>
+<p><span style="color: #000000; font-size: 18px;">svg</span></p>
+<p><span style="font-size: 18px;">svg绘制矢量图</span></p>
+<p><span style="font-size: 18px;">svg使用xml格式绘制图形</span></p>
+<p><span style="font-size: 18px;">svg要有一个根节点 叫svg标签 相当于html</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1"&gt;
+  &lt;circle cx="100" cy="50" r="40" stroke="black"
+  stroke-width="2" fill="red" /&gt;
+&lt;/svg&gt;
+
+&lt;svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="500px" height="400px"&gt;
+&lt;/svg&gt;
+</pre>
+</div>
+<p>　　</p>
+<p><span style="font-size: 18px;">svg如果不设置大小，默认占用面积 3008*150</span></p>
+<p><span style="color: #ff0000; font-size: 18px;">1.定义矩形</span></p>
+<p><span style="font-size: 18px;">rect标签有：</span></p>
+<p><span style="font-size: 18px;">width height 矩形宽高</span></p>
+<p><span style="font-size: 18px;">fill 定义矩形填充颜色(rgb值、颜色名或16进制)</span></p>
+<p><span style="font-size: 18px;">stroke-width 定义矩形边框宽度</span></p>
+<p><span style="font-size: 18px;">stroke 定义矩形边框以及颜色</span></p>
+<p><span style="font-size: 18px;">x 定义矩形左侧位置(矩形到浏览器窗口左侧距离)</span></p>
+<p><span style="font-size: 18px;">y 定义矩形顶端位置(矩形到浏览器窗口顶端位置</span><span style="font-size: 18px;">)</span></p>
+<p><span style="font-size: 18px;">fill-opacity 定义填充颜色透明度</span></p>
+<p><span style="font-size: 18px;">stroke-opacity 定义边框颜色透明度</span></p>
+<p><span style="font-size: 18px;">Rx Ry 可以使矩形产生圆角</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--矩形--&gt;
+  			&lt;rect width="100px" height="100px" x="50" y="250" rx="20" ry="20"  style="fill:pink;stroke-width: 5;stroke: red;"&gt;&lt;/rect&gt;</pre>
+</div>
+<p><span style="font-size: 18px;">fill-opactty和opacity的区别?</span></p>
+<p><span style="font-size: 18px;">fill-opacity只改变填充颜色透明度 opacity改变fill和stroke的透明度都改变</span></p>
+<p><span style="color: #ff0000; font-size: 18px;">2.定义圆</span></p>
+<p><span style="font-size: 18px;">circle cx cy 定义圆点的 x和y坐标。如果省略cx和cy，圆的中心会设置为(0,0)</span></p>
+<p><span style="font-size: 18px;">r定义半径</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--圆形--&gt;
+&lt;circle cx="200" cy="200" r="50" style="stroke:"pink"; fill:'red';"&gt;
+&lt;/circle&gt;
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">3.定义椭圆</span></p>
+<p><span style="font-size: 18px;">椭圆和圆很相似。不同之处在于椭圆有不同的x和y半径，而圆的x和y半径是相同的</span></p>
+<p><span style="font-size: 18px;">ellipse cx cy定义圆中心的x，y坐标</span></p>
+<p><span style="font-size: 18px;">rx 定义水平半径</span></p>
+<p><span style="font-size: 18px;">ry 定义垂直半径</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--椭圆--&gt;
+&lt;ellipse cx="300" cy="340" rx="100" ry="50" style="fill: yellowgreen;"&gt;&lt;/ellipse&gt;
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">4.定义直线</span></p>
+<p><span style="font-size: 18px;">line x1 y1 定义起始坐标 x2 y2定义结束坐标 必须结合 stroke</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!----直线----&gt;
+&lt;line x1="150" y1="250" x2="100" y2="100" style="stroke: lawngreen;"&gt;&lt;/line&gt;<br /><br /></pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">5.定义多边形</span></p>
+<p><span style="font-size: 18px;">polygon poinits=&ldquo;定义多边形每个角x和y坐标&rdquo;</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--定义多边形--&gt;
+&lt;polygon points="240,10 330,190 290,210" style="fill: pink; stroke: red;"&gt;
+&lt;/polygon&gt;
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">6.定义曲线(折线)</span></p>
+<p><span style="font-size: 18px;">polyline poinits&ldquo;折点的坐标</span><span style="font-size: 18px;">&rdquo;</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--曲线--&gt;
+&lt;polyline points="0,40 40,40 40,80 80,80 80,120 120,120 120,160 "style="stroke-width:5 ; stroke: pink; fill: none; "&gt;
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">7.定义路径</span></p>
+<p><span style="font-size: 18px;">d=&ldquo;定义路径指令&rdquo;</span></p>
+<p><span style="font-size: 18px;">M 是起点坐标</span></p>
+<p><span style="font-size: 18px;">L 是相邻点坐标</span></p>
+<p><span style="font-size: 18px;">Z是让路径构成闭合回路</span></p>
+<p><span style="font-size: 18px;">H代表水平划线 默认y轴上值一模一样</span></p>
+<p><span style="font-size: 18px;">V 代表垂直的线条 默认x轴上值一样</span></p>
+<p><span style="font-size: 18px;">A 后面跟七个值</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!--定义路径--&gt;	
+&lt;path id="path" d="M100 50 A60 60 0 1 0  300 50 " stroke="red" fill="none"&gt;&lt;/path&gt;
+</pre>
+</div>
+<p>　　<img src="./images/canvas与svg整理与区别1.png" alt="" /></p>
+<p><span style="color: #ff0000; font-size: 18px;">8.g 用于相关元素进行组合</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;g fill="pink" stroke="black" cx="60" cy="50" transform="translate(100,50)"&gt;
+&lt;circle  r="30" &gt;&lt;/circle&gt;
+&lt;circle  r="10" fill="blue" &gt;&lt;/circle&gt;		
+&lt;/g&gt;
+</pre>
+</div>
+<p><span style="font-size: 18px;">g身上的属性 子元素都会继承 但是g上的属性都必须显现属性，不是svg的私有属性，比如g上的圆心坐标不行</span></p>
+<p><span style="font-size: 18px;">transform 转换svg中的一个属性 translate rotate scale&nbsp;</span></p>
+<p><span style="font-size: 18px;">平移旋转 都是以起点 0 0 (svg的左上角) 点为参考点 而css3中以元素的中心点为参考点</span></p>
+<p><span style="font-size: 18px;">text 用于定义文本 xy xy的值在字体左下角</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!----txte----&gt;
+&lt;text stroke="blue" x="400" y="400" font-size="20" text-anchor="middle"&gt;哈哈哈哈&lt;/text&gt;
+</pre>
+</div>
+<p><span style="color: #ff0000; font-size: 18px;">9.绘制图片</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!----image----&gt;
+&lt;image x="80" y="80" width="100" height="100" xlink:href="02.jpg"&gt;&lt;/image&gt;</pre>
+</div>
+<p><span style="color: #ff0000;">&nbsp;10.<span style="font-size: 18px;">use 用于复制元素 xy</span></span></p>
+<p><span style="font-size: 18px;">xy是相对原始元素的坐标位置 不是相对svg的00点坐标</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!----use----&gt;
+&lt;circle cx="40" id="a" cy="40" r="10" translate="100,0" fill="blue"&gt;&lt;/circle&gt;
+&lt;use x="10" y="10" xlink:href="#a"&gt;&lt;/use&gt;
+</pre>
+</div>
+<p><span style="font-size: 18px;"><span style="color: #ff0000;">11.animate</span> 写在需要动画元素的中间</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;circle cx="250" cy="310" r="15" fill="lightblue"&gt;
+&lt;animate attributeName="cy" from="310" to="690" dur="2s" repeatCount="indefinite"&gt;
+&lt;/circle&gt;
+</pre>
+</div>
+<p>　　</p>
+<p>　　</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　</p>
+<p>　　</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

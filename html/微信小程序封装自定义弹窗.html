@@ -1,0 +1,405 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序封装自定义弹窗' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序封装自定义弹窗</center></div><div class='banquan'>原文出处:本文由博客园博主Indus_wang提供。<br/>
+原文连接:https://www.cnblogs.com/Indus/p/10826418.html</div><br>
+    <p>最近在做小程序的登录，需要同时获取用户手机号和头像昵称等信息，但是小程序又不支持单个接口同时获取两种数据，因此想到自定义一个弹窗，通过弹窗按钮触发获取手机号事件。记录一下。</p>
+<p><img src="./images/微信小程序封装自定义弹窗0.png" alt="" /></p>
+<p>具体代码如下：</p>
+<p>业务代码中：</p>
+<p>　　在业务代码中引入dialog组件即可</p>
+<div>
+<div>　　&lt;dialog visible="{{dialogVisible}}" showFooter="{{footerVisible}}" title="测试一下"&gt;</div>
+<div>　　　　&lt;view class='dialog-body' slot="dialog-body"&gt;</div>
+<div>　　　　　　&lt;view class='dialog-content'&gt;申请获取你微信绑定的手机号&lt;/view&gt;</div>
+<div>　　　　　　&lt;view class='dialog-footer' slot="dialog-footer"&gt;</div>
+<div>　　　　　　　　&lt;button class='cancel-btn' bindtap="close"&gt;取消&lt;/button&gt;</div>
+<div>　　　　　　　　&lt;button open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" class='confirm-btn'&gt;授权&lt;/button&gt;</div>
+<div>　　　　　　&lt;/view&gt;</div>
+<div>　　　　&lt;/view&gt;</div>
+<div>　　&lt;/dialog&gt;</div>
+</div>
+<p>dialog组件：</p>
+<p>component下面新建dialog。注意是 component 不是 page ，因为要作为组件引入到页面中</p>
+<p>　　dialog.wxml:</p>
+<p>　　需要传入四个属性</p>
+<p><span style="color: #0000ff; background-color: #fffffe; font-family: Consolas; font-size: 12px; white-space: pre;">　　　　visible：是否显示弹窗</span></p>
+<p><span style="color: #0000ff; background-color: #fffffe; font-family: Consolas; font-size: 12px; white-space: pre;">　　　　title ：标题</span></p>
+<p><span style="color: #0000ff; background-color: #fffffe; font-family: Consolas; font-size: 12px; white-space: pre;">　　　　showClose：是否显示右上角关闭按钮</span></p>
+<p><span style="color: #0000ff; background-color: #fffffe; font-family: Consolas; font-size: 12px; white-space: pre;">　　　　showFooter：是否显示底部按钮</span></p>
+<div>
+<div>&lt;!--components/dialog/dialog.wxml--&gt;</div>
+<div>&lt;view class='dialog-custom' wx:if="{{visible}}"&gt;</div>
+<div>　　&lt;view class='dialog-mask' bindtap="clickMask"&gt;&lt;/view&gt;</div>
+<div>　　　　&lt;view class="dialog-main"&gt;</div>
+<div>　　　　　　&lt;view class="dialog-container"&gt;</div>
+<div>　　　　　　　　&lt;view class='dialog-container__title' wx:if="{{title.length&gt;0}}"&gt;</div>
+<div>　　　　　　　　　　&lt;view class='title-label'&gt;{{ title }}&lt;/view&gt;</div>
+<div>　　　　　　　　　　&lt;view class='title-icon'&gt;</div>
+<div>　　　　　　　　　　　　&lt;image wx:if="{{showClose}}" bindtap='close' src='/images/close-btn.png'&gt;&lt;/image&gt;</div>
+<div>　　　　　　　　　　&lt;/view&gt;</div>
+<div>　　　　　　　　&lt;/view&gt;</div>
+<div>　　　　　　&lt;view class='dialog-container__body'&gt;</div>
+<div>　　　　　　　　&lt;slot name="dialog-body"&gt;&lt;/slot&gt;</div>
+<div>　　　　　　&lt;/view&gt;</div>
+<div>　　　　　　&lt;view class='dialog-container__footer' wx:if="{{showFooter}}"&gt;</div>
+<div>　　　　　　　　&lt;view class='dialog-container__footer__cancel' bindtap="close"&gt;取消&lt;/view&gt;</div>
+<div>　　　　　　　　&lt;view class='dialog-container__footer__confirm' bindtap='confirm'&gt;确定&lt;/view&gt;</div>
+<div>　　　　　　&lt;/view&gt;</div>
+<div>　　　　&lt;/view&gt;</div>
+<div>　　&lt;/view&gt;</div>
+<div>&lt;/view&gt;</div>
+<div>&nbsp;</div>
+<div>dialog.js</div>
+<div>　　
+<div>
+<div>Component({</div>
+<div>/**</div>
+<div>* 组件的属性列表</div>
+<div>*/</div>
+<div>properties: {</div>
+<div>　　visible: {</div>
+<div>　　　　type: Boolean,</div>
+<div>　　　　value: false</div>
+<div>　　},</div>
+<div>　　width: {</div>
+<div>　　　　type: Number,</div>
+<div>　　　　value: 85</div>
+<div>　　},</div>
+<div>　　position: {</div>
+<div>　　　　type: String,</div>
+<div>　　　　value: 'center'</div>
+<div>　　},</div>
+<div>　　title: {</div>
+<div>　　　　type: String,</div>
+<div>　　　　value: ''</div>
+<div>　　},</div>
+<div>　　showClose: {</div>
+<div>　　　　type: Boolean,</div>
+<div>　　　　value: true</div>
+<div>　　},</div>
+<div>　　showFooter: {</div>
+<div>　　　　type: Boolean,</div>
+<div>　　　　value: false</div>
+<div>　　},</div>
+<div>},</div>
+<br />
+<div>  /**</div>
+<div>   * 组件的初始数据</div>
+<div>   */</div>
+<div>  data: {</div>
+<div>&nbsp;</div>
+<div>  },</div>
+<div>  options:{</div>
+<div>    　　multipleSlots: true</div>
+<div>  },</div>
+<div>  /**</div>
+<div>   * 组件的方法列表</div>
+<div>   */</div>
+<div>  methods: {</div>
+<div>    　　clickMask() {</div>
+<div>      　　　　this.setData({ visible: false });</div>
+<div>    　　},</div>
+<div>    　　close(){</div>
+<div>      　　　　this.setData({ visible: false });</div>
+<div>    　　},</div>
+<div>    　　cancel() {</div>
+<div>      　　　　this.setData({ visible: false });</div>
+<div>      　　　　this.triggerEvent('cancel');</div>
+<div>    　　},</div>
+<div>    　　confirm() {</div>
+<div>      　　　　this.setData({ visible: false });</div>
+<div>      　　　　this.triggerEvent('confirm');</div>
+<div>    　　}</div>
+<div>  }</div>
+<div>})</div>
+
+
+</div>
+
+</div>
+<div>&nbsp;</div>
+<div>dialog.json:声明是组件就行</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div>{</div>
+<div>　　"component": true,</div>
+<div>　　"usingComponents": {}</div>
+<div>}</div>
+
+</div>
+
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>dialog.wxss</div>
+<div>　　css可以根据自己喜好的样式调整，注意mask遮罩层的z-index高一点，确保在最上层</div>
+<div>
+<div>
+<div>/* components/dialog/dialog.wxss */</div>
+<div>.dialog-custom {</div>
+<div>　　width: 100vw;</div>
+<div>　　height: 100%;</div>
+<div>　　position: absolute;</div>
+<div>　　left: 0;</div>
+<div>　　top: 0;</div>
+<div>　　z-index: 9999;</div>
+<div>}</div>
+<div>.dialog-mask {</div>
+<div>　　position: fixed;</div>
+<div>　　top: 0;</div>
+<div>　　left: 0;</div>
+<div>　　right: 0;</div>
+<div>　　bottom: 0;</div>
+<div>　　z-index: 10000;</div>
+<div>　　width: 100vw;</div>
+<div>　　height: 100%;</div>
+<div>　　background: rgba(0, 0, 0, 0.3);</div>
+<div>}</div>
+<div>.dialog-main {</div>
+<div>　　position: fixed;</div>
+<div>　　z-index: 10001;</div>
+<div>　　top: 50%;</div>
+<div>　　left: 0;</div>
+<div>　　right: 0;</div>
+<div>　　width: 85vw;</div>
+<div>　　height: auto;</div>
+<div>　　margin: auto;</div>
+<div>　　transform: translateY(-50%);</div>
+<div>}</div>
+<div>.dialog-container {</div>
+<div>　　margin: 0 auto;</div>
+<div>　　background: #fff;</div>
+<div>　　z-index: 10001;</div>
+<div>　　border-radius: 3px;</div>
+<div>　　box-sizing: border-box;</div>
+<div>　　padding: 40rpx;</div>
+<div>}</div>
+<div>.dialog-container__title {</div>
+<div>　　width: 100%;</div>
+<div>　　height: 50rpx;</div>
+<div>　　line-height: 50rpx;</div>
+<div>　　margin-bottom: 20rpx;</div>
+<div>　　position: relative;</div>
+<div>}</div>
+<div>.dialog-container__title .title-label{</div>
+<div>　　display: inline-block;</div>
+<div>　　width: 100%;</div>
+<div>　　height: 50rpx;</div>
+<div>　　line-height: 50rpx;</div>
+<div>　　font-size: 36rpx;</div>
+<div>　　color: #000;</div>
+<div>　　text-align: center;</div>
+<div>}</div>
+<div>.dialog-container__title .title-icon{</div>
+<div>　　width: 34rpx;</div>
+<div>　　height: 50rpx;</div>
+<div>　　position: absolute;</div>
+<div>　　top: 0;</div>
+<div>　　right: 0;</div>
+<div>}</div>
+<div>.dialog-container__title .title-icon image{</div>
+<div>　　width: 34rpx;</div>
+<div>　　height: 34rpx;</div>
+<div>}</div>
+
+<br />
+<div>.dialog-container__body {</div>
+<div>  　　padding-top: 10rpx;</div>
+<div>  　　font-size: 32rpx;</div>
+<div>  　　line-height: 50rpx;</div>
+<div>}</div>
+
+
+<br />
+<div>.dialog-container__footer {</div>
+<div>  　　height: 76rpx;</div>
+<div>  　　line-height: 76rpx;</div>
+<div>  　　font-size: 32rpx;</div>
+<div>  　　text-align: center;</div>
+<div>  　　border-top: 1px solid #f1f1f1;</div>
+<div>  　　position: absolute;</div>
+<div>  　　bottom: 0;</div>
+<div>  　　left: 0;</div>
+<div>  　　right: 0;</div>
+<div>}</div>
+
+
+<br />
+<div>.dialog-container__footer .dialog-container__footer__cancel {</div>
+<div>  　　width: 50%;</div>
+<div>  　　color: #999;</div>
+<div>  　　display: inline-block;</div>
+<div>}</div>
+<div>.dialog-container__footer .dialog-container__footer__cancel::after{</div>
+<div>  　　position: absolute;</div>
+<div>  　　right: 50%;</div>
+<div>  　　bottom: 0;</div>
+<div>  　　content: '';</div>
+<div>  　　width: 2rpx;</div>
+<div>  　　height: 76rpx;</div>
+<div>  　　background: #f1f1f1;</div>
+<div>}</div>
+<div>.dialog-container__footer .dialog-container__footer__confirm {</div>
+<div>  　　color: #3B98F7;</div>
+<div>  　　width: 50%;</div>
+<div>  　　display: inline-block;</div>
+<div>  　　text-align: center;</div>
+<div>}</div>
+
+
+</div>
+
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div style="background-color: #fffffe; font-family: Consolas; font-size: 12px; line-height: 18px; white-space: pre;">
+<div><span style="color: #008000;">/* components/dialog/dialog.wxss */</span></div>
+<div><span style="color: #800000;">.dialog-custom</span> {</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">100vw</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">100%</span>;</div>
+<div><span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">absolute</span>;</div>
+<div><span style="color: #ff0000;">left:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">top:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">z-index:</span> <span style="color: #09885a;">9999</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-mask</span> {</div>
+<div><span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">fixed</span>;</div>
+<div><span style="color: #ff0000;">top:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">left:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">right:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">bottom:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">z-index:</span> <span style="color: #09885a;">10000</span>;</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">100vw</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">100%</span>;</div>
+<div><span style="color: #ff0000;">background:</span> <span style="color: #0451a5;">rgba(</span><span style="color: #09885a;">0</span>, <span style="color: #09885a;">0</span>, <span style="color: #09885a;">0</span>, <span style="color: #09885a;">0.3</span><span style="color: #0451a5;">)</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-main</span> {</div>
+<div><span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">fixed</span>;</div>
+<div><span style="color: #ff0000;">z-index:</span> <span style="color: #09885a;">10001</span>;</div>
+<div><span style="color: #ff0000;">top:</span> <span style="color: #09885a;">50%</span>;</div>
+<div><span style="color: #ff0000;">left:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">right:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">85vw</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #0451a5;">auto</span>;</div>
+<div><span style="color: #ff0000;">margin:</span> <span style="color: #0451a5;">auto</span>;</div>
+<div><span style="color: #ff0000;">transform:</span> <span style="color: #0451a5;">translateY(</span><span style="color: #09885a;">-50%</span><span style="color: #0451a5;">)</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container</span> {</div>
+<div><span style="color: #ff0000;">margin:</span> <span style="color: #09885a;">0</span> <span style="color: #0451a5;">auto</span>;</div>
+<div><span style="color: #ff0000;">background:</span> <span style="color: #0451a5;">#fff</span>;</div>
+<div><span style="color: #ff0000;">z-index:</span> <span style="color: #09885a;">10001</span>;</div>
+<div><span style="color: #ff0000;">border-radius:</span> <span style="color: #09885a;">3px</span>;</div>
+<div><span style="color: #ff0000;">box-sizing:</span> <span style="color: #0451a5;">border-box</span>;</div>
+<div><span style="color: #ff0000;">padding:</span> <span style="color: #09885a;">40</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__title</span> {</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">100%</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">line-height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">margin-bottom:</span> <span style="color: #09885a;">20</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">relative</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__title</span> <span style="color: #800000;">.title-label</span>{</div>
+<div><span style="color: #ff0000;">display:</span> <span style="color: #0451a5;">inline-block</span>;</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">100%</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">line-height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">font-size:</span> <span style="color: #09885a;">36</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">color:</span> <span style="color: #0451a5;">#000</span>;</div>
+<div><span style="color: #ff0000;">text-align:</span> <span style="color: #0451a5;">center</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__title</span> <span style="color: #800000;">.title-icon</span>{</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">34</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">absolute</span>;</div>
+<div><span style="color: #ff0000;">top:</span> <span style="color: #09885a;">0</span>;</div>
+<div><span style="color: #ff0000;">right:</span> <span style="color: #09885a;">0</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__title</span> <span style="color: #800000;">.title-icon</span> <span style="color: #800000;">image</span>{</div>
+<div><span style="color: #ff0000;">width:</span> <span style="color: #09885a;">34</span><span style="color: #0451a5;">rpx</span>;</div>
+<div><span style="color: #ff0000;">height:</span> <span style="color: #09885a;">34</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>}</div>
+
+<br />
+<div><span style="color: #800000;">.dialog-container__body</span> {</div>
+<div>  <span style="color: #ff0000;">padding-top:</span> <span style="color: #09885a;">10</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">font-size:</span> <span style="color: #09885a;">32</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">line-height:</span> <span style="color: #09885a;">50</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>}</div>
+
+
+<br />
+<div><span style="color: #800000;">.dialog-container__footer</span> {</div>
+<div>  <span style="color: #ff0000;">height:</span> <span style="color: #09885a;">76</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">line-height:</span> <span style="color: #09885a;">76</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">font-size:</span> <span style="color: #09885a;">32</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">text-align:</span> <span style="color: #0451a5;">center</span>;</div>
+<div>  <span style="color: #ff0000;">border-top:</span> <span style="color: #09885a;">1px</span> <span style="color: #0451a5;">solid</span> <span style="color: #0451a5;">#f1f1f1</span>;</div>
+<div>  <span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">absolute</span>;</div>
+<div>  <span style="color: #ff0000;">bottom:</span> <span style="color: #09885a;">0</span>;</div>
+<div>  <span style="color: #ff0000;">left:</span> <span style="color: #09885a;">0</span>;</div>
+<div>  <span style="color: #ff0000;">right:</span> <span style="color: #09885a;">0</span>;</div>
+<div>}</div>
+
+
+<br />
+<div><span style="color: #800000;">.dialog-container__footer</span> <span style="color: #800000;">.dialog-container__footer__cancel</span> {</div>
+<div>  <span style="color: #ff0000;">width:</span> <span style="color: #09885a;">50%</span>;</div>
+<div>  <span style="color: #ff0000;">color:</span> <span style="color: #0451a5;">#999</span>;</div>
+<div>  <span style="color: #ff0000;">display:</span> <span style="color: #0451a5;">inline-block</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__footer</span> <span style="color: #800000;">.dialog-container__footer__cancel::after</span>{</div>
+<div>  <span style="color: #ff0000;">position:</span> <span style="color: #0451a5;">absolute</span>;</div>
+<div>  <span style="color: #ff0000;">right:</span> <span style="color: #09885a;">50%</span>;</div>
+<div>  <span style="color: #ff0000;">bottom:</span> <span style="color: #09885a;">0</span>;</div>
+<div>  <span style="color: #ff0000;">content:</span> <span style="color: #a31515;">''</span>;</div>
+<div>  <span style="color: #ff0000;">width:</span> <span style="color: #09885a;">2</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">height:</span> <span style="color: #09885a;">76</span><span style="color: #0451a5;">rpx</span>;</div>
+<div>  <span style="color: #ff0000;">background:</span> <span style="color: #0451a5;">#f1f1f1</span>;</div>
+<div>}</div>
+<div><span style="color: #800000;">.dialog-container__footer</span> <span style="color: #800000;">.dialog-container__footer__confirm</span> {</div>
+<div>  <span style="color: #ff0000;">color:</span> <span style="color: #0451a5;">#3B98F7</span>;</div>
+<div>  <span style="color: #ff0000;">width:</span> <span style="color: #09885a;">50%</span>;</div>
+<div>  <span style="color: #ff0000;">display:</span> <span style="color: #0451a5;">inline-block</span>;</div>
+<div>  <span style="color: #ff0000;">text-align:</span> <span style="color: #0451a5;">center</span>;</div>
+<div>}</div>
+
+
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

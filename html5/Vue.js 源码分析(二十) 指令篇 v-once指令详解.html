@@ -1,0 +1,140 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十) 指令篇 v-once指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十) 指令篇 v-once指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11149610.html</div><br>
+    <p>数据绑定最常见的形式就是使用&ldquo;Mustache&rdquo;语法 (双大括号) 的文本插值，例如:&lt;p&gt;Message: {{ msg }}&lt;/p&gt;以后每当<code>msg</code>属性发生了改变，插值处的内容都会自动更新。</p>
+<p>可以给DOM节点添加一个v-once指令，这样模板只会在第一次更新时显示数据，此后再次更新该DOM里面引用的数据时，内容不会自动更新了，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="d" v-once&gt;
+        &lt;p&gt;{{message}}&lt;/p&gt;
+    &lt;/div&gt;    
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span> Vue({el:'#d',data:{message:'Hello World!'<span style="color: #000000;">}})
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>DOM渲染为:</p>
+<p><img src="./images/Vue.js 源码分析(二十) 指令篇 v-once指令详解0.png" alt="" /></p>
+<p>为了验证修改message属性不会触发DOM更新，我们在控制台输入app.message="Hello Vue"来修改message属性</p>
+<p><img src="./images/Vue.js 源码分析(二十) 指令篇 v-once指令详解1.png" alt="" /></p>
+<p>可以发现DOM并未更新，此时app.message等于"Hello Vue!"的，我们打印看看，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十) 指令篇 v-once指令详解2.png" alt="" /></p>
+<p>可以看到app.message等于Hello Vue!,为什么没有触发更新了，因为<span style="color: #ff0000;">Vue内部把模板缓存起来了，把v-once对应的节点当作一个静态节点来看待，而不是一个响应式的数据(没有经过Object.defineproperty处理)</span><br /><br /><br /></p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong> </p>
+<hr />
+<p>&nbsp;在解析模板生成AST节点树对象的时候会通过processOnce尝试去获取v-once指令，如果有定义则在当前AST对象上增加一个once属性，值为true,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processOnce (el) {     <span style="color: #008000;">//</span><span style="color: #008000;">第9460行 解析v-once属性    </span>
+  <span style="color: #0000ff;">var</span> once$$1 = getAndRemoveAttr(el, 'v-once');     <span style="color: #008000;">//</span><span style="color: #008000;">获取v-once属性</span>
+  <span style="color: #0000ff;">if</span> (once$$1 != <span style="color: #0000ff;">null</span>) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果存在，则给el增加一个once属性，值为true</span>
+    el.once = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  }
+}</span></pre>
+</div>
+<p>例子里的模板解析时执行到这里后等于:</p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(二十) 指令篇 v-once指令详解3.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候会先判断AST中有无once属性，如果有则调用genOnce函数，genOnce会调用genStatic()去生成一个静态节点</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genElement (el, state) {           <span style="color: #008000;">//</span><span style="color: #008000;">第10139行  生成函数字符串</span>
+  <span style="color: #0000ff;">if</span> (el.staticRoot &amp;&amp; !<span style="color: #000000;">el.staticProcessed) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> genStatic(el, state)   
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (el.once &amp;&amp; !el.onceProcessed) {    <span style="color: #008000;">//</span><span style="color: #008000;">如果有设置了once属性，则调用genOnce()函数</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> genOnce(el, state)
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (el.<span style="color: #0000ff;">for</span> &amp;&amp; !<span style="color: #000000;">el.forProcessed) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}
+
+</span><span style="color: #0000ff;">function</span> genOnce (el, state) {              <span style="color: #008000;">//</span><span style="color: #008000;">第10179行  渲染v-once指令</span>
+  el.onceProcessed = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">if</span> (el.<span style="color: #0000ff;">if</span> &amp;&amp; !el.ifProcessed) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果有定义了v-if指令</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> genIf(el, state)
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (el.staticInFor) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果是在v-for环境下</span>
+    <span style="color: #0000ff;">var</span> key = ''<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> parent =<span style="color: #000000;"> el.parent;
+    </span><span style="color: #0000ff;">while</span><span style="color: #000000;"> (parent) {
+      </span><span style="color: #0000ff;">if</span> (parent.<span style="color: #0000ff;">for</span><span style="color: #000000;">) {
+        key </span>=<span style="color: #000000;"> parent.key;
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">
+      }
+      parent </span>=<span style="color: #000000;"> parent.parent;
+    }
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">key) {
+      </span>"development" !== 'production' &amp;&amp;<span style="color: #000000;"> state.warn(
+        </span>"v-once can only be used inside v-for that is keyed. "<span style="color: #000000;">
+      );
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> genElement(el, state)
+    }
+    </span><span style="color: #0000ff;">return</span> ("_o(" + (genElement(el, state)) + "," + (state.onceId++) + "," + key + ")"<span style="color: #000000;">)
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> genStatic(el, state)               <span style="color: #008000;">//</span><span style="color: #008000;">否则直接调用genStatic()函数</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>genStatic函数是静态节点渲染时的分支，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genStatic (el, state) {      <span style="color: #008000;">//</span><span style="color: #008000;">第10172行 </span>
+  el.staticProcessed = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  state.staticRenderFns.push((</span>"with(this){return " + (genElement(el, state)) + "}"));           <span style="color: #008000;">//</span><span style="color: #008000;">再次调用genElement(el, state)，但是结果保存到state.staticRenderFns里面</span>
+  <span style="color: #0000ff;">return</span> ("_m(" + (state.staticRenderFns.length - 1) + (el.staticInFor ? ',true' : '') + ")")   <span style="color: #008000;">//</span><span style="color: #008000;">对于静态节点，返回格式为_m(id)，id为staticRenderFns数组属性里的索引，生成Vnode时用于缓存用的</span>
+}</pre>
+</div>
+<p><span style="color: #ff0000;">对于v-once和静态节点来说，渲染后它的render函数是一个_m函数，其中参数是一个索引值，是存储在staticRenderFns数组属性对应的索引，每个值是一个静态DOM，只会渲染一次的</span></p>
+<p>例子里的模板渲染后等于render和staticRenderFns属性如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十) 指令篇 v-once指令详解4.png" alt="" /></p>
+<p>最后执行render函数的时候就会执行_m(0)这个函数，_m等于全局的renderStatic函数，如下:</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> renderStatic (       <span style="color: #008000;">//</span><span style="color: #008000;">第3869行 渲染静态节点</span>
+<span style="color: #000000;">  index,
+  isInFor
+) {
+  </span><span style="color: #0000ff;">var</span> cached = <span style="color: #0000ff;">this</span>._staticTrees || (<span style="color: #0000ff;">this</span>._staticTrees = []);         <span style="color: #008000;">//</span><span style="color: #008000;">这个是缓存</span>
+  <span style="color: #0000ff;">var</span> tree = cached[index];                                           <span style="color: #008000;">//</span><span style="color: #008000;">尝试从缓存中拿到tree</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> if has already-rendered static tree and not inside v-for,</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> we can reuse the same tree.</span>
+  <span style="color: #0000ff;">if</span> (tree &amp;&amp; !isInFor) {                                             <span style="color: #008000;">//</span><span style="color: #008000;">如果该静态AST在缓存中有了，而且不是在v-for环境下</span>
+    <span style="color: #0000ff;">return</span> tree                                                         <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回tree即可</span>
+<span style="color: #000000;">  }   
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> otherwise, render a fresh tree.</span>
+  tree = cached[index] = <span style="color: #0000ff;">this</span>.$options.staticRenderFns[index].call(   <span style="color: #008000;">//</span><span style="color: #ff0000;">调用$options.staticRenderFns里对应的函数渲染成一个Vnode，并保存到缓存中</span>
+    <span style="color: #0000ff;">this</span><span style="color: #000000;">._renderProxy,
+    </span><span style="color: #0000ff;">null</span><span style="color: #000000;">,
+    </span><span style="color: #0000ff;">this</span> <span style="color: #008000;">//</span><span style="color: #008000;"> for render fns generated for functional component templates</span>
+<span style="color: #000000;">  );      
+  markStatic(tree, (</span>"__static__" + index), <span style="color: #0000ff;">false</span>);                    <span style="color: #008000;">//</span><span style="color: #008000;">设置标记</span>
+  <span style="color: #0000ff;">return</span><span style="color: #000000;"> tree
+}</span></pre>
+</div>
+<p>可以看到对于v-once节点来说，如果没有和v-if或v-for配合使用，则它会被当作一个静态节点来对待，经过了第一次渲染后就会把模板缓存起来，以后的更新渲染都只是从缓存中拿出结果而已。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

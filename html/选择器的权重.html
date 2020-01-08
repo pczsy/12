@@ -1,0 +1,126 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修选择器的权重' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>选择器的权重</center></div><div class='banquan'>原文出处:本文由博客园博主司徒炼提供。<br/>
+原文连接:https://www.cnblogs.com/tourey-fatty/p/12060576.html</div><br>
+    <h3 id="选择器的权重">选择器的权重</h3>
+<p>权重就是我同个元素，有多个选择器的情况下，我该选择哪一个选择器的样式。</p>
+<pre><code><code>&lt;!doctype html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            #p{
+                background: red;
+            }
+            .p{
+                background: skyblue;
+            }
+            p{
+                background: green;
+            }
+            
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p style=&quot;background: pink&quot; id=&quot;p&quot;&gt;行内的样式&lt;/p&gt;
+        &lt;p  class=&quot;p&quot; id=&quot;p&quot;&gt;id的样式&lt;/p&gt;
+        &lt;p  class=&quot;p&quot;&gt;class的样式&lt;/p&gt;
+        &lt;p&gt;p标签的样式 &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>通过上面的比较，可以得出，行内样式&gt;id选择器&gt;类选择器&gt;标签选择器&gt;通配符</p>
+<p>那么有没有可能让标签选择大于所有的选择器呢，答案是有的，只要加上这行代码<code>!important</code>，任何选择器的权重就是无限大了。</p>
+<pre><code><code>&lt;!doctype html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            #p{
+                background: red;
+            }
+            .p{
+                background: skyblue;
+            }
+            p{
+                background: green !important;
+            }
+            *{
+                background: brown 
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p style=&quot;background: pink&quot; id=&quot;p&quot;&gt;行内的样式&lt;/p&gt;
+        &lt;p  class=&quot;p&quot; id=&quot;p&quot;&gt;id的样式&lt;/p&gt;
+        &lt;p  class=&quot;p&quot;&gt;class的样式&lt;/p&gt;
+        &lt;p&gt;p标签的样式 &lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="选择器的类型">选择器的类型</h3>
+<p>ID选择器 #id</p>
+<p>类选择器 .class</p>
+<p>标签选择器 p,div等</p>
+<p>属性选择器 [type=&quot;text&quot;]</p>
+<p>通用选择器 *</p>
+<p>伪类选择器 :hover</p>
+<p>伪元素选择器 ::before</p>
+<p>子选择器、相邻选择器</p>
+<h3 id="选择器的权重-1">选择器的权重</h3>
+<p>第一等：行内样式是 1000，行内样式虽然没被列入选择器里，但它的权重是最高的</p>
+<p>第二等：id选择器是 100</p>
+<p>第三等：类选择器、伪类选择。属性选择器、属性选择器 10</p>
+<p>第四等：标签选择器和伪元素选择器 1</p>
+<p>其他选择器的权重为0</p>
+<p>继承的样式没有权重</p>
+<p>如果等级相同，那么最后的样式会覆盖前面的样式</p>
+<p>最后请记住<code>!important</code> 的权重是无限大的</p>
+<h3 id="权重的计算">权重的计算</h3>
+<p>将选择器的权重加起来</p>
+<pre><code><code>&lt;!doctype html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            body input{
+                color: blue;
+            }
+            input{
+                color: red;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;input type=&quot;text&quot; name=&quot;&quot; value=&quot;ssss&quot;&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>最终的样式是文字为蓝色</p>
+<p>因为body input 的权重是2，body,input每个的权重是1，所以加起来就2</p>
+<pre class="css"><code>#id .input input{
+    color: yellow;
+}</code></pre>
+<p>上面的权重就是 100 + 10 +1 = 111</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

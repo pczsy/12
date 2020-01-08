@@ -1,0 +1,180 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue小白篇 - ES6的语法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue小白篇 - ES6的语法</center></div><div class='banquan'>原文出处:本文由博客园博主大大怪超人提供。<br/>
+原文连接:https://www.cnblogs.com/pymu/p/11459715.html</div><br>
+    <h1 id="为什么要学-es6-的语法呢">为什么要学 ES6 的语法呢？</h1>
+<p>因为 Vue 语法有很多都是 ES6（ECMAScript 6），这里推荐 [阮一峰 ECMAScript 6 入门]: <a href="http://es6.ruanyifeng.com/" class="uri">http://es6.ruanyifeng.com/</a></p>
+<pre><code><code># // var 声明的是全局变量   
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        // 输出a，发现没有，会自动在前面 var a;  然后再进行操作
+        console.log(a)    //有变量提升，undefined
+        {
+            var a = 3;   
+        }
+        console.log(a)    //3
+
+
+
+        # let 声明的是局部的，不会存在变量提升
+        console.log(b)
+        {
+            // b 是局部作用域的  只能在这个大括号里才能使用
+            let b = 10;   
+        }
+        console.log(b)
+    &lt;/script&gt;
+
+    let声明变量的特点： 
+        1、局部作用域  
+            2、不会存在变量提升  
+            3、变量不能重复声明
+
+
+    let 与 var 声明变量的区别：
+        var 声明的是全局变量，而 let 是局部的 
+</code></pre>
+<h2 id="const-声明变量">const 声明变量</h2>
+<pre><code><code>    &lt;script&gt;
+        console.log(b)
+        {
+            const b = 10;  
+            b = 20;   // 报错
+        }
+        console.log(b)
+    &lt;/script&gt;
+
+const 声明变量的特点：
+    1、局部作用域  
+        2、不会存在变量提升  
+        3、变量不能重复声明
+        4、只能声明常量，不可变的量   （比 let 声明变量多一个特点）</code></pre>
+<h2 id="模板字符串">模板字符串</h2>
+<pre><code><code>tab 键上面的反引号 `${变量名}` 来插值
+
+
+&lt;script&gt;
+    let name = &#39;未来&#39;;
+    let str = `我是${name}`;
+
+    console.log(str)   // 我是未来
+&lt;/script&gt;</code></pre>
+<h2 id="es6-的箭头函数">ES6 的箭头函数</h2>
+<pre><code><code>funtion () {} === () =&gt; {}  this的指向发生改变
+
+# ES5 声明函数：
+        function add(x){
+            return x;
+        }
+        add(5)
+
+        let add = function(x){
+            return x;
+        }
+        console.log(add(50))
+
+
+# ES6 声明函数（箭头函数）：
+        let add = (x) =&gt; {
+            return x;
+        }
+        console.log(60)
+
+# 简洁版（不易阅读）：
+        let add2 = x =&gt; x;
+        console.log(add2(100))
+
+
+
+#ES5 的案例：
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        let person = {
+            name: &#39;日天&#39;,
+            age: 18,
+            fav: function(){
+                console.log(this)  // 指向 person 
+                console.log(this.name)   // 日天
+            }
+        }
+        person.fav()
+    &lt;/script&gt;
+
+
+
+# ES6 的案例：
+        let person = {
+            name: &#39;日天&#39;,
+            age: 30,
+            fav: () =&gt; {
+      //this指向  发生了改变。this指向 定义person的父级对象（上下文）
+                console.log(this)    // 指向window
+                console.log(this.name)  // 输出 空 
+            }       
+        }
+        person.fav()
+
+
+
+# 对象的单体模式
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        let person = {
+            name: &#39;日天&#39;,
+            age: 18,
+            fav(){   // 相当于 fav:function(){}函数声明
+                console.log(this)  // // 指向 person
+                console.log(this.name)   // 输出 日天
+            }
+        }
+        person.fav()
+    &lt;/script&gt;</code></pre>
+<h2 id="es6-的类">ES6 的类</h2>
+<pre><code><code>function person(name, age){
+    this.name = name;
+    this.age = age;
+}
+var p1 = person(&#39;tom&#39;,&#39;16&#39;);
+
+
+
+    &lt;script&gt;
+        //声明一个Person 类
+        class Person{
+            // 当前类的父类（继承性）
+            // constructor 方法相当于python中的__init__初始化方法
+             constructor(name=&#39;tom&#39;, age=45){  
+                 this.name = name;
+                 this.age = age;
+             }
+             showname(){
+                console.log(this.name)
+             }
+             showage(){
+                console.log(this.age)
+             }
+        }
+
+        let v = new Person();
+        v.showname();   //输出tom
+    &lt;/script&gt;
+</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

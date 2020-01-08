@@ -1,0 +1,205 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修10个让你受益匪浅的css使用技巧' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>10个让你受益匪浅的css使用技巧</center></div><div class='banquan'>原文出处:本文由博客园博主小蚊提供。<br/>
+原文连接:https://www.cnblogs.com/LuckyWinty/p/11763296.html</div><br>
+    <h4 id="safari-3d变换会忽略z-index的层级">1. Safari 3D变换会忽略z-index的层级</h4>
+<p>在Safari浏览器下(此Safari浏览器包括iOS的Safari，iPhone上的微信浏览器，以及Mac OS X系统的Safari浏览器)，当我们使用3D transform变换的时候，如果祖先元素没有overflow:hidden/scroll/auto等限制，则会直接忽略自身和其他元素的<code>z-index</code>层叠顺序设置，而直接使用真实世界的3D视角进行渲染。<br />
+例如下面的场景，图中红框里面的模块，使用 3D transform变换，进行旋转动画，但是在Safari浏览器下，忽略了二维码遮罩层的<code>z-index</code>,结果使用了真实世界的3D视角进行渲染。出现了重叠的bug：<br />
+<img src="./images/10个让你受益匪浅的css使用技巧0.png" alt="GitHub" /></p>
+<h5 id="解决方法">解决方法：</h5>
+<ol>
+<li>父级，任意父级，非body级别，设置overflow:hidden可恢复和其他浏览器一样的渲染。</li>
+<li>以毒攻毒。有时候，页面复杂，我们不能给父级设置overflow:hidden，那么可以将被影响的元素设置一个足够大的translateZ值就可以，如translateZ(100px)。</li>
+</ol>
+<h4 id="文字居中兼容">2. 文字居中兼容</h4>
+<p>正常处理文字上下居中的手段是让元素height和line-height相等，但是安卓环境下当字体大小&lt;14px/0.7rem的时候会出现居中失效的情况。</p>
+<h5 id="解决方法-1">解决方法：</h5>
+<ol>
+<li><p>判断系统环境（安卓/IOS）分别作微调；</p></li>
+<li>font-size、height、width全部放大为2倍，利用transform进行缩放</li>
+</ol>
+<pre><code><code>height: 1rem; 
+width: 2rem; 
+font-size: 0.5rem;
+
+变成： 
+height: 2rem; 
+width: 4rem; 
+font-size: 1rem; 
+transform: scale(0.5);</code></pre>
+<p>但由于放大之后占据空间，左右会留白，需要利用margin负值 <code>margin: -0.35rem -0.45rem 0;</code>调整</p>
+<ol>
+<li>有解决方案是将rem改为px。</li>
+</ol>
+<h4 id="个a标签包裹的模块做90度旋转其中一个模块会出现点击失灵">3. 2个a标签包裹的模块做90度旋转，其中一个模块会出现点击失灵</h4>
+<p>定义了一个动画效果如下(sass代码)：</p>
+<pre><code><code>@keyframes official-featured_rotate {
+    10%,50%{  
+      transform:rotateY(90deg);  
+    } 
+    60%,100%{  
+      transform:rotateY(0deg);  
+    }  
+}
+&amp;-rotate {
+    position: absolute;
+    width: rem(350/2);
+    height: rem(160/2);
+    transform-style:preserve-3d;
+    transform:translate3d(0,0,0);
+    &amp;.ani_rotate {
+        animation:official-featured_rotate 5s linear 0s infinite;
+        animation-delay: 2s;
+    }
+    &amp;__item {
+        width: rem(350/2);
+        height: rem(160/2);
+        position: absolute;
+        &amp;:nth-child(1) {
+            transform: translateZ(rem(350/4)); 
+        }
+        &amp;:nth-child(2) {
+            transform: rotateY(90deg) translate3d(0,0,rem(350/4)); 
+        }
+    }
+}</code></pre>
+<p>这里是2个a标签，做90度的旋转效果使得两个a可以循环切换展示。这里2个的基本样式是一致的，宽高也一样。但是在安卓下（ios正常）只有打开页面能看到的第一个a标签能正常跳转，能正常绑定事件。第二个a不能跳转，我就想那我通过点击事件来跳转可以不，结果绑定任何事件都不生效。</p>
+<h5 id="解决方法-2">解决方法：</h5>
+<p>然后测试发现，在旋转过程中（只要未完全旋转90度）点击还是能一切正常的。于是把旋转角度改为了89.99度，一切正常。动画效果修改为：</p>
+<pre><code><code>@keyframes official-featured_rotate {
+    10%,50%{  
+      transform:rotateY(-89.99deg);  
+    } 
+    60%,100%{  
+      transform:rotateY(0deg);  
+    }  
+}</code></pre>
+<p>后来查找了一下stackoverflow(https://stackoverflow.com/questions/23548612/cant-click-on-buttons-after-css-transform)。里面也是说了这个解决方法。</p>
+<h4 id="使用currentcolor来简化css">4. 使用currentColor来简化css</h4>
+<p>设置border-color、background-color等颜色的时候，可以使用currentColor[与当前元素的字体颜色相同]来简化css。</p>
+<pre><code><code>.div{
+    color: rgba(0,0,0,.85);
+    font-weight: 500;
+    text-align: left;
+    padding: 20px;
+    border: solid 1px currentColor;
+}</code></pre>
+<h4 id="利用灰色滤镜做样式的disable效果">5. 利用灰色滤镜做样式的disable效果</h4>
+<p>灰色图可以直接加滤镜，不用切多一张图。如图：<br />
+<img src="./images/10个让你受益匪浅的css使用技巧1.png" alt="GitHub" /></p>
+<h5 id="解决方法-3">解决方法：</h5>
+<pre><code><code>.coupon_style .disable {
+-webkit-filter: grayscale(1);
+}</code></pre>
+<h4 id="曲线阴影的实现">6. 曲线阴影的实现</h4>
+<ul>
+<li>多个阴影重叠，就是正常阴影+曲线阴影</li>
+<li>正常情况下，有个矩形有正常的阴影，作为主投影，这时候再定义一个有一定弧度圆角的圆角矩形，然后放在正常矩形的下面，并露出一点点底部有弧度的阴影，这样的话就可以形成曲线投影的效果。</li>
+</ul>
+<p>效果：</p>
+<p><img src="./images/10个让你受益匪浅的css使用技巧2.png" alt="GitHub" /><br />
+代码：<br />
+<img src="./images/10个让你受益匪浅的css使用技巧3.png" alt="GitHub" /><br />
+<img src="./images/10个让你受益匪浅的css使用技巧4.png" alt="GitHub" /></p>
+<h4 id="翘边阴影的实现">7. 翘边阴影的实现</h4>
+<p>利用:before和:after，加上绝对定位的性质，可以形成一个矩形，这个时候结合CSS3的倾斜属性skew和旋转属性rote。就可以形成一个有旋转角度的平行四边形，这个时候再和原来的矩形重叠，则可产生翘边效果。</p>
+<p>效果：<br />
+<img src="./images/10个让你受益匪浅的css使用技巧5.png" alt="GitHub" /></p>
+<p>代码：</p>
+<p><img src="./images/10个让你受益匪浅的css使用技巧6.png" alt="GitHub" /><br />
+<img src="./images/10个让你受益匪浅的css使用技巧7.png" alt="GitHub" /><br />
+<img src="./images/10个让你受益匪浅的css使用技巧8.png" alt="GitHub" /></p>
+<h4 id="利用-webkit-mask实现蒙版效果">8.利用-webkit-mask实现蒙版效果</h4>
+<p>效果图：<br />
+<img src="./images/10个让你受益匪浅的css使用技巧9.png" alt="GitHub" /><br />
+代码：</p>
+<pre><code><code>background: url(&quot;images/logo.png&quot;) no-repeat;
+-webkit-mask : url(&quot;images/mask.png&quot;);</code></pre>
+<p>mask.png中黑色代表是不透明的（alpha：1）,其他部分为透明的（alpha：0），将它盖在背景图上，注意：背景图对应mask.png中透明的位置也会变成透明，留下非透明的形状，即背景图的可见形状与mask.png的可见形状相同。 即为&quot;蒙版&quot;。</p>
+<h4 id="图片自适应占位方式">9.图片自适应占位方式</h4>
+<p>当图片未正确加载，或加载完成前，由于图片高度为0，其容器会因为没有内容，导致容器无法撑高而塌陷，而如果加载较慢则会再图片加载完成后出现闪烁的情况。</p>
+<p>css中，当padding-top/bottom值为百分比时，其值都是以其父元素的宽度为参照对象。因此对于宽高比例固定的情况，可以利用padding-top/bottom用于图片自适应占位，解决页面闪烁的问题。</p>
+<p>如果仅设置值padding-top/bottom为百分比，会出现一个问题，就是该方法容器的max-height属性会失效，就无法限制容器的最大高度了。</p>
+<p>因此，可以给容器添加一个伪元素的子元素用于撑起内容，该子元素拥有一个padding-top:100%，同时给容器一个max-height尝试限制容器的高度，最后内容用绝对定位的方式添加即可。如：</p>
+<pre><code><code>#container{
+    width: 50%;
+    max-height:300px;
+    background-color:#ddd;
+    /*由于margin存在塌陷的问题，需要通过构建BFC来保证容器不会受到影响，因此这里可以给容器一个overflow:hidden来保证伪元素的margin不会塌陷。*/
+    overflow:hidden;
+    position: relative; /* 父容器相对定位 */
+}
+.placeholder::after{
+    content:&quot;&quot;;
+    display:block;
+    margin-top:100%;
+}
+img{
+    position:absolute;  /* 内容绝对定位 */
+    left: 50%;
+    top: 50%;      
+    transform: translateX(-50%) translateY(-50%); /* 控制内容绝对定位位置 */
+    width:80%;   /* 控制图片不溢出，因此这里使用的图片实际宽度受父容器影响 */
+}</code></pre>
+<p>但是对于宽高比例不定的图片来说，这样做可能导致图片显示不全，使用时要注意。</p>
+<h4 id="页面自适应最佳实践">10.页面自适应最佳实践</h4>
+<p>经过大型项目实践，下面这段CSS是最好的基于rem和vm和calc实践代码：</p>
+<pre><code><code>html {
+    font-size: 16px;
+}
+@media screen and (min-width: 375px) {
+    html {
+        /* iPhone6的375px尺寸作为16px基准，414px正好18px大小, 600 20px */
+        font-size: calc(100% + 2 * (100vw - 375px) / 39);
+        font-size: calc(16px + 2 * (100vw - 375px) / 39);
+    }
+}
+@media screen and (min-width: 414px) {
+    html {
+        /* 414px-1000px每100像素宽字体增加1px(18px-22px) */
+        font-size: calc(112.5% + 4 * (100vw - 414px) / 586);
+        font-size: calc(18px + 4 * (100vw - 414px) / 586);
+    }
+}
+@media screen and (min-width: 600px) {
+    html {
+        /* 600px-1000px每100像素宽字体增加1px(20px-24px) */
+        font-size: calc(125% + 4 * (100vw - 600px) / 400);
+        font-size: calc(20px + 4 * (100vw - 600px) / 400);
+    }
+}
+@media screen and (min-width: 1000px) {
+    html {
+        /* 1000px往后是每100像素0.5px增加 */
+        font-size: calc(137.5% + 6 * (100vw - 1000px) / 1000);
+        font-size: calc(22px + 6 * (100vw - 1000px) / 1000);
+    }
+}</code></pre>
+<h3 id="最后">最后</h3>
+<ul>
+<li>欢迎加我微信(winty230)，拉你进技术群，长期交流学习...</li>
+<li>欢迎关注「前端Q」,认真学前端，做个有专业的技术人...</li>
+</ul>
+<p><img src="./images/10个让你受益匪浅的css使用技巧10.png" alt="GitHub" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

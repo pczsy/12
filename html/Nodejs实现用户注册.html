@@ -1,0 +1,390 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Nodejs实现用户注册' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Nodejs实现用户注册</center></div><div class='banquan'>原文出处:本文由博客园博主零晨三点半提供。<br/>
+原文连接:https://www.cnblogs.com/resultset/p/10666174.html</div><br>
+    <p>1创建连接池对象</p>
+<p>2导出连接池对象</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('b8ac80fa-749d-43c1-8994-cca269703aa8')"><img id="code_img_closed_b8ac80fa-749d-43c1-8994-cca269703aa8" class="code_img_closed" src="./images/Nodejs实现用户注册0.png" alt="" /><img id="code_img_opened_b8ac80fa-749d-43c1-8994-cca269703aa8" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('b8ac80fa-749d-43c1-8994-cca269703aa8',event)" src="./images/Nodejs实现用户注册1.png" alt="" />
+<div id="cnblogs_code_open_b8ac80fa-749d-43c1-8994-cca269703aa8" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">/*</span><span style="color: #008000;">*
+</span><span style="color: #008080;"> 2</span> <span style="color: #008000;"> * 1.引入mysql模块
+</span><span style="color: #008080;"> 3</span> <span style="color: #008000;"> * 2.创建连接池对象
+</span><span style="color: #008080;"> 4</span> <span style="color: #008000;"> * 3.导出连接池对象
+</span><span style="color: #008080;"> 5</span>  <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 6</span> const mysql = require('mysql'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">var</span> pool =<span style="color: #000000;"> mysql.createPool({
+</span><span style="color: #008080;"> 8</span>     host:'localhost'<span style="color: #000000;">,
+</span><span style="color: #008080;"> 9</span>     port:'3306'<span style="color: #000000;">,
+</span><span style="color: #008080;">10</span>     user:'xxx'<span style="color: #000000;">,
+</span><span style="color: #008080;">11</span>     password:'xxx'<span style="color: #000000;">,
+</span><span style="color: #008080;">12</span>     database:'xxx'<span style="color: #000000;">,
+</span><span style="color: #008080;">13</span>     connectionLimit:20
+<span style="color: #008080;">14</span> <span style="color: #000000;">});
+</span><span style="color: #008080;">15</span> module.exports = pool;</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>1托管静态资源到public</p>
+<p>2使用body-parser中间件</p>
+<p>3使用路由器挂在到指定的位置</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('75dcafe4-5c6c-4bf7-9a71-83e1b140e75f')"><img id="code_img_closed_75dcafe4-5c6c-4bf7-9a71-83e1b140e75f" class="code_img_closed" src="./images/Nodejs实现用户注册0.png" alt="" /><img id="code_img_opened_75dcafe4-5c6c-4bf7-9a71-83e1b140e75f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('75dcafe4-5c6c-4bf7-9a71-83e1b140e75f',event)" src="./images/Nodejs实现用户注册1.png" alt="" />
+<div id="cnblogs_code_open_75dcafe4-5c6c-4bf7-9a71-83e1b140e75f" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">引入express模块</span>
+<span style="color: #008080;"> 2</span> const express = require('express'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 3</span> <span style="color: #008000;">//</span><span style="color: #008000;">引入路由器</span>
+<span style="color: #008080;"> 4</span> const userRouter = require('./routes/user.js'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 5</span> const productRouter = require('./routes/product.js'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span> const myproRouter = require('./routes/mypro.js'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span> const demoRouter = require('./routes/demo.js'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 8</span> const bodyParser = require('body-parser'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 9</span> <span style="color: #008000;">//</span><span style="color: #008000;">创建web服务器</span>
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">var</span> server =<span style="color: #000000;"> express();
+</span><span style="color: #008080;">11</span> <span style="color: #008000;">//</span><span style="color: #008000;">监听端口</span>
+<span style="color: #008080;">12</span> server.listen(8080<span style="color: #000000;">);
+</span><span style="color: #008080;">13</span> <span style="color: #008000;">//</span><span style="color: #008000;">托管静态资源</span>
+<span style="color: #008080;">14</span> server.use(express.static('public'<span style="color: #000000;">));
+</span><span style="color: #008080;">15</span> server.use(express.static('ajaxdemo'<span style="color: #000000;">));
+</span><span style="color: #008080;">16</span> server.use(express.static('mypro'<span style="color: #000000;">));
+</span><span style="color: #008080;">17</span> server.use(express.static('js'<span style="color: #000000;">));
+</span><span style="color: #008080;">18</span> server.use(express.static('css'<span style="color: #000000;">));
+</span><span style="color: #008080;">19</span> server.use(express.static('bootstrap'<span style="color: #000000;">));
+</span><span style="color: #008080;">20</span> server.use(express.static('img'<span style="color: #000000;">));
+</span><span style="color: #008080;">21</span> <span style="color: #008000;">//</span><span style="color: #008000;">使用body-parser中间件</span>
+<span style="color: #008080;">22</span> <span style="color: #000000;">server.use(bodyParser.urlencoded({
+</span><span style="color: #008080;">23</span>     extended:<span style="color: #0000ff;">false</span>
+<span style="color: #008080;">24</span> <span style="color: #000000;">}));
+</span><span style="color: #008080;">25</span> <span style="color: #008000;">//</span><span style="color: #008000;">挂载路由器</span>
+<span style="color: #008080;">26</span> server.use('/user'<span style="color: #000000;">,userRouter);
+</span><span style="color: #008080;">27</span> server.use('/demo',demoRouter);</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>1引入连接池模块</p>
+<p>2创建路由器对象</p>
+<p>3往路由器中添加路由</p>
+<p>4在路由中使用连接池</p>
+<p>5导出路由器</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('64dc641d-bb76-4382-94e9-78c04a3217e6')"><img id="code_img_closed_64dc641d-bb76-4382-94e9-78c04a3217e6" class="code_img_closed" src="./images/Nodejs实现用户注册0.png" alt="" /><img id="code_img_opened_64dc641d-bb76-4382-94e9-78c04a3217e6" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('64dc641d-bb76-4382-94e9-78c04a3217e6',event)" src="./images/Nodejs实现用户注册1.png" alt="" />
+<div id="cnblogs_code_open_64dc641d-bb76-4382-94e9-78c04a3217e6" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">/*</span>
+<span style="color: #008080;"> 2</span> <span style="color: #008000;">    1.引入express
+</span><span style="color: #008080;"> 3</span> <span style="color: #008000;">    2.创建路由器对象
+</span><span style="color: #008080;"> 4</span> <span style="color: #008000;">    3.添加路由
+</span><span style="color: #008080;"> 5</span> <span style="color: #008000;">    4.导出路由器
+</span><span style="color: #008080;"> 6</span> <span style="color: #008000;">    5.引入连接池对象
+</span><span style="color: #008080;"> 7</span> <span style="color: #008000;">    6.将数据插入到数据库中
+</span><span style="color: #008080;"> 8</span> <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 9</span> const express = require('express'<span style="color: #000000;">);
+</span><span style="color: #008080;">10</span> const pool = require('../pool.js'<span style="color: #000000;">);
+</span><span style="color: #008080;">11</span> <span style="color: #0000ff;">var</span> router =<span style="color: #000000;"> express.Router();
+</span><span style="color: #008080;">12</span> <span style="color: #008000;">//</span><span style="color: #008000;">查看所有数据</span>
+<span style="color: #008080;">13</span> router.get('/sele', (req, res) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">14</span>     <span style="color: #008000;">//</span><span style="color: #008000;">验证数据是否为空</span>
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">var</span> obj =<span style="color: #000000;"> req.query;
+</span><span style="color: #008080;">16</span>     <span style="color: #008000;">//</span><span style="color: #008000;">console.log('query',obj);</span>
+<span style="color: #008080;">17</span>     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj) {
+</span><span style="color: #008080;">18</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">obj[key]) {
+</span><span style="color: #008080;">19</span>             res.send('数据不能为空'<span style="color: #000000;">);
+</span><span style="color: #008080;">20</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">23</span>     <span style="color: #0000ff;">var</span> sqlselect = 'select * from xxx'<span style="color: #000000;">;
+</span><span style="color: #008080;">24</span>     pool.query(sqlselect,(err, result) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">25</span>         <span style="color: #0000ff;">if</span>(err) <span style="color: #0000ff;">throw</span><span style="color: #000000;"> err;
+</span><span style="color: #008080;">26</span>         <span style="color: #0000ff;">if</span>(result.length &gt; 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            res.send(result);
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    });
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">});
+</span><span style="color: #008080;">31</span> <span style="color: #008000;">//</span><span style="color: #008000;">查看用户名</span>
+<span style="color: #008080;">32</span> router.get('/seleUname', (req, res) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">33</span>     <span style="color: #008000;">//</span><span style="color: #008000;">验证数据是否为空</span>
+<span style="color: #008080;">34</span>     <span style="color: #0000ff;">var</span> obj =<span style="color: #000000;"> req.query;
+</span><span style="color: #008080;">35</span>     <span style="color: #008000;">//</span><span style="color: #008000;">console.log('query',obj);</span>
+<span style="color: #008080;">36</span>     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj) {
+</span><span style="color: #008080;">37</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">obj[key]) {
+</span><span style="color: #008080;">38</span>             res.send('数据不能为空'<span style="color: #000000;">);
+</span><span style="color: #008080;">39</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">42</span>     <span style="color: #0000ff;">var</span> sqlselect = 'select uname from xxx where uname = ?'<span style="color: #000000;">;
+</span><span style="color: #008080;">43</span>     pool.query(sqlselect,[obj.uname],(err,result) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">44</span>         <span style="color: #0000ff;">if</span>(err) <span style="color: #0000ff;">throw</span><span style="color: #000000;"> err;
+</span><span style="color: #008080;">45</span>         <span style="color: #0000ff;">if</span>(result.length &gt; 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">            console.log(result.tength);
+</span><span style="color: #008080;">47</span>             res.send('1'<span style="color: #000000;">);
+</span><span style="color: #008080;">48</span>         }<span style="color: #0000ff;">else</span><span style="color: #000000;">{
+</span><span style="color: #008080;">49</span>             res.send('0'<span style="color: #000000;">);
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">51</span> <span style="color: #000000;">    });
+</span><span style="color: #008080;">52</span> <span style="color: #000000;">});
+</span><span style="color: #008080;">53</span> router.post('/reg', (req, res) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">54</span>     <span style="color: #0000ff;">var</span> obj =<span style="color: #000000;"> req.body;
+</span><span style="color: #008080;">55</span>     console.log('body'<span style="color: #000000;">,obj);
+</span><span style="color: #008080;">56</span>     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span><span style="color: #000000;"> obj){
+</span><span style="color: #008080;">57</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">obj[key]){
+</span><span style="color: #008080;">58</span>             res.send('内容不能为空'<span style="color: #000000;">);
+</span><span style="color: #008080;">59</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">60</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">61</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">62</span>     <span style="color: #0000ff;">var</span> selectInsert = 'insert into xxx set ?'<span style="color: #000000;">;
+</span><span style="color: #008080;">63</span>     pool.query(selectInsert, [obj], (err, result) =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">64</span>         <span style="color: #0000ff;">if</span>(err) <span style="color: #0000ff;">throw</span><span style="color: #000000;"> err;
+</span><span style="color: #008080;">65</span>         <span style="color: #0000ff;">if</span>(result.affectedRows &gt; 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">            console.log(result.affectedRows)
+</span><span style="color: #008080;">67</span>             res.send('1'<span style="color: #000000;">);
+</span><span style="color: #008080;">68</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">69</span>             res.send('0'<span style="color: #000000;">);
+</span><span style="color: #008080;">70</span> <span style="color: #000000;">            console.log(result.affectedRows)
+</span><span style="color: #008080;">71</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">72</span> <span style="color: #000000;">    });
+</span><span style="color: #008080;">73</span> <span style="color: #000000;">});
+</span><span style="color: #008080;">74</span> <span style="color: #008000;">//</span><span style="color: #008000;">导出路由器</span>
+<span style="color: #008080;">75</span> module.exports = router;</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>4.html页面</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('a7c2068e-b82d-4ca0-97dc-7da3ff9df57e')"><img id="code_img_closed_a7c2068e-b82d-4ca0-97dc-7da3ff9df57e" class="code_img_closed" src="./images/Nodejs实现用户注册0.png" alt="" /><img id="code_img_opened_a7c2068e-b82d-4ca0-97dc-7da3ff9df57e" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('a7c2068e-b82d-4ca0-97dc-7da3ff9df57e',event)" src="./images/Nodejs实现用户注册1.png" alt="" />
+<div id="cnblogs_code_open_a7c2068e-b82d-4ca0-97dc-7da3ff9df57e" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">doctype html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">&lt;link rel="stylesheet" type="text/css" href="/code.css" /&gt;</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/reg.js"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> charset</span><span style="color: #0000ff;">="utf-8"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/jquery.min.js"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> charset</span><span style="color: #0000ff;">="utf-8"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/bootstrap.min.js"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> charset</span><span style="color: #0000ff;">="utf-8"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="/bootstrap.css"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">12</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #800000;">            *</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #ff0000;">                margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #ff0000;">                padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">16</span>             <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #800000;">            body</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #ff0000;">                background</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> url(/true.png) no-repeat</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #ff0000;">                background-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> cover</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #ff0000;">                overflow-x</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #ff0000;">                overflow-y</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">22</span>             <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #800000;">            #box</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #ff0000;">                width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 700px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #ff0000;">                height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 500px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #ff0000;">                left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 50%</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #ff0000;">                top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 50%</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #ff0000;">                margin-left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> -350px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #ff0000;">                margin-top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> -250px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">30</span> <span style="background-color: #f5f5f5; color: #ff0000;">                position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">31</span>             <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">32</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">33</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">34</span> 
+<span style="color: #008080;">35</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">36</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">37</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">38</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="row clearfix"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">39</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-md-10 column"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">40</span>                     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-horizontal"</span><span style="color: #ff0000;"> role</span><span style="color: #0000ff;">="form"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">41</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">42</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="inputEmail3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-2 control-label"</span><span style="color: #0000ff;">&gt;</span>UserName:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">43</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="uname_box"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-6"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">44</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="uname"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="uname"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="form-control"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Please enter a user name"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">45</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">46</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p1"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">47</span> 
+<span style="color: #008080;">48</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">49</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">50</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">51</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="inputPassword3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-2 control-label"</span><span style="color: #0000ff;">&gt;</span>UserPassword:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">52</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-sm-6"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">53</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="upwd"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">='upwd' </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="form-control"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Please enter your user password"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">54</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">55</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p2"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">56</span> 
+<span style="color: #008080;">57</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">58</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">59</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">60</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="inputPassword3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-2 control-label"</span><span style="color: #0000ff;">&gt;</span>ConfirmPassword:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">61</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-sm-6"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">62</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="upwd1"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">='upwd' </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="password"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="form-control"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Confirm user password"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">63</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">64</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p3"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">65</span> 
+<span style="color: #008080;">66</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">67</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">68</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">69</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="inputPassword3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-2 control-label"</span><span style="color: #0000ff;">&gt;</span>Email:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">70</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-sm-6"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">71</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="email"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="email"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="form-control"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Please enter user email"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">72</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">73</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p4"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">74</span> 
+<span style="color: #008080;">75</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">76</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">77</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">78</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="inputPassword3"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="col-sm-2 control-label"</span><span style="color: #0000ff;">&gt;</span>Tel:<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">79</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-sm-6"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">80</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="phone"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="phone"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="form-control"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="Please enter the user's mobile phone number"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">81</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">82</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="p5"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">83</span> 
+<span style="color: #008080;">84</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">85</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">86</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="form-group"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">87</span>                             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="col-sm-offset-2 col-sm-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">88</span>                                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="reg"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="submit"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="btn col-lg-9 btn-info"</span><span style="color: #0000ff;">&gt;</span>Register<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">89</span>                             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">90</span>                         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">91</span>                     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">92</span>                 <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">93</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">94</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">95</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">96</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">97</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>5.js前端验证以及Ajax异步交互实现用户注册</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e235b5cb-eb59-4267-b09e-4fd1c203cc85')"><img id="code_img_closed_e235b5cb-eb59-4267-b09e-4fd1c203cc85" class="code_img_closed" src="./images/Nodejs实现用户注册0.png" alt="" /><img id="code_img_opened_e235b5cb-eb59-4267-b09e-4fd1c203cc85" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('e235b5cb-eb59-4267-b09e-4fd1c203cc85',event)" src="./images/Nodejs实现用户注册1.png" alt="" />
+<div id="cnblogs_code_open_e235b5cb-eb59-4267-b09e-4fd1c203cc85" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;">  1</span> window.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">  2</span>     uname.onfocus =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  3</span>     uname.onblur =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  4</span>     upwd.onfocus =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  5</span>     upwd.onblur =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  6</span>     upwd1.onfocus =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  7</span>     upwd1.onblur =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  8</span>     email.onfocus =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;">  9</span>     email.onblur =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;"> 10</span>     phone.onfocus =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;"> 11</span>     phone.onblur =<span style="color: #000000;"> notNull;
+</span><span style="color: #008080;"> 12</span>     upwd.onfocus =<span style="color: #000000;"> passw;
+</span><span style="color: #008080;"> 13</span>     upwd.onblur =<span style="color: #000000;"> passw;
+</span><span style="color: #008080;"> 14</span>     upwd1.onfocus =<span style="color: #000000;"> passw;
+</span><span style="color: #008080;"> 15</span>     upwd1.onblur =<span style="color: #000000;"> passw;
+</span><span style="color: #008080;"> 16</span>     <span style="color: #008000;">//</span><span style="color: #008000;">声明一个全局的xhr</span>
+<span style="color: #008080;"> 17</span>     <span style="color: #0000ff;">var</span> xhr = <span style="color: #0000ff;">new</span><span style="color: #000000;"> XMLHttpRequest();
+</span><span style="color: #008080;"> 18</span>     <span style="color: #0000ff;">var</span> flag = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 19</span>     <span style="color: #008000;">//</span><span style="color: #008000;">验证是否为空并且用户名是否已经存在</span>
+<span style="color: #008080;"> 20</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> notNull() {
+</span><span style="color: #008080;"> 21</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">uname.value) {
+</span><span style="color: #008080;"> 22</span>             p1.innerHTML = '用户名不能为空'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 23</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 24</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 25</span>             p1.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 26</span> <span style="color: #000000;">            getUname();
+</span><span style="color: #008080;"> 27</span> 
+<span style="color: #008080;"> 28</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 29</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">upwd.value) {
+</span><span style="color: #008080;"> 30</span>             p2.innerHTML = '密码不能为空'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 31</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 32</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 33</span>             p2.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 34</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 35</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">upwd1.value) {
+</span><span style="color: #008080;"> 36</span>             p3.innerHTML = '确认密码不能为空'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 37</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 38</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 39</span>             p3.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 40</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 41</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">email.value) {
+</span><span style="color: #008080;"> 42</span>             p4.innerHTML = '邮箱不能为空'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 43</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 44</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 45</span>             p4.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 46</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 47</span>         <span style="color: #0000ff;">if</span>(!<span style="color: #000000;">phone.value) {
+</span><span style="color: #008080;"> 48</span>             p5.innerHTML = '手机号不能为空'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 49</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 50</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 51</span>             p5.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 52</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 53</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 54</span>     <span style="color: #008000;">//</span><span style="color: #008000;">验证用户名是否已存在</span>
+<span style="color: #008080;"> 55</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> getUname() {
+</span><span style="color: #008080;"> 56</span>         xhr.onreadystatechange = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 57</span>             <span style="color: #0000ff;">if</span>(xhr.readyState == 4 &amp;&amp; xhr.status == 200<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 58</span>                 <span style="color: #0000ff;">var</span> result =<span style="color: #000000;"> xhr.responseText;
+</span><span style="color: #008080;"> 59</span> <span style="color: #000000;">                console.log(result);
+</span><span style="color: #008080;"> 60</span>                 <span style="color: #0000ff;">if</span>(result === '1'<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 61</span>                     p1.innerHTML = '用户名已存在'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 62</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">如果用户名已存在，该按钮处于禁用状态</span>
+<span style="color: #008080;"> 63</span>                     reg.setAttribute('disabled','true'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 64</span>                 } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 65</span>                     p1.innerHTML = ''<span style="color: #000000;">;
+</span><span style="color: #008080;"> 66</span>                     reg.disabled = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 67</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;"> 68</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 69</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 70</span>         <span style="color: #0000ff;">var</span> url = "/demo/seleUname?uname=" +<span style="color: #000000;"> uname.value;
+</span><span style="color: #008080;"> 71</span>         xhr.open('get', url, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 72</span>         xhr.send(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 73</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 74</span>     <span style="color: #008000;">//</span><span style="color: #008000;">密码验证</span>
+<span style="color: #008080;"> 75</span>     <span style="color: #0000ff;">function</span><span style="color: #000000;"> passw() {
+</span><span style="color: #008080;"> 76</span>         <span style="color: #0000ff;">if</span>(upwd.value !=<span style="color: #000000;"> upwd1.value) {
+</span><span style="color: #008080;"> 77</span>             p3.innerHTML = '两次密码不一致'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 78</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 79</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 80</span>     
+<span style="color: #008080;"> 81</span>     reg.onclick = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 82</span>         <span style="color: #008000;">//</span><span style="color: #008000;">查询所有用户信息</span>
+<span style="color: #008080;"> 83</span>         xhr.onreadystatechange = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 84</span>             <span style="color: #0000ff;">if</span>(xhr.readyState == 4 &amp;&amp; xhr.status == 200<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 85</span>                 <span style="color: #0000ff;">var</span> result =<span style="color: #000000;"> xhr.responseText;
+</span><span style="color: #008080;"> 86</span> <span style="color: #000000;">                console.log(JSON.parse(result));
+</span><span style="color: #008080;"> 87</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;"> 88</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;"> 89</span>         <span style="color: #0000ff;">var</span> url = "/demo/sele"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 90</span>         xhr.open('get', url, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 91</span>         xhr.send(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+</span><span style="color: #008080;"> 92</span> 
+<span style="color: #008080;"> 93</span>         <span style="color: #008000;">//</span><span style="color: #008000;">执行注册</span>
+<span style="color: #008080;"> 94</span>         xhr.onreadystatechange = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 95</span>             <span style="color: #0000ff;">if</span>(xhr.readyState == 4 &amp;&amp; xhr.status == 200<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 96</span>                 <span style="color: #0000ff;">var</span> result =<span style="color: #000000;"> xhr.responseText;
+</span><span style="color: #008080;"> 97</span>                 <span style="color: #0000ff;">if</span><span style="color: #000000;">(flag) {
+</span><span style="color: #008080;"> 98</span> <span style="color: #000000;">                    getUname();
+</span><span style="color: #008080;"> 99</span>                     <span style="color: #0000ff;">if</span>(result === '1'<span style="color: #000000;">) {
+</span><span style="color: #008080;">100</span>                         alert('success'<span style="color: #000000;">);
+</span><span style="color: #008080;">101</span>                         setTimeout(()=&gt;<span style="color: #000000;">{
+</span><span style="color: #008080;">102</span>                             location.href = 'http://localhost:8080/login_user.html'<span style="color: #000000;">;
+</span><span style="color: #008080;">103</span> <span style="color: #000000;">                        });
+</span><span style="color: #008080;">104</span>                     } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">105</span>                         alert('error'<span style="color: #000000;">);
+</span><span style="color: #008080;">106</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">107</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">108</span> 
+<span style="color: #008080;">109</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">110</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">111</span>         <span style="color: #0000ff;">var</span> str = "/demo/reg"<span style="color: #000000;">;
+</span><span style="color: #008080;">112</span>         xhr.open('post', str, <span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #008080;">113</span>         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded'<span style="color: #000000;">);
+</span><span style="color: #008080;">114</span>         <span style="color: #0000ff;">var</span> formdata = "uname=" + uname.value + "&amp;upwd=" + upwd.value + "&amp;email=" + email.value + ""<span style="color: #000000;">;
+</span><span style="color: #008080;">115</span> <span style="color: #000000;">        xhr.send(formdata);
+</span><span style="color: #008080;">116</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">117</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;界面展示：</p>
+<p><img src="./images/Nodejs实现用户注册10.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

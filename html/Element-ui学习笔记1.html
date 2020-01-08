@@ -1,0 +1,115 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Element-ui学习笔记1' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Element-ui学习笔记1</center></div><div class='banquan'>原文出处:本文由博客园博主Riko提供。<br/>
+原文连接:https://www.cnblogs.com/riko/p/11004006.html</div><br>
+    <p>1.col,row布局注意事项</p>
+<p>el-row el-col gutter就是css，span的时候宽度是按boder-box来计算。</p>
+<p>将&nbsp;<code>type</code>&nbsp;属性赋值为 'flex'，可以启用 flex 布局，并可通过&nbsp;<code>justify</code>&nbsp;属性来指定 start, center, end, space-between, space-around 其中的值来定义子元素的排版方式</p>
+<p><code>xs</code>、<code>sm</code>、<code>md</code>、<code>lg</code>&nbsp;和&nbsp;<code>xl</code></p>
+<p><img title="row属性" src="./images/Element-ui学习笔记10.png" alt="row属性" width="923" height="391" /></p>
+<p><img title="col属性" src="./images/Element-ui学习笔记11.png" alt="col属性" width="947" height="665" /></p>
+<h3 id="ji-yu-duan-dian-de-yin-cang-lei">基于断点的隐藏类</h3>
+<p>Element 额外提供了一系列类名，用于在某些条件下隐藏元素。这些类名可以添加在任何 DOM 元素或自定义组件上。如果需要，请自行引入以下文件：</p>
+<pre><code><code class="language-js hljs javascript"><span class="hljs-keyword">import <span class="hljs-string">'element-ui/lib/theme-chalk/display.css';
+</span></span></code></pre>
+<p>包含的类名及其含义为：</p>
+<ul>
+<li><code>hidden-xs-only</code>&nbsp;- 当视口在&nbsp;<code>xs</code>&nbsp;尺寸时隐藏</li>
+<li><code>hidden-sm-only</code>&nbsp;- 当视口在&nbsp;<code>sm</code>&nbsp;尺寸时隐藏</li>
+<li><code>hidden-sm-and-down</code>&nbsp;- 当视口在&nbsp;<code>sm</code>&nbsp;及以下尺寸时隐藏</li>
+<li><code>hidden-sm-and-up</code>&nbsp;- 当视口在&nbsp;<code>sm</code>&nbsp;及以上尺寸时隐藏</li>
+<li><code>hidden-md-only</code>&nbsp;- 当视口在&nbsp;<code>md</code>&nbsp;尺寸时隐藏</li>
+<li><code>hidden-md-and-down</code>&nbsp;- 当视口在&nbsp;<code>md</code>&nbsp;及以下尺寸时隐藏</li>
+<li><code>hidden-md-and-up</code>&nbsp;- 当视口在&nbsp;<code>md</code>&nbsp;及以上尺寸时隐藏</li>
+<li><code>hidden-lg-only</code>&nbsp;- 当视口在&nbsp;<code>lg</code>&nbsp;尺寸时隐藏</li>
+<li><code>hidden-lg-and-down</code>&nbsp;- 当视口在&nbsp;<code>lg</code>&nbsp;及以下尺寸时隐藏</li>
+<li><code>hidden-lg-and-up</code>&nbsp;- 当视口在&nbsp;<code>lg</code>&nbsp;及以上尺寸时隐藏</li>
+<li><code>hidden-xl-only</code>&nbsp;- 当视口在&nbsp;<code>xl</code>&nbsp;尺寸时隐藏</li>
+</ul>
+<p>2.container容器</p>
+<p><code>&lt;el-container&gt;</code>：外层容器。当子元素中包含&nbsp;<code>&lt;el-header&gt;</code>&nbsp;或&nbsp;<code>&lt;el-footer&gt;</code>&nbsp;时，全部子元素会垂直上下排列，否则会水平左右排列。</p>
+<p><code>&lt;el-header&gt;</code>：顶栏容器。</p>
+<p><code>&lt;el-aside&gt;</code>：侧边栏容器。</p>
+<p><code>&lt;el-main&gt;</code>：主要区域容器。</p>
+<p><code>&lt;el-footer&gt;</code>：底栏容器。</p>
+<p>注意考虑一个兼容性问题，因为采用的是flex布局</p>
+<p><code>&lt;el-container&gt;</code>&nbsp;的子元素只能是后四者，后四者的父元素也只能是&nbsp;<code>&lt;el-container&gt;</code></p>
+<p>header,footer默认高度60px，有height属性</p>
+<p>aside默认宽度300px,有width属性</p>
+<p>3.color颜色和字体，边框等</p>
+<p>有一套初始化模板，可以通过scss改变变量值，或着直接下载一套自定义主题进行更改</p>
+<p><span class="hljs-selector-tag">font-family: "<span class="hljs-selector-tag">Helvetica&nbsp;<span class="hljs-selector-tag">Neue",<span class="hljs-selector-tag">Helvetica,"<span class="hljs-selector-tag">PingFang&nbsp;<span class="hljs-selector-tag">SC","<span class="hljs-selector-tag">Hiragino&nbsp;<span class="hljs-selector-tag">Sans&nbsp;<span class="hljs-selector-tag">GB","<span class="hljs-selector-tag">Microsoft&nbsp;<span class="hljs-selector-tag">YaHei","微软雅黑",<span class="hljs-selector-tag">Arial,<span class="hljs-selector-tag">sans-serif;</span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+<table class="demo-typo-size">
+<tbody>
+<tr>
+<td>层级</td>
+<td>字体大小</td>
+</tr>
+<tr>
+<td>辅助文字</td>
+<td class="color-dark-light">12px Extra Small</td>
+</tr>
+<tr>
+<td>正文（小）</td>
+<td class="color-dark-light">13px Small</td>
+</tr>
+<tr>
+<td>正文</td>
+<td class="color-dark-light">14px Base</td>
+</tr>
+<tr>
+<td>小标题</td>
+<td class="color-dark-light">16px Medium</td>
+</tr>
+<tr>
+<td>标题</td>
+<td class="color-dark-light">18px large</td>
+</tr>
+<tr>
+<td>主标题</td>
+<td class="color-dark-light">20px Extra large</td>
+</tr>
+</tbody>
+</table>
+<p>边框实线 默认1px 虚线 默认2px</p>
+<p>圆角</p>
+<p>无圆角</p>
+<p>border-radius: 0px</p>
+<p>小圆角</p>
+<p>border-radius: 2px</p>
+<p>大圆角</p>
+<p>border-radius: 4px</p>
+<p>圆形圆角</p>
+<p>border-radius: 30px</p>
+<p>基础投影 box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)</p>
+<p>浅色投影 box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)</p>
+<p>&nbsp;</p>
+<p>Icon图标直接使用类名</p>
+<p><span class="hljs-tag">&lt;<span class="hljs-name">i&nbsp;<span class="hljs-attr">class=<span class="hljs-string">"el-icon-edit"&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">i&gt;</span></span></span></span></span></span></p>
+<p><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag">&lt;<span class="hljs-name">i&nbsp;<span class="hljs-attr">class=<span class="hljs-string">"el-icon-share"&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">i&gt;</span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag">&lt;<span class="hljs-name">i&nbsp;<span class="hljs-attr">class=<span class="hljs-string">"el-icon-delete"&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">i&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag">&lt;<span class="hljs-name">el-button&nbsp;<span class="hljs-attr">type=<span class="hljs-string">"primary"&nbsp;<span class="hljs-attr">icon=<span class="hljs-string">"el-icon-search"&gt;搜索<span class="hljs-tag">&lt;/<span class="hljs-name">el-button&gt;在标签里插入图标用icon属性</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-tag"><span class="hljs-name"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-attr"><span class="hljs-string"><span class="hljs-tag"><span class="hljs-name">图标大全&nbsp;<a href="https://element.eleme.cn/#/zh-CN/component/icon">https://element.eleme.cn/#/zh-CN/component/icon</a></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

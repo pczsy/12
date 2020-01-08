@@ -1,0 +1,92 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修bootstrap-select使用过程中的一些问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>bootstrap-select使用过程中的一些问题</center></div><div class='banquan'>原文出处:本文由博客园博主幽篁晓筑提供。<br/>
+原文连接:https://www.cnblogs.com/woods1815/p/11145153.html</div><br>
+    <p>&nbsp;</p>
+<p>这里总结一下上次使用bootstrap-select的过程中遇到的一些问题。至于bootstrap-select的具体使用方法这里就不介绍了，网上有很多例子。</p>
+<p><strong>地址</strong>：</p>
+<p>官方插件地址：<a href="https://developer.snapappointments.com/bootstrap-select" target="_blank">https://developer.snapappointments.com/bootstrap-select</a></p>
+<p>GitHub地址：<a href="https://github.com/snapappointments/bootstrap-select" target="_blank">https://github.com/snapappointments/bootstrap-select</a></p>
+<p>&nbsp;</p>
+<h2>问题一：点击没有反应，下拉框不出现</h2>
+<p><strong>原因</strong>：可能是js文件引入顺序错误。</p>
+<p><strong>正确引入顺序</strong>：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet" /&gt;
+&lt;link href="lib/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" /&gt;
+&lt;script src="lib/jquery-3.4.1/jquery-3.4.1.min.js"&gt;&lt;/script&gt;
+&lt;script src="lib/bootstrap/js/bootstrap.min.js"&gt;&lt;/script&gt;
+&lt;script src="lib/bootstrap-select/js/bootstrap-select.js"&gt;&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<h2>问题二：如何加载动态数据</h2>
+<p><strong>方法一</strong>：</p>
+<div class="cnblogs_code">
+<pre><code>$.get("/test/ajax", <span style="color: #0000ff;">function</span><span style="color: #000000;">(result){
+    </span><span style="color: #0000ff;">if</span>(result.code == 0<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">var</span> addhtml = ""<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; result.data.length; i++<span style="color: #000000;">){
+            addhtml </span>+= "&lt;option value="+ result.data[i]['id'] +"&gt;"+ result.data[i]['name'] +"&lt;/option&gt;"<span style="color: #000000;">;
+        }
+        $(</span>'.selectpicker'<span style="color: #000000;">).html(addhtml);
+    }
+});</span></pre>
+</div>
+<p><strong>方法二</strong>：</p>
+<div class="cnblogs_code">
+<pre><code>$.get("/test/ajax", <span style="color: #0000ff;">function</span><span style="color: #000000;">(result){
+    </span><span style="color: #0000ff;">if</span>(result.code == 0<span style="color: #000000;">){
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; result.data.length; i++<span style="color: #000000;">){
+            $(</span>'.selectpicker').append("&lt;option value="+ result.data[i]['id'] +"&gt;"+ result.data[i]['name'] +"&lt;/option&gt;"<span style="color: #000000;">);
+        }
+    }
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>问题三：动态加载数据不显示</h2>
+<p><strong>原因</strong>：动态生成数据后没有刷新插件</p>
+<p><strong>解决办法</strong>：数据加载成功后加入以下两条语句。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">使用refresh方法更新UI以匹配新状态</span>
+$('.selectpicker').selectpicker('refresh'<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">render方法强制重新渲染引导程序</span>
+$('.selectpicker').selectpicker('render');</pre>
+</div>
+<p>&nbsp;</p>
+<h2>问题四：使用筛选时，如果同时出现中文和英文，则搜索会出现问题</h2>
+<p><strong>解决办法</strong>：</p>
+<p>注释bootstrap-select.js文件中的以下代码：</p>
+<div class="cnblogs_code">
+<pre><code>that.$lis.not('.hidden, .divider, .dropdown-header').eq(0).addClass('active').children('a'<span style="color: #000000;">).focus();
+$(</span><span style="color: #0000ff;">this</span>).focus();</pre>
+</div>
+<p>&nbsp;</p>
+<h2>问题五：不选时默认显示内容&nbsp;</h2>
+<p><strong>解决办法</strong>：</p>
+<div class="cnblogs_code">
+<pre><code>$(".selectpicker"<span style="color: #000000;">).selectpicker({
+   noneSelectedText : </span>'请选择'<span style="color: #000000;">
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

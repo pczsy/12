@@ -1,0 +1,83 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue中对于图片是否正常加载的思考' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue中对于图片是否正常加载的思考</center></div><div class='banquan'>原文出处:本文由博客园博主wangnima666提供。<br/>
+原文连接:https://www.cnblogs.com/tony-stark/p/11377242.html</div><br>
+    <p>问题：由于业务需要，我们需要判断图片能否正常的加载，如果未正常加载的话，需要显示一张默认图片；</p>
+<p>方案：1，由于后台返回的是一个图片id数组，例如 imgList=['343313131','21333413244','3312w232211'],图片的完整路径应为http://公司服务器地址/xxxx/read?fileId='图片id'，可以看成一个请求，先对图片的src请求一次，如果请求成功，返回的结果（res）data里面应该是一串二进制乱码，如果返回的结果中data属性里面有code，值不为0，则说明图片是无效的。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;2，onerror事件此时传入当前的元素并修改src</p>
+<p>&nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>实施方案： 第一种方案</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">图片检验2</span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">that为传入的img数组</span><span style="color: #008000;">
+//</span><span style="color: #008000;">name为属性名字例如[{id:'343313131'}],此时name就为'id';</span><span style="color: #008000;">
+//</span><span style="color: #008000;">apiBaseUrl 为域名</span><span style="color: #008000;">
+//</span><span style="color: #008000;">fileConfigServer 为读取路径</span><span style="color: #008000;">
+//</span><span style="color: #008000;">imgSrcPath 为参数名例如 '?fileId='</span>
+import axios from 'axios'<span style="color: #000000;">;
+Vue.prototype.testImg2 </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(that, name) {
+    
+    </span><span style="color: #0000ff;">function</span>*<span style="color: #000000;"> change() {
+        </span><span style="color: #0000ff;">for</span>(let j=0;j&lt;that.length;j++<span style="color: #000000;">){
+            let result </span>=<span style="color: #000000;"> yield ajax(j);
+        }
+      let result </span>=<span style="color: #000000;"> yield ajax();
+    }
+    </span><span style="color: #0000ff;">var</span> newchange =<span style="color: #000000;"> change();
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> ajax(i){
+                axios({
+            method: </span>'post'<span style="color: #000000;">,
+            url: apiBaseUrl </span>+ fileConfigServer + imgSrcPath +<span style="color: #000000;"> that[i][name]
+        }).then(res </span>=&gt;<span style="color: #000000;"> {
+            that[i][name] </span>= res.data.code ? <span style="color: #0000ff;">false</span> : apiBaseUrl + fileConfigServer + imgSrcPath +<span style="color: #000000;"> that[i][name];//（1）<br />            console.log(res); //打印结果
+            newchange.next();
+
+        }).</span><span style="color: #0000ff;">catch</span>(err =&gt;<span style="color: #000000;"> {
+            console.log(</span>'失败'<span style="color: #000000;">)
+        })
+        }
+    newchange.next();
+    
+}</span></pre>
+</div>
+<p>结果：打印res如下:</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<img src="./images/vue中对于图片是否正常加载的思考0.png" alt="" /></p>
+<p>&nbsp; &nbsp; &nbsp;第一个为显示不正常的，data中返回了data相关字段code为-1，第二个为显示正常的data的值为二进制代码</p>
+<pre><code><span>（1）中即为如果返回有code 则将图片的id值记为false，vue界面可采用 v-if来显示正常图片与加载失败的图片<br />问：这里为什么采用yiled？<br />答：因为是异步请求，无法判定第几个先返回，但为了保证之前的顺序，所以在请求完成的时候调用next进行下一次请求，也可以采用<br /><br /><br /><br /><br /><br /><br />  方案二，方案二是比较简单的<br />  直接给图片绑定error事件即可，例如:</span></pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">html中</span>
+&lt;img @error="handleError($event)"/&gt;
+ <span style="color: #008000;">//</span><span style="color: #008000;">methods中：</span>
+<span style="color: #000000;">   handleError(e){
+   e.currentTarget.src</span>="默认图片地址"<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp; 方案二注意：1，如果图片是循环出来的用这种方案是没有问题的，注意火狐可能不兼容onerror事件，可以采用背景图片代替</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 2，如果图片单独的不是循环出来的，比如封面之类的，加入logo来自于后台 ，即src是动态的建议如下：</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code>//html中<br />&lt;img v-<span style="color: #0000ff;">if</span>="imgurl" :src="imgurl"/&gt;<br />//js中 请将imgurl初始值赋值为null<br /><br /><br /></pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;这样做的原因：html会优先解析img元素会被创建，而此时imgurl还在请求中值不存在，此时就会触发onerror事件，如果加v-if，html不会解析img标签，当然元素不会创建。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

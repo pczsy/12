@@ -1,0 +1,68 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修『vue踩坑日常』 在index.html中引入静态文件不生效' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>『vue踩坑日常』 在index.html中引入静态文件不生效</center></div><div class='banquan'>原文出处:本文由博客园博主linwene提供。<br/>
+原文连接:https://www.cnblogs.com/linwene/p/10788617.html</div><br>
+    <p>Vue日常踩坑日常 —— 在index.html中引入静态文件不生效问题</p>
+<p>本文针对的是Vue小白，不喜勿喷，谢谢</p>
+<p>出现该问题的标志如下</p>
+<p>控制台warning（<code>Resource interpreted as Stylesheet but transferred with MIME type text/html</code>）</p>
+<p><img src="./images/『vue踩坑日常』 在index.html中引入静态文件不生效0.png" /></p>
+<p><strong>出现的原因及解决办法</strong></p>
+<p><strong>第一种可能出现原因</strong>就是引入的静态文件在src文件夹内，这种的解决办法就是把资源引入静态资源的目录static</p>
+<p><strong>第二种可能出现的原因</strong>就是有单独的静态资源目录但是名字不叫static，这种的解决办法更改配置文件，把对应的几个配置文件内的static更改为你自己所创建的静态资源目录，由于网上大多教程所改的地方都不够完全，还是会出现该问题，所以这也是今天为什么要写这篇文章的原因。</p>
+<p>需要更改的有3个文件，分别是<code>config</code>文件夹下的<code>index.js</code>,<code>build</code>文件夹下的<code>webpack.dev.conf.js</code>和<code>webpack.prod.conf.js</code></p>
+<p>假如你的静态资源文件夹叫<strong>public</strong>，和<strong>src</strong>文件夹同级，需要修改的如下</p>
+<p><strong>1. index.js</strong></p>
+<pre><code><code>  dev: {
+    assetsSubDirectory: &#39;public&#39;,//原本是static，现在改为public
+    assetsPublicPath: `/${name}/`,
+    
+    ...
+    
+  build: {
+    index: path.resolve(__dirname, &#39;../dist/index.html&#39;),
+    assetsRoot: path.resolve(__dirname, &#39;../dist&#39;),
+    assetsSubDirectory: &#39;public&#39;,//原本是static，现在改为public</code></pre>
+<p><strong>2. webpack.dev.conf.js</strong></p>
+<pre><code><code>    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        //下面原本是static，现在改为public
+        from: path.resolve(__dirname, &#39;../public&#39;),
+        to: config.build.assetsSubDirectory,
+        ignore: [&#39;.*&#39;]
+      }
+    ])</code></pre>
+<p><strong>3. webpack.prod.conf.js</strong></p>
+<pre><code><code>    // copy custom static assets
+    new CopyWebpackPlugin([
+      {
+        //下面原本是static，现在改为public
+        from: path.resolve(__dirname, &#39;../public&#39;),
+        to: config.dev.assetsSubDirectory,
+        ignore: [&#39;.*&#39;]
+      }
+    ])</code></pre>
+<p>Ps：有任何问题欢迎在评论区探讨</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

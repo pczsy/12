@@ -1,0 +1,254 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【微信小程序】手写索引选择器（城市列表，汽车品牌选择列表）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【微信小程序】手写索引选择器（城市列表，汽车品牌选择列表）</center></div><div class='banquan'>原文出处:本文由博客园博主等一轮新月提供。<br/>
+原文连接:https://www.cnblogs.com/yfgg/p/11202750.html</div><br>
+    <p>摘要： 小程序索引选择器，点击跳转相应条目，索引可滑动，滑动也可跳转</p>
+<p>场景：城市选择列表， 汽车品牌选择列表</p>
+<p>所用组件：&nbsp;<span style="background-color: #ff0000; color: #ffffff;">scroll-view</span>（小程序原生）&nbsp;<a href="https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html" target="_blank">https://developers.weixin.qq.com/miniprogram/dev/component/scroll-view.html</a></p>
+<div>所用API：<span style="color: #ffffff;">&nbsp;<span style="background-color: #ff0000;">wx.getSystemInfo&nbsp; &nbsp;&nbsp;<span style="background-color: #ffffff; color: #000000;">&nbsp;<span style="color: #3366ff;"><span style="background-color: #ffffff; color: #3366ff;"><a href="https://developers.weixin.qq.com/miniprogram/dev/api/base/system/system-info/wx.getSystemInfo.html" target="_blank">https://developers.weixin.qq.com/miniprogram/dev/api/base/system/system-info/wx.getSystemInfo.html</a></span></span></span></span></span></div>
+<div>使用技术： 组件 + API + 一个简单的<span style="background-color: #ff0000; color: #ffffff;">计算</span><span style="background-color: #ff0000; color: #ffffff;"><br /></span></div>
+<div>效果示意：</div>
+<div><img src="./images/【微信小程序】手写索引选择器（城市列表，汽车品牌选择列表）0.png" alt="" />
+<p>&nbsp;</p>
+</div>
+<div>&nbsp;</div>
+<div>本例<span style="background-color: #ff0000; color: #ffffff;">数据结构</span>：（你可以把你的数据改成这种结构，当然，掌握方法后可自行调整）
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">  1</span> <span style="color: #000000;">list: [
+</span><span style="color: #008080;">  2</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">  3</span> <span style="color: #000000;">              "letter": "A",
+</span><span style="color: #008080;">  4</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;">  5</span> <span style="color: #000000;">                "name": "奥迪1",
+</span><span style="color: #008080;">  6</span> <span style="color: #000000;">                "id": 1
+</span><span style="color: #008080;">  7</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;">  8</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;">  9</span> <span style="color: #000000;">                "name": "奥迪2",
+</span><span style="color: #008080;"> 10</span> <span style="color: #000000;">                "id": 2
+</span><span style="color: #008080;"> 11</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 12</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 13</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 14</span> <span style="color: #000000;">              "letter": "B",
+</span><span style="color: #008080;"> 15</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 16</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 17</span> <span style="color: #000000;">                "id": 3
+</span><span style="color: #008080;"> 18</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 19</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 20</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 21</span> <span style="color: #000000;">                "id": 4
+</span><span style="color: #008080;"> 22</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 23</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 24</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 25</span> <span style="color: #000000;">              "letter": "C",
+</span><span style="color: #008080;"> 26</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 27</span> <span style="color: #000000;">                "name": "麻喇沙底",
+</span><span style="color: #008080;"> 28</span> <span style="color: #000000;">                "id": 5
+</span><span style="color: #008080;"> 29</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 30</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 31</span> <span style="color: #000000;">                "name": "adidas",
+</span><span style="color: #008080;"> 32</span> <span style="color: #000000;">                "id": 6
+</span><span style="color: #008080;"> 33</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 34</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 35</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 36</span> <span style="color: #000000;">              "letter": "D",
+</span><span style="color: #008080;"> 37</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 38</span> <span style="color: #000000;">                "name": "煲事件",
+</span><span style="color: #008080;"> 39</span> <span style="color: #000000;">                "id": 7
+</span><span style="color: #008080;"> 40</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 41</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 42</span> <span style="color: #000000;">                "name": "保时捷",
+</span><span style="color: #008080;"> 43</span> <span style="color: #000000;">                "id": 8
+</span><span style="color: #008080;"> 44</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 45</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 46</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 47</span> <span style="color: #000000;">              "letter": "E",
+</span><span style="color: #008080;"> 48</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 49</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 50</span> <span style="color: #000000;">                "id": 9
+</span><span style="color: #008080;"> 51</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 52</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 53</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 54</span> <span style="color: #000000;">                "id": 10
+</span><span style="color: #008080;"> 55</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 56</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 57</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 58</span> <span style="color: #000000;">              "letter": "F",
+</span><span style="color: #008080;"> 59</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 60</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 61</span> <span style="color: #000000;">                "id": 11
+</span><span style="color: #008080;"> 62</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 63</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 64</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 65</span> <span style="color: #000000;">                "id": 12
+</span><span style="color: #008080;"> 66</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 67</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 68</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 69</span> <span style="color: #000000;">              "letter": "G",
+</span><span style="color: #008080;"> 70</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 71</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 72</span> <span style="color: #000000;">                "id": 15
+</span><span style="color: #008080;"> 73</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 74</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 75</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 76</span> <span style="color: #000000;">                "id": 16
+</span><span style="color: #008080;"> 77</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 78</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 79</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 80</span> <span style="color: #000000;">              "letter": "H",
+</span><span style="color: #008080;"> 81</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 82</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 83</span> <span style="color: #000000;">                "id": 17
+</span><span style="color: #008080;"> 84</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 85</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 86</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 87</span> <span style="color: #000000;">                "id": 18
+</span><span style="color: #008080;"> 88</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;"> 89</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;"> 90</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;"> 91</span> <span style="color: #000000;">              "letter": "I",
+</span><span style="color: #008080;"> 92</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;"> 93</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;"> 94</span> <span style="color: #000000;">                "id": 19
+</span><span style="color: #008080;"> 95</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;"> 96</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;"> 97</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;"> 98</span> <span style="color: #000000;">                "id": 20
+</span><span style="color: #008080;"> 99</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;">100</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">101</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">102</span> <span style="color: #000000;">              "letter": "J",
+</span><span style="color: #008080;">103</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;">104</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;">105</span> <span style="color: #000000;">                "id": 21
+</span><span style="color: #008080;">106</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;">107</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;">108</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;">109</span> <span style="color: #000000;">                "id": 22
+</span><span style="color: #008080;">110</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;">111</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">112</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">113</span> <span style="color: #000000;">              "letter": "K",
+</span><span style="color: #008080;">114</span> <span style="color: #000000;">              "list": [{
+</span><span style="color: #008080;">115</span> <span style="color: #000000;">                "name": "宝马1",
+</span><span style="color: #008080;">116</span> <span style="color: #000000;">                "id": 23
+</span><span style="color: #008080;">117</span> <span style="color: #000000;">              },
+</span><span style="color: #008080;">118</span> <span style="color: #000000;">              {
+</span><span style="color: #008080;">119</span> <span style="color: #000000;">                "name": "宝马2",
+</span><span style="color: #008080;">120</span> <span style="color: #000000;">                "id": 24
+</span><span style="color: #008080;">121</span> <span style="color: #000000;">              }]
+</span><span style="color: #008080;">122</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">123</span>           ]</pre>
+</div>
+<p><span style="background-color: #ff0000; color: #ffffff;">&nbsp;html 结构</span>：</p>
+<p>主体部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">scroll-view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="content"</span><span style="color: #ff0000;"> scroll-y</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> :style</span><span style="color: #0000ff;">="scrollHeight"</span><span style="color: #ff0000;"> :scroll-top</span><span style="color: #0000ff;">="scrollData.scrollTop"</span><span style="color: #ff0000;"> :scroll-into-view</span><span style="color: #0000ff;">="toView"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="brandList"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item, index) in list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="index"</span><span style="color: #ff0000;"> :id</span><span style="color: #0000ff;">="item.letter"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>{{item.letter}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(el, i) in item.list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="i"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="pro"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="getToast(el.name)"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/static/images/user.png"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> mode</span><span style="color: #0000ff;">="aspectFit"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>{{el.name}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>           <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>       <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">scroll-view</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">// 侧边导航栏
+</span><span style="color: #008080;">2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="letterList"</span><span style="color: #ff0000;"> @touchstart</span><span style="color: #0000ff;">="handlerTouchMove"</span> 
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">        @touchmove</span><span style="color: #0000ff;">="handlerTouchMove"</span> 
+<span style="color: #008080;">4</span> <span style="color: #ff0000;">        @touchend</span><span style="color: #0000ff;">="handlerTouchEnd"</span><span style="color: #ff0000;"> :style</span><span style="color: #0000ff;">="fixedTop"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item, index) in list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="index"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="getLetter(item.letter)"</span><span style="color: #0000ff;">&gt;</span>{{item.letter}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<div><span style="background-color: #ff0000; color: #3366ff;">&nbsp;<span style="color: #ffffff;">js初始数据</span></span>：</div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">scrollData: {
+        scrollTop: 0,
+      },
+      toView:'A',</span></pre>
+</div>
+<p><span style="background-color: #ff0000; color: #ffffff;">step1</span><span style="color: #ffffff;">：&nbsp;</span></p>
+<p><span style="color: #000000; background-color: #ffffff;">首先，侧边导航栏肯定是用fixed定位固定（一般在右侧），其次在竖直方向居中，调用wx.getSystemInfo&nbsp;</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">let fixedTop = 0;
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      let length = this.list.length // 取到list数组的length，因为list的length决定了侧边导航的高度
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">      wx.getSystemInfo({
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">        success(res) {
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">          fixedTop = (res.windowHeight - (20 * length))/2  //20为侧边导航每个p的高度
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">7</span>       })</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffffff;">step2</span></p>
+<p>手指在侧边导航滑动时的js</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">handlerTouchMove (e) {
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">      let touches = e.touches[0] || {}
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">      let pageY = touches.pageY
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">      let rest = pageY - this.fixedTop
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">      let index = Math.ceil(rest / 20)
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">      console.log(this.list.length, index, 206);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">      console.log(index,195);<br /></span><span style="color: #008080;"> 8</span> <span style="color: #000000;">      if(index &gt; this.list.length) {
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">        index = this.list.length - 1// 
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;">11</span>       <span style="color: #000000;">if( 0 &lt;index &lt;= this.list.length) { // 1213  10  9
+12         index = index - 1
+13       }
+14       if(index &lt;= 0) {
+15         index = 0
+16       }
+17       let letter = this.list[index].letter
+18       wx.showToast({
+19         title: letter,
+20         icon: 'none',
+21         duration: 2000
+22       })
+23       this.toView = letter
+24     },
+25     handlerTouchEnd () {
+26       wx.hideLoading()
+27     },</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffffff;">step3</span></p>
+<p>点击侧边索引时的js</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">    getLetter (letter) {
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      this.toView = letter
+</span><span style="color: #008080;">3</span>     },</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffff00;">结束惹，88， 下次见</span></p>
+<p><span style="color: #ffffff;">是</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+<div>&nbsp;</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

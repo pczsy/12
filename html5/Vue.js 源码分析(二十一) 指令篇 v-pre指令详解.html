@@ -1,0 +1,112 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十一) 指令篇 v-pre指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十一) 指令篇 v-pre指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11153635.html</div><br>
+    <p>该指令会跳过所在元素和它的子元素的编译过程，也就是把这个节点及其子节点当作一个静态节点来处理，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;
+        &lt;p v-pre :title="message"&gt;{{message}}&lt;/p&gt;  
+        &lt;p&gt;{{message}}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+            el:</span>'#app'<span style="color: #000000;">,
+            data:{message:</span>"Hello World"<span style="color: #000000;">}
+        })
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>编译后的结果为:</p>
+<p><img src="./images/Vue.js 源码分析(二十一) 指令篇 v-pre指令详解0.png" alt="" /></p>
+<p>对应的HTML节点树为:</p>
+<p><img src="./images/Vue.js 源码分析(二十一) 指令篇 v-pre指令详解1.png" alt="" /></p>
+<p>可以看到:title属性也被当成了特性来处理了，我们在控制台输入app.message="Hello Vue!"看看渲染变化:</p>
+<p><img src="./images/Vue.js 源码分析(二十一) 指令篇 v-pre指令详解2.png" alt="" /></p>
+<p>可以看到对于v-pre对应的DOM节点，数据变化时也不会触发渲染的</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;解析模板时如果遇到标签开始，会执行start函数，对于 &lt;p v-pre :title="message"&gt;{{message}}&lt;/p&gt;来说</p>
+<div class="cnblogs_code">
+<pre><code>start: <span style="color: #0000ff;">function</span> start (tag, attrs, unary) {   <span style="color: #008000;">//</span><span style="color: #008000;">第9136行  解析到标签开始时执行到这里</span>
+      <span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span>
+
+      <span style="color: #0000ff;">if</span> (!inVPre) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果inVPre为false  <span style="color: #ff0000;">inVPre是个全局，用于判断当前是否在v-pre属性的环境之下，比如&lt;p v-pre&gt;&lt;span&gt;123&lt;/span&gt;&lt;/p&gt;解析到span标签时可以通过该属性来判断当前在v-pre内</span></span>
+        processPre(element);                      <span style="color: #008000;">//</span><span style="color: #008000;">尝试解析v-pre属性</span>
+        <span style="color: #0000ff;">if</span> (element.pre) {                        <span style="color: #008000;">//</span><span style="color: #008000;">如果element有v-pre属性</span>
+          inVPre = <span style="color: #0000ff;">true</span>;                            <span style="color: #008000;">//</span><span style="color: #008000;">则设置inVPre为true</span>
+<span style="color: #000000;">        }
+      }
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (platformIsPreTag(element.tag)) {
+        inPre </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      }
+      </span><span style="color: #0000ff;">if</span> (inVPre) {                             <span style="color: #008000;">//</span><span style="color: #008000;">如果当前为pre标签  </span>
+        processRawAttrs(element);                  <span style="color: #008000;">//</span><span style="color: #008000;">则设置inPre为true</span>
+      } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">element.processed) {          
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> structural directives</span>
+        processFor(element);                      <span style="color: #ff0000;">//</span><span style="color: #ff0000;">对于v-pre特性标记的节点来说，不会进行这里面的分支，也就不会处理Vue指令了</span>
+<span style="color: #000000;">        processIf(element);
+        processOnce(element);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> element-scope stuff</span>
+<span style="color: #000000;">        processElement(element, options);
+      }
+
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    },</span></pre>
+</div>
+<p>processRawAttrs用于将特性保存到AST对象的attrs属性上，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processRawAttrs (el) {     <span style="color: #008000;">//</span><span style="color: #008000;">第9317行 如果设置了v-pre特性，则执行到这里</span>
+  <span style="color: #0000ff;">var</span> l =<span style="color: #000000;"> el.attrsList.length; 
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (l) {
+    </span><span style="color: #0000ff;">var</span> attrs = el.attrs = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Array(l); 
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; l; i++) {         <span style="color: #008000;">//</span><span style="color: #008000;">遍历当前所有的特性，依次保存到e.attrs上面</span>
+      attrs[i] =<span style="color: #000000;"> {
+        name: el.attrsList[i].name,
+        value: JSON.stringify(el.attrsList[i].value)
+      };
+    }
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">el.pre) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> non root node in pre blocks with no attributes</span>
+    el.plain = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  }
+}</span></pre>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+</div>
+<p>后面在gendata()函数执行时就会拼凑成attr属性里，最后render渲染成相应的DOM节点后就会将该attr属性保存到对应的节点上了，例子里的模板渲染成render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"app"}},[<span style="color: #ff0000;">_c('p',{pre:true,attrs:{":title":"message"}},[_v("{{message}}")</span>]),_v(" "),_c('p',[_v(_s(message))])])}</pre>
+</div>
+<p>红色标记的就是v-pre编译后的模板，等到p元素渲染成真实DOM节点的时候，就会触发Vue内部attrs模块的updateAttrs方法进行初始化，<span style="color: #ff0000;">之后就和v-bind指令里的后部分流程时一样的，最后会调用原生的DOM函数setAttribute去设置特性</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

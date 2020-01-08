@@ -1,0 +1,134 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue 集成jTopo 处理方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue 集成jTopo 处理方法</center></div><div class='banquan'>原文出处:本文由博客园博主hucoke提供。<br/>
+原文连接:https://www.cnblogs.com/hucoke/p/11313480.html</div><br>
+    <p>&nbsp;</p>
+<h2 class="block">jTopo 帮助说明网站</h2>
+<p><a href="http://www.jtopo.com/index.html">http://www.jtopo.com/index.html</a></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>使用例子：</strong></p>
+<p><a href="http://www.jtopo.com/demo/helloworld.html">http://www.jtopo.com/demo/helloworld.html</a></p>
+<p>不建议直接安装&nbsp;github 上的代码，因为代码版本不是最新，有部分功能未实现。</p>
+<p>&nbsp;</p>
+<p>下载最新的js类库文件放到&nbsp; vue&nbsp; 项目&nbsp;public&nbsp; &nbsp;文件夹下。</p>
+<div>&nbsp;引入&nbsp; import "/jtopo/jtopo-0.4.8-min.js";</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div>&lt;template&gt;</div>
+<div>&lt;div&gt;</div>
+<div>&lt;PanelBase title="拓扑图"&gt;</div>
+<div>&lt;div slot="head-btns" class="panel-head-btns"&gt;&lt;/div&gt;</div>
+<div>&lt;div slot="body-content"&gt;</div>
+<div>&lt;section class="table-section"&gt;</div>
+<div>&lt;canvas width="2000" height="600" id="canvas"&gt;&lt;/canvas&gt;</div>
+<div>&lt;/section&gt;</div>
+<div>&lt;/div&gt;</div>
+<div>&lt;/PanelBase&gt;</div>
+<div>&lt;/div&gt;</div>
+<div>&lt;/template&gt;</div>
+<div>&nbsp;</div>
+<div>
+<div><br />
+<div>        let canvas = document.getElementById("canvas");</div>
+
+<br />
+<div>        that.stage = new JTopo.Stage(canvas);</div>
+<div>        that.scene = new JTopo.Scene(that.stage);</div>
+<div>        that.scene.background = "/jtopo/aa.png";</div>
+
+</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>
+<div><br />
+<div>        let s1 = that.node("a1", 305, 43, "server.png");</div>
+<div>        s1.alarm = "2 W";</div>
+<div>        let s2 = that.node("a2", 365, 43, "server.png");</div>
+<div>        let s3 = that.node("a3", 425, 43, "server.png");</div>
+
+<br />
+<div>        let g1 = that.node("a4", 366, 125, "gather.png");</div>
+<div>        that.linkNode(s1, g1, true);</div>
+<div>        that.linkNode(s2, g1, true);</div>
+<div>        that.linkNode(s3, g1, true);</div>
+
+<br />
+<div>        let w1 = that.node("a5", 324, 167, "wanjet.png");</div>
+<div>        that.linkNode(g1, w1);</div>
+
+<br />
+<div>        let c1 = that.node("a6", 364, 214, "center.png");</div>
+<div>        that.linkNode(w1, c1);</div>
+
+<br />
+<div>        let cloud = that.node("a7", 344, 259, "cloud.png");</div>
+<div>        that.linkNode(c1, cloud);</div>
+
+<br />
+<div>        let c2 = that.node("a8", 364, 328, "center.png");</div>
+<div>        that.linkNode(cloud, c2);</div>
+
+<br />
+<div>        let w2 = that.node("a9", 324, 377, "wanjet.png");</div>
+<div>        that.linkNode(c2, w2);</div>
+
+</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div>linkNode(nodeA: number, nodeZ: number, f: boolean) {</div>
+<div>/**连线*/</div>
+<div>let link;</div>
+<div>if (f) {</div>
+<div>link = new JTopo.FoldLink(nodeA, nodeZ);</div>
+<div>} else {</div>
+<div>link = new JTopo.Link(nodeA, nodeZ);</div>
+<div>}</div>
+<div>link.direction = "vertical";</div>
+<div>this.scene.add(link);</div>
+<div>return link;</div>
+<div>},</div>
+<div>hostLink(nodeA: any, nodeZ: any, name: string) {</div>
+<div>let link1 = new JTopo.FlexionalLink(nodeA, nodeZ, name);</div>
+<div>//var link = new JTopo.FlexionalLink(nodeA, nodeZ, text);</div>
+<div>//var link = new JTopo.FlexionalLink(nodeA, nodeZ, text);// 二次折线</div>
+<div>link1.shadow = false;</div>
+<div>link1.offsetGap = 44;</div>
+<div>this.scene.add(link1);</div>
+<div>return link1;</div>
+<div>}</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+</div>
+</div>
+</div>
+</div>
+<div>&nbsp;</div>
+</div>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

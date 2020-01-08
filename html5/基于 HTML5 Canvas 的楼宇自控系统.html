@@ -1,0 +1,105 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修基于 HTML5 Canvas 的楼宇自控系统' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>基于 HTML5 Canvas 的楼宇自控系统</center></div><div class='banquan'>原文出处:本文由博客园博主HT学习笔记提供。<br/>
+原文连接:https://www.cnblogs.com/htdaydayup/p/11713367.html</div><br>
+    <h1>前言</h1>
+<p>楼宇自控是指楼宇中电力设备，如电梯、水泵、风机、空调等，其主要工作性质是强电驱动。通常这些设备是开放性的工作状态，也就是说没有形成一个闭环回路。只要接通电源，设备就在工作，至于工作状态、进程、能耗等，无法在线及时得到数据，更谈不上合理使用和节约能源。现在楼宇自控是将上述的电器设备进行在线监控，通过设置相应的传感器、行程开关、光电控制等，对设备的工作状态进行检测，并通过线路返回控制机房的中心电脑，由电脑得出分析结果，再返回到设备终端进行调解。</p>
+<p><img src="./images/基于 HTML5 Canvas 的楼宇自控系统0.png" alt="" width="859" height="418" /></p>
+<p>(具体效果请参考链接：<a href="http://www.hightopo.com/demo/building-automation-system/" target="_blank">http://www.hightopo.com/demo/building-automation-system/</a>)</p>
+<h1>代码实现</h1>
+<p>首先第一步我们还是要对整个界面做一下基础的设置：</p>
+<div class="cnblogs_code">
+<pre><code>gv.getSelectWidth = () =&gt; { <span style="color: #0000ff;">return</span> 0 } <span style="color: #008000;">//</span><span style="color: #008000;"> 隐藏选中边框</span>
+gv.setMovableFunc(() =&gt; { <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span> }) <span style="color: #008000;">//</span><span style="color: #008000;"> 禁止图元移动</span>
+gv.handleScroll = () =&gt; {} <span style="color: #008000;">//</span><span style="color: #008000;"> 禁止鼠标缩放</span>
+gv.handlePinch = () =&gt; {} <span style="color: #008000;">//</span><span style="color: #008000;"> 禁止 touch 下双指缩放</span>
+gv.setPannable(<span style="color: #0000ff;">false</span>) <span style="color: #008000;">//</span><span style="color: #008000;"> 禁止平移</span>
+gv.setRectSelectable(<span style="color: #0000ff;">false</span>) <span style="color: #008000;">//</span><span style="color: #008000;"> 禁止框选</span>
+gv.setScrollBarVisible(<span style="color: #0000ff;">false</span>) <span style="color: #008000;">//</span><span style="color: #008000;"> 隐藏滚动条</span>
+window.document.oncontextmenu = () =&gt; { <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span> } <span style="color: #008000;">//</span><span style="color: #008000;"> 全局设置右键菜单禁用</span></pre>
+</div>
+<p>接下来就开始对面板进行封装，实现每块中包含的动画效果，这些动效制作起来既简单又能展现出整个系统的运动感，其实现的方式相仿，我就用一段例子来演示：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> chillerPanelAnim() {
+　　let num </span>=<span style="color: #000000;"> []
+　　let n </span>=<span style="color: #000000;"> []
+</span><span style="color: #0000ff;">　　for</span> (let i = 0; i &lt; 10; i++<span style="color: #000000;">) {
+</span><span style="color: #0000ff;">　　　　if</span> (i &lt; 8<span style="color: #000000;">) {
+　　　　　　num.push(Math.random() </span>* 2<span style="color: #000000;">)
+　　　　}
+</span><span style="color: #0000ff;">　　　　else</span> <span style="color: #0000ff;">if</span> (i === 8<span style="color: #000000;">) {
+　　　　　　n.push(Math.random() </span>* 40 + 60<span style="color: #000000;">)
+　　　　}
+</span><span style="color: #0000ff;">　　　　else</span><span style="color: #000000;"> {
+　　　　　　n.push(Math.random() </span>* 31<span style="color: #000000;">)
+　　　　}
+　　}
+　　let oldNumValue1 </span>= chillerPanel.a('l1.l.clipPercentage'<span style="color: #000000;">)
+　　let oldNumValue2 </span>= chillerPanel.a('l2.l.clipPercentage'<span style="color: #000000;">)
+　　let oldNumValue3 </span>= chillerPanel.a('l3.l.clipPercentage'<span style="color: #000000;">)</span><span style="color: #000000;">
+　　ht.Default.startAnim({
+　　　　duration: </span>2000<span style="color: #000000;">,
+　　　　easing: (t) </span>=&gt; { <span style="color: #0000ff;">return</span><span style="color: #000000;"> t },
+　　　　action: (v, t) </span>=&gt;<span style="color: #000000;"> {
+　　　　　　chillerPanel.a(</span>'l1.l.clipPercentage', oldNumValue1 + (num[0] - oldNumValue1) *<span style="color: #000000;"> v)
+　　　　　　chillerPanel.a(</span>'l2.l.clipPercentage', oldNumValue2 + (num[1] - oldNumValue2) *<span style="color: #000000;"> v)
+　　　　　　chillerPanel.a(</span>'l3.l.clipPercentage', oldNumValue3 + (num[2] - oldNumValue3) *<span style="color: #000000;"> v)</span><span style="color: #000000;">
+　　　　},
+　　　　finishFunc: () </span>=&gt;<span style="color: #000000;"> {
+　　　　　　setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+　　　　　　　　chillerPanelAnim()
+　　　　　　}, </span>2000<span style="color: #000000;">)
+　　　　}
+　　})
+}</span></pre>
+</div>
+<p>关于动画的方法大家可以理解为将某些属性由起始值逐渐变到目标值的过程，HT 提供了 ht.Default.startAnim，它支持 Frame-Based 和 Time-Based 两种方式的动画，我使用 Time-Based 方式，优点在于只需要指定 duration 的动画周期的毫秒数即可，HT 将在指定的时间周期内完成动画，也就是说帧数或 action 函数被调用次数取决于系统环境，一般来说系统配置更好的机器，更高效的浏览器则调用帧数越多，动画过程更平滑。避免了由于 js 语言无法精确控制 interval 时间间隔，可能会出现动画周期差异较大的问题。这其中还有个 easing&nbsp;属性可以通过数学公式计算来配置动画的&nbsp;<a href="https://hightopo.com/codeeditor/index.html?url=http://www.hightopo.com/guide/guide/core/beginners/examples/example_animation.html" target="_blank">缓动效果</a>，感兴趣的朋友可以打开来自己试着玩一玩。<span style="color: #000000;"><br /></span></p>
+<p><img src="./images/基于 HTML5 Canvas 的楼宇自控系统1.png" alt="" width="857" height="417" /></p>
+<p>2.5D 设备的管道部分，我用调度的方式给大家介绍一下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 流动动画</span>
+let flowTask =<span style="color: #000000;"> {<br />　　interval: 10,
+    action: (data) </span>=&gt;<span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">if</span> (data.getDisplayName() === 'flow1'<span style="color: #000000;">) {
+            data.s(</span>'shape.dash.offset', data.s('shape.dash.offset') + 1<span style="color: #000000;">)
+        }
+        </span><span style="color: #0000ff;">if</span> (data.getDisplayName() === 'flow2'<span style="color: #000000;">) {
+            data.s(</span>'shape.dash.offset', data.s('shape.dash.offset') - 1<span style="color: #000000;">)
+        }
+        </span><span style="color: #0000ff;">if</span> (data.getDisplayName() === 'flow3'<span style="color: #000000;">) {
+            data.s(</span>'shape.dash.offset', data.s('shape.dash.offset') + 5<span style="color: #000000;">)
+        }
+    }
+}<br /></span></pre>
+<div>dm.addScheduleTask(flowTask)</div>
+</div>
+<p>这也是一种实现动效的方式，它主要用于在指定的时间间隔进行函数回调处理，常用于实现图形的流动和闪烁等动画效果。流程是先通过 DataModel 添加调度任务，DataModel 会在调度任务指定的时间间隔到达时，遍历所有图元回调调度任务的 action 函数，可在该函数中传入的 Data 图元做相应的属性修改以达到动画效果。更多参数和设置可以参考 <a href="http://www.hightopo.com/guide/guide/core/schedule/ht-schedule-guide.html" target="_blank">调度手册</a>。</p>
+<p><img src="./images/基于 HTML5 Canvas 的楼宇自控系统2.png" alt="" width="552" height="361" /><img src="./images/基于 HTML5 Canvas 的楼宇自控系统3.png" alt="" width="163" height="360" /></p>
+<p>我们还要注意最好给需要交互的图元的鼠标移入移出事件分别设置&nbsp;view.setCursor('pointer') 和&nbsp;view.setCursor('default') 来增强交互体验感。同时，制作 2.5D 的图元其实需要花费超出正常 2D 图元数倍的工作量，除了要按照真实角度的透视图去建模外，还需要把每个部分单独制作。这就出现了有可能卡顿的问题，我们做的时候要注意用缓存规则来优化性能，尽可能的把每个细节做好。cacheRule 就相当于都用同一个 image，默认规则时：图标名 + 宽 + 高 + 缩放，如果规则判定一致，就会用同一张贴图，如果有其他的需要影响，就多返回一些信息，例如 data.a( 'color' )，这样会额外判定他们这个属性也是否一致，只有都一致的才会用同一张缓存，不一致的话尝试新建缓存贴图，比较适合静态的。</p>
+<h1>总结</h1>
+<p>在二十一世纪的今天，随着计算机技术和信息技术突飞猛进的发展。对大楼内的各种设备的状态监视和测量不再是随线式，而是采用扫描测量。智能建筑 (Intelligent Buildings) 是建筑技术与互联网技术相结合的产物，是信息社会与经济国际化的需要。今天我们打造的楼宇自动化控制系统 (BAS) 就属于这其中的一类，还有通信自动化系统 (CAS) 和办公自动化系统 (OAS) 等组成。如今已经广泛应用于各个领域，极大的提高了管理效率和能源的有效利用率以及设备监测等智能化为一体的操作系统。还有更多高大上的智能操作系统在等待着我们推动社会信息化的进步！</p>
+<p><img src="./images/基于 HTML5 Canvas 的楼宇自控系统4.png" alt="" width="421" height="206" /><img src="./images/基于 HTML5 Canvas 的楼宇自控系统5.png" alt="" width="421" height="205" /></p>
+<p>HT&nbsp;for&nbsp;Web ：(<a href="http://www.hightopo.com/demos/cn-index.html" target="_blank">http://www.hightopo.com/demos/cn-index.html</a>)</p>
+<p><img src="./images/基于 HTML5 Canvas 的楼宇自控系统6.png" alt="" width="420" height="205" /><img src="./images/基于 HTML5 Canvas 的楼宇自控系统7.png" alt="" width="419" height="204" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

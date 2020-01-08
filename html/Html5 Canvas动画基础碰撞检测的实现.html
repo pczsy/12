@@ -1,0 +1,235 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Html5 Canvas动画基础碰撞检测的实现' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Html5 Canvas动画基础碰撞检测的实现</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11973255.html</div><br>
+    <div>
+<p>在Canvas中进行碰撞检测，大家往往直接采用游戏引擎(Cocos2d-JS、Egret)或物理引擎(Box2D)内置的碰撞检测功能，好奇的你有思考过它们的内部运行机制吗？下面将针对基本的碰撞检测技术进行讲解：</p>
+<p>1、基于矩形的碰撞检测</p>
+<p>所谓碰撞检测就是判断物体间是否发生重叠，这里我们假设讨论的碰撞体都是矩形物体。下面示例中我们将创建两个rect对象A和B(以下简称A,B)，其中A位置固定，B跟随鼠标移动，当A,B重叠时控制台将提示intercect！！</p>
+<p>1、创建Rect对象</p>
+<p>这里我们新建Rect.js，建立Rect对象并为其添加原型方法draw,该方法将根据当前对象的属性(位置、大小)绘制到传入的画布对象（context）中。</p>
+<p>代码如下 ：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function Rect(x,y,width,height) {
+    </span><span style="color: #0000ff;">this</span>.x =<span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">this</span>.y =<span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">this</span>.width =<span style="color: #000000;"> width;
+    </span><span style="color: #0000ff;">this</span>.height =<span style="color: #000000;"> height;
+}
+ 
+Rect.prototype.draw </span>=<span style="color: #000000;"> function(context){
+    context.save();
+    context.translate(</span><span style="color: #0000ff;">this</span>.x,<span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+    context.fillRect(</span><span style="color: #800080;">0</span>,<span style="color: #800080;">0</span>,<span style="color: #0000ff;">this</span>.width,<span style="color: #0000ff;">this</span><span style="color: #000000;">.height);
+    context.restore();
+}</span></pre>
+</div>
+<p>2、获取鼠标位置</p>
+<p>因为B需要跟随鼠标移动所以我们需要检测鼠标在画布的当前位置。创建Capturemouse函数检测鼠标在传入的文档节点（element）上的移动并返回一个mouse对象（其中包含了鼠标的x，y坐标）。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function Capturemouse (element) {
+    </span><span style="color: #0000ff;">var</span> mouse={x:<span style="color: #0000ff;">null</span>,y:<span style="color: #0000ff;">null</span><span style="color: #000000;">};
+    element.addEventListener(</span><span style="color: #800000;">'</span><span style="color: #800000;">mousemove</span><span style="color: #800000;">'</span>,function (<span style="color: #0000ff;">event</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> x, y;
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">event</span>.pageX || <span style="color: #0000ff;">event</span><span style="color: #000000;">.pageY){
+            x </span>= <span style="color: #0000ff;">event</span><span style="color: #000000;">.pageX;
+            y </span>= <span style="color: #0000ff;">event</span><span style="color: #000000;">.pageY;
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            x </span>= <span style="color: #0000ff;">event</span>.clientX+document.body.scrollLeft+<span style="color: #000000;">
+                document.documentElement.scrollLeft;
+            y </span>= <span style="color: #0000ff;">event</span>.clientY+document.body.scrollTop+<span style="color: #000000;">
+                document.documentElement.scrollTop;
+        }
+        x </span>-=<span style="color: #000000;">element.offsetLeft;
+        y </span>-=<span style="color: #000000;">element.offsetTop;
+        mouse.x </span>=<span style="color: #000000;"> x;
+        mouse.y </span>=<span style="color: #000000;"> y;
+    },</span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> mouse;
+}</span></pre>
+</div>
+<div>
+<div>
+<p>3、碰撞检测</p>
+<p>检测A,B是否发生重叠，在讨论是否发生重叠时我们可以先看看没有重叠的四种情况，如下图：</p>
+<p>以下是对这四种状态的判断：</p>
+<p>1、rectB.y+rectB.height &lt; rectA.y<br />2、rectB.y &gt; rectA.x +rectA.width<br />3、rectB.y &gt; rectA.y + rectA.height<br />4、rectB.x+rectB.width &lt; rectA.x</p>
+<p>知道如何判断没有重叠的状态，那发生重叠的状态该如何判断呢？没错&ldquo;取反&rdquo;！，我们创建函数Interaect并添加到Init.js中，该函数传入两个Rect对象参数，当两Rect对象发生重叠将返回true。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function Intersect(rectA,rectB) {
+    </span><span style="color: #0000ff;">return</span> !(rectB.y+rectB.height &lt; rectA.y || rectB.y &gt; rectA.x +rectA.width ||<span style="color: #000000;">
+        rectB.y </span>&gt; rectA.y + rectA.height|| rectB.x+rectB.width &lt;<span style="color: #000000;"> rectA.x)
+}</span></pre>
+</div>
+<p>4、动画循环</p>
+<p>新建animationjs，设置requestAnimationFrame()动画函数。</p>
+<p>在循环体中将做以下两件事：</p>
+<p>&ldquo;清空&rdquo;当前canvas中内容，为绘制下一帧做准备。<br />检测A,B是否发生重叠，若重叠则在控制台输出interact！！！<br />检测当前鼠标在canvas上的移动并将鼠标位置更新到B的位置属性中。<br />根据新的位置属性重新绘制A,B（当然,A的位置不会更新但因为每次循环将清空canvas所以需要重新绘制）<br />代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function drawAnimation() {
+    window.requestAnimationFrame(drawAnimation);
+    context.clearRect(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, canvas.width, canvas.height);
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(Intersect(rectA,rectB)){
+     console.log(</span><span style="color: #800000;">'</span><span style="color: #800000;">interact!!!!</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(mouse.x){
+        rectB.x </span>=<span style="color: #000000;"> mouse.x;
+        rectB.y </span>=<span style="color: #000000;"> mouse.y;
+    }
+    rectA.draw(context);
+    rectB.draw(context);
+}</span></pre>
+</div>
+<p>3、初始化</p>
+<p>新建Init.js ,获取canvas元素并绑定鼠标移动检测，初始化Rect对象A和B，最后开启动画循环。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code>window.onload =<span style="color: #000000;"> function () {
+    canvas </span>= document.getElementById(<span style="color: #800000;">'</span><span style="color: #800000;">collCanvas</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    context </span>= canvas.getContext(<span style="color: #800000;">'</span><span style="color: #800000;">2d</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    Capturemouse(canvas);
+    rectA </span>= <span style="color: #0000ff;">new</span> Rect(canvas.width/<span style="color: #800080;">2</span>,canvas.height/<span style="color: #800080;">2</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    rectB </span>= <span style="color: #0000ff;">new</span> Rect(<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    drawAnimation();
+}</span></pre>
+</div>
+<p>2、基于圆形的碰撞检测</p>
+<p>说完矩形碰撞，我们再来聊聊圆形碰撞，同样我们将创建两个Circle对象A和B(以下简称A,B)，其中A位置固定，B跟随鼠标移动，当A,B重叠时控制台将提示intercect！！</p>
+<div>
+<p>1、创建circle对象</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function Circle(x,y,radius) {
+    </span><span style="color: #0000ff;">this</span>.x =<span style="color: #000000;"> x;
+    </span><span style="color: #0000ff;">this</span>.y =<span style="color: #000000;"> y;
+    </span><span style="color: #0000ff;">this</span>.radius =<span style="color: #000000;"> radius;
+}
+ 
+Circle.prototype.draw </span>=<span style="color: #000000;"> function(context){
+    context.save();
+    context.translate(</span><span style="color: #0000ff;">this</span>.x,<span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+    context.beginPath();
+    context.arc(</span><span style="color: #800080;">0</span>,<span style="color: #800080;">0</span>,<span style="color: #0000ff;">this</span>.radius,<span style="color: #800080;">0</span>,Math.PI*<span style="color: #800080;">2</span>,<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+    context.fill();
+    context.restore();
+}</span></pre>
+</div>
+<p>2、检测圆形碰撞</p>
+<p>圆形间碰撞检测可以简单地通过两圆心间距离与两圆半径之和的比较做判断，当两圆心距离小于两圆半径之和时则发生碰撞。</p>
+<p>如下图：</p>
+<p>所以我们首先需要做的是计算出两圆心间的距离，这里我们将用到两点间的距离公式，如下：</p>
+<p>当取得两圆心间的距离之后将与两圆半径之和比较，如果距离小于半径之和则返回true。</p>
+<p>现在我们更新Interaect函数。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function Intersect(circleA,circleB) {
+    </span><span style="color: #0000ff;">var</span> dx = circleA.x-<span style="color: #000000;">circleB.x;
+    </span><span style="color: #0000ff;">var</span> dy = circleA.y-<span style="color: #000000;">circleB.y;
+    </span><span style="color: #0000ff;">var</span> distance = Math.sqrt(dx*dx+dy*<span style="color: #000000;">dy);
+    </span><span style="color: #0000ff;">return</span> distance &lt; (circleA.radius +<span style="color: #000000;"> circleB.radius);
+}</span></pre>
+</div>
+<p>3、动画循环</p>
+<p>更新animation.js，这里我们替换Rect对象为Circle对象。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function drawAnimation() {
+    window.requestAnimationFrame(drawAnimation);
+    context.clearRect(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, canvas.width, canvas.height);
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(Intersect(circleA,circleB)){
+     console.log(</span><span style="color: #800000;">'</span><span style="color: #800000;">interact!!!!</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(mouse.x){
+        circleB.x </span>=<span style="color: #000000;"> mouse.x;
+        circleB.y </span>=<span style="color: #000000;"> mouse.y;
+    }
+    circleA.draw(context);
+    circleB.draw(context);
+}</span></pre>
+</div>
+<p>4、初始化</p>
+<p>更新Init.js ,初始化Circle对象A和B，最后开启动画循环。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code>window.onload =<span style="color: #000000;"> function () {
+    canvas </span>= document.getElementById(<span style="color: #800000;">'</span><span style="color: #800000;">collCanvas</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    context </span>= canvas.getContext(<span style="color: #800000;">'</span><span style="color: #800000;">2d</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    Capturemouse(canvas);
+    circleA </span>= <span style="color: #0000ff;">new</span> Circle(canvas.width/<span style="color: #800080;">2</span>,canvas.height/<span style="color: #800080;">2</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    circleB </span>= <span style="color: #0000ff;">new</span> Circle(<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    drawAnimation();
+}</span></pre>
+</div>
+<p>3、基于矩形与圆形间的碰撞检测</p>
+<p>前面讲解都是单一形状间的碰撞检测，下面我们将检测矩形和圆形间的碰撞。</p>
+<p>1、检测碰撞</p>
+<p>和矩形检测一样，我们先看看没有发生碰撞的四种情况。</p>
+<p>如下图：</p>
+<p>以下是对这四种状态的判断：</p>
+<div class="cnblogs_code">
+<pre><code>Circle.y + Circle.radius &lt;<span style="color: #000000;"> Rect.y
+Circle.x </span>- Circle.radius &gt; Rect.x +<span style="color: #000000;"> Rect.width
+Circle.y </span>- Circle.radius &gt; Rect.y +<span style="color: #000000;"> Rect.height
+Circle.x </span>+ Circle.radius &lt;<span style="color: #000000;"> Rect.x
+更新Interaect函数，将没有重叠的状态&ldquo;取反&rdquo;，向该函数传入Rect对象和Circle对象，当Rect对象与Circle对象发生重叠将返回true。</span></pre>
+</div>
+<p>代码如下：</p>
+<p>function Intersect(Rect,Circle) {<br />return !(Circle.y + Circle.radius &lt; Rect.y ||<br />Circle.x - Circle.radius &gt; Rect.x + Rect.width ||<br />Circle.y - Circle.radius &gt; Rect.y + Rect.height ||<br />Circle.x + Circle.radius &lt; Rect.x)<br />}<br />2、动画循环</p>
+<p>更新animation.js，这里我们将circle对象跟随鼠标运动，并检测与固定位置的rect对象的碰撞。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">function drawAnimation() {
+    window.requestAnimationFrame(drawAnimation);
+    context.clearRect(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">, canvas.width, canvas.height);
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(Intersect(rect,circle)){
+     console.log(</span><span style="color: #800000;">'</span><span style="color: #800000;">interact!!!!</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(mouse.x){
+        circle.x </span>=<span style="color: #000000;"> mouse.x;
+        circle.y </span>=<span style="color: #000000;"> mouse.y;
+    }
+    circle.draw(context);
+    rect.draw(context);
+}</span></pre>
+</div>
+<p>3、初始化</p>
+<p>更新Init.js ,初始化Circle对象和Rect对象，最后开启动画循环。</p>
+<p>代码如下：</p>
+<div class="cnblogs_code">
+<pre><code>window.onload =<span style="color: #000000;"> function () {
+    canvas </span>= document.getElementById(<span style="color: #800000;">'</span><span style="color: #800000;">collCanvas</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    context </span>= canvas.getContext(<span style="color: #800000;">'</span><span style="color: #800000;">2d</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    Capturemouse(canvas);
+    circle </span>= <span style="color: #0000ff;">new</span> Circle(<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    rect </span>= <span style="color: #0000ff;">new</span> Rect(canvas.width/<span style="color: #800080;">2</span>,canvas.height/<span style="color: #800080;">2</span>,<span style="color: #800080;">100</span>,<span style="color: #800080;">100</span><span style="color: #000000;">);
+    drawAnimation();
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+相信很多人在刚接触前端或者中期时候总会遇到一些问题及瓶颈期，如学了一段时间没有方向感或者坚持不下去一个人学习枯燥乏味有问题也不知道怎么解决，对此我整理了一些资料 喜欢我的文章想与更多资深大牛一起讨论和学习的话 欢迎加入我的学习交流群<a class=" wrap external" href="https://link.zhihu.com/?target=https%3A//jq.qq.com/%3F_wv%3D1027%26k%3D59jir0A" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">907694362</a></div>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

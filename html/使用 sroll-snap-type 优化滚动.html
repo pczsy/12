@@ -1,0 +1,173 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修使用 sroll-snap-type 优化滚动' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>使用 sroll-snap-type 优化滚动</center></div><div class='banquan'>原文出处:本文由博客园博主ChokCoco提供。<br/>
+原文连接:https://www.cnblogs.com/coco1s/p/11993942.html</div><br>
+    <p><span style="font-size: 14px; font-family: verdana, geneva;">根据&nbsp;<a href="https://www.w3.org/TR/css-scroll-snap-1/" target="_blank">CSS Scroll Snap Module Level 1</a>&nbsp;规范，CSS 新增了一批能够控制滚动的属性，让滚动能够在仅仅通过 CSS 的控制下，得到许多原本需要 JS 脚本介入才能实现的美好交互。</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">Tips：本文截的一些 Gif 图涉及容器滚动，效果不是很好，可以点进 Demo 里实际感受下。</span></p>
+</blockquote>
+<p class="heading"><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">sroll-snap-type</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">首先看看&nbsp;<code>sroll-snap-type</code>&nbsp;可能算得上是新的滚动规范里面最核心的一个属性样式。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/scroll-snap-type" target="_blank">scroll-snap-type</a>：属性定义在滚动容器中的一个临时点（snap point）如何被严格的执行。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">光看定义有点难理解，简单而言，这个属性规定了一个容器是否对内部滚动动作进行捕捉，并且规定了如何去处理滚动结束状态。</span></p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">语法</span></h3>
+<div class="cnblogs_Highlighter">
+<pre><code>{
+    scroll-snap-type: none | [ x | y | block | inline | both ] [ mandatory | proximity ]?
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">举个例子，假设，我们希望一个横向可滚动容器，每次滚动之后，子元素最终的停留位置不是尴尬的被分割，而是完整的呈现在容器内，可以这样写：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;ul&gt;
+    &lt;li&gt;1&lt;/li&gt;
+    &lt;li&gt;2&lt;/li&gt;
+    &lt;li&gt;3&lt;/li&gt;
+&lt;/ul&gt;</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre><code>ul {
+    scroll-snap-type: x mandatory;
+}
+
+li {
+    scroll-snap-align: center;
+}　　</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上面&nbsp;<code>scroll-snap-type: x mandatory</code>&nbsp;中，<code>x</code>&nbsp;表示捕捉 x 轴方向上的滚动，<code>mandatory</code>&nbsp;表示强制将滚动结束后元素的停留位置设置到我们规定的地方。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">左边是正常滚动容器的写法，右边是添加了&nbsp;<code>scroll-snap-</code>&nbsp;之后：</span><span style="font-family: verdana, geneva;">&nbsp;</span></p>
+<p><span style="font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动0.png" alt="" width="580" height="258" />&nbsp;</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;">如果是 y 轴方向的滚动也是一样的，只需要简单改一下 scroll-snap-type：</span></span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>ul {
+    scroll-snap-type: y mandatory;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动1.png" alt="" width="567" height="252" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/ZEYzyeK" target="_blank">CodePen Demo -- CSS Scroll Snap Demo</a></span></span></p>
+<h3 class="heading"><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></h3>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">scroll-snap-type 中的 mandatory 与 proximity</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><code>scroll-snap-type</code>&nbsp;中的另外一个重点就是 mandatory 与 proximity。</span></p>
+<ul>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">mandatory: 通常在 CSS 代码中我们都会使用这个，mandatory 的英文意思是强制性的，表示滚动结束后，滚动停止点一定会强制停在我们指定的地方</span></p>
+</li>
+<li>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">proximity: 英文意思是接近、临近、大约，在这个属性中的意思是滚动结束后，滚动停止点可能就是滚动停止的地方，也可能会再进行额外移动，停在我们指定的地方</span></p>
+</li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">也就是说，如上指定了&nbsp;<code>scroll-snap-type: y proximity</code>&nbsp;的滚动容器，如果不额外设置&nbsp;<code>scroll-snap-margin</code>/<code>scroll-snap-padding</code>，是有可能停在下面这样~尴尬~的位置：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 12px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动2.png" alt="" width="262" height="180" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;&nbsp;</span></span></p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">scroll-snap-type: both mandatory</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，还有一种比较特殊的情况是，<code>scroll-snap-type: both mandatory</code>，表示横向与竖向的滚动，都会同时进行捕捉，也是可以的：</span></p>
+<p><span style="font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动3.png" alt="" width="216" height="191" />&nbsp;</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/oNggdpV" target="_blank">CodePen Demo -- CSS Scroll Snap Both mandatory Demo</a></span></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">scroll-snap-align</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使用&nbsp;<code>scroll-snap-align</code>&nbsp;可以简单的控制将要聚焦的当前滚动子元素在滚动方向上相对于父容器的对齐方式。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">其需要作用在父元素上，可选值有三个：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>{
+    scroll-snap-align: start | center | end;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">什么意思呢，看看示意图：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动4.png" alt="" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;">可以类比单个元素在 flexbox 里面的&nbsp;<code>justify-content</code>&nbsp;属性的 flex-start | flex-end | center，规定当前元素在主轴上相对父容器的对齐方式去理解。</span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">再看看实际的 Demo ，将&nbsp;<code>scroll-snap-align</code>&nbsp;添加到滚动子容器上：</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">scroll-snap-align: start</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使当前聚焦的滚动子元素在滚动方向上相对于父容器顶部对齐。</span></p>
+<p><img src="./images/使用 sroll-snap-type 优化滚动5.png" alt="" width="364" height="179" /></p>
+<p>&nbsp;</p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">scroll-snap-align: center</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使当前聚焦的滚动子元素在滚动方向上相对于父容器中心对齐。</span></p>
+<p><img src="./images/使用 sroll-snap-type 优化滚动6.png" alt="" width="372" height="183" /></p>
+<p>&nbsp;</p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">scroll-snap-align: end</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使当前聚焦的滚动子元素在滚动方向上相对于父容器底部对齐。</span><span style="font-family: verdana, geneva;">&nbsp;</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动7.png" alt="" width="368" height="181" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/ExaYoZM" target="_blank">CodePen Demo -- CSS Scroll Snap Demo</a></span></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3 class="heading"><span style="font-size: 14pt; font-family: verdana, geneva;">不规则子元素滚动</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果子元素大小不一，也能有非常好的表现，使用&nbsp;<code>scroll-snap-align: center</code>，使得不规则子元素在每次滚动后居于容器中间：</span></p>
+<p><span style="font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动8.png" alt="" width="290" height="144" />&nbsp;</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/dyPPqdL" target="_blank">CodePen Demo -- CSS Scroll Snap 不规则子元素滚动 Demo</a></span></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">scroll-margin / scroll-padding</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上述的&nbsp;<code>scroll-snap-align</code>&nbsp;很好用，可以控制滚动子元素与父容器的对齐方式。然而可选的值只有三个，有的时候我们希望进行一些更精细的控制时，可以使用&nbsp;<code>scroll-margin</code>&nbsp;或者&nbsp;<code>scroll-padding</code></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">其中：</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">scroll-padding 是作用于滚动父容器，类似于盒子的 padding</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">scroll-margin 是作用于滚动子元素，每个子元素的 scroll-margin 可以设置为不一样的值，类似于盒子的 margin</span></li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">举个例子，在竖向滚动下，给滚动父容器添加一个&nbsp;<code>scroll-padding-top: 30px</code>&nbsp;等同于给每个子元素添加 ``scroll-margin-top: 30px`：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">我们希望滚动子元素在&nbsp;<code>scroll-snap-align: start</code>&nbsp;的基础上，与容器顶部的距离为 30px：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;ul class="snap"&gt;
+  &lt;li&gt;1&lt;/li&gt;
+  &lt;li&gt;2&lt;/li&gt;
+  &lt;li&gt;3&lt;/li&gt;
+  ...
+&lt;/ul&gt;　　</pre>
+</div>
+<div class="cnblogs_Highlighter">
+<pre><code>.snap {
+    overflow-x: auto;
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 30px;
+}
+
+li {
+    scroll-snap-align: start;
+}<span style="font-family: verdana, geneva;">&nbsp;</span></pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动9.png" alt="" width="333" height="164" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;">总结一下就是，scroll-snap-align&nbsp;可以对滚动之后的对齐方式进行简单控制，而配合&nbsp;<code>scroll-margin</code>&nbsp;/&nbsp;<code>scroll-padding</code>&nbsp;则可以进行精确控制。</span></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">废弃的 scroll-snap-points-x / scroll-snap-points-y</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">标准的发展过程，早年间的规范如今废除，这个了解一下即可，新标准现在是这几个，并且大部分浏览器已经兼容：</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">scroll-snap-type</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">scroll-snap-align</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">scroll-margin / scroll-padding</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;"><s>scroll-snap-stop</s></span></li>
+</ul>
+<p><img src="./images/使用 sroll-snap-type 优化滚动10.png" alt="" width="518" height="212" /></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://www.w3.org/TR/css-scroll-snap-1/#scroll-snap-stop" target="_blank">scroll-snap-stop</a>&nbsp;是一个仍处于实验室的标准，本文没有过多介绍，我自己在几个不同浏览器尝试了下，暂时没有发现浏览器支持这个属性，但是最新的标准里面是有关于它的明确的定义的。</span></p>
+</blockquote>
+<h2 class="heading"><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></h2>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">实际应用，渐进增强</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">在实际应用中，应用在全屏滚动/广告banner上有很多用武之地：</span></p>
+<p><span style="font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动11.png" alt="" width="387" height="203" />&nbsp;</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/YzPPvBV" target="_blank">CodePen Demo -- full screen scroll</a></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，兼容性现在还是很大的问题：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/使用 sroll-snap-type 优化滚动12.png" alt="" width="1065" height="325" /></span></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><span style="font-size: 14px; font-family: verdana, geneva;">不过在很多场景下，就算&nbsp;<code>scroll-snap-</code>&nbsp;相关几个属性暂不兼容，也不会对正常使用造成影响，所以在很多场景，这些属性都可以直接应用上去，对支持的浏览器提供更好的交互。</span></span></p>
+<h2 class="heading"><span style="font-size: 18pt; font-family: verdana, geneva;">最后</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">好了，简单的科普文，本文到此结束，希望对你有帮助 :)</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">更多精彩 CSS 技术文章汇总在我的&nbsp;<a href="https://github.com/chokcoco/iCSS" target="_blank">Github -- iCSS</a>&nbsp;，持续更新，欢迎点个 star 订阅收藏。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果还有什么疑问或者建议，可以多多交流，原创文章，文笔有限，才疏学浅，文中若有不正之处，万望告知。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

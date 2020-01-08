@@ -1,0 +1,118 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css+js相关笔记' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css+js相关笔记</center></div><div class='banquan'>原文出处:本文由博客园博主故事我忘了&#176;提供。<br/>
+原文连接:https://www.cnblogs.com/jsccc520/p/11953130.html</div><br>
+    <div style="text-align:right">作者:<font color="brown">故事我忘了<sup>c</sup></font><br/>个人微信公众号:<font color="blue">程序猿的月光宝盒</font><br/><img src="./images/css+js相关笔记0.png"  width="15%"/></div>
+<hr>
+<h5 id="section"></h5>
+<h1 id="css部分">css部分:</h1>
+<h2 id="内联元素垂直居中的设置">1.内联元素垂直居中的设置:</h2>
+<p>(1) 设置父级元素的行高 line-height,和高度 height</p>
+<p>​ 原则:line-height=height</p>
+<p>(2) 再设置内联元素的</p>
+<p>​ vertical-align: middle</p>
+<h2 id="页头页尾拼接">2.页头,页尾拼接</h2>
+<p>通常在开发中,都会有公共的页面部分(不只是导航栏,头部,尾页等)</p>
+<h4 id="拼接法则">2.1拼接法则:</h4>
+<p>主页面中,需要拼接的地方,加入以下代码:</p>
+<p><code>&lt;iframe src=&quot;common/log_reg_top.html&quot; height=&quot;60&quot; scrolling=&quot;no&quot; frameborder=&quot;no&quot;&gt;&lt;/iframe&gt;</code></p>
+<p>​ 参数解读:</p>
+<p>​ <code>src</code>:要贴进来的页面地址</p>
+<p>​ <code>height</code>:原页面的高</p>
+<p>​ <code>scrolling</code>:取消滚轮</p>
+<p>​ <code>frameborder</code>:取消框架的边缘线</p>
+<h4 id="对应的css样式">2.2对应的css样式:</h4>
+<pre><code><code>iframe{
+    /*变成块级元素*/
+    display: block;
+    /*宽度100*/
+    width: 100%;
+}</code></pre>
+<p>如果嫌麻烦也可以写在2.1的代码里,这里作为抽取公共代码角度把他抽出来,放在一个公共的css样式里</p>
+<h2 id="圆角">3.圆角</h2>
+<h3 id="单词">3.1单词</h3>
+<p><code>border-radius</code></p>
+<h3 id="语法">3.2语法</h3>
+<p>1.<code>div{border-radius:x[px]}</code></p>
+<p>2.<code>div{border-radius:x[px] x[px] x[px] x[px]}</code></p>
+<hr/>
+<h1 id="js部分">js部分:</h1>
+<h2 id="ajax语法">1.ajax语法</h2>
+<pre class="js"><code>$.ajax({
+                url :&quot;&quot;,//跳转到的url地址
+                type:&quot;&quot;,//请求方式  post/get
+                dataType :&quot;&quot;,//返回来的数据类型
+                //需要传递的数据,以json格式,如:&quot;userName&quot;:userName,&quot;password&quot;:password
+                //$(&quot;#edit&quot;).serialize():表单序列化.注意：必须存在name属性,其他用法google
+                //作用:获取id为edit的所有input标签的值并自己转入到对象中
+                data:{},
+                async : true,//是否异步
+                success:function (obj) {//成功的回调函数,obj为传回来的数据
+                    if (obj!==null){
+                        console.log(obj);
+                   // Object { realName=&quot;金圣聪&quot;,  password=&quot;xxx&quot;,  id=1,  更多...}
+                        //js中设置session,对应的取session是sessionStorage.getItem(key)
+                        sessionStorage.setItem(&quot;realName&quot;,obj.realName);
+                        sessionStorage.setItem(&quot;id&quot;,obj.id);
+                        //跳转到主页
+                        location.href=&quot;main.html&quot;;
+                    }else{
+                        alert(&quot;登录失败!用户名或密码错误&quot;);
+                    }
+                },
+                error:function () {//失败执行的方法
+                    alert(&quot;登录失败!用户名或密码错误&quot;);
+
+                }
+            })</code></pre>
+<h2 id="判断字符串为空的方法">2.判断字符串为空的方法</h2>
+<pre class="js"><code>/**
+ * 判断字符串为空
+ * @param obj 需要判断的字符串
+ * @returns {boolean} true 为空,false不为空
+ */
+function isEmpty(obj){
+    return typeof obj === &quot;undefined&quot; || obj === null || obj === &quot;&quot;;
+}</code></pre>
+<h2 id="截取地址栏的参数">3.截取地址栏的参数</h2>
+<pre class="js"><code>//(很重要)截取地址栏上的参数,使用时,传入的实参 用&quot;&quot;括起来,比如http://XXXX?id=1,此时,传入方法的实参就是 &quot;id&quot;
+function getLocationParam(name) {
+    var reg = new RegExp(&quot;(^|&amp;)&quot; + name + &quot;=([^&amp;]*)(&amp;|$)&quot;);
+    var r = window.location.search.substr(1).match(reg);
+    // alert(window.location.search);
+    if (r != null) return unescape(r[2]); return null;
+}</code></pre>
+<h2 id="用反引号键盘1左边的做字符串拼接">4.用反引号<code>(键盘</code>1<code>左边的)</code>做字符串拼接</h2>
+<pre class="js"><code>var rightBottomStrHead = `
+        &lt;strong style=&quot;float: left&quot;&gt;销售信息查询:&lt;/strong&gt;
+         排序方式:&amp;nbsp;
+            &lt;select name=&quot;condition&quot;&gt;
+                &lt;option value=&quot;0&quot;&gt;销售日期&lt;/option&gt;
+                &lt;option value=&quot;1&quot;&gt;单笔总价&lt;/option&gt;
+            &lt;/select&gt;
+        &lt;div style=&quot;float: right&quot; class=&quot;rightBottomStrHead&quot;&gt;
+           
+        &lt;/div&gt;
+        `;</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

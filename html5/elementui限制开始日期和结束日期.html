@@ -1,0 +1,69 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修elementui限制开始日期和结束日期' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>elementui限制开始日期和结束日期</center></div><div class='banquan'>原文出处:本文由博客园博主Edith6提供。<br/>
+原文连接:https://www.cnblogs.com/FormerWhite/p/11772647.html</div><br>
+    <p>项目需求：开始日期和结束日期 禁用当前日期之前的日期。同时结束日期 禁用开始日期之前的日期</p>
+<pre><code><code>    &lt;div class=&#39;startTime&#39;&gt;
+        开始时间：&lt;el-date-picker v-model=&quot;value1&quot; type=&quot;date&quot; @change=&quot;changeStartTime&quot; :clearable=&quot;false&quot;
+          placeholder=&quot;选择日期&quot; :picker-options=&quot;startDateLimit&quot;&gt;
+        &lt;/el-date-picker&gt;
+        &lt;span class=&quot;important&quot;&gt;*&lt;/span&gt;
+      &lt;/div&gt;
+      &lt;!-- 结束时间 --&gt;
+      &lt;div class=&quot;endTime&quot;&gt;
+        结束时间：&lt;el-date-picker v-model=&quot;value2&quot; :picker-options=&quot;endDateLimit&quot; type=&quot;date&quot; :clearable=&quot;false&quot; @change=&quot;changeEndTime&quot; placeholder=&quot;选择日期&quot;&gt;
+        &lt;/el-date-picker&gt;
+        &lt;span class=&quot;important&quot;&gt;*&lt;/span&gt;
+      &lt;/div&gt;</code></pre>
+<pre class="js"><code>vm = new Vue({
+  el: &quot;#app&quot;,
+  data: function () {
+    return {
+      value1: &quot;&quot;, //开始时间
+      value2: &quot;&quot;, //结束时间
+      startDateLimit: {
+        disabledDate: (time) =&gt; {
+          // if (this.value2 != &quot;&quot;) {
+          //   return time.getTime() &gt; new Date(this.value2).getTime();
+          // }else{
+            return time.getTime() &lt; Date.now() - 8.64e7;//禁用当前日期之前的时间；如果没有后面的-8.64e6就是不可以选择今天的
+          // }
+        }
+      },
+      endDateLimit: {
+        disabledDate: (time) =&gt; {
+          if(this.value1!= &quot;&quot;){
+            return time.getTime() &lt; new Date(this.value1).getTime()//禁用开始日期之前的日期
+          }
+          return time.getTime() &lt; Date.now() - 8.64e7;; //减去一天的时间代表可以选择同一天;
+        }
+      },
+    }
+  },
+
+
+更多使用方法链接如下：
+https://blog.csdn.net/qq_33769914/article/details/83856268
+https://www.cnblogs.com/YuKiee/p/9651240.html</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

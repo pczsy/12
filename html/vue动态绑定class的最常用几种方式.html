@@ -1,0 +1,132 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue动态绑定class的最常用几种方式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue动态绑定class的最常用几种方式</center></div><div class='banquan'>原文出处:本文由博客园博主lwming提供。<br/>
+原文连接:https://www.cnblogs.com/lwming/p/10925318.html</div><br>
+    <h3 id="对象语法"><span style="font-size: 14pt;">vue动态绑定class的最常用几种方式：<br /></span></h3>
+<p><span style="font-size: 14pt;"><strong>&nbsp;第一种</strong>：</span>（最简单的绑定）</p>
+<p>1.绑定单个class</p>
+<p>&nbsp;html部分：</p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">:class</span><span style="color: #0000ff;">="{'active':isActive}"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;js部分：判断是否绑定一个active</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      isActive: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">
+    };
+  }</span></pre>
+</div>
+<p>结果渲染为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="active"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px;"><span style="font-size: 14px;">2.</span><span style="font-size: 14px;">若要绑定多个class，需要逗号隔开就行：</span><span style="font-size: 13px; color: #ff0000;">（这里的activeTwo加不加引号都可以，也一样都能渲染，如下）</span></span></p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="activeOne"</span><span style="color: #ff0000;"> v-bind:class</span><span style="color: #0000ff;">="{ activeTwo: isActive, 'activeThree': hasError }"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>js部分：判断是否绑定对应class</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      isActive: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+      hasError: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">
+    };
+  }</span></pre>
+</div>
+<p>结果渲染为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="activeOne activeTwo activeThree"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>第二种：</strong><span style="font-size: 14px;">（绑定的数据对象）</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">:class</span><span style="color: #0000ff;">="classObject"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">data: {
+  classObject: {
+    active: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+  }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>第三种</strong></span>：（绑定一个返回对象的计算属性）<a href="https://cn.vuejs.org/v2/guide/computed.html"><br /></a></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">:class</span><span style="color: #0000ff;">="classObject"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code>export <span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    isActive: </span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+    };
+  },
+  computed: {
+  classObject: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      active: </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.isActive,
+    }
+  }
+}</span></pre>
+</div>
+<p>结果渲染为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="active"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><strong>第四种</strong></span>：（单纯数组方法）</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">:class</span><span style="color: #0000ff;">="[activeClass, errorClass]"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      activeClass: </span>"active"<span style="color: #000000;">,
+      errorClass: </span>"disActive"<span style="color: #000000;">
+    };
+  },</span></pre>
+</div>
+<p>结果渲染为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="active disActive"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 14pt;">第五种：</span></strong>（数组与三元运算符结合判断选择需要的class）</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">:class</span><span style="color: #0000ff;">="[isActive?'active':'disActive']"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      isActive: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+    };
+  },</span></pre>
+</div>
+<p>结果渲染为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="disActive"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

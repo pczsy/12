@@ -1,0 +1,260 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于BFC的一些事' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于BFC的一些事</center></div><div class='banquan'>原文出处:本文由博客园博主你的薄荷提供。<br/>
+原文连接:https://www.cnblogs.com/yyong/p/11510212.html</div><br>
+    <h2 id="bfc的生成" data-anchor-id="9mn3">BFC的生成</h2>
+<p data-anchor-id="uwhj">在实现CSS的布局时,假设我们不知道BFC的话,很多地方我们生成了BFC但是不知道.在布局中,一个元素是block元素还是inline元素是必须要知道的.而BFC就是用来格式化块状元素盒子,同样还有管理内连盒子的IFC等.那首先就来了解一下什么是FC.</p>
+<pre><code><code>FC: Formatting Context指的是页面中的一个渲染区域,并且拥有自己的渲染规则.决定子元素如何定位,以及和其他元素的相互作用和联系.
+BFC: 块级格式化上下文, 是一个独立的块级渲染区域,只针对块级元素,有一套自己的渲染规则来约束块级盒子,与外部无关.
+</code></pre>
+<p data-anchor-id="06xu">既然BFC是一块独立的渲染区域,那么这块区域在哪里,有多大, 这就有生成BDC的元素决定,CSS2.1中规定, 满足以下CSS声明的元素就会生成BFC.</p>
+<ul data-anchor-id="4uxo">
+<li>根元素</li>
+<li>float不为none</li>
+<li>overflow不为hidden</li>
+<li><code>display: inline-block, table-cell, table-caption</code>(注意: 值为table会生成BFC是因为会默认生成一个匿名的table-cell,所以不是table生成了BFC)</li>
+<li><code>position: absolute, fixed</code></li>
+</ul>
+<div class="md-section-divider">&nbsp;</div>
+<h2 id="bfc的约束" data-anchor-id="oihm">BFC的约束</h2>
+<p data-anchor-id="pvnp">浏览器对BFC约束如下:</p>
+<pre data-anchor-id="whgx"><code>1. 生成BFC的子元素会一个接一个的放置,在垂直方向上的起点是包含块的顶部,相邻的子元素之间的垂直距离由margin控制.在BFC中相邻的块级元素外边距会折叠.
+2. BFC中的子元素中,每一个子元素的左外边距与包含块的左边界接触(从右到左的格式化,与右边界接触),即使浮动元素也如此,除非这个子元素也创建了BFC.
+</code></pre>
+<p data-anchor-id="mgf0">具体展开来说就是:<br />1. 内部Box在垂直方向上一个接一个放置<br />2. 垂直方向的距离由margin决定.<br />3. 每个元素的左外边距与包含块的左边界接触,即使浮动元素也是如此.所以BFC中的元素不会超出包含块,但是position为absolute的元素可以超出包含块的边界.<br />4. BFC的区域不会与float元素的区域重合.<br />5. 计算BFC的高度会包含float元素,但是float元素会使父元素高度塌陷.注意区别BFC高度和父元素高度.<br />6. BFC相当于页面上的一个独立的容器.子元素不影响外部元素,反之亦然.<br />所以看到这些约束,一些常见的规则就可以了解原因.比如:</p>
+<pre data-anchor-id="yvts"><code>- 块级元素与父元素同宽,垂直排列
+- 垂直方向上的相邻div的外边距会折叠
+- 浮动元素会尽量接近左上方
+- 父元素浮动,或者overflow为hidden会包住子元素
+</code></pre>
+<div class="md-section-divider">&nbsp;</div>
+<h2 id="bfc在布局中的应用" data-anchor-id="m18h">BFC在布局中的应用</h2>
+<div class="md-section-divider">&nbsp;</div>
+<h3 id="1-解决margin折叠" data-anchor-id="o1v7">1. 解决margin折叠</h3>
+<p data-anchor-id="cyjm">同一个BFC中的两个相邻Box才会发生重叠与方向无关，不过由于上文提到的第一条限制，我们甚少看到水平方向的margin重叠。这在IE中是个例外，IE可以设置write-mode</p>
+<div class="md-section-divider">&nbsp;</div>
+<ol class="linenums">
+<li class="L0"><code class="language-html"><span class="dec">&lt;!doctype HTML&gt;</span></code></li>
+<li class="L1"><code class="language-html"><span class="tag">&lt;html&gt;</span></code></li>
+<li class="L2"><code class="language-html"><span class="tag">&lt;head&gt;</span></code></li>
+<li class="L3"><code class="language-html"><span class="tag">&lt;style<span class="pln"> <span class="atn">type<span class="pun">=<span class="atv">"text/css"<span class="tag">&gt;</span></span></span></span></span></span></code></li>
+<li class="L4"><code class="language-html"></code></li>
+<li class="L5"><code class="language-html"><span class="pln"> <span class="com">#green {</span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln"> margin<span class="pun">:<span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px</span></span></span></span></span></span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln"> <span class="pun">}</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln"> <span class="com">#blue {</span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln"> margin<span class="pun">:<span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px</span></span></span></span></span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln"> <span class="pun">}</span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln"> <span class="com">#red {</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln"> margin<span class="pun">:<span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px<span class="pln"> <span class="lit">10px</span></span></span></span></span></span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln"> <span class="pun">}</span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln"> body <span class="pun">{</span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln"> writing<span class="pun">-<span class="pln">mode<span class="pun">:<span class="pln">vertical<span class="pun">-<span class="pln">rl<span class="pun">;</span></span></span></span></span></span></span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln"> <span class="pun">}</span></span></code></li>
+<li class="L7"><code class="language-html"></code></li>
+<li class="L8"><code class="language-html"><span class="tag">&lt;/style&gt;</span></code></li>
+<li class="L9"><code class="language-html"><span class="tag">&lt;/head&gt;</span></code></li>
+<li class="L0"><code class="language-html"><span class="tag">&lt;body&gt;</span></code></li>
+<li class="L1"><code class="language-html"></code></li>
+<li class="L2"><code class="language-html"><span class="tag">&lt;div<span class="pln"> <span class="atn">id<span class="pun">=<span class="atv">"green"<span class="pln"> <span class="atn">style<span class="pun">=<span class="atv">"<span class="pln">background<span class="pun">:<span class="pln">lightgreen<span class="pun">;<span class="pln">height<span class="pun">:<span class="lit">100px<span class="pun">;<span class="pln">width<span class="pun">:<span class="lit">100px<span class="pun">;<span class="atv">"<span class="tag">&gt;&lt;/div&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="tag">&lt;div<span class="pln"> <span class="atn">id<span class="pun">=<span class="atv">"blue"<span class="pln"> <span class="atn">style<span class="pun">=<span class="atv">"<span class="pln">background<span class="pun">:<span class="pln">lightblue<span class="pun">;<span class="pln">height<span class="pun">:<span class="lit">100px<span class="pun">;<span class="pln">width<span class="pun">:<span class="lit">100px<span class="pun">;<span class="atv">"<span class="tag">&gt;&lt;/div&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="tag">&lt;div<span class="pln"> <span class="atn">id<span class="pun">=<span class="atv">"red"<span class="pln"> <span class="atn">style<span class="pun">=<span class="atv">"<span class="pln">background<span class="pun">:<span class="pln">pink<span class="pun">;<span class="pln">height<span class="pun">:<span class="lit">100px<span class="pun">;<span class="pln">width<span class="pun">:<span class="lit">100px<span class="pun">;<span class="atv">"<span class="tag">&gt;&lt;/div&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L5"><code class="language-html"></code></li>
+<li class="L6"><code class="language-html"><span class="tag">&lt;/body&gt;</span></code></li>
+<li class="L7"><code class="language-html"><span class="tag">&lt;/html&gt;</span></code></li>
+</ol>
+<p data-anchor-id="f1fy">可以看到水平方向发生了重叠<br /><img src="./images/关于BFC的一些事0.png" alt="水平方向折叠" /></p>
+<p data-anchor-id="f49g">要阻止margin重叠，只要将两个元素别放在一个BFC中即可（可以用上文提到的方式让相邻元素其中一个生成BFC）。阻止两个相邻元素的margin重叠看起来没有什么意义，主要用于嵌套元素。</p>
+<div class="md-section-divider">&nbsp;</div>
+<ol class="linenums">
+<li class="L0"><code class="language-html"><span class="dec">&lt;!DOCTYPE html&gt;</span></code></li>
+<li class="L1"><code class="language-html"><span class="tag">&lt;html&gt;</span></code></li>
+<li class="L2"><code class="language-html"><span class="tag">&lt;head&gt;</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  <span class="tag">&lt;meta<span class="pln"> <span class="atn">http-equiv<span class="pun">=<span class="atv">"Content-Type"<span class="pln"> <span class="atn">content<span class="pun">=<span class="atv">"text/html; charset=utf-8"<span class="tag">&gt;</span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="com">&lt;!--The viewport meta tag is used to improve the presentation and behavior of the samples </span></span></code></li>
+<li class="L5"><code class="language-html"><span class="com">    on iOS devices--&gt;</span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">  <span class="tag">&lt;meta<span class="pln"> <span class="atn">name<span class="pun">=<span class="atv">"viewport"<span class="pln"> <span class="atn">content<span class="pun">=<span class="atv">"initial-scale=1, maximum-scale=1,user-scalable=no"<span class="tag">/&gt;</span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">  <span class="tag">&lt;title&gt;&lt;/title&gt;</span></span></code></li>
+<li class="L8"><code class="language-html"></code></li>
+<li class="L9"><code class="language-html"><span class="pln">  <span class="tag">&lt;style&gt;</span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">    html<span class="pun">,<span class="pln"> body <span class="pun">{<span class="pln"> height<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;<span class="pln"> width<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;<span class="pln"> margin<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;<span class="pln"> padding<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;<span class="pln"> <span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">    <span class="pun">.<span class="pln">first<span class="pun">{</span></span></span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">      margin<span class="pun">:<span class="lit">20px<span class="pun">;</span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">      background<span class="pun">:<span class="pln">lightgreen<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">      width<span class="pun">:<span class="lit">100px<span class="pun">;</span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">      height<span class="pun">:<span class="lit">100px<span class="pun">;</span></span></span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">    ul<span class="pun">{</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">      <span class="com">/*display:inline-block;*/</span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">      margin<span class="pun">:<span class="lit">10px<span class="pun">;</span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">      background<span class="pun">:<span class="pln">lightblue<span class="pun">;</span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">    li<span class="pun">{</span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">      margin<span class="pun">:<span class="lit">25px<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">  <span class="tag">&lt;/style&gt;</span></span></code></li>
+<li class="L6"><code class="language-html"><span class="tag">&lt;/head&gt;</span></code></li>
+<li class="L7"><code class="language-html"></code></li>
+<li class="L8"><code class="language-html"><span class="tag">&lt;body&gt;</span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">  <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"first"<span class="tag">&gt;&lt;/div&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">  <span class="tag">&lt;ul&gt;</span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">    <span class="tag">&lt;li&gt;<span class="pln">1<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">    <span class="tag">&lt;li&gt;<span class="pln">2<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">    <span class="tag">&lt;li&gt;<span class="pln">3<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="tag">&lt;/ul&gt;</span></span></code></li>
+<li class="L5"><code class="language-html"><span class="tag">&lt;/body&gt;</span></code></li>
+<li class="L6"><code class="language-html"><span class="tag">&lt;/html&gt;</span></code></li>
+
+
+</ol>
+<p data-anchor-id="0bb1">此时div与ul之间的垂直距离，取div、ul、li三者之间的最大外边距。<br /><img src="./images/关于BFC的一些事1.png" alt="外边距取最大值" /><br />要阻止嵌套元素的重叠，只需让ul生成BFC即可（将代码中饭的display注释去掉），这样div、ul、li之间便不会发生重叠现象。而li位于同一BFC内所以仍然存在重叠现象。</p>
+<div class="md-section-divider">&nbsp;</div>
+<h3 id="2-解决浮动" data-anchor-id="8u82">2. 解决浮动</h3>
+<p data-anchor-id="1yal">在清楚浮动带来的问题的解决方案中,一定会回答用BFC清除,那到底是怎么清除的呢?根本原因就是父级元素创建BFC后,子元素即使浮动也会参与BFC高度的计算.即不会产生高度塌陷的问题.</p>
+<div class="md-section-divider">&nbsp;</div>
+<ol class="linenums">
+<li class="L0"><code class="language-html"><span class="dec">&lt;!DOCTYPE html&gt;</span></code></li>
+<li class="L1"><code class="language-html"><span class="tag">&lt;html&gt;</span></code></li>
+<li class="L2"><code class="language-html"><span class="tag">&lt;head&gt;</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  <span class="tag">&lt;meta<span class="pln"> <span class="atn">charset<span class="pun">=<span class="atv">"utf-8"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="tag">&lt;title&gt;<span class="pln">JS Bin<span class="tag">&lt;/title&gt;</span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">  <span class="tag">&lt;style&gt;</span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">    html<span class="pun">,<span class="pln"> body <span class="pun">{</span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">      height<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;</span></span></span></span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">      width<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;</span></span></span></span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">      margin<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">      padding<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">    <span class="pun">.<span class="pln">first<span class="pun">{</span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">          margin<span class="pun">:<span class="lit">20px<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">          background<span class="pun">:<span class="pln">lightgreen<span class="pun">;</span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">          border<span class="pun">:<span class="pln"> <span class="lit">2px<span class="pln"> solid lightgreen<span class="pun">;</span></span></span></span></span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">          <span class="com">/*display:inline-block;*/</span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">          <span class="com">/*overflow:hidden;*/</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">          <span class="com">/*float: left;*/</span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">          <span class="com">/*position: absolute;*/</span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">    ul<span class="pun">{</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">          overflow<span class="pun">:<span class="pln">hidden<span class="pun">;</span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">          margin<span class="pun">:<span class="lit">10px<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">          background<span class="pun">:<span class="pln">lightblue<span class="pun">;</span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">          width<span class="pun">:<span class="lit">100px<span class="pun">;</span></span></span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">          height<span class="pun">:<span class="lit">200px<span class="pun">;</span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">          <span class="kwd">float<span class="pun">:<span class="pln"> left<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L9"><code class="language-html"></code></li>
+<li class="L0"><code class="language-html"><span class="pln">    li<span class="pun">{</span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">          margin<span class="pun">:<span class="lit">25px<span class="pun">;</span></span></span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">    <span class="pun">}</span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  <span class="tag">&lt;/style&gt;</span></span></code></li>
+<li class="L4"><code class="language-html"><span class="tag">&lt;/head&gt;</span></code></li>
+<li class="L5"><code class="language-html"><span class="tag">&lt;body&gt;</span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">  <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"first"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">      <span class="tag">&lt;ul&gt;</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">        <span class="tag">&lt;li&gt;<span class="pln">1<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">        <span class="tag">&lt;li&gt;<span class="pln">2<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">        <span class="tag">&lt;li&gt;<span class="pln">3<span class="tag">&lt;/li&gt;</span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">      <span class="tag">&lt;/ul&gt;</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">  <span class="tag">&lt;/div&gt;</span></span></code></li>
+<li class="L3"><code class="language-html"><span class="tag">&lt;/body&gt;</span></code></li>
+<li class="L4"><code class="language-html"><span class="tag">&lt;/html&gt;</span></code></li>
+
+
+</ol>
+<p data-anchor-id="znb9"><img src="./images/关于BFC的一些事2.png" alt="父元素" /><br />将代码中first样式中任意一项注释去掉都可以得到包围浮动的效果，其中<code>overflow：hidden</code>方式，与正常流最接近。<br />关于清除浮动的详细介绍,请参考<a href="https://www.cnblogs.com/dolphinX/p/3508869.html" target="_blank">这篇</a>简洁明了的文章.</p>
+<div class="md-section-divider">&nbsp;</div>
+<h3 id="3-多栏布局的bfc实现" data-anchor-id="q3u8">3. 多栏布局的BFC实现</h3>
+<p data-anchor-id="5r2i">通过BFC约束:&nbsp;<code>BFC的区域不会与float的元素区域重叠</code>, 可以来实现多栏布局.</p>
+<div class="md-section-divider">&nbsp;</div>
+<ol class="linenums">
+<li class="L0"><code class="language-html"><span class="dec">&lt;!DOCTYPE html&gt;</span></code></li>
+<li class="L1"><code class="language-html"><span class="tag">&lt;html&gt;</span></code></li>
+<li class="L2"><code class="language-html"><span class="tag">&lt;head&gt;</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  <span class="tag">&lt;meta<span class="pln"> <span class="atn">charset<span class="pun">=<span class="atv">"utf-8"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="tag">&lt;title&gt;<span class="pln">JS Bin<span class="tag">&lt;/title&gt;</span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">  <span class="tag">&lt;style&gt;</span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">     html<span class="pun">,<span class="pln"> body <span class="pun">{</span></span></span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">  height<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;</span></span></span></span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">  width<span class="pun">:<span class="pln"> <span class="lit">100<span class="pun">%;</span></span></span></span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">  margin<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">  padding<span class="pun">:<span class="pln"> <span class="lit">0<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pun">}</span></code></li>
+<li class="L2"><code class="language-html"><span class="pun">.<span class="pln">left<span class="pun">{</span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  background<span class="pun">:<span class="pln">pink<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="kwd">float<span class="pun">:<span class="pln"> left<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">  width<span class="pun">:<span class="lit">180px<span class="pun">;</span></span></span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pun">}</span></code></li>
+<li class="L7"><code class="language-html"><span class="pun">.<span class="pln">center<span class="pun">{</span></span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">  background<span class="pun">:<span class="pln">lightyellow<span class="pun">;</span></span></span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">  overflow<span class="pun">:<span class="pln">hidden<span class="pun">;</span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pun">}</span></code></li>
+<li class="L1"><code class="language-html"><span class="pun">.<span class="pln">right<span class="pun">{</span></span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">  background<span class="pun">:<span class="pln"> lightblue<span class="pun">;</span></span></span></span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">  width<span class="pun">:<span class="lit">210px<span class="pun">;</span></span></span></span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">  <span class="kwd">float<span class="pun">:<span class="pln">right<span class="pun">;</span></span></span></span></span></code></li>
+<li class="L5"><code class="language-html"><span class="pun">}</span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">  <span class="tag">&lt;/style&gt;</span></span></code></li>
+<li class="L7"><code class="language-html"><span class="tag">&lt;/head&gt;</span></code></li>
+<li class="L8"><code class="language-html"><span class="tag">&lt;body&gt;</span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">  <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"container"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">    <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"left"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">      <span class="tag">&lt;pre&gt;</span></span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">        .left{</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">          background:pink;</span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">          float: left;</span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">          width:180px;</span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">        }</span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">      <span class="tag">&lt;/pre&gt;</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">    <span class="tag">&lt;/div&gt;</span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">    <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"right"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">       <span class="tag">&lt;pre&gt;</span></span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">        .right{</span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">          background:lightblue;</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">          width:180px;</span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">          float:right;</span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">        }</span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">      <span class="tag">&lt;/pre&gt;</span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">    <span class="tag">&lt;/div&gt;</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="pln">    <span class="tag">&lt;div<span class="pln"> <span class="atn">class<span class="pun">=<span class="atv">"center"<span class="tag">&gt;</span></span></span></span></span></span></span></code></li>
+<li class="L9"><code class="language-html"><span class="pln">      <span class="tag">&lt;pre&gt;</span></span></code></li>
+<li class="L0"><code class="language-html"><span class="pln">      .center{</span></code></li>
+<li class="L1"><code class="language-html"><span class="pln">        background:lightyellow;</span></code></li>
+<li class="L2"><code class="language-html"><span class="pln">        overflow:hidden;</span></code></li>
+<li class="L3"><code class="language-html"><span class="pln">        height:116px;</span></code></li>
+<li class="L4"><code class="language-html"><span class="pln">      }</span></code></li>
+<li class="L5"><code class="language-html"><span class="pln">      <span class="tag">&lt;/pre&gt;</span></span></code></li>
+<li class="L6"><code class="language-html"><span class="pln">    <span class="tag">&lt;/div&gt;</span></span></code></li>
+<li class="L7"><code class="language-html"><span class="pln">  <span class="tag">&lt;/div&gt;</span></span></code></li>
+<li class="L8"><code class="language-html"><span class="tag">&lt;/body&gt;</span></code></li>
+<li class="L9"><code class="language-html"><span class="tag">&lt;/html&gt;</span></code></li>
+
+
+</ol>
+<p data-anchor-id="0ixu">这种布局的特点在于左右两栏宽度固定，中间栏可以根据浏览器宽度自适应。<br /><img title="" src="./images/关于BFC的一些事3.png" alt="多栏布局" /></p>
+<div class="md-section-divider">&nbsp;</div>
+<h2 id="收获" data-anchor-id="2myj">收获</h2>
+<p data-anchor-id="kuqc">初次看到BFC这个词,是在一个面试题上.然后百度了一下,看到了寒冬大神的一篇<a href="https://www.cnblogs.com/winter-cn/archive/2013/05/11/3072926.html" target="_blank">博客</a>,当时看完是觉得BFC,对于大佬来说是必要的,对我而言还太早.确实,当时的我还是一个连布局什么都不是很懂的菜鸟(当然现在也是).在看了一些CSS的基础之后,通过查阅资料,在这里提及一下,最新的布局方案Flex和Grid都会生成BFC,具体可以去看MDN,看一些前辈的心得,总是觉得会了,但是过段时间就忘掉了.俗话,能给别人讲明白才是真正的理解了.所以才绞尽脑汁写了这样一个总结.</p>
+<p data-anchor-id="iq5y">其实对于BFC,我们只要知道一些特定的CSS声明会生成BFC,浏览器对BFC有一套特定的渲染规则,利用这些特殊的规则在布局上解决一些问题,就差不多了.但是当深入理解之后,会发现很多最常见的效果,就是因为BFC.当探究到这些的时候,前端的乐趣就在这里了.</p>
+<p data-anchor-id="0j5h">文章中的内容可能有很问题,希望不吝指导.毕竟工作经验对于我还是欠缺的,遇到问题探究问题的方式方法不一样.不过话说回来,技术的乐趣就在于不断的探究,试错,总结积累上.</p>
+<p data-anchor-id="u5d8">最后提一下IE,在IE中有类似的hasLayout.有兴趣可以研究研究.</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

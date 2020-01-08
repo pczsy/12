@@ -1,0 +1,230 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修ReactJS中的自定义组件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>ReactJS中的自定义组件</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11917746.html</div><br>
+    <p><strong>可控自定义组件：</strong></p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=<span style="color: #800000;">"</span><span style="color: #800000;">UTF-8</span><span style="color: #800000;">"</span>&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/react.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/react-dom.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/browser.min.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/babel</span><span style="color: #800000;">"</span>&gt;
+            <span style="color: #0000ff;">var</span> Radio=<span style="color: #000000;">React.createClass({
+                getInitialState:function(){
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                        value:</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.props.defaultValue
+                    };
+                },
+                handleChange:function(</span><span style="color: #0000ff;">event</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">.props.onChange){
+                        </span><span style="color: #0000ff;">this</span>.props.onChange(<span style="color: #0000ff;">event</span><span style="color: #000000;">);
+                    }
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setState({
+                        value:</span><span style="color: #0000ff;">event</span><span style="color: #000000;">.target.value
+                    });
+                },
+                render:function(){
+                    </span><span style="color: #0000ff;">var</span> children=<span style="color: #000000;">[];
+                    </span><span style="color: #0000ff;">var</span> value=<span style="color: #0000ff;">this</span>.props.value||<span style="color: #0000ff;">this</span><span style="color: #000000;">.state.value;
+                    React.Children.forEach(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.props.children,function(child,i){
+                        </span><span style="color: #0000ff;">var</span> label=&lt;label key={i}&gt;
+                            &lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">radio</span><span style="color: #800000;">"</span> name={<span style="color: #0000ff;">this</span>.props.name} value={child.props.value} <span style="color: #0000ff;">checked</span>={child.props.value==value} onChange={<span style="color: #0000ff;">this</span>.handleChange}/&gt;<span style="color: #000000;">
+                            {child.props.children}
+                            </span>&lt;br/&gt;
+                    &lt;/label&gt;<span style="color: #000000;">;
+                    children.push(label);
+                    }.bind(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">));
+                    </span><span style="color: #0000ff;">return</span> &lt;span&gt;{children}&lt;/span&gt;<span style="color: #000000;">;
+                }
+            });
+            </span><span style="color: #0000ff;">var</span> MyForm=<span style="color: #000000;">React.createClass({
+                getInitialState:function(){
+                    </span><span style="color: #0000ff;">return</span> ({my_radio:<span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span><span style="color: #000000;">});
+                },
+
+                handleChange:function(</span><span style="color: #0000ff;">event</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setState({
+                        my_radio:</span><span style="color: #0000ff;">event</span><span style="color: #000000;">.target.value
+                    });
+                },
+                submitHandler:function(</span><span style="color: #0000ff;">event</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">event</span><span style="color: #000000;">.preventDefault();
+                    alert(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.state.my_radio);
+                },
+                render:function(){
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (
+                        </span>&lt;form onSubmit={<span style="color: #0000ff;">this</span>.submitHandler}&gt;
+                        &lt;Radio value={<span style="color: #0000ff;">this</span>.state.my_radio} name=<span style="color: #800000;">"</span><span style="color: #800000;">my_radio</span><span style="color: #800000;">"</span> onChange={<span style="color: #0000ff;">this</span>.handleChange}&gt;
+                            &lt;option value=<span style="color: #800000;">"</span><span style="color: #800000;">A</span><span style="color: #800000;">"</span>&gt;First option&lt;/option&gt;
+                            &lt;option value=<span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span>&gt;Second option&lt;/option&gt;
+                            &lt;option value=<span style="color: #800000;">"</span><span style="color: #800000;">C</span><span style="color: #800000;">"</span>&gt;Third option&lt;/option&gt;
+                        &lt;/Radio&gt;
+                        &lt;button type=<span style="color: #800000;">"</span><span style="color: #800000;">submit</span><span style="color: #800000;">"</span>&gt;Speak&lt;/button&gt;
+                        &lt;/form&gt;<span style="color: #000000;">
+                    )
+                }
+            });
+
+            ReactDOM.render(</span>&lt;MyForm&gt;&lt;/MyForm&gt;<span style="color: #000000;">,document.body);
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+<strong>&lt;/html&gt;</strong></pre>
+</div>
+<p><strong>不可控的自定义组件:</strong></p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;script src="js/react.js"&gt;&lt;/script&gt;
+        &lt;script src="js/react-dom.js"&gt;&lt;/script&gt;
+        &lt;script src="js/browser.min.js"&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script type="text/babel"&gt;
+            var Radio=React.createClass({
+                getInitialState:function(){
+                    return {
+                        value:this.props.defaultValue
+                    };
+                },
+                handleChange:function(event){
+                    if(this.props.onChange){
+                        this.props.onChange(event);
+                    }
+                    this.setState({
+                        value:event.target.value
+                    });
+                },
+                render:function(){
+                    var children=[];
+                    var value=this.props.value||this.state.value;
+                    React.Children.forEach(this.props.children,function(child,i){
+                        var label=&lt;label&gt;
+                            &lt;input type="radio" name={this.props.name} value={child.props.value} checked={child.props.value==value} onChange={this.handleChange}/&gt;
+                            {child.props.children}
+                            &lt;br/&gt;
+                    &lt;/label&gt;;
+                    children['label'+i]=label;
+                    }.bind(this));
+                    return &lt;span&gt;{children}&lt;/span&gt;;
+                }
+            });
+            var MyForm=React.createClass({
+                handleSubmit:function(event){
+                    event.preventDefault();
+                    alert(this.refs.radio.state.value);
+                },
+                render:function(){
+                    return (
+                        &lt;form onSubmit={this.handleSubmit}&gt;
+                        &lt;Radio ref="radio" name="my_radio" defaultValue="B"&gt;
+                            &lt;p value="A"&gt;First&lt;/p&gt;
+                            &lt;option value="B"&gt;Second option&lt;/option&gt;
+                            &lt;option value="C"&gt;Third option&lt;/option&gt;
+                        &lt;/Radio&gt;
+                        &lt;button type="submit"&gt;Speak&lt;/button&gt;
+                        &lt;/form&gt;
+                    )
+                }
+            });
+
+            ReactDOM.render(&lt;MyForm&gt;&lt;/MyForm&gt;,document.body);
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=<span style="color: #800000;">"</span><span style="color: #800000;">UTF-8</span><span style="color: #800000;">"</span>&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/react.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/react-dom.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script src=<span style="color: #800000;">"</span><span style="color: #800000;">js/browser.min.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/babel</span><span style="color: #800000;">"</span>&gt;
+            <span style="color: #0000ff;">var</span> Radio=<span style="color: #000000;">React.createClass({
+                getInitialState:function(){
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                        value:</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.props.defaultValue
+                    };
+                },
+                handleChange:function(</span><span style="color: #0000ff;">event</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">.props.onChange){
+                        </span><span style="color: #0000ff;">this</span>.props.onChange(<span style="color: #0000ff;">event</span><span style="color: #000000;">);
+                    }
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setState({
+                        value:</span><span style="color: #0000ff;">event</span><span style="color: #000000;">.target.value
+                    });
+                },
+                render:function(){
+                    </span><span style="color: #0000ff;">var</span> children=<span style="color: #000000;">[];
+                    </span><span style="color: #0000ff;">var</span> value=<span style="color: #0000ff;">this</span>.props.value||<span style="color: #0000ff;">this</span><span style="color: #000000;">.state.value;
+                    React.Children.forEach(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.props.children,function(child,i){
+                        </span><span style="color: #0000ff;">var</span> label=&lt;label&gt;
+                            &lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">radio</span><span style="color: #800000;">"</span> name={<span style="color: #0000ff;">this</span>.props.name} value={child.props.value} <span style="color: #0000ff;">checked</span>={child.props.value==value} onChange={<span style="color: #0000ff;">this</span>.handleChange}/&gt;<span style="color: #000000;">
+                            {child.props.children}
+                            </span>&lt;br/&gt;
+                    &lt;/label&gt;<span style="color: #000000;">;
+                    children[</span><span style="color: #800000;">'</span><span style="color: #800000;">label</span><span style="color: #800000;">'</span>+i]=<span style="color: #000000;">label;
+                    }.bind(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">));
+                    </span><span style="color: #0000ff;">return</span> &lt;span&gt;{children}&lt;/span&gt;<span style="color: #000000;">;
+                }
+            });
+            </span><span style="color: #0000ff;">var</span> MyForm=<span style="color: #000000;">React.createClass({
+                handleSubmit:function(</span><span style="color: #0000ff;">event</span><span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">event</span><span style="color: #000000;">.preventDefault();
+                    alert(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.refs.radio.state.value);
+                },
+                render:function(){
+                    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> (
+                        </span>&lt;form onSubmit={<span style="color: #0000ff;">this</span>.handleSubmit}&gt;
+                        &lt;Radio <span style="color: #0000ff;">ref</span>=<span style="color: #800000;">"</span><span style="color: #800000;">radio</span><span style="color: #800000;">"</span> name=<span style="color: #800000;">"</span><span style="color: #800000;">my_radio</span><span style="color: #800000;">"</span> defaultValue=<span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span>&gt;
+                            &lt;p value=<span style="color: #800000;">"</span><span style="color: #800000;">A</span><span style="color: #800000;">"</span>&gt;First&lt;/p&gt;
+                            &lt;option value=<span style="color: #800000;">"</span><span style="color: #800000;">B</span><span style="color: #800000;">"</span>&gt;Second option&lt;/option&gt;
+                            &lt;option value=<span style="color: #800000;">"</span><span style="color: #800000;">C</span><span style="color: #800000;">"</span>&gt;Third option&lt;/option&gt;
+                        &lt;/Radio&gt;
+                        &lt;button type=<span style="color: #800000;">"</span><span style="color: #800000;">submit</span><span style="color: #800000;">"</span>&gt;Speak&lt;/button&gt;
+                        &lt;/form&gt;<span style="color: #000000;">
+                    )
+                }
+            });
+
+            ReactDOM.render(</span>&lt;MyForm&gt;&lt;/MyForm&gt;<span style="color: #000000;">,document.body);
+        </span>&lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>本人刚建立一个前端学习交流群，群内有很多干货适合前期和中期需要解决的问题，欢迎给位进群一起探讨互相帮助<a class=" wrap external" href="https://link.zhihu.com/?target=https%3A//jq.qq.com/%3F_wv%3D1027%26k%3D5229akI" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">907694362</a>祝各位在前端的道路上一帆风顺！！</p>
+<p><code>&nbsp;</code></p>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

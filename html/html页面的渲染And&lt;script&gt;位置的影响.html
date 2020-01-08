@@ -1,0 +1,61 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修html页面的渲染And&lt;script&gt;位置的影响' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>html页面的渲染And&lt;script&gt;位置的影响</center></div><div class='banquan'>原文出处:本文由博客园博主gamecc666提供。<br/>
+原文连接:https://www.cnblogs.com/gamecc666/p/11751735.html</div><br>
+    <p style="text-align: left;">周末加班敲代码的时用到了&lt;script&gt;标签，突然想到了一个问题：别的自测项目里面&lt;script&gt;我把他放在了不同位置，这里应该会对代码的执行与渲染后影响吧？于是今天专门进行了查询，趁机总结以下：</p>
+<p style="text-align: left;">&nbsp; &nbsp; html 文档的解释方式&amp;顺序：</p>
+<p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; 预备知识：（需要简单理解同步/异步的区别）&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 同步，是所有的操作都做完，才返回给用户结果。即写完数据库之后，在相应用户，用户体验不好。</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 异步，不用等所有操作等做完，就相应用户请求。即先相应用户请求，然后慢慢去写数据库，用户体验较好。</p>
+<ol>
+<li style="text-align: left;">html文档的执行，从上到下解释</li>
+<li style="text-align: left;">解释过程中遇到 &lt;link&gt;,&lt;img&gt; 标签就会异步进行加载/下载，然后继续向下进行代码的解释</li>
+<li style="text-align: left;">遇到&lt;script&gt; 标签时情况相反，此时会开始同步请求JS文件，然后逐句执行JS文件中的代码，知道所有代码执行完再继续进行html剩余代码的解释</li>
+</ol>
+<p style="text-align: left;">&nbsp; &nbsp;&lt;script&gt;标签引起的问题And位置的影响：</p>
+<ul>
+<li style="text-align: left;">解决&lt;script&gt;同步执行导致html脚本解释的阻塞问题：</li>
+</ul>
+<ol>
+<li style="text-align: left;">方法一 =&gt; 将&lt;script&gt;放在&lt;body&gt;的最后一部分</li>
+<li style="text-align: left;">给&lt;script&gt;标签添加 defer 属性；用法：
+<pre><code>&lt;script type="text/javascript" <code>defer="defer"</code>&gt;<br />defer 作用：属性规定是否对脚本执行进行延迟，直到页面加载为止。（注意：局限于IE浏览器;详细请参考=&gt;<a href="https://www.w3school.com.cn/tags/att_script_defer.asp" target="_blank">请点击这里</a>）<br />当然也有缺点：就是如果多个JS脚本的时候没法确定脚本的执行先后顺序</pre>
+</li>
+</ol>
+<ul>
+<li style="text-align: left;">&lt;script&gt;位置的影响：<br />&nbsp; &nbsp; &nbsp; 预备知识：（浏览器的工作流程）<br />&nbsp; &nbsp; &nbsp; 解析html文档成DOM树 =&gt; 解析CSS生成CSSDOM树 =&gt; CSSDOM树和DOM树结合形成Rending Tree =&gt; Layout =&gt; 渲染<br />
+<ul>
+<li style="text-align: left;">将&lt;script&gt;放在&lt;head&gt;&lt;/head&gt;之间，使其在主页和其他代码之前预先装载，可以实现例如：*.js 文件的提前调用</li>
+<li style="text-align: left;">将&lt;script&gt;放在&lt;body&gt;&lt;/body&gt;之间，则页面加载后运行（注意放在&lt;body&gt;&lt;/body&gt;中的位置，这里推荐放在最后）</li>
+</ul>
+</li>
+</ul>
+<p style="margin-left: 60px;">小结：</p>
+<ol>
+<li style="list-style-type: none;"><ol>
+<li>在head里面，所有的function函数只加载不执行，执行的话是在某件事触发之后（如果有变量的初始化，会导致报错）</li>
+<li>在body里面直接加载并执行</li>
+</ol></li>
+</ol>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

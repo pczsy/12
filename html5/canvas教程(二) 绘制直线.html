@@ -1,0 +1,80 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas教程(二) 绘制直线' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas教程(二) 绘制直线</center></div><div class='banquan'>原文出处:本文由博客园博主大树0211号提供。<br/>
+原文连接:https://www.cnblogs.com/cnyball/p/11154930.html</div><br>
+    <p>经过 <strong><a href="https://www.cnblogs.com/cnyball/p/11148891.html">canvas 教程(一) 简介</a></strong> 我们知道了 canvas 的一些基本情况</p>
+<p>而本次是给大家带来直线的绘制</p>
+<p>canvas 中，基本图形有两种，一种是直线，还有一种是曲线<br />
+但是无论是直线还是曲线，我们都应该先了解 canvas 的坐标系 s</p>
+<h2 id="canvas-的坐标系">canvas 的坐标系</h2>
+<p>要绘制之前肯定要了解一下 canvas 的坐标系，我们之前肯定接触过数学坐标系：<strong>y 轴正方向是向上的</strong></p>
+<p>其实在前端领域里几乎所有的坐标系都是使用的 w3c 的坐标你，canvas 也是一样，w3c 的坐标系和数学坐标系的区别就在于：<strong>w3c 坐标系的 y 轴正方向是向下的</strong></p>
+<h2 id="绘制直线">绘制直线</h2>
+<p>canvas 中绘制直线可以使用 moveTo 和 lineTo 两个方法，我们看看绘制一条直线的语法是怎么样的</p>
+<pre><code><code>context.moveTo(x1, y1); //将画笔移动至坐标(x1,y1)作为新的起点
+context.lineTo(x2, y2); //从起点画线到(x2,y2)并以此作为新的起点
+context.stroke(); //描边连线</code></pre>
+<p>stroke 是指描边，对应的还有 fill 填充，我们在下面的绘制中试一试便知道是什么意思了</p>
+<p>moveTo 和 lineTo 是可以重复使用来同时绘制多条直线</p>
+<p>所以我们可以进行绘制三角形，矩形等</p>
+<p>描边三角形：</p>
+<pre><code><code>context.moveTo(50, 50);
+context.lineTo(50, 100);
+context.lineTo(100, 100);
+context.lineTo(50, 50);
+context.stroke();</code></pre>
+<p>填充矩形：</p>
+<pre><code><code>context.moveTo(50, 50);
+context.lineTo(50, 100);
+context.lineTo(150, 100);
+context.lineTo(150, 50);
+context.lineTo(50, 50);
+context.fill();</code></pre>
+<p>是吧，我们很容易就理解了其中的区别。</p>
+<h2 id="绘制矩形">绘制矩形</h2>
+<p>那么在我们开发当中，矩形是非常常见的，但我们发现一条一条的直线绘制是一件很麻烦的事情，所以 canvas 也带有了绘制矩形的方法: <strong>rect(x, y, width, height)</strong></p>
+<p>其中 x,y 代表绘制起点 width 和 height 分别要绘制的矩形的宽和高</p>
+<p>而在我们绘制的时候可以修改颜色即是<strong>描边颜色：strokeStyle</strong> 和<strong>填充颜色：fillStyle</strong></p>
+<p>这两个属性的取值分为三种 1.颜色值 2.渐变色 3.图案<br />
+后面两种暂且不表，颜色则支持<strong>十六进制</strong>、<strong>颜色关键字</strong>（例如：red）、<strong>rgb</strong>、<strong>rgba</strong></p>
+<p>所以绘制矩形的步骤是</p>
+<pre><code><code>context.strokeStyle = &#39;red&#39;; //1. 设置描边颜色
+context.rect(50, 50, 100, 50); //2. 绘制矩形
+context.stroke(); //3. 描边</code></pre>
+<p>canvas 也提供了另外两种绘制矩形的方法：<strong>描边矩形和</strong>和<strong>填充矩形</strong><br />
+就是上面的 2，3 的结合<br />
+填充和描边的分别是 fill 和 stroke 那么填充矩形和描边矩形的方法就是 fillRect 和 strokeRect 了<br />
+<strong>语法均是一致的</strong></p>
+<blockquote>
+<p>⚠️ strokeStyle 和 fillStyle 必须在绘制之前设置，否则无效</p>
+</blockquote>
+<h2 id="清除画布">清除画布</h2>
+<p>有绘制矩形的方法，也有清除矩形的方法，这里的清除矩形不是指清除之前画的所有矩形，而是指在画布清除指定矩形区域<br />
+方法名字为 clearRect，属性和绘制矩形是一致的</p>
+<p>所以我们以后也会经常用到这个方法来，用来清空整个 canvas，即 context.clearRect(0,0,canvas.width,canvas.height)</p>
+<h2 id="结束">结束</h2>
+<p>本次讲了：<strong>绘制直线</strong>、<strong>绘制矩形</strong>、<strong>描边和填充</strong>、<strong>清除矩形</strong>，大家学会了多少呢？</p>
+<p>其实已经可以利用这些做一些好玩的事情了，比如五角星，多边形，取色板等有趣的形状，工具</p>
+<p><strong><a href="https://www.cnblogs.com/cnyball/p/11225131.html">戳我进入 canvas 教程(三) 绘制曲线</a></strong></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

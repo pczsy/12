@@ -1,0 +1,125 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【前端知识体系-CSS相关】Bootstrap相关知识' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【前端知识体系-CSS相关】Bootstrap相关知识</center></div><div class='banquan'>原文出处:本文由博客园博主Web前端社区提供。<br/>
+原文连接:https://www.cnblogs.com/fecommunity/p/11893537.html</div><br>
+    <h2 id="bootstrap-的优缺点">1.Bootstrap 的优缺点？</h2>
+<ul>
+<li>优点：CSS代码结构合理，现成的代码可以直接使用（响应式布局）</li>
+<li>缺点：定制流程较为繁琐，体积大</li>
+</ul>
+<h2 id="如何实现响应式布局">2.如何实现响应式布局？</h2>
+<ul>
+<li>原理：通过media query设置不同分辨率的class</li>
+<li>使用：为不同分辨率选择不同的class</li>
+</ul>
+<h2 id="如何定制自己的bootstrap样式">3.如何定制自己的bootstrap样式?</h2>
+<ol>
+<li>使用CSS同名类覆盖（门槛低，见效快，可能会有bug）</li>
+<li>修改源码重新构建（一次性彻底解决）<br />
+[<br />
+bootstrap.scss是入口文件，修改这个文件内容之后，使用node-sass重新编译scss文件<br />
+node-sass --output-style expanded bootstrap/custom/scss/bootstrap.scss &gt; bootstrap/custom/dist/css/bootstrap.css<br />
+]</li>
+<li>引用Scss源文件，修改变量(类似于预处理器的使用方式, 徐亚什么模块引入什么模块，会更加灵活，推荐)<br />
+[<br />
+1. 创建一个自己的custom.scss文件<br />
+<code>$primary: greed;                      @import './botstrap-custom/scss/bootstrap.scss'</code><br />
+]</li>
+</ol>
+<h2 id="如何实现一个响应式布局框架">4.如何实现一个响应式布局框架？</h2>
+<blockquote>
+<p>[!NOTE]<br />
+面试常考考点，要求模拟实现boostrap的底层实现原理。</p>
+</blockquote>
+<p>上面的[!NOTE]是行匹配模式，默认情况下支持类型NOTE，TIP，WARNING和DANGER。</p>
+<h3 id="js的模拟实现">4.1 JS的模拟实现</h3>
+<pre><code><code>&lt;style&gt;
+    .container{
+　　　　height: 40px;
+       margin: 0 auto;
+       background-color: rebeccapurple;
+   }
+&lt;/style&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;
+&lt;script&gt;
+    window.addEventListener(&quot;load&quot;, function () {
+        // 1. 获取容器
+        let container = document.querySelector(&quot;.container&quot;);
+        let clientW = 0;
+        resize();
+        // 2. 监听窗口的大小变化
+        window.addEventListener(&quot;resize&quot;, resize);
+        function resize() {
+            // 2.1 获取改变后的宽度
+            clientW = window.innerWidth;
+            // 2.2 判断
+            if(clientW &gt;= 1200){ // 超大屏幕
+                container.style.width = &quot;1170px&quot;;
+            }else if(clientW &gt;= 992){ // 大屏幕
+                container.style.width = &quot;970px&quot;;
+            }else if(clientW &gt;= 768){ // 小屏幕
+                container.style.width = &quot;750px&quot;;
+            }else { // 超小屏幕
+                container.style.width = &quot;100%&quot;;
+            }
+        }
+    });
+&lt;/script&gt;</code></pre>
+<h3 id="css的模拟实现">4.2 CSS的模拟实现</h3>
+<pre><code><code>&lt;style&gt;
+        .container{
+            height: 40px;
+            margin: 0 auto;
+            background-color: rebeccapurple;
+        }
+
+        /*媒体查询*/
+        @media screen  and (max-width: 768px){
+            .container{
+                width: 100%;
+            }
+        }
+　　　　　
+        @media screen  and (min-width: 768px) and (max-width: 992px){
+            .container{
+                width: 750px;
+            }
+        }
+        @media screen  and (min-width: 992px) and (max-width: 1200px){
+            .container{
+                width: 970px;
+            }
+        }
+        @media screen  and (min-width: 1200px){
+            .container{
+                width: 1170px;
+            }
+        }
+&lt;/style&gt;
+&lt;div class=&quot;container&quot;&gt;&lt;/div&gt;</code></pre>
+<blockquote>
+<p>[!NOTE]<br />
+关键点：mediaQuery, 浮动，响应式布局，resize事件</p>
+</blockquote>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

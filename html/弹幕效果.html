@@ -1,0 +1,242 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修弹幕效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>弹幕效果</center></div><div class='banquan'>原文出处:本文由博客园博主野鹤亦闲云提供。<br/>
+原文连接:https://www.cnblogs.com/xiaoyaolang/p/11926366.html</div><br>
+    <p>弹幕小效果</p>
+<div class="cnblogs_Highlighter">
+<pre><code>	&lt;style type="text/css"&gt;
+		*{ margin: 0; padding: 0;}
+		#box{ width: 542px; height: 330px;
+		border: 3px solid goldenrod;
+		margin-left:300px;}
+	   #btm{margin: 0;padding: 0; height: 30px;background: goldenrod;
+	   display: flex; z-index: 999; position: relative; }
+	   #btm span{ flex: 1; flex-direction: column;font: 16px/30px "微软雅黑";
+	   color: #fff;  text-align: center; cursor: pointer;}
+	   #btm span:nth-child(1){ flex: 3;}
+	   #btm span input{ width:100% ; height: 30px; font: 16px/30px "微软雅黑";
+	   border: none; outline: none;}
+	   #content{ height: 300px; position: relative; z-index: 999;
+	   background:rgba(0,0,0,0.7)}
+	   #content span{color:#fff; height: 30px; font: 14px/30px "微软雅黑"; position: absolute;left:542px;
+	   white-space: nowrap;}
+	   #v{ position: absolute;
+	   left: 303px; top: -32px; width: 542px; height: 358px; background: url(2.png);}
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;div id="box"&gt;
+		&lt;div id="content"&gt;&lt;/div&gt;
+		&lt;p id="btm"&gt;
+			&lt;span&gt;&lt;input type="text" id="text" /&gt;&lt;/span&gt;
+			&lt;span id="sendCon"&gt;发送&lt;/span&gt;
+			&lt;span id="hideCon"&gt;隐藏&lt;/span&gt;
+			&lt;span id="showCon"&gt;显示&lt;/span&gt;
+		&lt;/p&gt;
+	&lt;/div&gt;
+	&lt;div id="v"&gt;
+		 
+	&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;script src="sport1.js"&gt;&lt;/script&gt;
+&lt;script src="public.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+	$id("sendCon").onclick = function(){
+		var oSpan =document.createElement("span");
+		oSpan.innerHTML = $id("text").value;
+		$id("content").appendChild( oSpan );
+		oSpan.style.top = rand(0,270) + "px";
+		var w = oSpan.offsetWidth;
+		
+		moves( oSpan , { "left" : -w } ,function(){
+			oSpan.remove();
+		});
+	}
+	$id("hideCon").onclick  = function(){
+		$id("content").style.opacity = 0;
+	}
+	$id("showCon").onclick  = function(){
+		$id("content").style.opacity = 1;
+	}
+&lt;/script&gt;
+</pre>
+</div>
+<p>　　sport1.js</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('8d50fd7b-b84f-462c-b391-fe37cd660554')"><img id="code_img_closed_8d50fd7b-b84f-462c-b391-fe37cd660554" class="code_img_closed" src="./images/弹幕效果0.png" alt="" /><img id="code_img_opened_8d50fd7b-b84f-462c-b391-fe37cd660554" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('8d50fd7b-b84f-462c-b391-fe37cd660554',event)" src="./images/弹幕效果1.png" alt="" />
+<div id="cnblogs_code_open_8d50fd7b-b84f-462c-b391-fe37cd660554" class="cnblogs_code_hide">
+<pre><code><span style="color: #000000;">function getStyle(el,attr){
+        if(window.getComputedStyle){
+            return window.getComputedStyle(el,null)[attr];
+        }else{
+            return el.currentStyle[attr];
+        }
+    }
+function move(el,target,attr,callback){
+    clearInterval(el.timer);
+    el.timer=setInterval(function(){
+        var cur=0;
+        if(attr=="opacity"){
+            cur=parseFloat(getStyle(el,attr))*100;
+        }else{
+            cur=parseInt(getStyle(el,attr));
+        }
+         
+        var speed=(target-cur)/10;
+        
+        speed=speed&gt;0?Math.ceil(speed):Math.floor(speed);
+        if(cur == target){
+            clearInterval(el.timer);
+            if(callback){
+                callback();
+            }
+            return;
+        }
+        if(attr=="opacity"){
+            el.style[attr]=(cur+speed)/100;
+        }else{
+            el.style[attr]=cur+speed+"px";
+        }
+    },30)
+}
+function moves(obj,json,callback){
+    clearInterval(obj.timer);
+    obj.timer = setInterval(function(){
+        var flag=true;
+        for(var attr in json){
+            var cur = 0;
+            if(attr == "opacity"){
+                cur = parseFloat(getStyle(obj,attr)) * 100;
+            }else{
+                cur = parseInt(getStyle(obj,attr));//有单位 所以parseInt
+            }            
+            var speed = (json[attr] - cur) / 10;
+            speed = speed &gt; 0 ? Math.ceil(speed) : Math.floor(speed);
+            if(cur != json[attr]){
+                flag=false;
+                
+            }
+            if(attr == "opacity"){
+                obj.style[attr] =  (cur + speed) / 100;
+            }else{
+                obj.style[attr] =  cur + speed + "px";
+            }
+        }
+        if(flag){
+            clearInterval(obj.timer);
+            if(callback){
+                callback();
+            }
+            
+        }
+    },100)
+}
+function movies (el,json,callback) {
+    clearInterval(el.timer);
+    el.timer=setInterval(function(){
+        var flag=true;
+        for (attr in json) {
+            
+        
+            var cur=0;
+            if(attr=="opacity"){
+                cur=parseFloat( getStyle(el,attr))*100;
+            }else{
+                cur=parseInt(getStyle(el,attr));
+            }
+            var speed=(json[attr]-cur)/10;
+            speed=speed&gt;0?Math.ceil(speed):Math.floor(speed);
+            if(cur!=json[attr]){
+                flag=false;
+            }
+            if(attr=="opacity"){
+                el.style[attr]=(cur+speed)/100;
+            }else{
+                el.style[attr]=cur+speed+"px"    
+            }    
+        }
+        if(flag){
+            clearInterval(el.timer);
+            if(callback){
+                callback();
+            }
+        }
+        
+    },60)
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>public.js</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('5035232a-101f-42ec-b099-825eadd6b01a')"><img id="code_img_closed_5035232a-101f-42ec-b099-825eadd6b01a" class="code_img_closed" src="./images/弹幕效果0.png" alt="" /><img id="code_img_opened_5035232a-101f-42ec-b099-825eadd6b01a" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('5035232a-101f-42ec-b099-825eadd6b01a',event)" src="./images/弹幕效果1.png" alt="" />
+<div id="cnblogs_code_open_5035232a-101f-42ec-b099-825eadd6b01a" class="cnblogs_code_hide">
+<pre><code><span style="color: #000000;">function $id(id){
+    return document.getElementById(id);
+}
+function rand(min,max){
+    return Math.round(Math.random()*(max-min)+min);
+}
+function getColor(){
+        var str="0123456789ABCDEF";
+        var color="#"
+        for(var i=0;i</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">6</span><span style="color: #ff0000;">;i++){
+            color+</span><span style="color: #0000ff;">=str[rand(0,15)]
+        </span><span style="color: #ff0000;">}
+        return color;
+    }
+
+function diff(start,end){
+        return Math.abs(start.getTime()-end.getTime())/1000;
+    }
+function mySort(arr){
+        for(var i</span><span style="color: #0000ff;">=0;i&lt;arr.length-1;i++){
+            </span><span style="color: #ff0000;">for (var j</span><span style="color: #0000ff;">=0;j&lt;arr.length-1-i;j++){
+                </span><span style="color: #ff0000;">if(arr[j]</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">arr[j+1]){
+                    var temp=arr[j];
+                        arr[j]=arr[j+1];
+                        arr[j+1]=temp;
+                }
+            }
+        }
+        return arr;
+    }
+function zero(val){
+      return val</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">10</span><span style="color: #ff0000;">?"0"+val:""+val;
+}
+function addEvent(obj,type,fun){
+    if(obj.addEventListener){
+        obj.addEventListener(type,fun,false);
+    }else{
+        obj.attachEvent("on"+type,fun);
+    }
+}
+function removeEvent(obj,type,fun){
+    if(obj.removeEventListener){
+        obj.removeEventListener(type,fun,false);
+    }else{
+        obj.detachEvent("on"+type,fun);
+    }
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">View Code</span></div>
+<p>&nbsp;<img src="./images/弹幕效果4.png" alt="" /><img src="./images/弹幕效果5.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

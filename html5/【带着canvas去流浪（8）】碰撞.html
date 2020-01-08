@@ -1,0 +1,206 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【带着canvas去流浪（8）】碰撞' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【带着canvas去流浪（8）】碰撞</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/10753005.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-canvas的能力">一. canvas的能力</a></li>
+        <li><a href="#二.-动画框架">二. 动画框架</a></li>
+        <li><a href="#三.-在canvas中模拟碰撞">三. 在canvas中模拟碰撞</a><ul>
+        <li><a href="#定义小球的属性">3.1定义小球的属性</a></li>
+        <li><a href="#生成新的小球">3.2 生成新的小球</a></li>
+        <li><a href="#帧动画绘制函数step">3.3 帧动画绘制函数step</a></li>
+        <li><a href="#定义小球的update方法">3.4 定义小球的update方法</a></li>
+        <li><a href="#碰撞检测">3.5 碰撞检测</a></li>
+        <li><a href="#碰撞仿真">3.6 碰撞仿真</a></li>
+        </ul></li>
+        <li><a href="#四.-下一步">四. 下一步</a></li>
+        </ul>
+    </div>
+</div>
+<p><img src="./images/【带着canvas去流浪（8）】碰撞0.png" /></p>
+<blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/canvas-echarts/8.collision">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<p>经过前面章节相对枯燥的练习，相信你已经能够上手<code>canvas</code>的原生API了，那么从这一节开始，我们就开始接触点好玩的东西——动画。</p>
+<p><img src="./images/【带着canvas去流浪（8）】碰撞1.png" /></p>
+<h2 id="一.-canvas的能力">一. canvas的能力</h2>
+<p>如果你以为<code>canvas</code>只能绘制图表那真的就图样图森破了，且不谈<code>webgl</code>的绘图上下文，单就2d空间的画笔就可以做很多有意思的事情，比如实现一些酷炫的动画效果，比如做一些<strong>物理仿真，图片滤镜，直播弹幕，甚至做游戏开发</strong>等等，画面的变化大多依赖于canvas提供的像素操作能力，而动效几乎都是靠canvas在短时间内逐帧绘制而形成的，和电影的原理是一样的。</p>
+<p>我们知道<code>javascript</code>中和时间控制有关的函数<code>setTimeout( )</code> 以及<code>setInterval( )</code>最终执行时的时间点并不准确，因为在事件队列中会被其他异步任务影响甚至直接阻塞，那么在不断重复的绘制中，就有可能会出现卡顿或者忽快忽慢；另一方面，假设我们使用的电脑显示屏刷新率为<strong>60帧/秒</strong>，也就是大约16.7ms重绘一次，那么即时我们在16.7ms时间内执行了很多次计算和绘制命令，实际上最终呈现出的也只是最后一次结果，就好比对一段很密集的数据进行了隔点采样，轻则浪费性能，重则会在画面呈现时出现跳帧。为了配合显示器刷新，我们可以使用另一个方法——<code>requestAnimationFrame（fn）</code>，这是javascript中专门用来绘制逐帧动画的，它会配合显示器的刷新频率进行必要的图像更新，节省不必要的性能浪费。</p>
+<h2 id="二.-动画框架">二. 动画框架</h2>
+<p>在<code>canvas</code>上实现基本的动画，可以遵循一个基本的编程框架:</p>
+<pre><code><code>function step(){
+    /**
+    *在每一帧中要执行的逻辑
+    *......
+    */
+    requestAnimationFrame(step);
+}
+
+step();//启动执行</code></pre>
+<p>你没看错，这就是<code>canvas</code>动画最核心的一段代码，<code>step（）</code>函数会在每个绘图周期内重复执行。那么每一帧中需要做哪些工作呢？</p>
+<p>我们将canvas想象成一个舞台<code>stage</code>，每一个需要绘制在画布上的元素被称为<strong>精灵</strong>，无论它们拥有怎样的属性，它们都具备<code>update( )</code>和<code>paint( )</code>两个基本方法，前者用于在每一帧中计算更新精灵的参数属性，后者用于将这个精灵对象绘制在画布上。那么<code>step</code>函数在每一帧中所执行的逻辑就变得明朗了，对画布进行必要的擦除，接着更新每一个精灵的状态（可能是位置，颜色等等），然后将其绘制在画布上。</p>
+<p>比如现在要在画布上表现一段太阳东升西落得动画，对应的伪代码就是下面这个样子的：</p>
+<pre><code><code>let stage = [];
+stage.push(background, tree, cloud, sun);
+
+function step(){
+    cleanStage();//对画布进行必要擦除
+    background.update();//更新土地的属性
+    tree.update();//更新树的属性
+    cloud.update();//更新云的属性
+    sun.update();//更新太阳的属性（属性中必然包含着太阳的位置数据）
+    background.paint();//绘制土地
+    tree.paint();//绘制树
+    cloud.paint();//绘制云
+    sun.paint();//绘制太阳
+    requestAnimationFrame(step);
+}</code></pre>
+<p>如果你理解了上面的过程，那么接下来我们对上述代码进行一些抽象和改写：</p>
+<pre><code><code>//建立舞台及添加元素的代码
+let stage = [];
+stage.push(background, tree, cloud, sun....);
+
+//逐帧动画代码
+function step(){
+    cleanStage();
+    stage.map(sprite=&gt;{
+        sprite,update();
+        sprite.paint(ctx);
+    });
+    requestAnimationFrame(step);
+}</code></pre>
+<p>每一个精灵对象都需要实现自己的<code>update( )</code>和 <code>paint( )</code>方法来描述自己的参数如何变化，以及如何在每一帧中被绘制，被添加进stage数组的都是精灵的实例，一般会将canvas绘图上下文传入<code>paint(context)</code>方法，这样就可以将精灵绘制在指定的画布上。上面的范式只是一个简陋的核心模型，但是已经足够说明canvas动画的本质。</p>
+<h2 id="三.-在canvas中模拟碰撞">三. 在canvas中模拟碰撞</h2>
+<p>现在我们就通过一个碰撞仿真的例子来学习canvas动画以及基本的物理仿真分析，示例虽然精简，但包含了canvas动效最核心的精灵动画和碰撞检测主题。为了方便二维向量操作并隐藏各种数学计算的细节，我们直接使用一个已经定义好的<code>Vector2</code>类，其中封装了很多向量的基本操作，都是初高中数学的知识，如果你已经记不太清楚，可以找一些有关的资料复习一下。</p>
+<h3 id="定义小球的属性">3.1定义小球的属性</h3>
+<p>将每一个小球视为一个精灵，我们需要为它增加一些基本属性以便在每一帧中能够将其绘制出来。通过位置，半径和颜色信息，就能够绘制出小球；通过速度信息，就可以计算小球的位置变化，以便在绘制下一帧时使用。</p>
+<pre><code><code>class Ball{
+    constructor(x,y,id){
+        this.pos = new Vector2(x,y);//初始化小球的位置
+        this.id = id;
+        this.color = &#39;&#39;;//绘制的颜色
+        this.r = 20;//小球半径，为方便演示，此处使用给定值
+        this.velocity = null;//小球的速度
+    }
+}</code></pre>
+<h3 id="生成新的小球">3.2 生成新的小球</h3>
+<p>为了增加演示效果，我们使用一个定时函数来随机生成小球，每次生成时为其赋予一个颜色，并给定一个随机的初始速度。</p>
+<pre><code><code>//为全局balls数组增加一个新的小球,初始位置为(50,30),
+function addBall() {
+   let ball = new Ball(50,30,balls.length);
+       ball.color = colorPalette[parseInt(steps / 100,10) % 10];
+       ball.velocity = new Vector2(5*Math.random(), 5 * Math.random());
+       balls.push(ball);
+}</code></pre>
+<p>为了方便起见，我们使用一个全局自增的数值变量，在<code>step</code>中根据条件来执行<code>addBall()</code>方法:</p>
+<pre><code><code>if (steps % 100 === 0 &amp;&amp; steps &lt; 1500) {
+  addBall();
+}</code></pre>
+<p><code>step</code>每循环100次（大约1.5秒）就会多生成一个向随机方向发射的小球，且小球的数量不能超过15个。</p>
+<h3 id="帧动画绘制函数step">3.3 帧动画绘制函数step</h3>
+<p><code>step</code>函数是动画的核心，我们需要在其中完成重绘背景，添加小球，更新每个小球，绘制小球这些逻辑（由于背景是静态的，示例中并没有将其抽象为精灵动画）。</p>
+<pre><code><code>function step() {
+    steps++;
+    //重绘背景
+    paintBg();
+    //每隔一定时间增加一个小球
+    if (steps % 100 === 0 &amp;&amp; steps &lt; 1500) {
+      addBall();
+    }
+    //更新每个小球的状态
+    balls = balls.map((ball,index,originArr)=&gt;{
+      ball.update(index,originArr);
+      ball.paint();//描线但不在画布上绘制
+      return ball;
+    });
+    //绘制每个小球位置
+    requestAnimationFrame(step);
+}</code></pre>
+<h3 id="定义小球的update方法">3.4 定义小球的update方法</h3>
+<p>精灵的绘制方法<code>paint</code>一般都只涉及<code>canvas</code>的基本绘图<code>API</code>,并不复杂，例如本例中，只需要在小球的<code>pos</code>属性记录的位置处绘制一个封闭弧线并填充它就可以了。精灵的<code>update( )</code>方法往往才是最难编写的部分。在这个方法中，需要完成的基本逻辑包括状态更新和碰撞检测。</p>
+<ul>
+<li><p><strong>状态更新</strong></p>
+<p>状态更新一般包括自身状态更新和相对状态更新。自身状态的更新，比如你希望小球在运动过程中颜色会有变化，就属于自身状态的变化，相对状态变化一般指小球相对公共坐标系或某个参照对象而发生的宏观位置变化，比如本例中的小球位置变化。</p></li>
+<li><p><strong>碰撞检测</strong></p>
+<p>碰撞检测一般包括精灵是否与其他精灵发生碰撞，并需要对碰撞后造成的影响进行仿真。</p></li>
+</ul>
+<p>参考代码:</p>
+<pre><code><code>/*更新状态
+由于检测碰撞需要知道其他小球的位置，故此处将小球数组的引用传入
+也可以直接以面向对象的方式来定义*/
+update(index,balls){
+
+    let nextPos;//模拟下一次落点
+
+    //1.计算下一次落点
+    nextPos = this.pos.add(this.velocity.multiply(dt)); 
+
+    //2.判断新位置是否碰触边界，如果是则边界法向的速度反向，假设碰撞过程是无能量损失
+    if (nextPos.x + this.r &gt; rightBorder || nextPos.x &lt; this.r) {
+        this.velocity.x = -1 * this.velocity.x;//速度分量反向
+        nextPos = this.pos;//取消当前帧的位置更新
+    } 
+    if (nextPos.y + this.r &gt; bottomBorder || nextPos.y &lt; this.r) {
+        this.velocity.y = -1 * this.velocity.y;
+        nextPos = this.pos;
+    }
+
+    //3.判断是否与其他小球产生碰撞，为避免重复，每个小球只和比自己id更大的小球做检测
+    balls.map(ball=&gt;{
+       if (ball.id &gt; index &amp;&amp; this.checkCollision(ball)) {
+           this.handleCollision(ball);
+       }
+       return ball;
+    });
+
+    //4.确认更新位置
+    this.pos = nextPos;      
+}</code></pre>
+<h3 id="碰撞检测">3.5 碰撞检测</h3>
+<p>规则形状的碰撞检测一般有某些特殊方法，例如平面内的小球，其实只需要判断圆心的距离和两球半径和的大小，就可以知道两球是否碰撞。而当检测物体的外观并不规则时，碰撞检测是成了一个非常复杂的问题，最常用的方法包括外接盒检测，光线投射法和分离轴定理检测，感兴趣的小伙伴可以自行查资料进行学习。本例中的检测方法实际上是外接盒检测法的一种基本情况。</p>
+<pre><code><code>//碰撞检测
+checkCollision(ball){
+   return this.pos.subtract(ball.pos).length() &lt; this.r + ball.r;
+}</code></pre>
+<h3 id="碰撞仿真">3.6 碰撞仿真</h3>
+<p>碰撞仿真就是利用物理知识来计算碰撞对于物体造成的影响并修改其对应参数。本例中的碰撞可以抽象为<strong>两个质量相等的运动小球的非对心碰撞</strong>，且不计能量损失，一般情况下需要使用能量守恒定理和动量守恒定理联立方程进行求解。本例的仿真中，我们先将<strong>小球的非对心碰撞</strong>简化为<strong>对心碰撞</strong>，方法是将小球的速度向量分解为沿球心连线方向<code>Vr</code>以及沿圆心连线法向<code>Vn</code>两个分量，然后使用两个小球的<code>Vr</code>来进行对心碰撞的模拟（质量相等的刚体对心碰撞后会互换速度），接着再将碰撞后的速度与小球自己的法向速度<code>Vn</code>进行向量合成即可。</p>
+<p>本例的代码中使用了简化的方案，只计算了沿球心连线方向的分量并进行了碰撞模拟，没有对碰撞后的速度进行合成，但对碰撞模拟的效果影响不大。参考代码如下：</p>
+<pre><code><code>//处理碰撞
+handleCollision(ball){
+    let ballToThis = this.pos.subtract(ball.pos).normalize();
+    let thisToBall = ballToThis.negate();
+    this.velocity = ballToThis.multiply(Math.abs(ball.velocity.length()*(ball.velocity.dot(ballToThis) / ball.velocity.length())));
+    ball.velocity = thisToBall.multiply(Math.abs(this.velocity.length()*(this.velocity.dot(ballToThis) / this.velocity.length())));
+}</code></pre>
+<p>碰撞后两个小球的速度都发生了变化，在下一帧更新位置时就会表现出来，效果已经在本节开头展示出了。</p>
+<blockquote>
+<p>完整的示例代码可以参见附件的demo，或访问开头处我的<code>github</code>仓库地址。</p>
+</blockquote>
+<h2 id="四.-下一步">四. 下一步</h2>
+<p>有了这样一个撞球的基本模型和示例，你能做出一个乒乓球小游戏或是撞球小游戏吗？</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

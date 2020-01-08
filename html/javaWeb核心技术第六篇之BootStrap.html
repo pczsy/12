@@ -1,0 +1,773 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修javaWeb核心技术第六篇之BootStrap' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>javaWeb核心技术第六篇之BootStrap</center></div><div class='banquan'>原文出处:本文由博客园博主小小一提供。<br/>
+原文连接:https://www.cnblogs.com/haizai/p/11368042.html</div><br>
+    <div class="cnblogs_code">
+<pre><code><span style="color: #000000;">概述:
+        Bootstrap 是最受欢迎的 HTML、CSS 和 JS 框架，用于开发响应式布局、移动设备优先的 WEB 项目。
+        作用:
+            开发响应式的页面
+            响应式:就是一个网站能够兼容多个终端
+            节约开发成本,提高开发效率
+    入门:
+        下载BootStrap
+            www.bootcss.com 官网地址
+        模版
+            </span><span style="color: #800080;">1</span><span style="color: #000000;">.导入BootStrap的css
+            </span><span style="color: #800080;">2</span>.导入jquery的js(<span style="color: #800080;">1.8</span>+<span style="color: #000000;">)
+            </span><span style="color: #800080;">3</span><span style="color: #000000;">.导入BootStrap的js
+            </span><span style="color: #800080;">4</span><span style="color: #000000;">.设置视口(支持移动设备)
+            </span>&lt;meta name=<span style="color: #800000;">"</span><span style="color: #800000;">viewport</span><span style="color: #800000;">"</span> content=<span style="color: #800000;">"</span><span style="color: #800000;">width=device-width, initial-scale=1</span><span style="color: #800000;">"</span>&gt;
+            <span style="color: #800080;">5</span><span style="color: #000000;">.添加一个布局容器
+                通过div设置一个 </span><span style="color: #0000ff;">class</span><span style="color: #000000;">
+                    方式1:</span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">container</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                    方式2:</span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">container-fluid</span><span style="color: #800000;">"</span><span style="color: #000000;">
+    核心:
+        全局CSS
+        设置全局 CSS 样式；基本的 HTML 元素均可以通过 </span><span style="color: #0000ff;">class</span><span style="color: #000000;"> 设置样式并得到增强效果；还有先进的栅格系统。
+            媒体查询(了解)
+            默认有一些分辨率临界点的阀值
+                分辨率                    屏幕大小
+                分辨率</span>&gt;=<span style="color: #000000;">1200px            超大屏幕
+                </span><span style="color: #800080;">992</span>&lt;=分辨率&lt;<span style="color: #800080;">1200</span><span style="color: #000000;">        中等屏幕
+                </span><span style="color: #800080;">768</span>&lt;=分辨率&lt;<span style="color: #800080;">992</span><span style="color: #000000;">            小屏幕
+                分辨率</span>&lt;<span style="color: #800080;">768</span><span style="color: #000000;">                超小屏幕
+            栅格系统★
+            在不同分辨率的屏幕下展示不同的效果,根据不同的上网设备,栅格系统将屏幕分成一系列的行(row)和列(column),由行和列来创建页面布局,注意栅格系统必须放在布局容器内使用
+                行:
+                通过class </span>= <span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span><span style="color: #000000;">来设置一行
+                列(最多将视口分为12列)
+                通过class属性来设置在不同屏幕是所占的列    n表示每格占的份数
+                    col</span>-lg-n        大屏            分辨率&gt;=<span style="color: #800080;">1200</span><span style="color: #000000;">
+                    col</span>-md-n        中屏            <span style="color: #800080;">992</span>&lt;=分辨率&lt;<span style="color: #800080;">1200</span><span style="color: #000000;">
+                    col</span>-sm-n        小屏            <span style="color: #800080;">768</span>&lt;=分辨率&lt;<span style="color: #000000;">992px
+                    col</span>-xs-n        超小屏        分辨率&lt;<span style="color: #000000;">768px
+                    
+案例:
+</span>&lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">container</span><span style="color: #800000;">"</span>&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 hidden-xs</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">1</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">2</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">3</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">4</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">5</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">6</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">7</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">8</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">9</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">10</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">11</span>&lt;/div&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;"> col-md-2 col-sm-3 col-xs-6</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">border: solid 1px red;height: 20px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #800080;">12</span>&lt;/div&gt;
+        &lt;/div&gt;<span style="color: #000000;">
+                    
+            响应式工具:
+                显示:
+                    .visible</span>-<span style="color: #000000;">xs        超小屏可见
+                    .visible</span>-<span style="color: #000000;">sm        小屏可见
+                    .visible</span>-<span style="color: #000000;">md        中等屏幕可见
+                    .visible</span>-<span style="color: #000000;">lg                大屏可见
+                隐藏:
+                    .hidden</span>-<span style="color: #000000;">xs        超小屏时隐藏
+                    .hidden</span>-<span style="color: #000000;">sm        小屏幕时隐藏
+                    .hidden</span>-<span style="color: #000000;">md        中等屏幕时隐藏
+                    .hidden</span>-<span style="color: #000000;">lg        大屏幕时隐藏
+            标题:
+                .h1 </span>--<span style="color: #000000;"> .h6
+            对齐方式:(文本)
+                .text</span>-<span style="color: #000000;">left    左对齐
+                .text</span>-<span style="color: #000000;">center居中
+                .text</span>-<span style="color: #000000;">right    右对齐
+            列表:
+                .list</span>-<span style="color: #000000;">unstyled    移除默认的列表样式
+                .list</span>-<span style="color: #000000;">inline    将所有列表项放置同一行
+            表格:bootstrap给表格添加了默认样式
+                .table        普通表格
+                .table</span>-<span style="color: #000000;">striped         条纹表格(IE8不支持)
+                .table</span>-<span style="color: #000000;">bordered        边框表格
+                .table</span>-<span style="color: #000000;">hover         带有鼠标悬停的表格
+                .table</span>-<span style="color: #000000;">condensed     紧缩表格
+            表单:
+                垂直表单:
+                内联表单:(将所有内容放在同一行)
+                水平表单:
+            按钮:★
+                .btn     为按钮添加基本样式
+                .btn</span>-<span style="color: #0000ff;">default</span>     默认/<span style="color: #000000;">标准按钮
+                .btn</span>-<span style="color: #000000;">primary    原始按钮样式（未被操作）
+                .btn</span>-<span style="color: #000000;">success     表示成功的动作
+                .btn</span>-<span style="color: #000000;">info 该样式可用于要弹出信息的按钮
+            图片:
+                .img</span>-<span style="color: #000000;">rounded     为图片添加圆角 (IE8 不支持)
+                .img</span>-<span style="color: #000000;">circle     将图片变为圆形 (IE8 不支持)
+                .img</span>-<span style="color: #000000;">responsive 图片响应式
+        组件
+        无数可复用的组件，包括字体图标、下拉菜单、导航、警告框、弹出框等更多功能。
+            下拉选:
+            导航条:
+        javaScript插件
+        jQuery 插件为 Bootstrap 的组件赋予了&ldquo;生命&rdquo;。可以简单地一次性引入所有插件，或者逐个引入到你的页面中。
+            图片轮播
+
+综合案例:
+
+</span>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+    &lt;head&gt;
+        &lt;meta charset=<span style="color: #800000;">"</span><span style="color: #800000;">UTF-8</span><span style="color: #800000;">"</span>&gt;
+        &lt;meta name=<span style="color: #800000;">"</span><span style="color: #800000;">viewport</span><span style="color: #800000;">"</span> content=<span style="color: #800000;">"</span><span style="color: #800000;">width=device-width,initial-scale=1</span><span style="color: #800000;">"</span> /&gt;
+        &lt;title&gt;&lt;/title&gt;
+        &lt;link rel=<span style="color: #800000;">"</span><span style="color: #800000;">stylesheet</span><span style="color: #800000;">"</span> href=<span style="color: #800000;">"</span><span style="color: #800000;">css/bootstrap.css</span><span style="color: #800000;">"</span> /&gt;
+        &lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/javascript</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">js/jquery-1.11.0.min.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/javascript</span><span style="color: #800000;">"</span> src=<span style="color: #800000;">"</span><span style="color: #800000;">js/bootstrap.min.js</span><span style="color: #800000;">"</span>&gt;&lt;/script&gt;
+        &lt;script&gt;<span style="color: #000000;">
+            $(function() {
+                $(</span><span style="color: #800000;">'</span><span style="color: #800000;">.carousel</span><span style="color: #800000;">'</span><span style="color: #000000;">).carousel({
+                    interval: </span><span style="color: #800080;">1000</span><span style="color: #000000;">
+                })
+            });
+        </span>&lt;/script&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">container</span><span style="color: #800000;">"</span>&gt;
+            &lt;!--<span style="color: #800080;">1</span>.topbar--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row text-center</span><span style="color: #800000;">"</span>&gt;
+                &lt;!--<span style="color: #000000;">img1:中等屏幕时占4份,在小屏时占6份,在超小屏时占12份
+                    img2:中等屏幕时占4份,在小屏时隐藏,在超小屏时占12份
+                    超链接:中等屏幕时占4份,在小屏时占6份,在超小屏时占12份</span>--&gt;
+                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-4 col-sm-6</span><span style="color: #800000;">"</span>&gt;
+                    &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/logo2.png</span><span style="color: #800000;">"</span> /&gt;
+                &lt;/div&gt;
+                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-4 hidden-sm</span><span style="color: #800000;">"</span>&gt;
+                    &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/header.jpg</span><span style="color: #800000;">"</span> /&gt;
+                &lt;/div&gt;
+                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-4 col-sm-6 text-center</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">padding-top: 20px;</span><span style="color: #800000;">"</span>&gt;
+                    &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">btn btn-default</span><span style="color: #800000;">"</span>&gt;登录&lt;/a&gt;&amp;nbsp;&amp;<span style="color: #000000;">nbsp;
+                    </span>&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">btn btn-default</span><span style="color: #800000;">"</span>&gt;登录&lt;/a&gt;&amp;nbsp;&amp;<span style="color: #000000;">nbsp;
+                    </span>&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">btn btn-default</span><span style="color: #800000;">"</span>&gt;登录&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">2</span>.导航条--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;nav <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">navbar navbar-inverse</span><span style="color: #800000;">"</span>&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">container-fluid</span><span style="color: #800000;">"</span>&gt;
+                        &lt;!-- Brand and toggle <span style="color: #0000ff;">get</span> grouped <span style="color: #0000ff;">for</span> better mobile display --&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">navbar-header</span><span style="color: #800000;">"</span>&gt;
+                            &lt;button type=<span style="color: #800000;">"</span><span style="color: #800000;">button</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">navbar-toggle collapsed</span><span style="color: #800000;">"</span> data-toggle=<span style="color: #800000;">"</span><span style="color: #800000;">collapse</span><span style="color: #800000;">"</span> data-target=<span style="color: #800000;">"</span><span style="color: #800000;">#bs-example-navbar-collapse-1</span><span style="color: #800000;">"</span> aria-expanded=<span style="color: #800000;">"</span><span style="color: #800000;">false</span><span style="color: #800000;">"</span>&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">sr-only</span><span style="color: #800000;">"</span>&gt;Toggle navigation&lt;/span&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">icon-bar</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">icon-bar</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">icon-bar</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+                      &lt;/button&gt;
+                            &lt;a <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">navbar-brand</span><span style="color: #800000;">"</span> href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;首页&lt;/a&gt;
+                        &lt;/div&gt;
+                        &lt;!-- Collect the nav links, forms, and other content <span style="color: #0000ff;">for</span> toggling --&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">collapse navbar-collapse</span><span style="color: #800000;">"</span> id=<span style="color: #800000;">"</span><span style="color: #800000;">bs-example-navbar-collapse-1</span><span style="color: #800000;">"</span>&gt;
+                            &lt;ul <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">nav navbar-nav</span><span style="color: #800000;">"</span>&gt;
+                                &lt;li <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">active</span><span style="color: #800000;">"</span>&gt;
+                                    &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;手机数码 &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">sr-only</span><span style="color: #800000;">"</span>&gt;(current)&lt;/span&gt;&lt;/a&gt;
+                                &lt;/li&gt;
+                                &lt;li&gt;
+                                    &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;电脑办公&lt;/a&gt;
+                                &lt;/li&gt;
+                                &lt;li <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">dropdown</span><span style="color: #800000;">"</span>&gt;
+                                    &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">dropdown-toggle</span><span style="color: #800000;">"</span> data-toggle=<span style="color: #800000;">"</span><span style="color: #800000;">dropdown</span><span style="color: #800000;">"</span> role=<span style="color: #800000;">"</span><span style="color: #800000;">button</span><span style="color: #800000;">"</span> aria-haspopup=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span> aria-expanded=<span style="color: #800000;">"</span><span style="color: #800000;">false</span><span style="color: #800000;">"</span>&gt;Dropdown &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">caret</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;&lt;/a&gt;
+                                    &lt;ul <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">dropdown-menu</span><span style="color: #800000;">"</span>&gt;
+                                        &lt;li&gt;
+                                            &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;Action&lt;/a&gt;
+                                        &lt;/li&gt;
+                                        &lt;li&gt;
+                                            &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;Another action&lt;/a&gt;
+                                        &lt;/li&gt;
+                                        &lt;li&gt;
+                                            &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;Something <span style="color: #0000ff;">else</span> here&lt;/a&gt;
+                                        &lt;/li&gt;
+                                        &lt;li role=<span style="color: #800000;">"</span><span style="color: #800000;">separator</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">divider</span><span style="color: #800000;">"</span>&gt;&lt;/li&gt;
+                                        &lt;li&gt;
+                                            &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;Separated link&lt;/a&gt;
+                                        &lt;/li&gt;
+                                        &lt;li role=<span style="color: #800000;">"</span><span style="color: #800000;">separator</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">divider</span><span style="color: #800000;">"</span>&gt;&lt;/li&gt;
+                                        &lt;li&gt;
+                                            &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;One more separated link&lt;/a&gt;
+                                        &lt;/li&gt;
+                                    &lt;/ul&gt;
+                                &lt;/li&gt;
+                            &lt;/ul&gt;
+                            &lt;form <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">navbar-form navbar-right</span><span style="color: #800000;">"</span>&gt;
+                                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">form-group</span><span style="color: #800000;">"</span>&gt;
+                                    &lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">text</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">form-control</span><span style="color: #800000;">"</span> placeholder=<span style="color: #800000;">"</span><span style="color: #800000;">Search</span><span style="color: #800000;">"</span>&gt;
+                                &lt;/div&gt;
+                                &lt;button type=<span style="color: #800000;">"</span><span style="color: #800000;">submit</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">btn btn-default</span><span style="color: #800000;">"</span>&gt;Submit&lt;/button&gt;
+                            &lt;/form&gt;
+                        &lt;/div&gt;
+                        &lt;!-- /.navbar-collapse --&gt;
+                    &lt;/div&gt;
+                    &lt;!-- /.container-fluid --&gt;
+                &lt;/nav&gt;
+
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">3</span>.轮播图--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-example-generic</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel slide</span><span style="color: #800000;">"</span> data-ride=<span style="color: #800000;">"</span><span style="color: #800000;">carousel</span><span style="color: #800000;">"</span>&gt;
+                    &lt;!-- Indicators --&gt;
+                    &lt;ol <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-indicators</span><span style="color: #800000;">"</span>&gt;
+                        &lt;li data-target=<span style="color: #800000;">"</span><span style="color: #800000;">#carousel-example-generic</span><span style="color: #800000;">"</span> data-slide-to=<span style="color: #800000;">"</span><span style="color: #800000;">0</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">active</span><span style="color: #800000;">"</span>&gt;&lt;/li&gt;
+                        &lt;li data-target=<span style="color: #800000;">"</span><span style="color: #800000;">#carousel-example-generic</span><span style="color: #800000;">"</span> data-slide-to=<span style="color: #800000;">"</span><span style="color: #800000;">1</span><span style="color: #800000;">"</span>&gt;&lt;/li&gt;
+                        &lt;li data-target=<span style="color: #800000;">"</span><span style="color: #800000;">#carousel-example-generic</span><span style="color: #800000;">"</span> data-slide-to=<span style="color: #800000;">"</span><span style="color: #800000;">2</span><span style="color: #800000;">"</span>&gt;&lt;/li&gt;
+                    &lt;/ol&gt;
+
+                    &lt;!-- Wrapper <span style="color: #0000ff;">for</span> slides --&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-inner</span><span style="color: #800000;">"</span> role=<span style="color: #800000;">"</span><span style="color: #800000;">listbox</span><span style="color: #800000;">"</span>&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item active</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">./img/1.jpg</span><span style="color: #800000;">"</span> alt=<span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span>&gt;
+                            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-caption</span><span style="color: #800000;">"</span>&gt;<span style="color: #000000;">
+                                欢迎你...
+                            </span>&lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">./img/2.jpg</span><span style="color: #800000;">"</span> alt=<span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span>&gt;
+                            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-caption</span><span style="color: #800000;">"</span>&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">./img/3.jpg</span><span style="color: #800000;">"</span> alt=<span style="color: #800000;">"</span><span style="color: #800000;">...</span><span style="color: #800000;">"</span>&gt;
+                            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">carousel-caption</span><span style="color: #800000;">"</span>&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Controls --&gt;
+                    &lt;a <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">left carousel-control</span><span style="color: #800000;">"</span> href=<span style="color: #800000;">"</span><span style="color: #800000;">#carousel-example-generic</span><span style="color: #800000;">"</span> role=<span style="color: #800000;">"</span><span style="color: #800000;">button</span><span style="color: #800000;">"</span> data-slide=<span style="color: #800000;">"</span><span style="color: #800000;">prev</span><span style="color: #800000;">"</span>&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">glyphicon glyphicon-chevron-left</span><span style="color: #800000;">"</span> aria-hidden=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">sr-only</span><span style="color: #800000;">"</span>&gt;Previous&lt;/span&gt;
+                    &lt;/a&gt;
+                    &lt;a <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">right carousel-control</span><span style="color: #800000;">"</span> href=<span style="color: #800000;">"</span><span style="color: #800000;">#carousel-example-generic</span><span style="color: #800000;">"</span> role=<span style="color: #800000;">"</span><span style="color: #800000;">button</span><span style="color: #800000;">"</span> data-slide=<span style="color: #800000;">"</span><span style="color: #800000;">next</span><span style="color: #800000;">"</span>&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">glyphicon glyphicon-chevron-right</span><span style="color: #800000;">"</span> aria-hidden=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+                        &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">sr-only</span><span style="color: #800000;">"</span>&gt;Next&lt;/span&gt;
+                    &lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">4</span>.热门商品--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;div&gt;
+                    &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">h2</span><span style="color: #800000;">"</span>&gt;热门商品&lt;/span&gt;&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/title2.jpg</span><span style="color: #800000;">"</span> /&gt;
+                &lt;/div&gt;
+                &lt;!--<span style="color: #000000;">下div:
+            左div:中等屏幕时占2份,小屏和超小屏隐藏
+                图片
+            右div:中等屏幕时占10份,小屏和超小屏占12份
+                middle div:中等屏幕时占6份,小屏和超小屏隐藏
+                    图片
+                商品div:中等屏幕时占2份,小屏占4份,超小屏时占6份
+                    图片 2个p标签</span>--&gt;
+                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                    &lt;!--<span style="color: #000000;">左div:中等屏幕时占2份,小屏和超小屏隐藏
+                    图片</span>--&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 hidden-sm hidden-xs</span><span style="color: #800000;">"</span>&gt;
+                        &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/big01.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> height=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> /&gt;
+                    &lt;/div&gt;
+                    &lt;!--<span style="color: #000000;">右div:中等屏幕时占10份,小屏和超小屏占12份
+                        </span>--&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-10</span><span style="color: #800000;">"</span>&gt;
+                        &lt;!--<span style="color: #000000;">middle div:中等屏幕时占6份,小屏和超小屏隐藏
+                            图片</span>--&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-6 hidden-sm hidden-xs</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/middle01.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> height=<span style="color: #800000;">"</span><span style="color: #800000;">180px</span><span style="color: #800000;">"</span> /&gt;
+                        &lt;/div&gt;
+                        &lt;!--<span style="color: #000000;">商品div:中等屏幕时占2份,小屏占4份,超小屏时占6份
+                            图片 2个p标签</span>--&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">5</span>.图片--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/ad.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> /&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">6</span>.热门商品--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;div&gt;
+                    &lt;span <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">h2</span><span style="color: #800000;">"</span>&gt;热门商品&lt;/span&gt;&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/title2.jpg</span><span style="color: #800000;">"</span> /&gt;
+                &lt;/div&gt;
+                &lt;!--<span style="color: #000000;">下div:
+            左div:中等屏幕时占2份,小屏和超小屏隐藏
+                图片
+            右div:中等屏幕时占10份,小屏和超小屏占12份
+                middle div:中等屏幕时占6份,小屏和超小屏隐藏
+                    图片
+                商品div:中等屏幕时占2份,小屏占4份,超小屏时占6份
+                    图片 2个p标签</span>--&gt;
+                &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                    &lt;!--<span style="color: #000000;">左div:中等屏幕时占2份,小屏和超小屏隐藏
+                    图片</span>--&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 hidden-sm hidden-xs</span><span style="color: #800000;">"</span>&gt;
+                        &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/big01.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> height=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> /&gt;
+                    &lt;/div&gt;
+                    &lt;!--<span style="color: #000000;">右div:中等屏幕时占10份,小屏和超小屏占12份
+                        </span>--&gt;
+                    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-10</span><span style="color: #800000;">"</span>&gt;
+                        &lt;!--<span style="color: #000000;">middle div:中等屏幕时占6份,小屏和超小屏隐藏
+                            图片</span>--&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-6 hidden-sm hidden-xs</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/middle01.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> height=<span style="color: #800000;">"</span><span style="color: #800000;">180px</span><span style="color: #800000;">"</span> /&gt;
+                        &lt;/div&gt;
+                        &lt;!--<span style="color: #000000;">商品div:中等屏幕时占2份,小屏占4份,超小屏时占6份
+                            图片 2个p标签</span>--&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                        &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">col-md-2 col-sm-4 col-xs-6 text-center</span><span style="color: #800000;">"</span>&gt;
+                            &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/small08.jpg</span><span style="color: #800000;">"</span> /&gt;
+                            &lt;p&gt;妹子&lt;/p&gt;
+                            &lt;p&gt;<span style="color: #800080;">288</span>&lt;/p&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">7</span>.图片--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row</span><span style="color: #800000;">"</span>&gt;
+                &lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">img/footer.jpg</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span> /&gt;
+            &lt;/div&gt;
+            &lt;!--<span style="color: #800080;">8</span>--&gt;
+            &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">row text-center</span><span style="color: #800000;">"</span>&gt;
+                &lt;p&gt;
+                    &lt;ol <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">list-unstyled list-inline</span><span style="color: #800000;">"</span>&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span>&gt;联系我们&lt;/a&gt;&lt;/li&gt;
+                    &lt;/ol&gt;
+                &lt;/p&gt;
+                &lt;p&gt;Copyright &amp;copy; <span style="color: #800080;">2005</span>-<span style="color: #800080;">2016</span>  版权所有&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+
+&lt;/html&gt;<span style="color: #000000;">
+
+
+
+案例</span>-<span style="color: #000000;">将我们的项目发布出去
+    需求分析:
+        将我们编写好的(web项目)项目放到服务器上,这样以来用户就可以通过网络访问到我们的(web项目)项目了
+    技术分析:
+        web服务器
+        web项目
+        Http协议
+    </span><span style="color: #808080;">////////////////////////</span><span style="color: #008000;">//</span>
+    http:<span style="color: #008000;">//</span><span style="color: #008000;">localhost/webDemo/html/hello.html   get</span>
+
+<span style="color: #808080;">//////////////////</span><span style="color: #008000;">/</span>
+day33HTTP&amp;<span style="color: #000000;">Tomcat
+
+</span>-<span style="color: #000000;"> Web服务器
+  </span>-<span style="color: #000000;"> 概念:
+    </span>-<span style="color: #000000;"> web资源:
+      </span><span style="color: #800000;">"</span><span style="color: #800000;">英文直译</span><span style="color: #800000;">"</span>网<span style="color: #800000;">"</span><span style="color: #800000;">的意思</span>
+<span style="color: #000000;">      资源:一切数据文件
+      web资源:通过网络可以访问到的资源,通常指的是一切放在服务器上的文件</span><span style="color: #800000;">"
+</span>    -<span style="color: #000000;"> web资源的分类:
+      </span>-<span style="color: #000000;"> 静态的web资源:
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    内容是一成不变的</span><span style="color: #800000;">"</span>
+      -<span style="color: #000000;"> 动态的web资源:
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    内容有可能在不同的时间或者不同的人访问的时候会发生改变的</span><span style="color: #800000;">"</span>
+    -<span style="color: #000000;"> web技术分类
+      </span>-<span style="color: #000000;"> 静态的web技术
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    例如: html  css  js  .....</span><span style="color: #800000;">"</span>
+      -<span style="color: #000000;"> 动态的web技术
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    例如:servlet  jsp</span><span style="color: #800000;">"</span>
+    -<span style="color: #000000;"> 软件的架构
+      </span>- c/s架构(Client/Server   客户端/<span style="color: #000000;">服务器)
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    例如:qq  迅雷  lol</span><span style="color: #800000;">"</span>
+      - b/s架构(Browser/Server   浏览器/<span style="color: #000000;">服务器)
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    例如:京东  淘宝  </span><span style="color: #800000;">"</span>
+      -<span style="color: #000000;"> 区别
+        </span>- c/<span style="color: #000000;">s:需要客户下载客户端,页面比较炫,和服务器交互少,可以在客户端处理部分业务逻辑,可降低服务器的压力.需要维护客户端和服务器端
+        </span>- b/<span style="color: #000000;">s:只需要客户有一个浏览器,一切页面从服务器加载,和服务器交互频繁,由服务器处理业务逻辑,服务器压力较大.只需要维护服务器端.
+    </span>-<span style="color: #000000;"> 通讯机制
+      </span>-<span style="color: #000000;"> 基于http协议
+        </span>-<span style="color: #000000;"> 浏览器发送给服务器的内容:请求(request)
+        </span>-<span style="color: #000000;"> 服务器返回给浏览器的内容:响应(response)
+        </span>-<span style="color: #000000;"> 注意:先有请求,后有响应,一次请求对应一次响应
+  </span>-<span style="color: #000000;"> web服务器
+    </span>-<span style="color: #000000;"> 作用:将我们编写好的网页发布出去,别人就可以通过网络访问
+    </span>-<span style="color: #000000;"> 常见的web服务器
+      </span><span style="color: #800000;">"</span><span style="color: #800000;">名称        厂商            特点</span>
+<span style="color: #000000;">      Weblogic     oracle        大型的收费的支持javaEE所有规范的web服务器(servlet和jsp)
+      websphere     ibm            大型的收费的支持javaEE所有规范的web服务器(servlet和jsp)
+      tomcat     apache        小型的免费的支持servlet和jsp规范的</span><span style="color: #800000;">"</span><span style="color: #800000;">web服务器</span><span style="color: #800000;">""
+</span>    -<span style="color: #000000;"> Tomcat服务器★
+    
+        Tomcat如何优化</span>?    
+            <span style="color: #800080;">1</span><span style="color: #000000;">: 优化连接配置.修改连接数,关闭客户端的dns查询(DNS查询需要占用网络，再获取对方ip的时候会消耗一定的时间)
+            </span><span style="color: #800080;">2</span><span style="color: #000000;">: 优化jdk,扩大tomcat使用的内存,默认为128M
+      </span>-<span style="color: #000000;"> 下载
+        </span>- http:<span style="color: #008000;">//</span><span style="color: #008000;">tomcat.apache.org/download-70.cgi</span>
+        -<span style="color: #000000;"> core:
+          </span>-<span style="color: #000000;"> zip:可以在window上运行的(我们今天使用)
+          </span>-<span style="color: #000000;"> tar.gz:运行在linux上的
+      </span>-<span style="color: #000000;"> 安装
+        </span>-<span style="color: #000000;"> 解压缩即可
+      </span>-<span style="color: #000000;"> 目录结构
+        </span>-<span style="color: #000000;"> bin:存放可执行的文件
+        </span>-<span style="color: #000000;"> ★conf:存放配置文件
+        </span>-<span style="color: #000000;"> lib:存放的是tomcat运行时和项目运行时必须的jar包
+        </span>- logs:存放的是日志文件(catalina.<span style="color: #0000ff;">out</span><span style="color: #000000;">)
+        </span>-<span style="color: #000000;"> temp:存放临时文件(不用管)
+        </span>-<span style="color: #000000;"> ★★webapps:存放要发布的web项目
+        </span>-<span style="color: #000000;"> ★work:存放项目运行时产生的java文件和class文件
+      </span>-<span style="color: #000000;"> 启动
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    双击 tomcat目录下/bin/startup.bat</span><span style="color: #800000;">"</span>
+      -<span style="color: #000000;"> 关闭
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">    方式1:点 x</span>
+            方式2:ctrl +<span style="color: #000000;"> c
+            (记住)方式3:双击 tomcat目录下</span>/bin/shutdown.bat<span style="color: #800000;">"
+</span>      -<span style="color: #000000;"> 配置
+        </span>-<span style="color: #000000;"> 常见问题
+          </span>-<span style="color: #000000;"> 一闪而过
+            </span><span style="color: #800000;">"</span><span style="color: #800000;">查看JAVA_HOME是否配置正确</span><span style="color: #800000;">"</span>
+          -<span style="color: #000000;"> 端口占用: 可以修改Tomcat的端口号
+            </span><span style="color: #800000;">"</span><span style="color: #800000;">修改 tomcat目录下/conf/server.xml 大约70行</span>
+                             &lt;Connector port=<span style="color: #800000;">"</span><span style="color: #800000;">8080</span><span style="color: #800000;">"</span> protocol=<span style="color: #800000;">"</span><span style="color: #800000;">HTTP/1.1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                               connectionTimeout</span>=<span style="color: #800000;">"</span><span style="color: #800000;">20000</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                               redirectPort</span>=<span style="color: #800000;">"</span><span style="color: #800000;">8443</span><span style="color: #800000;">"</span> /&gt;<span style="color: #000000;">
+                        需要将 </span><span style="color: #800080;">8080</span><span style="color: #000000;"> 修改成其他的端口号
+                        端口号:</span><span style="color: #800080;">0</span>~<span style="color: #800080;">65535</span>
+                            <span style="color: #800080;">0</span>~<span style="color: #800080;">1024</span><span style="color: #000000;">:系统预留的端口号 一般不要使用 但是可以使用80端口
+                            80端口是http协议的默认端口号,访问的时候可以不写端口号</span><span style="color: #800000;">"
+</span>      -<span style="color: #000000;"> 访问格式
+        </span>-<span style="color: #000000;"> tomcat的访问路径(8080是tomcat的默认的端口号)
+          </span><span style="color: #800000;">"</span><span style="color: #800000;">    http://localhost:8080</span><span style="color: #800000;">"</span>
+        - 格式:http:<span style="color: #008000;">//</span><span style="color: #008000;">ip地址:端口号/项目名/资源?参数名称=值&amp;参数名称=值</span>
+-<span style="color: #000000;"> web项目
+  </span>-<span style="color: #000000;"> 目录结构:★
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">myweb(目录名:项目名)</span>
+                |
+                |---<span style="color: #000000;">资源文件  html img css js
+                </span>|---WEB-<span style="color: #000000;">INF(目录:特点,通过浏览器直接访问不到)
+                </span>|        |
+                |        |---<span style="color: #000000;">lib(目录:项目运行的jar包)
+                </span>|        |---<span style="color: #000000;">classes(目录:存放的class文件)
+                </span>|        |---web.xml(核心配置文件,在servlet2.5版本中必须有,serlvet3.0版本不是必须的)<span style="color: #800000;">"
+</span>  -<span style="color: #000000;"> 项目访问路径:
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">http://localhost:80/myweb/1.html</span>
+    协议:<span style="color: #008000;">//</span><span style="color: #008000;">ip地址:端口/项目名称/资源"</span>
+  -<span style="color: #000000;"> Tomcat和Eclipse整合  
+</span>-<span style="color: #000000;"> Http协议:
+  </span>-<span style="color: #000000;"> 协议:规定内容的传输的格式
+  </span>-<span style="color: #000000;"> http协议:
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">用来制定互联网上数据的传输格式</span><span style="color: #800000;">"</span>
+  -<span style="color: #000000;"> 包含:
+    </span>-<span style="color: #000000;"> 浏览器发送给服务器的内容  请求
+      </span><span style="color: #800000;">"</span><span style="color: #800000;">规定请求数据的格式</span><span style="color: #800000;">"</span>
+    -<span style="color: #000000;"> 服务器返回给浏览器的内容  响应
+      </span><span style="color: #800000;">"</span><span style="color: #800000;">规定响应数据的格式</span><span style="color: #800000;">"</span>
+  -<span style="color: #000000;"> 请求的格式:
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">请求行 请求头 请求体</span><span style="color: #800000;">"</span>
+    -<span style="color: #000000;"> 请求行:请求的第一行
+      </span>- 格式:请求方式 请求资源 协议/<span style="color: #000000;">版本
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">例如:  GET /day33/1.html HTTP/1.1</span><span style="color: #800000;">"</span>
+      -<span style="color: #000000;"> 请求方式:
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">常见的两种 get和post</span>
+<span style="color: #000000;">        get请求:请求参数会在地址栏上显示,参数大小有限制,不安全
+              http:</span><span style="color: #008000;">//</span><span style="color: #008000;">ip地址:端口号/项目名/资源?参数名称=值&amp;参数名称=值</span>
+<span style="color: #000000;">        post请求:请求参数不在地址栏上显示,参数大小不受限制.较为安全
+            格式:
+                参数名称</span>=值&amp;参数名称=值<span style="color: #800000;">"
+</span>    -<span style="color: #000000;"> 请求头
+      </span>- 格式: key/<span style="color: #000000;">value的格式 (value可以为多个值的)
+      </span>-<span style="color: #000000;"> 常见的请求头
+        </span>- Accept: text/html,image<span style="color: #008000;">/*</span><span style="color: #008000;">        --支持数据类型
+        - Accept-Charset: ISO-8859-1    --字符集
+        - Accept-Encoding: gzip        --支持压缩
+        - Accept-Language:zh-cn         --语言环境
+        - Host: www.baidu.cn:80        --访问主机
+        - If-Modified-Since: Tue, 11 Jul 2000 18:23:51 GMT      --缓存文件的最后修改时间
+        - Referer: </span><span style="color: #008000; text-decoration: underline;">http://www.baidu.com/index.jsp</span><span style="color: #008000;">     --来自哪个页面、防盗链
+        - User-Agent: Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0)
+          "扩展知识:
+              Trident内核代表产品Internet Explorer，又称其为IE内核
+              Gecko内核代表作品Mozilla FirefoxGecko,火狐
+              Chrome内核代表作品Chrome,谷歌"
+        - Cookie
+        - Connection: close/Keep-Alive       --链接状态
+      - 重要的头:
+        - Referer  User-Agent Cookie If-Modified-Since
+    - 请求体
+      "和请求头之间有一个空行
+      post请求的参数:只有表单提交的时候明确了method="post"这时候是post请求,其他的都是get请求
+      参数名称=值&amp;参数名称=值
+      username=jack&amp;password=1234"
+  - 响应的格式:
+    "响应行 响应头 响应体"
+    - 响应行:响应信息的第一行
+      - 格式:
+        - 协议/版本 响应的状态码 状态码说明
+      - 例如:
+        - HTTP/1.1 200 OK
+      - 状态码:
+        - 1xx    :请求已发送
+        - 2xx    :响应已完成
+          - 200:响应成功(请求成功)
+        - 3xx    :需要浏览器进一步操作才可以完成
+          - 302:重定向(配合location头使用)
+          - 304:读缓存(Not Modified表示没有改变)
+        - 4xx :用户访问错误(Not Found 表示:路径写错了,你访问的路径不存在)
+          - 404:用户访问的资源不存在
+        - 5xx :服务器内部错误(其实就是代码有问题,改代码)
+          - 500:服务器内部异常
+    - 响应头
+      - 格式: key/value的格式 (value可以为多个值的)
+      - 常见的响应头
+        - Location: </span><span style="color: #008000; text-decoration: underline;">http://www.it315.org/index.jsp</span><span style="color: #008000;">     --跳转方向
+        - Server:apache tomcat            --服务器型号
+        - Content-Encoding: gzip             --数据压缩
+        - Content-Length: 80             --数据长度
+        - Content-Language: zh-cn         --语言环境
+        - Content-Type: text/html; charset=GB2312         --数据类型(MIME类型)  大类型/小类型 text/css  text/javascript  image/jpeg image/bmp
+        - Last-Modified: Tue, 11 Jul 2000 18:23:51 GMT    --最后修改时间
+        - Refresh: 1;url=</span><span style="color: #008000; text-decoration: underline;">http://www.it315.org</span><span style="color: #008000;">        --定时刷新
+        - Content-Disposition: attachment; filename=aaa.zip    --下载
+        - Set-Cookie:SS=Q0=5Lb_nQ; path=/search
+        - Expires: -1                    --缓存
+        - Cache-Control: no-cache              --缓存
+        - Pragma: no-cache                   --缓存
+        - Connection:Keep-Alive               --连接
+      - 重点的头:
+        - Set-Cookie Location Content-Type Refresh Content-Disposition Last-Modified
+    - 响应体
+      "和响应头之间有一个空行,
+      浏览器解析的内容"
+- servlet入门:
+  "本质上就是一个运行在服务器上的类"
+  - 作用:1.接受请求   2.调用Service  处理业务逻辑   3.生成响应结果
+  - 入门步骤:
+    - 1.编写一个类
+      - 必须实现Servlet接口
+      - 重写里面的方法
+    - 2.编写配置文件(项目下 web-inf/web.xml)
+      "注册servlet   绑定路径
+                  &lt;!-- 注册servlet 
+                      servlet-name:给servlet起个名称 名称自定义,保证唯一
+                      servlet-class:serlvet的全限定名(包名+类名)
+                  --&gt;
+                  &lt;servlet&gt;
+                      &lt;servlet-name&gt;helloservlet&lt;/servlet-name&gt;
+                      &lt;servlet-class&gt;cn.baidu.demo.HelloServlet&lt;/servlet-class&gt;
+                  &lt;/servlet&gt;
+                  
+                  &lt;!-- 绑定路径
+                      servlet-name:在servlet标签中给servlet起好的名称
+                      url-pattern:路径  暂时都以"/"开头
+                   --&gt;
+                  &lt;servlet-mapping&gt;
+                      &lt;servlet-name&gt;helloservlet&lt;/servlet-name&gt;
+                      &lt;url-pattern&gt;/hello&lt;/url-pattern&gt;
+                  &lt;/servlet-mapping&gt;"
+    - 3.测试
+      "            localhost/项目名/绑定的路径
+                  localhost/day33/hello"
+
+在服务器中,为什么需要项目部署?  为了让网络通过服务器访问到项目
+
+
+回顾:
+    tomcat服务器和Http协议:
+    web服务器:
+        概念:
+            web资源:
+            web资源分类:
+                静态的web资源:内容一层不变
+                动态的web资源:根据不同的人和不同的时间,可能会发生变化
+            web技术:
+                静态的web技术:html css js...
+                动态的web技术:Servlet jsp
+            结构:
+                B/S(浏览器/服务器):
+                C/S(客户端/服务器):
+            通讯机制:
+                基于HTTP协议
+                一次请求一次响应,先有请求后有响应
+        web服务器:
+            Tomcat:
+                下载:
+                安装:
+                目录结构:
+                    bin:
+                    conf:
+                    webapps:
+                    work:
+                启动:
+                    bin/startup.bat
+                关闭:
+                    X
+                    ctrl + c
+                    ★ bin/shutdown.bat
+                访问:
+                    协议://地址:端口/资源
+        web项目:
+            项目名称:
+                |-------html
+                |-------css
+                |-------js
+                |-------img
+                |-------WEB-INF
+                |-----------lib
+                |-----------classes
+                |-----------web.xml
+        http:
+            请求:浏览器发送给服务器的内容(request)
+                请求行
+                    请求信息的第一行
+                        请求方式 请求的资源 协议/版本        http/1.0 http/1.1
+                请求头 
+                    格式:
+                        key/value  (value可以为多个值)
+                请求体
+                    当请求是post的时候,存放post请求所携带的参数
+            响应:服务器返回给浏览器的内容(response)
+                响应行 
+                    响应信息的第一行
+                        协议/版本 状态码 说明
+                响应头 
+                    格式:
+                        key/value  (value可以为多个值)
+                响应体
+                    浏览器解析的内容
+////////////////////////////////////////////
+servlet:
+    
+案例-使用servlet完成用户登录功能
+    需求分析:
+        用户在表单中填写完用户名和密码后,点击登录的时候,向服务器发送登录的请求,
+        在服务器上处理请求,处理完毕后将处理信息响应到页面
+            处理结果:
+                登录成功:欢迎...登录...
+                登录失败:用户名或密码错误
+                异常:当前功能正在维护....
+        技术分析:
+            html:表单
+                form
+                    action:提交路径
+                    method:提交方式
+                        get
+                        post
+            servlet:
+                request
+                response
+    ////////////////
+    项目:
+        com.baidu.web
+        com.baidu.service
+        com.baidu.dao
+        com.baidu.domain
+        com.baidu.utils
+        
+        导入jar包
+        导入工具类</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

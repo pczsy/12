@@ -1,0 +1,141 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修轻松pick移动开发第二篇，rem布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>轻松pick移动开发第二篇，rem布局</center></div><div class='banquan'>原文出处:本文由博客园博主万象皆缘一念波提供。<br/>
+原文连接:https://www.cnblogs.com/flower8/p/11409514.html</div><br>
+    <p><strong>一、为什么要使用rem布局</strong></p>
+<p>前面我写了flex布局的优点，分配伸缩盒容器中子盒子占的份数及排列方式，使其不受屏幕缩放的影响，使布局变得简单。然而，在有些时候，不可避免要给盒子设置高度的值，怎么让高度也随着屏幕大小变化等比例缩放呢？另外，怎么让页面文字大小也随着屏幕的大小变化而缩放呢？rem布局就可以轻松解决这个问题。</p>
+<p><strong>二、rem布局的原理</strong></p>
+<p>1.rem</p>
+<p>首先要了解什么是rem，<span class="md-expand">rem (<span>root<span> em)是一个相对单位，1rem的值是页面html中font-size的大小</span></span></span>。在布局中，我们统一使用rem作为设置宽高的基本单位，这样我们可以通过控制页面font-size的大小来使页面元素等比例缩放。</p>
+<p>2.媒体查询和less。（less内容作为了解）</p>
+<p>媒体查询是CSS3的新语法，使用 @media查询，可以针对不同的媒体类型定义不同的样式。在rem布局中，就是根据屏幕大小的变化，确定html中的font-size的值。</p>
+<p><span class="md-expand">Less（LeanerStyle Sheets 的缩写）是一门 <span>CSS扩展语言<span>，也成为CSS预处理器。<span class="md-expand">它在CSS 的语法基础之上，<span>引入了变量，Mixin（混入），运算以及函数等功能<span>，大大简化了 CSS 的编写，并且降低了 CSS的维护成本。</span></span></span></span></span></span></p>
+<p><span class="md-expand"><span><span><span class="md-expand"><span><span>在rem布局中主要使用less文件来计算rem的值（盒子宽高的px值 / 1rem占的px值 = 宽高占的rem值）。在vscode中安装easyLess插件可以自动生成与less文件同名的css文件，在页面引入css即可。但是这样换算比较麻烦，开发中我们通常使用cssrem插件就可以替代less文件的功能了。</span></span></span></span></span></span></p>
+<p>3.flexible.js</p>
+<p>flexible.js就是一个封装好的js文件。将屏幕宽度除以10作为1rem的值，就不用每一个尺寸都用媒体查询判断rem值了。页面中的元素都是以rem来表示宽高的，这样随着屏幕尺寸大小的变化，页面元素也会进行缩放。</p>
+<p>使用flexible.js后可以在vscode中安装cssrem插件，并在设置里面的cssrem中设置全局font-size的固定大小（设计稿宽度除以10），cssrem插件可以直接将你输入的页面元素大小都转化为rem值，非常好用，省去在less文件中进行计算了。</p>
+<p><strong>三、实例</strong></p>
+<p>1.实现的效果如下，我们可以发现它的元素根据页面的大小而等比例缩放。</p>
+<p>750px屏幕下：</p>
+<p>&nbsp;<img src="./images/轻松pick移动开发第二篇，rem布局0.png" alt="" /></p>
+<p>500px屏幕下的效果：</p>
+<p><img src="./images/轻松pick移动开发第二篇，rem布局1.png" alt="" /></p>
+<p>2.实现方法</p>
+<p>rem布局实现方式有两种，第一种是rem+less+媒体查询，但是需要多写一个媒体查询less文件，比较麻烦，所以我们经常用第二种。第二种是rem+flexible.js，本文的案例是使用这种方式做的。</p>
+<p>3.步骤。</p>
+<p>准备工作：安装vscode的插件cssrem，另外在vscode设置中设置默认页面字体大小为750px / 10 = 75px。这样我们在写页面样式时候写上对应的px值，插件会直接将你输入的px值内容转换成对应的rem值，可以看到下面的代码长度的单位都是rem。</p>
+<p>首先引入flexible.js并搭建页面结构。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0, user-scalable=no,maximum-scale=1.0,minimum-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="ie=edge"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>rem布局详解<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/flexible.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 引入flexible.js根据屏幕判断1rem的值 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/normalize.css"</span><span style="color: #0000ff;">&gt;</span>    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 引入公用样式 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/index.css"</span><span style="color: #0000ff;">&gt;</span>    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 引入css样式 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">header</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="classify"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 左侧分类标志 </span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">action</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>                    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 中间搜索框 </span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="search"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="抢购双十一"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="login"</span><span style="color: #0000ff;">&gt;</span>登陆<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 右侧登录标志 </span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">header</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>然后书写css样式如下：</p>
+<p>第一步，加入媒体查询条件。设置在页面大于设计稿宽度时，也按设计稿宽度设置font-size大小。html中设置的字体大小容易被覆盖，所以加上!important进行提权。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">@media screen and (min-width:750px)</span>{<span style="color: #ff0000;">
+    html{
+        font-size</span>:<span style="color: #0000ff;"> 75px!important</span>;
+    }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>第二步：body修饰。body要是10rem即设计稿宽度。然后根据屏幕缩放。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">body</span>{<span style="color: #ff0000;">
+    min-width</span>:<span style="color: #0000ff;"> 320px</span>;   <span style="color: #008000;">/*</span><span style="color: #008000;"> 设定移动开发的页面的最大最小值的范围 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    max-width</span>:<span style="color: #0000ff;"> 750px</span>;<span style="color: #ff0000;">  
+    width</span>:<span style="color: #0000ff;"> 10rem</span>;       <span style="color: #008000;">/*</span><span style="color: #008000;"> body是固定的10rem居中 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;">0 auto</span>;
+}</pre>
+</div>
+<p><span style="background-color: #ffffff; font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px;">第三步：header 书写，用到固定定位。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">header</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> flex</span>;  <span style="color: #008000;">/*</span><span style="color: #008000;"> 父盒子添加伸缩盒布局属性 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> fixed</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;">50%</span>;<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> translateX(-50%)</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 10rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1.173333rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #ffc001</span>;
+}</pre>
+</div>
+<p>第四部：其余代码如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">*</span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+.classify</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> .586667rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> .933333rem</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> url(../images/classify.png) no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> .586667rem</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;">.146667rem .333333rem .093333rem</span>;
+}<span style="color: #800000;">
+header form</span>{<span style="color: #ff0000;">
+    flex</span>:<span style="color: #0000ff;"> 1</span>;    <span style="color: #008000;">/*</span><span style="color: #008000;"> 子盒子独占1份剩余空间 </span><span style="color: #008000;">*/</span>
+}<span style="color: #800000;">
+header input</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> .906667rem</span>;<span style="color: #ff0000;">
+    margin-top</span>:<span style="color: #0000ff;"> .133333rem</span>;<span style="color: #ff0000;">
+    border-radius</span>:<span style="color: #0000ff;"> .453333rem</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;"> #fff2cd</span>;<span style="color: #ff0000;">
+    padding-left</span>:<span style="color: #0000ff;"> .746667rem</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> .32rem</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> none</span>;   <span style="color: #008000;">/*</span><span style="color: #008000;"> 去除边框和轮廓线 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    outline</span>:<span style="color: #0000ff;"> none</span>;
+}<span style="color: #800000;">
+.login</span>{
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> display: block;  因为父盒子是伸缩盒布局，所以不需要 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> .133333rem .266667rem</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> .906667rem</span>;<span style="color: #ff0000;">
+    line-height</span>:<span style="color: #0000ff;"> .906667rem</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> .333333rem</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> #fff</span>;<span style="color: #ff0000;">
+    text-decoration</span>:<span style="color: #0000ff;"> none</span>;
+}</pre>
+</div>
+<p><strong>四：总结</strong></p>
+<p>rem的好处我们可以显而易见得看到了，任何长度都可以换成rem单位，这样页面元素可以随着页面大小变化进行缩放。实际开发中一般用混合式开发flex+rem模式。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

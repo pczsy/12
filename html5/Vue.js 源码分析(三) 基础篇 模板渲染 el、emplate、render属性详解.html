@@ -1,0 +1,214 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(三) 基础篇 模板渲染 el、emplate、render属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(三) 基础篇 模板渲染 el、emplate、render属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11011485.html</div><br>
+    <p>Vue有三个属性和模板有关，官网上是这样解释的:</p>
+<p style="margin-left: 30px;">el　　　　　;提供一个在页面上已存在的 DOM 元素作为 Vue 实例的挂载目标</p>
+<p style="margin-left: 30px;">template　　;一个字符串模板作为 Vue 实例的标识使用。模板将会 <strong>替换</strong> 挂载的元素。挂载元素的内容都将被忽略，除非模板的内容有分发插槽。</p>
+<p style="margin-left: 30px;">render&nbsp; 　　;字符串模板的代替方案，允许你发挥 JavaScript 最大的编程能力。该渲染函数接收一个 <code>createElement</code> 方法作为第一个参数用来创建 <code>VNode</code>。</p>
+<p>&nbsp;</p>
+<p>简单说一下，就是:</p>
+<p>　　Vue内部会判断如果没有render属性则把template属性的值作为模板，如果template不存在则把el对应的DOM节点的outerHTML属性作为模板,经过一系列正则解析和流程生成一个render函数，最后通过with(this){}来执行。</p>
+<p>　　也就是说template的优先级大于el。</p>
+<p>　　render的参数是Vue内部的$createElement函数(位于4486行)，它的可扩展性更强一些，在一些项目的需求中，可以用很简单的代码得到一个模板。例如Vue实战9.3里介绍的例子，有兴趣可以看看</p>
+<p>render可以带3个参数，分别如下:</p>
+<p>&nbsp;&nbsp;&nbsp; tag　　　　&nbsp;&nbsp; &nbsp;&nbsp; ;元素的标签名，也可以是组件名<br />&nbsp;&nbsp; &nbsp;data　　　　&nbsp;&nbsp; &nbsp;;该VNode的属性，是个对象<br />&nbsp;&nbsp; &nbsp;children&nbsp;&nbsp; 　　 &nbsp; ;子节点，是个数组<br />其中参数2可以省略的，在4335行做了修正，最后执行_createElement()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> createElement (　<span style="color: #339966;">　//第4335行</span>
+  context,
+  tag,
+  data,
+  children,
+  normalizationType,
+  alwaysNormalize
+) {
+  </span><span style="color: #0000ff;">if</span> (Array.isArray(data) || isPrimitive(data)) {     <span style="color: #008000;">//</span><span style="color: #008000;">如果data是个数组或者是基本类型</span>
+    normalizationType =<span style="color: #000000;"> children;
+    children </span>= data;                                      <span style="color: #008000;">//</span><span style="color: #008000;">修正data为children</span>
+    data = undefined;                                     <span style="color: #008000;">//</span><span style="color: #008000;">修正data为undefined</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isTrue(alwaysNormalize)) {
+    normalizationType </span>=<span style="color: #000000;"> ALWAYS_NORMALIZE;
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _createElement(context, tag, data, children, normalizationType) 　　　　<span style="color: #339966;">//最后执行_createElement创建一个虚拟VNode</span>
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>例如下面三个Vue实例，分别用el、template和rentder指定模板，它们的输出是一样的</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;script src="https://cdn.bootcss.com/vue/2.5.16/vue.js"&gt;&lt;/script&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app1"&gt;{{message}}&lt;/div&gt;
+    &lt;div id="app2"&gt;&lt;/div&gt;
+    &lt;div id="app3"&gt;&lt;/div&gt;
+    &lt;script&gt;
+        <span style="color: #0000ff;">var</span> data={message:'you are so annoying'<span style="color: #000000;">}</span>
+        <span style="color: #0000ff;">new</span> Vue({el:'#app1',data})                                                          <span style="color: #008000;">//</span><span style="color: #008000;">用el做模板</span>
+        <span style="color: #0000ff;">new</span> Vue({el:'#app2',data,template:"&lt;div&gt;{{message}}&lt;/div&gt;"})                        <span style="color: #008000;">//</span><span style="color: #008000;">用template做模板</span>
+        <span style="color: #0000ff;">new</span> Vue({el:'#app3',data,render:<span style="color: #0000ff;">function</span>(h){<span style="color: #0000ff;">return</span> h('div',<span style="color: #0000ff;">this</span>.message)}})         <span style="color: #008000;">//</span><span style="color: #008000;">直接用render函数指定模板</span>
+    &lt;/script&gt;        
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>&nbsp;、浏览器显示结果:</p>
+<p><img src="./images/Vue.js 源码分析(三) 基础篇 模板渲染 el、emplate、render属性详解0.png" alt="" /></p>
+<p>可以看到输出是一摸一样的</p>
+<p>&nbsp;</p>
+<div>&nbsp;<span style="font-size: 18pt;">源码分析</span></div>
+<hr />
+<p>Vue实例后会先执行_init()进行初始化，快结束时会判断是否有el属性，如果存在则调用$mount进行挂载，$mount函数如下:</p>
+<p class="hwi">&nbsp;writer by:大沙漠 QQ:22969969</p>
+<div class="cnblogs_code">
+<pre><code>Vue.prototype.$mount = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (　　　　//定义在10861行
+  el,
+  hydrating
+) {
+  el </span>= el &amp;&amp;<span style="color: #000000;"> query(el);
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (el === document.body || el ===<span style="color: #000000;"> document.documentElement) {
+    </span>"development" !== 'production' &amp;&amp;<span style="color: #000000;"> warn(
+      </span>"Do not mount Vue to &lt;html&gt; or &lt;body&gt; - mount to normal elements instead."<span style="color: #000000;">
+    );
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #0000ff;">var</span> options = <span style="color: #0000ff;">this</span><span style="color: #000000;">.$options;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> resolve template/el and convert to render function</span>
+  <span style="color: #0000ff;">if</span> (!options.render) {                                            <span style="color: #008000;">//</span><span style="color: #008000;">如果render属性不存在</span>
+    <span style="color: #0000ff;">var</span> template = options.template;                                <span style="color: #008000;">//</span><span style="color: #008000;">则尝试获取template属性并将其编译成render   </span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (template) {
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> template === 'string'<span style="color: #000000;">) {                              
+        </span><span style="color: #0000ff;">if</span> (template.charAt(0) === '#'<span style="color: #000000;">) {
+          template </span>=<span style="color: #000000;"> idToTemplate(template);
+          </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+          <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; !<span style="color: #000000;">template) {
+            warn(
+              (</span>"Template element not found or is empty: " +<span style="color: #000000;"> (options.template)),
+              </span><span style="color: #0000ff;">this</span><span style="color: #000000;">
+            );
+          }
+        }
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (template.nodeType) {
+        template </span>=<span style="color: #000000;"> template.innerHTML;
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        {
+          warn(</span>'invalid template option:' + template, <span style="color: #0000ff;">this</span><span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">
+      }
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (el) {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果templtate不存在但是el存在，则获取调用getOuterHTML()函数获取el的outerHTML属性，<span style="color: #008000;">getOuterHTML</span>()定义在10933行，也就是末尾，用户获取DOM的outerHTML</span>
+      template =<span style="color: #000000;"> getOuterHTML(el);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (template) {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+      <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; config.performance &amp;&amp;<span style="color: #000000;"> mark) {
+        mark(</span>'compile'<span style="color: #000000;">);
+      }
+
+      </span><span style="color: #0000ff;">var</span> ref =<span style="color: #000000;"> compileToFunctions(template, {
+        shouldDecodeNewlines: shouldDecodeNewlines,
+        shouldDecodeNewlinesForHref: shouldDecodeNewlinesForHref,
+        delimiters: options.delimiters,
+        comments: options.comments
+      }, </span><span style="color: #0000ff;">this</span>);                                                     <span style="color: #008000;">//</span><span style="color: #008000;">这里调用compileToFunctions()将template解析成一个render函数，并返回</span>
+      <span style="color: #0000ff;">var</span> render =<span style="color: #000000;"> ref.render;
+      </span><span style="color: #0000ff;">var</span> staticRenderFns =<span style="color: #000000;"> ref.staticRenderFns;
+      options.render </span>=<span style="color: #000000;"> render;
+      options.staticRenderFns </span>=<span style="color: #000000;"> staticRenderFns;
+
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+      <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; config.performance &amp;&amp;<span style="color: #000000;"> mark) {
+        mark(</span>'compile end'<span style="color: #000000;">);
+        measure((</span>"vue " + (<span style="color: #0000ff;">this</span>._name) + " compile"), 'compile', 'compile end'<span style="color: #000000;">);
+      }
+    }
+  }
+  </span><span style="color: #0000ff;">return</span> mount.call(<span style="color: #0000ff;">this</span><span style="color: #000000;">, el, hydrating)
+};</span></pre>
+</div>
+<pre><code><span style="color: #000000;">compileToFunctions</span>函数是由createCompiler()返回的(这里有点绕，研究代码的时候在里面绕了好几天)，我把大致主体贴出来，如下:</pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> baseOptions ={}                                                     <span style="color: #008000;">//</span><span style="color: #008000;">编译的配置项 第9802行</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> createCompileToFunctionFn(compile){
+  </span><span style="color: #0000ff;">var</span> cache = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);  
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span> compileToFunctions(template, options, vm) {    <span style="color: #008000;">//</span><span style="color: #008000;">编译时先执行这里</span>
+    <span style="color: #008000;">/**/</span><span style="color: #000000;">
+    compile(template,options)       
+    </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+  }
+}
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> createCompilerCreator(baseCompile){
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;">(baseOptions){
+    </span><span style="color: #0000ff;">function</span> compile(template, options) {<span style="color: #008000;">/**/</span><span style="color: #000000;">}
+              </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+                  compile: compile,
+                  compileToFunctions: createCompileToFunctionFn(compile)    </span><span style="color: #008000;">//</span><span style="color: #008000;">难点:匿名函数返回的值中又调用了createCompileToFunctionFn函数</span>
+<span style="color: #000000;">              }
+  }
+}
+</span><span style="color: #0000ff;">var</span> createCompiler = createCompilerCreator(<span style="color: #0000ff;">function</span>(){                <span style="color: #008000;">//</span><span style="color: #008000;">传入一个匿名函数</span>
+        <span style="color: #0000ff;">var</span> ast = parse(template.trim(), options);                          <span style="color: #008000;">//</span><span style="color: #008000;">编译时，第二步:再执行这里</span>
+        <span style="color: #0000ff;">if</span> (options.optimize !== <span style="color: #0000ff;">false</span><span style="color: #000000;">) {          
+              optimize(ast, options);
+        }
+        </span><span style="color: #0000ff;">var</span> code =<span style="color: #000000;"> generate(ast, options);         
+        </span><span style="color: #0000ff;">return</span> {ast: ast,render: code.render,staticRenderFns: code.staticRenderFns}   <span style="color: #008000;">//</span><span style="color: #008000;">最后返回一个对象</span>
+<span style="color: #000000;">})
+</span><span style="color: #0000ff;">var</span> ref$1 =<span style="color: #000000;"> createCompiler(baseOptions);
+</span><span style="color: #0000ff;">var</span> compileToFunctions = ref$1.compileToFunctions;                  <span style="color: #008000;">//</span><span style="color: #008000;">编译的入口文件</span></pre>
+</div>
+<p>是不是有点晕呢，我举一个例子就能看明白了，如下:</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">function</span> show(show){      <span style="color: #008000;">//</span><span style="color: #008000;">shou函数也直接返回一个匿名函数，带一个参数</span>
+      <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;">(info){
+        show(info)              </span><span style="color: #008000;">//</span><span style="color: #008000;">show通过作用域链就可以访问到参数的show函数了</span>
+<span style="color: #000000;">      }
+    }
+
+    </span><span style="color: #0000ff;">var</span> info=show(<span style="color: #0000ff;">function</span><span style="color: #000000;">(info){
+      console.log(info)
+    })                      　　　　</span><span style="color: #008000;">//</span><span style="color: #008000;">这里执行show函数，传入一个匿名函数</span>
+    info({name:'gsz'}) 　　　　<span style="color: #339966;">//控制台输出:{name: "gsz"}</span></pre>
+</div>
+<p><span style="color: #000000;">Vue内部看得晦涩是因为传参的时候都注明了一个函数名，其实这个函数名是可以忽略的，这样看起来会更清晰一点&nbsp; 　　注:这样设计是为了跨平台一些代码的复用和存放吧，代码结构在node下更好理解一点</span></p>
+<p><span style="color: #000000;">compileToFunctions函数内部会调用parse()将模板经过一系列的正则解析，用一个AST对象保存，然后调用<span style="color: #000000;">generate</span>()做静态节点标记，最后调用<span style="color: #000000;">generate</span>生成一个render函数</span></p>
+<p><span style="color: #000000;">以上面的第一个Vue实例来说，parse()解析后的AST对象如下:</span></p>
+<p><span style="color: #000000;"><img src="./images/Vue.js 源码分析(三) 基础篇 模板渲染 el、emplate、render属性详解1.png" alt="" /></span></p>
+<p>、再通过<span style="color: #000000;"><span style="color: #000000;">generate</span></span>()后生成如下一个对象，其中render就是最终要执行的render函数了</p>
+<p><img src="./images/Vue.js 源码分析(三) 基础篇 模板渲染 el、emplate、render属性详解2.png" alt="" /></p>
+<pre><code><span style="color: #000000;">compileToFunctions</span>函数返回值是一个对象，以上面的第一个vue实例为例，返回后的信息如下:</pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">{
+  render:</span>"(function anonymous() {with(this){return _c('div',{attrs:{"id":"app1"}},[_v(_s(message))])}})",　　　　　<span style="color: #008000;">//</span><span style="color: #008000;">最终渲染出来的render函数</span>
+  staticRenderFns:Function[] 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　    <span style="color: #008000;">//</span><span style="color: #008000;">如果是静态节点，则保存到这里</span>
+}</pre>
+</div>
+<pre><code>以后分析到每个API时这里会单独分析的<br />最后在mountcomponent()函数内会以当前Vue实例为上下文，执行该render函数(在2739行)，此时就会完成渲染watch的收集，并生成虚拟VNode，最后调用_update()方法生成真实DOM节点。</pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

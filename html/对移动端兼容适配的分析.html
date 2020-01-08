@@ -1,0 +1,164 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修对移动端兼容适配的分析' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>对移动端兼容适配的分析</center></div><div class='banquan'>原文出处:本文由博客园博主*逍遥游*提供。<br/>
+原文连接:https://www.cnblogs.com/paul123/p/11073465.html</div><br>
+    <p>一、思考<br />  在移动端越来越重要的背景下，每位web开发者对移动适配都有自己的想法。是移动优先，还是PC优先，还是两者兼得？在实际开发中这个问题是和项目产品定位有关的，也涉及到UI的设计，不是开发者能决定。但不管产品如何定位，作为开发者总是要提供最优的解决方案，是用一套样式还是多套样式？网上一搜，有静态布局、流式布局，响应式布局，自适应布局，弹性布局等一堆，云里雾里，到底要怎么选呢？看完这篇文章相信心中就有数了。</p>
+<p>二、viewport的使用<br />1、最常见的设置，大多数的框架（如bootstrap）和知名的站点基本是这个配置</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"</span> <span style="color: #0000ff;">/&gt;</span></pre>
+</div>
+<p>2、这个配置重点在width=device-width，就是让视窗口等于设配宽度，也就是我们开发中能用document的宽度，其它几个&ldquo;初始缩放大小&rdquo;&ldquo;最大缩放大小&rdquo;&ldquo;最小缩放大小&rdquo;和&ldquo;是否允许用户缩放&rdquo;可以理解为用来&ldquo;固定&rdquo;这个设置不被破坏的。<br />3、这个设置很简单，但同时也会带来一些需要解决的问题。<br />  a、现在的手机都是两倍三倍的Retina高清屏，1px实际的效果是不止一个像素的，对不同的设备设置不同 <br />  的initial-scale可以有比较好的效果，比如在2倍Retina的iphone6(6s,7,8)中设置为0.5。一旦 <br />  动态设置这个，也就意味这视窗口不同了，需要不同样式适配。这也是分配样式的一套基准，如何分配样式 <br />  后面会有更详细的讲解。<br />  b、在PC端如果有最小宽度的限制，同样需要配置不同的width值。</p>
+<p>三、单位的使用<br />1、css中单位很多，这里只介绍最常用的几种：<br />  (1) px:这个可以理解为&ldquo;基准&rdquo;单位，就是不管在什么设备中其值是不会变的，就像cm,kg这些一样<br />  (2) em:这个是相对父容器的单位，一般用在字体font-size中比较好。如父容器font-size为16px,则 <br />      1em=16px<br />  (3) rem:相对于根元素html的单位，如html的font-size为16px,则1rem=16px<br />  (4) vw/vh: 视口宽高为100vw/100vh,这个和百分比类似，只是百分比是相对于父容器，其相对于视口<br />2、移动适配最常用的应该是rem,很多框架和淘宝的flexible适配都是基于这个单位，而自己做的话，一般         <br />在首页加载时全局js设置html的font-size即可，代码如下：</p>
+<div class="cnblogs_code">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (doc, win) {
+  </span><span style="color: #0000ff;">var</span> docEl =<span style="color: #000000;"> doc.documentElement,
+    resizeEvt </span>= 'orientationchange' <span style="color: #0000ff;">in</span> window ? 'orientationchange' : 'resize'<span style="color: #000000;">,
+    recalc </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+      </span><span style="color: #0000ff;">var</span> clientWidth =<span style="color: #000000;"> docEl.clientWidth;
+      </span><span style="color: #0000ff;">if</span> (!clientWidth) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">这里根据设计稿为750，设置1rem=100px,</span>
+      docEl.style.fontSize = 100 * (clientWidth / 375) + 'px'<span style="color: #000000;">;
+    };
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> Abort if browser does not support addEventListener</span>
+  <span style="color: #0000ff;">if</span> (!doc.addEventListener) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+  win.addEventListener(resizeEvt, recalc, </span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+  doc.addEventListener(</span>'DOMContentLoaded', recalc, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+})(document, window);</span></pre>
+</div>
+<p>3.如果用了sass/less等预编译语言可以更灵活的配置的，在上面方法内配置（设计稿为750的情况下）：<br />  docEl.style.fontSize = 40 * (clientWidth / 750) + 'px';<br />  在编译函数中配置：<br /> @function px2rem($px, $base-font-size: 20px) {<br />      @return ($px / $base-font-size) * 1rem;<br />    }<br /> 这样我们就可以直接使用设计稿的尺寸，如：px2rem(100px)，省去了自己计算，如果没用预编译语言（推 <br /> 荐使用），编辑器也有插件支持单位转化。<br /> 4.上面是基于屏幕宽度来设置根元素font-size,如果设置不同的initial-scale，我们需要基于设备像素比设置，通过window.devicePixelRatio获取。</p>
+<p>四、页面布局方式<br />1.理解html的文档流方式，其实就是流式布局，即横向需要我们设置，纵向自动叠加。这个和移动端的设计体验方式是比较像的。在宽度中就要用自适应的方式，如百分比，有设置相对单位的，可用相对单位，灵活使用，css3的display:flex也是很好的选择，现代浏览器和移动设备基本都支持了。<br />2.刚才说到体验，很明显移动端和pc端的体验真的很不同，所以光有上面的自适应是远远不够，是不是需要对这两个完全不同的体验方式响应不同的布局和样式。</p>
+<p>五、媒体查询<br />1.我们除了可以用js来判断不同的设备，设置相对单位所用的根元素。另一个强大的方式是可以通过css3强大的媒体查询来指定不同的样式。<br />2.媒体查询的规则</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">@media all and ([min-width|max-width|orientation|min-device-width|...]) </span>{<span style="color: #ff0000;"> ... </span>}</pre>
+</div>
+<p>中括号[]中表示需要添加的条件,可匹配宽高/横竖屏/设备类型等，比如min-width:750px,表示最小宽度为750px,{}是在匹配模式下的样式。也有逻辑判断and/or/not连接不同的规则</p>
+<p>3.要是引入整个文件，可以在link标签中使用</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">&lt;link rel="stylesheet" media="screen and (min-width:900px)" href="big.css" type="text/css" /&gt;</span></pre>
+</div>
+<p>表示：当屏幕大于或等于900px时，将采用big.css样式来渲染Web页面。</p>
+<p>4.Bootstrap响应式设计这类栅格布局采用的就是这套方式。</p>
+<p>六、1px像素边框问题 <br />1.除了上面说到在viewport中设置缩放外，直接设置一个空元素缩放也是可以的</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">p</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> red</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> scaleY(.5)</span>;
+}</pre>
+</div>
+<p>不足：圆角无法实现，实现4条边框比较麻烦，并且只能单独实现，如果嵌套，会对包含的效果产生不想要的效果，所以此方案配合:after和before独立使用较多</p>
+<p>2.利用CSS对阴影处理的方式实现0.5px的效果</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">box-shadow:0 1px 1px -1px rgba(0, 0, 0, 0.5);</span></pre>
+</div>
+<p>不足：颜色不好处理， 黑色 rgba(0,0,0,1) 最深的情况了。有阴影出现，不好用大量使用box-shadow可能会导致性能瓶颈。四条边框实现效果不理想。<br />3.图片实现，使用 background-image 实现1px有两种方式: 渐变 linear-gradient 或直接使用图片(base64)。渐变 linear-gradient (50%有颜色，50%透明)</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">div</span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 1px</span>;<span style="color: #ff0000;">
+    background-image</span>:<span style="color: #0000ff;">-webkit-linear-gradient(top,transparent 50%,#000 50%)</span>;<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> top left</span>;<span style="color: #ff0000;">
+    background-repeat</span>:<span style="color: #0000ff;"> no-repeat</span>;<span style="color: #ff0000;">
+    background-size</span>:<span style="color: #0000ff;"> 100% 1px</span>;
+}</pre>
+</div>
+<p>不足：大量使用渐变可能导致性能瓶颈，代码量大，多背景图片有兼容性问题</p>
+<p>七、图片高清化<br />1.可以使用srcset属性设置，使用看https://www.zhangxinxu.com/wordpress/2014/10/responsive-images-srcset-size-w-descriptor/<br />2.背景图高清<br /> a.使用上面介绍的媒体查询，如：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 普通显示屏(设备像素比例小于等于1)使用1倍的图 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+  .css</span>{<span style="color: #ff0000;">
+      background-image</span>:<span style="color: #0000ff;"> url(img_1x.png)</span>;
+  }
+
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> 高清显示屏(设备像素比例大于等于2)使用2倍图  </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+  @media only screen and (-webkit-min-device-pixel-ratio:2)</span>{<span style="color: #ff0000;">
+      .css{
+    background-image</span>:<span style="color: #0000ff;"> url(img_2x.png)</span>;
+      }<span style="color: #800000;">
+  }
+
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> 高清显示屏(设备像素比例大于等于3)使用3倍图  </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+  @media only screen and (-webkit-min-device-pixel-ratio:3)</span>{<span style="color: #ff0000;">
+      .css{
+    background-image</span>:<span style="color: #0000ff;"> url(img_3x.png)</span>;
+      }<span style="color: #800000;">
+  }</span></pre>
+</div>
+<p>b.image-set 实现高清化</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.css </span>{<span style="color: #ff0000;">
+      background-image</span>:<span style="color: #0000ff;"> url(1x.png)</span>;    <span style="color: #008000;">/*</span><span style="color: #008000;">不支持image-set的情况下显示</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+      background</span>:<span style="color: #0000ff;"> -webkit-image-set(
+        url(1x.png) 1x,</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 支持image-set的浏览器的[普通屏幕]下 </span><span style="color: #008000;">*/</span><span style="color: #0000ff;">
+        url(2x.png) 2x,</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 支持image-set的浏览器的[2倍Retina屏幕] </span><span style="color: #008000;">*/</span><span style="color: #0000ff;">
+        url(3x.png) 3x</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 支持image-set的浏览器的[3倍Retina屏幕] </span><span style="color: #008000;">*/</span><span style="color: #0000ff;">
+      )</span>;
+  }</pre>
+</div>
+<p>c.很多网页端对图片的要求还是没那么高的，不像app那样，图片一般用一张2倍高清图就行，最新的设备对以上属性的支持还是可以的，对于要求高的应用使用</p>
+<p>八、移动端click屏幕产生300ms的延时响应<br />1.原因：在浏览器需要如何判断快速点击上，当用户在屏幕上单击某一个元素时候，例如跳转链接&lt;a href="#"&gt;&lt;/a&gt;，此处浏览器会先捕获该次单击，但浏览器不能决定用户是单纯要点击链接还是要双击该部分区域进行缩放操作，所以，捕获第一次单击后，浏览器会先Hold一段时间t，如果在t时间区间里用户未进行下一次点击，则浏览器会做单击跳转链接的处理，如果t时间里用户进行了第二次单击操作，则浏览器会禁止跳转，转而进行对该部分区域页面的缩放操作。那么这个时间区间t有多少呢？在IOS safari下，大概为300毫秒。这就是延迟的由来。造成的后果用户纯粹单击页面，页面需要过一段时间才响应，给用户慢体验感觉，对于web开发者来说是，页面js捕获click事件的回调函数处理，需要300ms后才生效，也就间接导致影响其他业务逻辑的处理。<br />2.解决方案：<br />（1）使用fastclick.js,只要全局加入该文件并设置如下：</p>
+<div class="cnblogs_code">
+<pre><code>FastClick.attach(document.body);</pre>
+</div>
+<p>(2) zepto的touch模块，tap事件也是为了解决在click的延迟问题</p>
+<p>九、更改默认样式</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">//使用appearance改变webkit浏览器的默认外观
+input,select </span>{<span style="color: #ff0000;"> -webkit-appearance</span>:<span style="color: #0000ff;">none</span>;<span style="color: #ff0000;"> appearance</span>:<span style="color: #0000ff;"> none</span>; }<span style="color: #800000;">
+
+//winphone下，使用伪元素改变表单元素默认外观
+//1.禁用select默认箭头，::-ms-expand修改表单控件下拉箭头，设置隐藏并使用背景图片来修饰
+select::-ms-expand </span>{<span style="color: #ff0000;"> display</span>:<span style="color: #0000ff;">none</span>; }<span style="color: #800000;">
+
+//2.禁用radio和checkbox默认样式，::-ms-check修改表单复选框或单选框默认图标，设置隐藏并使用背景图片来修饰
+input[type=radio]::-ms-check,
+input[type=checkbox]::-ms-check </span>{<span style="color: #ff0000;"> display</span>:<span style="color: #0000ff;">none</span>; }<span style="color: #800000;">
+
+//3.禁用pc端表单输入框默认清除按钮，::-ms-clear修改清除按钮，设置隐藏并使用背景图片来修饰
+input[type=text]::-ms-clear,
+input[type=tel]::-ms-clear,
+input[type=number]::-ms-clear </span>{<span style="color: #ff0000;"> display</span>:<span style="color: #0000ff;">none</span>; }<span style="color: #800000;">
+// 禁止长按链接与图片弹出菜单
+a,img </span>{<span style="color: #ff0000;"> -webkit-touch-callout</span>:<span style="color: #0000ff;"> none </span>}<span style="color: #800000;">    
+
+// 禁止ios和android用户选中文字
+html,body </span>{<span style="color: #ff0000;">-webkit-user-select</span>:<span style="color: #0000ff;">none</span>;<span style="color: #ff0000;"> user-select</span>:<span style="color: #0000ff;"> none</span>; }<span style="color: #800000;">
+
+// 改变输入框placeholder的颜色值
+::-webkit-input-placeholder </span>{ <span style="color: #008000;">/*</span><span style="color: #008000;"> WebKit browsers </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+color</span>:<span style="color: #0000ff;"> #999</span>; }<span style="color: #800000;">
+:-moz-placeholder </span>{ <span style="color: #008000;">/*</span><span style="color: #008000;"> Mozilla Firefox 4 to 18 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+color</span>:<span style="color: #0000ff;"> #999</span>; }<span style="color: #800000;">
+::-moz-placeholder </span>{ <span style="color: #008000;">/*</span><span style="color: #008000;"> Mozilla Firefox 19+ </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+color</span>:<span style="color: #0000ff;"> #999</span>; }<span style="color: #800000;">
+:-ms-input-placeholder </span>{ <span style="color: #008000;">/*</span><span style="color: #008000;"> Internet Explorer 10+ </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+color</span>:<span style="color: #0000ff;"> #999</span>; }<span style="color: #800000;">
+input:focus::-webkit-input-placeholder</span>{<span style="color: #ff0000;"> color</span>:<span style="color: #0000ff;">#999</span>; }<span style="color: #800000;">
+
+// android上去掉语音输入按钮
+input::-webkit-input-speech-button </span>{<span style="color: #ff0000;">display</span>:<span style="color: #0000ff;"> none</span>}</pre>
+</div>
+<p>十、总结<br />1.网站适配的终端可以用js或媒体查询的方式获取，分配对应的样式。<br />2.布局上采用相对单位,百分比和flex的弹性方式。<br />3.对移动端的特殊性进行适配，如1px问题，默认样式等。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

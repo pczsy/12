@@ -1,0 +1,164 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS3 制作魔方 - 相关立体样式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS3 制作魔方 - 相关立体样式</center></div><div class='banquan'>原文出处:本文由博客园博主三人行工作室提供。<br/>
+原文连接:https://www.cnblogs.com/timeddd/p/10858034.html</div><br>
+    <blockquote>
+<p>最好的实践，就是给定一个实践的目标去实践。</p>
+</blockquote>
+<p>目标：利用 CSS3 的一些特性，绘制一个魔方，要可以玩转的那种，即上下左右每一层都可以独立旋转。效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式0.png" /></p>
+<p>为了完成此效果，将使用到以下相关概念和样式：坐标、3D呈现、平移、旋转。</p>
+<h2 id="坐标">（1）坐标</h2>
+<p>屏幕的起点坐标是(0,0,0)，往右递增为 x 方向，使用 left 属性表示，往下走，递增为 y 方向，使用 top 属性表示。而 3D 场景中 z 正方向（递增）为走出屏幕到你面前的方向。</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式1.png" /></p>
+<p>但这个坐标的起点不一定得是屏幕，只是遵循相同的方向。当元素使用 position:absolute 来绝对定位时，其位置坐标是以最近的 position:relative 父元素为(0,0,0) 来计算的，因此，我们绘制一个3D场景时，通常会定义一个最外层的 position:relative 元素来进行场内发挥。</p>
+<p>以下完整的页面代码，会绘制一个x,y,z坐标轴，会使用到本文涉及的各个内容，后边的内容均以此页面为基础，便于动手体验。</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt; 
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot; /&gt; 
+    &lt;title&gt;CSS3 魔方&lt;/title&gt;
+    &lt;!-- 样式部分全写这里 --&gt;
+    &lt;style&gt;  
+    .wrap {
+        transform-style: preserve-3d;
+        width: 300px;  height: 300px; 
+        position: relative;  /* 定位起点元素 */
+        border-top:solid 1px gray;  /* x 轴 */
+        border-left:solid 1px gray;  /* y 轴 */
+        /* 倾斜一点方能见立体效果 */
+        transform: rotateX(-30deg) rotateY(-30deg); 
+    }
+
+    /* z 轴正方向 */
+    .zaxis_p { 
+        position:absolute; 
+        width : 300px;
+        height:1px;  
+        border-top:solid 1px gray; 
+        /* xy面上，90度立起来就是 z */
+        transform: rotateY(-90deg); 
+        /* 立起来的旋转点 */
+        transform-origin:0 0 0; 
+    }
+
+    /* z 轴负方向 */
+    .zaxis_n { 
+        position:absolute; 
+        width : 300px;
+        height:1px;  
+        border-top:dashed 1px gray; /*（虚线）*/
+        transform: rotateY(90deg);
+        transform-origin:0 0 0; 
+    }
+    &lt;/style&gt; 
+&lt;/head&gt;
+
+&lt;body style=&quot;padding:300px;&quot;&gt;
+  &lt;div class=&quot;wrap&quot;&gt;
+    &lt;div class=&quot;zaxis_p&quot;&gt;&lt;/div&gt; 
+    &lt;div class=&quot;zaxis_n&quot;&gt;&lt;/div&gt; 
+  &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<p>效果如下图：</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式2.png" /></p>
+<h2 id="d-呈现">（2）3D 呈现</h2>
+<p>transform-style: preserve-3d;</p>
+<p>上边绘制的坐标轴，最外层的 wrap 有 transform-style: preserver-3d 属性，它表示，它是维持其三维态的，其子元素可在其三个维度空间施展。如果没有此项，子元素在 z 空间上是没有作用的，也即我们的 z 轴会变成一个点。</p>
+<h2 id="平移">（3）平移</h2>
+<p>沿着坐标轴的方向保持姿势移动，对于 x 与 y 轴而言，移动可以通过改变 left，top 值来达到目的，对于 z 轴（x，y轴同样适用）则使用平移样式。如，让元素在 z 轴上后移 200个像素，让其在上边坐标z轴的虚线上，我们可以使用：</p>
+<p>transform: tanslateZ(-200px);  </p>
+<p>我们在坐标中添加一个元素，其样式定义如下：</p>
+<pre><code><code>.square {
+    position:absolute;
+    width:100px; height:100px;
+    background:green;
+    top:0; left:0;
+    transform:translateZ(-200px);
+}
+
+&lt;div class=&quot;square&quot;&gt;&lt;/div&gt;</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式3.png" /></p>
+<h2 id="旋转">（4）旋转</h2>
+<p>物体的旋转与转动的轴心点有关，就像一个球，我们可以挂一根绳子转大圈，也可以直接转它，这个轴心与以下样式定义有关：</p>
+<p>transform-origin:0 0 0;  </p>
+<p>后边的这个&quot; 0 0 0 &quot;的值为相对位置，是以元素自身为起点来算的。所以，具体到每个元素，这个(0,0,0)表示的是该元素的起点位置，与别的元素无关。有关transform-origin 更多的描述与用法可参考相关资料。</p>
+<p>有了旋转轴心点，在方向上给个角度就可以了。如，绕 z 轴旋转 45 度。</p>
+<p>transform: rotateZ(45deg);</p>
+<p>度数可正可负，每一根坐标轴，把轴的正向对准你的眼睛（对准鼻梁也不错），此时，顺时针为正角度，逆时针为负角度。</p>
+<p>旋转的示例，在下边的综合示例中给出。</p>
+<h2 id="动画">（5）动画</h2>
+<p>CSS3 形成动画效果有两种方式，其本质都是呈现样式属性值的变化过程。</p>
+<h3 id="第一种方式"><strong>第一种方式</strong></h3>
+<p>定义一个关键帧（@keyframes）样式体表示变化过程，并取个名字。然后，使用 animation 属性指定该名字让元素动起来。这种方式功能强大，对时间轴内的动画定义能力强，可以按百分比定义每一段的属性变化值。我们以让上边定义的 square 在 z 轴上边绕 z 轴转边从 -200px 平移到 200px 为例来体验一下。</p>
+<pre><code><code>/*设置动画关键帧，名字为 movez */
+@keyframes movez { 
+    0% {  /* 从这样的属性开始 */
+        transform: translateZ(-200px) rotateZ(0deg);
+    }
+    100% { /* 变化到这样的属性 */
+        transform: translateZ(200px) rotateZ(3600deg);
+    }
+} 
+
+.square {
+    position:absolute;
+    width:100px; height:100px;
+    background:green;
+    top:0; left:0;
+    transform-origin:0 0 0; 
+    /* 按 movez 来呈现动画过程 */
+    animation:movez 10s linear infinite;
+}</code></pre>
+<p>效果如下：</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式4.png" /></p>
+<h3 id="第二种方式"><strong>第二种方式</strong></h3>
+<p>使用属性 transition 指定一个属性和一个时长，只要这个属性值发生变化，它就按规定的时长进行渐变形成动画。</p>
+<p>我们回到平移的那个 square，为其添加 transition 属性，指明 transform，时长设置为 5s，即5秒。</p>
+<pre><code><code>.square {
+    position:absolute;
+    width:100px; height:100px;
+    background:green;
+    top:0; left:0;
+    transform:translateZ(-200px);
+    /* 指定渐变属性，时长 */
+    transition: transform 5s;
+}</code></pre>
+<p>此时，我们来改变它的 transform 平移值：</p>
+<pre><code><code>&lt;script&gt;
+setTimeout(
+    function(){
+        document.querySelector(&quot;.square&quot;).style.transform = &quot;translateZ(200px)&quot;;
+    }, 
+    1000
+);
+&lt;/script&gt;</code></pre>
+<p>效果如下，多么优雅的一个变化过程，软着陆。</p>
+<p><img src="./images/CSS3 制作魔方 - 相关立体样式5.png" /></p>
+<h2 id="小结">（6）小结</h2>
+<p>熟悉以上了这些概念与特性，就有了达成魔方目标的工具。更多特性若有兴趣，可进一步加深了解，想象空间很大。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,118 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修随机点名' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>随机点名</center></div><div class='banquan'>原文出处:本文由博客园博主SailorM提供。<br/>
+原文连接:https://www.cnblogs.com/cy1227/p/12013181.html</div><br>
+    <p><span style="font-size: 16px;">今天听课听到了Math对象中的随机数方法random()，然后就想用它设计一个简单的随机点名系统。我记得之前高中的时候语文老师用过一个，是类似于名字滚动的那种，现在太菜就先不考虑这个了，后续有机会再研究吧。</span></p>
+<p><span style="font-size: 16px;">先展示一下最终的<span style="color: #000000;"><strong>效果图</strong></span>。</span></p>
+<p><img src="./images/随机点名0.png" alt="最终效果图" width="598" height="400" /></p>
+<p><span style="font-size: 16px;">下面是<strong>html</strong>代码部分</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="utf-8"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>随机点名<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">引入reset.css用来清除浏览器的默认样式</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/reset.css"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">引入css</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/page-index.css"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>             <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> nameArr </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> [</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190101德牧</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190102吉娃娃</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190103哈士奇</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190104金毛</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190105田园</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190106阿拉斯加</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">12</span>             <span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190107藏獒</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190108柴犬</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190109贵宾</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190110博美</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190111萨摩耶</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">190112拉布拉多</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">];
+</span><span style="color: #008080;">13</span>             
+<span style="color: #008080;">14</span>             
+<span style="color: #008080;">15</span>             <span style="background-color: #f5f5f5; color: #008000;">/*</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #008000;">             * 在MDN文档中可以直接查询到下面的函数
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #008000;">             * &mdash;&mdash;可以得到位于两个数之间（包括两个数在内）的随机整数
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #008000;">             * &mdash;&mdash;此处随机生成的数字作为数组下标，也就可以随机显示数组的内容
+</span><span style="color: #008080;">19</span>              <span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">20</span>             <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> getRandom(min, max){
+</span><span style="color: #008080;">21</span>                 <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> Math.floor(Math.random()</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;">(max</span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;">min</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">))</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">min;
+</span><span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;">23</span>             <span style="background-color: #f5f5f5; color: #008000;">/*</span>
+<span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #008000;">             * getElementById()方法可以返回拥有指定ID的第一个对象的引用
+</span><span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #008000;">             * innerHTML可以设置或者返回表格行的开始和结束标签之间的HTML
+</span><span style="color: #008080;">26</span>              <span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">27</span>             <span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> myFunction(){
+</span><span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #000000;">                document.getElementById(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">name</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">).innerHTML </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> nameArr[getRandom(</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">,nameArr.length</span><span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">)];
+</span><span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;">30</span>     
+<span style="color: #008080;">31</span>             
+<span style="color: #008080;">32</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">33</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">34</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">35</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">36</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="title"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="text"</span><span style="color: #0000ff;">&gt;</span>**大学点名系统<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">37</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="reminder"</span><span style="color: #ff0000;"> lass</span><span style="color: #0000ff;">="text"</span><span style="color: #0000ff;">&gt;</span>让我们看看是哪个幸运儿？？！！<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">38</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="name"</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">39</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">onclick</span><span style="color: #0000ff;">="myFunction()"</span><span style="color: #0000ff;">&gt;</span>开始<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">40</span>             <span style="color: #ff0000;">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</span>
+<span style="color: #008080;">41</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>结束<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">42</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">43</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">44</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 16px;">下面是<strong>css</strong>代码部分</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #800000;">*</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    padding</span>:<span style="color: #0000ff;"> 0</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> 0</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    text-align</span>:<span style="color: #0000ff;"> center</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">/*</span><span style="color: #008000;">设置整个的容器div</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 7</span> <span style="color: #800000;">#container</span>{
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 600px</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 400px</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    background-image</span>:<span style="color: #0000ff;"> url(../img/bc.jpg)</span>;
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> auto</span>;
+<span style="color: #008080;">12</span> }
+<span style="color: #008080;">13</span> <span style="color: #008000;">/*</span><span style="color: #008000;">大学点名系统样式设计</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">14</span> <span style="color: #800000;">#title</span>{
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    font</span>:<span style="color: #0000ff;"> bold 50px "微软雅黑"</span>;
+<span style="color: #008080;">16</span> }
+<span style="color: #008080;">17</span> <span style="color: #008000;">/*</span><span style="color: #008000;">提示语</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">18</span> <span style="color: #800000;">#reminder</span>{
+<span style="color: #008080;">19</span> <span style="color: #ff0000;">    padding-top</span>:<span style="color: #0000ff;"> 20px</span>;
+<span style="color: #008080;">20</span> <span style="color: #ff0000;">    font</span>:<span style="color: #0000ff;"> 25px "微软雅黑"</span>;
+<span style="color: #008080;">21</span> }
+<span style="color: #008080;">22</span> <span style="color: #008000;">/*</span><span style="color: #008000;">显示名字的div</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">23</span> <span style="color: #800000;">#name</span>{
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 160px</span>;
+<span style="color: #008080;">25</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 50px</span>;
+<span style="color: #008080;">26</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> white</span>;
+<span style="color: #008080;">27</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> 50px 220px</span>;
+<span style="color: #008080;">28</span> <span style="color: #ff0000;">    border-radius</span>:<span style="color: #0000ff;"> 10px</span>;
+<span style="color: #008080;">29</span> <span style="color: #ff0000;">    line-height</span>:<span style="color: #0000ff;"> 50px</span>;      <span style="color: #008000;">/*</span><span style="color: #008000;">line-height设计的和height一样，文字就可以显示在中间,这一点自己经常忘</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">30</span> }
+<span style="color: #008080;">31</span> <span style="color: #008000;">/*</span><span style="color: #008000;">按钮设计</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">32</span> <span style="color: #800000;">button</span>{
+<span style="color: #008080;">33</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 80px</span>;
+<span style="color: #008080;">34</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 40px</span>;
+<span style="color: #008080;">35</span> <span style="color: #ff0000;">    font</span>:<span style="color: #0000ff;"> 20px "微软雅黑"</span>;
+<span style="color: #008080;">36</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> gray</span>;
+<span style="color: #008080;">37</span> }</pre>
+</div>
+<p><span style="font-size: 16px;">总结来说，功能很简单，实现很简单，但是由于js刚入门好多东西还不懂，getElementById().innerHTML那个地方还是想了很久，另外就是结束按钮在这里就是个摆设，只是为了对称，没有设计什么功能，也没什么想法。</span></p>
+<p><span style="font-size: 16px;">第一篇博客就这样吧，&ldquo;积一时之跬步，臻千里之遥程&rdquo;，共勉！</span></p>
+<p>2019-12-09&nbsp; 20:44:05</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

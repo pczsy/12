@@ -1,0 +1,59 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修element-ui文件上传 做类型大小的限制' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>element-ui文件上传 做类型大小的限制</center></div><div class='banquan'>原文出处:本文由博客园博主```...简单点提供。<br/>
+原文连接:https://www.cnblogs.com/yysbolg/p/11095901.html</div><br>
+    <p>上代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="filebox"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-upload </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="upload-demo"</span><span style="color: #ff0000;"> :action</span><span style="color: #0000ff;">="url"</span><span style="color: #ff0000;"> :on-preview</span><span style="color: #0000ff;">="handlePreview"</span><span style="color: #ff0000;"> :on-remove</span><span style="color: #0000ff;">="handleRemove"</span><span style="color: #ff0000;"> <br />　　　　　　multiple :limit</span><span style="color: #0000ff;">="limitnum"</span><span style="color: #ff0000;"> :on-exceed</span><span style="color: #0000ff;">="handleExceed"</span><span style="color: #ff0000;"> :file-list</span><span style="color: #0000ff;">="fileList"</span><span style="color: #ff0000;"> :beforeUpload</span><span style="color: #0000ff;">="beforeAvatarUpload"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">el-button </span><span style="color: #ff0000;">size</span><span style="color: #0000ff;">="mini"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="primary"</span><span style="color: #0000ff;">&gt;</span>点击上传<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">slot</span><span style="color: #0000ff;">="tip"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="el-upload__tip"</span><span style="color: #0000ff;">&gt;</span>只能上传jpg/png文件，且不超过500kb<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">el-upload</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong>:beforeUpload="beforeAvatarUpload"</strong> </span>底下有方法重要在这里：<br />methods里面写beforeAvatarUpload这个方法</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">　　　　　　beforeAvatarUpload(file) {                 
+                </span><span style="color: #0000ff;">var</span> testmsg=file.name.substring(file.name.lastIndexOf('.')+1<span style="color: #000000;">)                
+                const extension </span>= testmsg === 'xls'<span style="color: #000000;">
+                const extension2 </span>= testmsg === 'xlsx'<span style="color: #000000;">
+                const isLt2M </span>= file.size / 1024 / 1024 &lt; 10
+                <span style="color: #0000ff;">if</span>(!extension &amp;&amp; !<span style="color: #000000;">extension2) {
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$message({
+                        message: </span>'上传文件只能是 xls、xlsx格式!'<span style="color: #000000;">,
+                        type: </span>'warning'<span style="color: #000000;">
+                    });
+                }
+                </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">isLt2M) {
+                    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$message({
+                        message: </span>'上传文件大小不能超过 10MB!'<span style="color: #000000;">,
+                        type: </span>'warning'<span style="color: #000000;">
+                    });
+                }
+                </span><span style="color: #0000ff;">return</span> extension || extension2 &amp;&amp;<span style="color: #000000;"> isLt2M
+            }</span></pre>
+</div>
+<p>想要什么限制加什么限制就好。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

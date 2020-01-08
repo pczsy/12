@@ -1,0 +1,343 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修纯CSS绘制3D立方体' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>纯CSS绘制3D立方体</center></div><div class='banquan'>原文出处:本文由博客园博主我的邋里庄提供。<br/>
+原文连接:https://www.cnblogs.com/zhangjinling1993/p/3d_box.html</div><br>
+    <div>本篇记录的是使用CSS3绘制3D立方体，并旋转起来。</div>
+<p>&nbsp;</p>
+<div>我的思路：</div>
+<div>1️⃣ 首先，用div元素画6个正方形摞在一起放在画布中间。为了区分，分别给每个div选择了不同的颜色，并且设置为半透明方便透视。</div>
+<div>2️⃣ 将6个div元素分为三组（上下一组、左右一组、前后一组），想象以画布中心为圆点，使三组分别沿x/y/z轴旋转90度。</div>
+<div>3️⃣ 上下一组，一张向上推50%正方形边长，一张向下推50%正方形边长；左右同理向左右推50%边长，前后同理向前后推50%边长。</div>
+<div>4️⃣ 整体旋转展示。</div>
+<p>&nbsp;</p>
+<p><img src="./images/纯CSS绘制3D立方体0.png" alt="" width="737" height="186" /></p>
+<p> <br />
+
+</p>
+<div>※ Html代码&amp;CSS样式布局：</div>
+<div>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;&lt;/title&gt;
+&lt;style&gt;
+.container {
+width: 400px;
+height: 400px;
+border: 1px solid #cccccc;
+}
+ 
+
+.box {
+position: relative;
+width: 100px;
+height: 100px;
+margin: auto;
+margin-top: 150px;
+transform-style: preserve-3d;
+}
+ 
+
+.box div {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+opacity: .5;
+transform-origin: center;
+}
+ 
+
+.box div:nth-of-type(1) {
+ 
+}
+ 
+
+.box div:nth-of-type(2) {
+background-color: yellow;
+}
+ 
+
+.box div:nth-of-type(3) {
+background-color: green;
+}
+ 
+
+.box div:nth-of-type(4) {
+background-color: blue;
+}
+ 
+
+.box div:nth-of-type(5) {
+background-color: black;
+}
+ 
+
+.box div:nth-of-type(6) {
+background-color: darkmagenta;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+ 
+
+&lt;div class="container"&gt;
+&lt;div class="box animate"&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;div&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+</div>
+<p>　　</p>
+</div>
+<p>&nbsp;</p>
+<div>※ CSS3添加6个正方形的动画效果</div>
+<div>
+<div class="cnblogs_Highlighter">
+<pre class="brush:css;gutter:true;">.box.animate div {
+animation: ease 4s 0s infinite;
+}
+ 
+
+.box.animate div:nth-of-type(1) {
+animation-name: box1-move;
+}
+ 
+
+.box.animate div:nth-of-type(2) {
+animation-name: box2-move;
+}
+ 
+
+.box.animate div:nth-of-type(3) {
+animation-name: box3-move;
+}
+ 
+
+.box.animate div:nth-of-type(4) {
+animation-name: box4-move;
+}
+ 
+
+.box.animate div:nth-of-type(5) {
+animation-name: box5-move;
+}
+ 
+
+.box.animate div:nth-of-type(6) {
+animation-name: box6-move;
+}
+ 
+
+@keyframes box1-move {
+0% {
+transform: rotatex(0deg);
+}
+25% {
+transform: rotatex(90deg);
+}
+50% {
+transform: rotatex(90deg) translatez(50px);
+}
+100% {
+transform: rotatex(90deg) translatez(50px);
+}
+}
+ 
+
+@keyframes box2-move {
+0% {
+transform: rotatex(0deg);
+}
+25% {
+transform: rotatex(90deg);
+}
+50% {
+transform: rotatex(90deg) translatez(-50px);
+}
+100% {
+transform: rotatex(90deg) translatez(-50px);
+}
+}
+ 
+
+@keyframes box3-move {
+0% {
+transform: rotatex(0deg);
+}
+25% {
+transform: rotatey(90deg);
+}
+50% {
+transform: rotatey(90deg) translatez(50px);
+}
+100% {
+transform: rotatey(90deg) translatez(50px);
+}
+}
+ 
+
+@keyframes box4-move {
+0% {
+transform: rotatex(0deg);
+}
+25% {
+transform: rotatey(90deg);
+}
+50% {
+transform: rotatey(90deg) translatez(-50px);
+}
+100% {
+transform: rotatey(90deg) translatez(-50px);
+}
+}
+ 
+
+@keyframes box5-move {
+0% {
+ 
+
+}
+25% {
+transform: translatez(0px);
+}
+50% {
+transform: translatez(50px);
+}
+100% {
+transform: translatez(50px);
+}
+}
+ 
+
+@keyframes box6-move {
+0% {
+ 
+
+}
+25% {
+transform: translatez(0px);
+}
+50% {
+transform: translatez(-50px);
+}
+100% {
+transform: translatez(-50px);
+}
+}
+</pre>
+</div>
+<p>　　</p>
+</div>
+<p>&nbsp;</p>
+<div>※ 添加整提旋转动画</div>
+<div>
+<div class="cnblogs_Highlighter">
+<pre class="brush:css;gutter:true;">.box.animate {
+animation: box-move ease 4s 0s infinite;
+}
+ 
+
+@keyframes box-move {
+0% {
+transform: rotatex(0deg) rotatey(0deg)
+}
+50% {
+transform: rotatex(45deg) rotatey(45deg)
+}
+100% {
+transform: rotatex(405deg) rotatey(405deg)
+}
+}
+</pre>
+</div>
+<p>　　</p>
+</div>
+<p>&nbsp;</p>
+<div>动画转的我有点头晕🤦&zwj;♀️，所以我决定把.animate类名剥离出来，用JavaScript通过按钮触发的模式将.animate添加到DOM中去，这样，只有点击按钮后动画才会被触发。最后，我添加了两个按钮，move和stop，分别用来触发动画和使动画停止。</div>
+<div>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!-- Html代码 --&gt;
+&lt;div class="ope"&gt;
+&lt;button id="animate"&gt;Move&lt;/button&gt;
+&lt;button id="stop"&gt;Stop&lt;/button&gt;
+&lt;/div&gt;
+ 
+
+&lt;!-- CSS代码 --&gt;
+.ope {
+margin-top: 100px;
+text-align: center;
+}
+ 
+
+.ope button {
+margin: 0 10px;
+border: 1px solid #4380f5;
+border-radius: 5px;
+cursor: pointer;
+background-color: #4380f5;
+color: #ffffff;
+outline: none;
+}
+ 
+
+.ope button:hover {
+background-color: #3e76e3;
+}
+ 
+
+.ope button:active {
+background-color: #3361ba;
+}
+ 
+&lt;!-- JavaScript代码 --&gt;
+&lt;script&gt;
+(function () {
+var box = document.getElementsByClassName('box')[0];
+ 
+
+document.getElementById('animate').onclick = function () {
+box.className = 'box animate';
+}
+document.getElementById('stop').onclick = function () {
+box.className = 'box';
+}
+})();
+&lt;/script&gt;
+</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>&nbsp;更多文章可移步到<a title="我的github博客" href="https://zhangjinling1993.github.io/" target="_blank">我的github博客</a>，谢谢！</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

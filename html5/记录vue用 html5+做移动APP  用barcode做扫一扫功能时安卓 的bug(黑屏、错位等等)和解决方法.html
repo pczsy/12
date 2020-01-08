@@ -1,0 +1,457 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修记录vue用 html5+做移动APP  用barcode做扫一扫功能时安卓 的bug(黑屏、错位等等)和解决方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>记录vue用 html5+做移动APP  用barcode做扫一扫功能时安卓 的bug(黑屏、错位等等)和解决方法</center></div><div class='banquan'>原文出处:本文由博客园博主h祝h提供。<br/>
+原文连接:https://www.cnblogs.com/huzhuhua/p/11064764.html</div><br>
+    <p style="text-align: left;">最近做项目时，要用到扫一扫二维码的功能，在html5+里面有提供barcode功能，于是照过来用了，</p>
+<p style="text-align: left;">写的代码如下 ：</p>
+<p style="text-align: left;">扫码页面：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;style lang=<span style="color: #800000;">"</span><span style="color: #800000;">less</span><span style="color: #800000;">"</span> scoped&gt;<span style="color: #000000;">
+#camera {
+  height: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+  width: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+  .van</span>-<span style="color: #000000;">icon {
+    top: </span>-<span style="color: #000000;">2px;
+    font</span>-<span style="color: #000000;">size: 30px;
+    color: #fff;
+    </span>&amp;<span style="color: #000000;">.back {
+      left: 10px;
+    }
+    </span>&amp;<span style="color: #000000;">.light {
+      right: 10px;
+    }
+  }
+  #scan {
+    width: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+    height: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+    z</span>-index: <span style="color: #800080;">2</span><span style="color: #000000;">;
+    position: </span><span style="color: #0000ff;">fixed</span><span style="color: #000000;">;
+    left: </span><span style="color: #800080;">0</span><span style="color: #000000;">;
+    top: </span><span style="color: #800080;">0</span><span style="color: #000000;">;
+    background: rgba(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+  }
+  .tips {
+    text</span>-<span style="color: #000000;">align: center;
+    position: absolute;
+    width: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+    top: </span><span style="color: #800080;">40</span>%<span style="color: #000000;">;
+    color: #fff;
+    z</span>-index: <span style="color: #800080;">3</span><span style="color: #000000;">;
+    left: </span><span style="color: #800080;">0</span>%<span style="color: #000000;">;
+  }</span><span style="color: #000000;">
+  .action {
+    position: </span><span style="color: #0000ff;">fixed</span><span style="color: #000000;">;
+    z</span>-index: <span style="color: #800080;">777</span><span style="color: #000000;">;
+    width: </span><span style="color: #800080;">100</span>%<span style="color: #000000;">;
+    left: </span><span style="color: #800080;">0</span><span style="color: #000000;">;
+    bottom: </span><span style="color: #800080;">0</span><span style="color: #000000;">;
+    .items {
+      display: flex;
+      justify</span>-content: space-<span style="color: #000000;">around;
+      background: rgba(</span><span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0.35</span><span style="color: #000000;">);
+      width: </span><span style="color: #800080;">60</span>%<span style="color: #000000;">;
+      padding: 4px;
+      margin: 4px auto;
+      .item {
+        flex</span>-<span style="color: #000000;">basis: 50px;
+        text</span>-<span style="color: #000000;">align: center;
+        img {
+          width: 27px;
+        }
+      }
+    }
+  }
+}
+</span>&lt;/style&gt;
+&lt;template&gt;
+  &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">camera</span><span style="color: #800000;">"</span>&gt;
+    &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">scan</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;
+    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">tips</span><span style="color: #800000;">"</span>&gt;<span style="color: #800000;">"</span><span style="color: #800000;">加载中...</span>&lt;/div&gt;
+    &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">action</span><span style="color: #800000;">"</span>&gt;
+      &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">items</span><span style="color: #800000;">"</span>&gt;
+        &lt;<span style="color: #000000;">div
+          </span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span><span style="color: #000000;">
+          @click</span>=<span style="color: #800000;">"</span><span style="color: #800000;">openLight</span><span style="color: #800000;">"</span>
+        &gt;&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">../assets/img/png-60@3x.png</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;
+        &lt;<span style="color: #000000;">div
+          </span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span><span style="color: #000000;">
+          @click</span>=<span style="color: #800000;">"</span><span style="color: #800000;">getPicture()</span><span style="color: #800000;">"</span>
+        &gt;&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">../assets/img/png-59@3x.png</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;
+
+        &lt;<span style="color: #000000;">div
+          </span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span><span style="color: #000000;">
+          @click</span>=<span style="color: #800000;">"</span><span style="color: #800000;">cancelScan()</span><span style="color: #800000;">"</span>
+        &gt;&lt;img src=<span style="color: #800000;">"</span><span style="color: #800000;">../assets/img/png-61@3x.png</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script  type=<span style="color: #800000;">'</span><span style="color: #800000;">text/ecmascript-6</span><span style="color: #800000;">'</span>&gt;<span style="color: #000000;">
+let scan </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      codeUrl: </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+      isLight: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+      showEnter: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+      extra: </span><span style="color: #0000ff;">null</span><span style="color: #000000;">,
+      type: </span><span style="color: #800000;">""</span><span style="color: #000000;">
+    };
+  },
+
+  mounted() {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (window.plus) {
+      let s </span>= plus.navigator.checkPermission(<span style="color: #800000;">"</span><span style="color: #800000;">camera</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      </span><span style="color: #0000ff;">if</span> (s !== <span style="color: #800000;">"</span><span style="color: #800000;">notdeny</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+        plus.nativeUI.alert(</span><span style="color: #800000;">"</span><span style="color: #800000;">相机权限未获取，请往设置应用程序里面开启权限!</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      }
+    }
+    </span><span style="color: #0000ff;">this</span>.startScan(); <span style="color: #008000;">//</span><span style="color: #008000;">`进入页面就调取扫一扫</span>
+<span style="color: #000000;">  },</span><span style="color: #000000;">
+  beforeDestroy() {
+    </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    scan.cancel();
+    scan.close();
+  },
+  methods: {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开闪光灯</span>
+<span style="color: #000000;">    openLight() {
+      </span><span style="color: #0000ff;">this</span>.isLight = !<span style="color: #0000ff;">this</span><span style="color: #000000;">.isLight;
+      scan.setFlash(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.isLight);
+    },
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">创建扫描控件</span>
+<span style="color: #000000;">    startRecognize() {
+      let that </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+
+      scan </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+      scan </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> plus.barcode.Barcode(
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">scan</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        [plus.barcode.QR, plus.barcode.EAN8, plus.barcode.EAN13],
+        {
+          frameColor: </span><span style="color: #800000;">"</span><span style="color: #800000;">#1294cb</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          scanbarColor: </span><span style="color: #800000;">"</span><span style="color: #800000;">#1294cb</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          top: </span><span style="color: #800000;">"</span><span style="color: #800000;">100px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          left: </span><span style="color: #800000;">"</span><span style="color: #800000;">0px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          width: </span><span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          height: </span><span style="color: #800000;">"</span><span style="color: #800000;">500px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          position: </span><span style="color: #800000;">"</span><span style="color: #800000;">fixed</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        }
+      );
+
+      scan.onmarked </span>=<span style="color: #000000;"> onmarked;
+      function onmarked(type, result, file) {
+        result </span>= result.replace(/\n/g, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        that.storage.save(</span><span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">, result);
+        that.codeUrl </span>= result; <span style="color: #008000;">//</span><span style="color: #008000;">扫描后返回值</span>
+        that.$router.go(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+      }
+    },
+    </span><span style="color: #008000;">//</span> <span style="color: #008000;">//</span><span style="color: #008000;">开始扫描</span>
+<span style="color: #000000;">    startScan() {
+      </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">this</span>.startRecognize(); <span style="color: #008000;">//</span><span style="color: #008000;">创建控件</span>
+      setTimeout(() =&gt;<span style="color: #000000;"> {
+        scan.start();
+      }, </span><span style="color: #800080;">200</span><span style="color: #000000;">);
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 取消扫描</span>
+<span style="color: #000000;">    cancelScan() {
+      let l </span>=<span style="color: #000000;"> plus.webview.all().length;
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$toast(l);
+      </span><span style="color: #0000ff;">if</span> (l &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        let ws </span>=<span style="color: #000000;"> plus.webview.currentWebview();
+        plus.webview.close(ws);
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">this</span>.$router.go(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> this.$router.go(-1);</span>
+      <span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+      plus.navigator.setStatusBarStyle(</span><span style="color: #800000;">"</span><span style="color: #800000;">dark</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (scan) {
+        scan.cancel(); </span><span style="color: #008000;">//</span><span style="color: #008000;">关闭扫描</span>
+        scan.close(); <span style="color: #008000;">//</span><span style="color: #008000;">关闭条码识别控件</span>
+<span style="color: #000000;">      }
+    },
+    getPicture() {
+      plus.gallery.pick(src </span>=&gt;<span style="color: #000000;"> {
+        plus.barcode.scan(
+          src,
+          (type, result) </span>=&gt;<span style="color: #000000;"> {
+            scan.cancel(); </span><span style="color: #008000;">//</span><span style="color: #008000;">关闭扫描</span>
+<span style="color: #000000;">            scan.close();
+            </span><span style="color: #0000ff;">this</span>.storage.save(<span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">, result);
+            </span><span style="color: #0000ff;">this</span>.$router.go(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+          },
+          error </span>=&gt;<span style="color: #000000;"> {
+          </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$toast({
+              position: </span><span style="color: #800000;">"</span><span style="color: #800000;">bottom</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+              message: </span><span style="color: #000000;">error.message
+            });
+            </span>
+<span style="color: #000000;">          }
+        );
+      });
+    }
+  }
+};
+</span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>去扫一扫前的页面：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">workshop</span><span style="color: #800000;">"</span>&gt;
+    &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">scan</span><span style="color: #800000;">"</span>&gt;
+      &lt;<span style="color: #000000;">div
+        id</span>=<span style="color: #800000;">"</span><span style="color: #800000;">header</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        :style</span>=<span style="color: #800000;">"</span><span style="color: #800000;">{height:statubar}</span><span style="color: #800000;">"</span>
+      &gt;
+        &lt;<span style="color: #000000;">div
+          </span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">wrap</span><span style="color: #800000;">"</span><span style="color: #000000;">
+          :style</span>=<span style="color: #800000;">"</span><span style="color: #800000;">{'padding-top':paddingTop}</span><span style="color: #800000;">"</span>
+        &gt;
+          &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">back</span><span style="color: #800000;">"</span>&gt;
+            &lt;van-<span style="color: #000000;">icon
+              name</span>=<span style="color: #800000;">"</span><span style="color: #800000;">arrow-left</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              @click</span>=<span style="color: #800000;">"</span><span style="color: #800000;">$router.go(-1)</span><span style="color: #800000;">"</span>
+            /&gt;
+          &lt;/div&gt;
+          &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">title</span><span style="color: #800000;">"</span>&gt;扫一扫&lt;/div&gt;
+          &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">history</span><span style="color: #800000;">"</span>&gt;
+            &lt;span&gt;<span style="color: #000000;">
+              历史记录
+            </span>&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">searchBox</span><span style="color: #800000;">"</span>&gt;
+        &lt;van-row&gt;
+          &lt;van-col span=<span style="color: #800000;">"</span><span style="color: #800000;">3</span><span style="color: #800000;">"</span>&gt;
+            &lt;van-<span style="color: #000000;">button
+              size</span>=<span style="color: #800000;">"</span><span style="color: #800000;">large</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              :square</span>=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              @click</span>=<span style="color: #800000;">"</span><span style="color: #800000;">goCamera</span><span style="color: #800000;">"</span>
+            &gt;
+              &lt;<span style="color: #000000;">img
+                </span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">right</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                src</span>=<span style="color: #800000;">"</span><span style="color: #800000;">../../assets/img/png-73@3x.png</span><span style="color: #800000;">"</span>
+              /&gt;
+            &lt;/van-button&gt;
+          &lt;/van-col&gt;
+          &lt;van-<span style="color: #000000;">col
+            span</span>=<span style="color: #800000;">"</span><span style="color: #800000;">21</span><span style="color: #800000;">"</span>
+            <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">van-hairline--surround</span><span style="color: #800000;">"</span>
+          &gt;
+            &lt;van-<span style="color: #000000;">search
+              v</span>-model=<span style="color: #800000;">"</span><span style="color: #800000;">value</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              :placeholder</span>=<span style="color: #800000;">"</span><span style="color: #800000;">pla</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              @keydown.stop</span>=<span style="color: #800000;">"</span><span style="color: #800000;">search</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              shape</span>=<span style="color: #800000;">"</span><span style="color: #800000;">round</span><span style="color: #800000;">"</span>
+            &gt;
+              &lt;span slot=<span style="color: #800000;">"</span><span style="color: #800000;">left-icon</span><span style="color: #800000;">"</span>&gt;&lt;/span&gt;
+            &lt;/van-search&gt;
+          &lt;/van-col&gt;
+        &lt;/van-row&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span><span style="color: #800000;">"</span><span style="color: #800000;">orderScan</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      result: {},
+      value: </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+    };
+  },
+  methods: {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 去扫码</span>
+<span style="color: #000000;">    goCamera() {
+        </span><span style="color: #0000ff;">this</span>.$router.go(<span style="color: #800000;">"</span><span style="color: #800000;">/camera</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 手动输入时搜索</span>
+<span style="color: #000000;">    search(e) {
+      </span><span style="color: #0000ff;">if</span> (e.keyCode == <span style="color: #800080;">13</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.onSearch();
+      }
+    },
+ </span><span style="color: #008000;">//</span><span style="color: #008000;"> 搜索结果</span>
+<span style="color: #000000;">    onSearch() {}
+  },
+  mounted() {
+    let camera </span>= sessionStorage.getItem(<span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">if</span> (camera &amp;&amp; camera != <span style="color: #800000;">"</span><span style="color: #800000;">null</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">this</span>.value = sessionStorage.getItem(<span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      sessionStorage.removeItem(</span><span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    }
+  }
+};
+</span>&lt;/script&gt;</pre>
+</div>
+<p>两个页面运行的效果如下</p>
+<p><img src="./images/记录vue用 html5+做移动APP  用barcode做扫一扫功能时安卓 的bug(黑屏、错位等等)和解决方法0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>当时以为很容易，结果做出后遇到各种BUG，有时黑屏，有时位置偏移，有时扫码框偏移等等</p>
+<p>比如下图 这个扫码框已经偏移了</p>
+<p><img src="./images/记录vue用 html5+做移动APP  用barcode做扫一扫功能时安卓 的bug(黑屏、错位等等)和解决方法1.png" alt="" /></p>
+<p>很奇怪，看官方提供的APP怎么扫都是没有问题。于是乎百度各种解决方法，看到&nbsp;有的说是因为摄像头很耗资源，要用单独的webview来分配，用完即关，看看官方的案例，貌似确实也是新建一个webview来启动的。</p>
+<p>心想应该就是这样吧，于是，把方法改了一下。去扫一扫前的页面的$router.go("/camera")时直接改成生成新一个webview，改后的JS代码如下；</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">  goCamera() {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">新建一个webview来启动扫一扫，不再$router.push()的跳转</span>
+      let h =<span style="color: #000000;"> location.href;
+      let n </span>= h.indexOf(<span style="color: #800000;">"</span><span style="color: #800000;">#</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      let r </span>=<span style="color: #000000;"> h.substr(n);
+      h </span>= h.replace(r, <span style="color: #800000;">"</span><span style="color: #800000;">#/camera</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      let ws </span>=<span style="color: #000000;"> plus.webview.create(h);
+      ws.show();
+    },</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;在扫码页面，修改扫码成功后router.go(-1)改成关闭当前的webview,进入页面时设置一个定时器来加载摄像头的资源的JS更改如下</p>
+<div class="cnblogs_code">
+<pre><code>let scan = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  data() {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      codeUrl: </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+      isLight: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+      showEnter: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+      extra: </span><span style="color: #0000ff;">null</span><span style="color: #000000;">,
+      scan: </span><span style="color: #0000ff;">null</span><span style="color: #000000;">,
+      type: </span><span style="color: #800000;">""</span><span style="color: #000000;">
+    };
+  },
+
+  mounted() {
+    setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> 设置500毫秒等资源加载</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (window.plus) {
+        let s </span>= plus.navigator.checkPermission(<span style="color: #800000;">"</span><span style="color: #800000;">camera</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (s !== <span style="color: #800000;">"</span><span style="color: #800000;">notdeny</span><span style="color: #800000;">"</span><span style="color: #000000;">) {
+          plus.nativeUI.alert(</span><span style="color: #800000;">"</span><span style="color: #800000;">相机权限未获取，请往设置应用程序里面开启权限!</span><span style="color: #800000;">"</span><span style="color: #000000;">);<br />　　　　　　return;
+        }
+        </span><span style="color: #0000ff;">this</span>.startScan(); <span style="color: #008000;">//</span><span style="color: #008000;">`进入页面就调取扫一扫</span>
+<span style="color: #000000;">      }
+    }, </span><span style="color: #800080;">500</span><span style="color: #000000;">);
+  },
+  beforeDestroy() {
+    </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+    scan.cancel();
+    scan.close();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> scan = null;</span>
+<span style="color: #000000;">  },
+  methods: {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 打开闪光灯</span>
+<span style="color: #000000;">    openLight() {
+      </span><span style="color: #0000ff;">this</span>.isLight = !<span style="color: #0000ff;">this</span><span style="color: #000000;">.isLight;
+      scan.setFlash(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.isLight);
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">创建扫描控件</span>
+<span style="color: #000000;">    startRecognize() {
+      let that </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+
+      scan </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+      scan </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> plus.barcode.Barcode(
+        </span><span style="color: #800000;">"</span><span style="color: #800000;">scan</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+        [plus.barcode.QR, plus.barcode.EAN8, plus.barcode.EAN13],
+        {
+          frameColor: </span><span style="color: #800000;">"</span><span style="color: #800000;">#1294cb</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          scanbarColor: </span><span style="color: #800000;">"</span><span style="color: #800000;">#1294cb</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          top: </span><span style="color: #800000;">"</span><span style="color: #800000;">100px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          left: </span><span style="color: #800000;">"</span><span style="color: #800000;">0px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          width: </span><span style="color: #800000;">"</span><span style="color: #800000;">100%</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          height: </span><span style="color: #800000;">"</span><span style="color: #800000;">500px</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          position: </span><span style="color: #800000;">"</span><span style="color: #800000;">fixed</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        }
+      );
+      scan.onmarked </span>=<span style="color: #000000;"> onmarked;
+      function onmarked(type, result, file) {
+        result </span>= result.replace(/\n/g, <span style="color: #800000;">""</span><span style="color: #000000;">);
+        that.storage.save(</span><span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">, result);
+        </span><span style="color: #0000ff;">if</span> (plus.webview.all().length &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+          </span><span style="color: #008000;">//</span><span style="color: #008000;"> 扫码成功后关闭当前的webview</span>
+          let ws =<span style="color: #000000;"> plus.webview.currentWebview();
+          plus.webview.close(ws);
+        }
+      }
+    },
+    </span><span style="color: #008000;">//</span> <span style="color: #008000;">//</span><span style="color: #008000;">开始扫描</span>
+<span style="color: #000000;">    startScan() {
+      </span><span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">this</span>.startRecognize(); <span style="color: #008000;">//</span><span style="color: #008000;">创建控件</span>
+      setTimeout(() =&gt;<span style="color: #000000;"> {
+        scan.start();
+      }, </span><span style="color: #800080;">200</span><span style="color: #000000;">);
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 取消扫描</span>
+<span style="color: #000000;">    cancelScan() {
+      let l </span>=<span style="color: #000000;"> plus.webview.all().length;</span><span style="color: #0000ff;">if</span> (l &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+        let ws </span>=<span style="color: #000000;"> plus.webview.currentWebview();
+        plus.webview.close(ws);
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">this</span>.$router.go(-<span style="color: #800080;">1</span><span style="color: #000000;">);
+      }
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> this.$router.go(-1);</span>
+      <span style="color: #0000ff;">if</span> (!window.plus) <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+      plus.navigator.setStatusBarStyle(</span><span style="color: #800000;">"</span><span style="color: #800000;">dark</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (scan) {
+        scan.cancel(); </span><span style="color: #008000;">//</span><span style="color: #008000;">关闭扫描</span>
+        scan.close(); <span style="color: #008000;">//</span><span style="color: #008000;">关闭条码识别控件</span>
+<span style="color: #000000;">      }
+    },
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 从相册选择图片扫码</span>
+<span style="color: #000000;">    getPicture() {
+      plus.gallery.pick(src </span>=&gt;<span style="color: #000000;"> {
+        plus.barcode.scan(
+          src,
+          (type, result) </span>=&gt;<span style="color: #000000;"> {
+            scan.cancel();
+            scan.close();
+            </span><span style="color: #0000ff;">this</span>.storage.save(<span style="color: #800000;">"</span><span style="color: #800000;">cameraData</span><span style="color: #800000;">"</span><span style="color: #000000;">, result);
+            </span><span style="color: #0000ff;">if</span> (plus.webview.all().length &gt; <span style="color: #800080;">1</span><span style="color: #000000;">) {
+              </span><span style="color: #008000;">//</span><span style="color: #008000;"> 扫码成功后关闭当前的webview</span>
+              let ws =<span style="color: #000000;"> plus.webview.currentWebview();
+              plus.webview.close(ws);
+            }
+          },
+          error </span>=&gt;<span style="color: #000000;"> {
+   　　　　 </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$toast({
+              position: </span><span style="color: #800000;">"</span><span style="color: #800000;">bottom</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+              message: </span><span style="color: #000000;"> error.message
+            });
+          }
+        );
+      });
+    }
+  }
+};<br /></span></pre>
+</div>
+<p>&nbsp;至于扫码成功的数据切换，我是用localStorage来保存。</p>
+<p>改成这样新生成一个webview方法后，我自己测试了N遍，没遇到过那些问题了，我也用我同事的手机测试过，也没有问题。但愿是解决了吧</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,49 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修你看Http的 三次握手' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>你看Http的 三次握手</center></div><div class='banquan'>原文出处:本文由博客园博主任噫們提供。<br/>
+原文连接:https://www.cnblogs.com/WG-console/p/10989105.html</div><br>
+    <h2 id="你看http的-三次握手">你看Http的 三次握手</h2>
+<p>按层次分，TCP位于传输层,而且TCP协议能够确认数据是否送达到对方,所以在客户端请求资源的时候，你得让俺知道咱俩关系是不是已经确定了啊，对不。这跟谈恋爱一样一样的，得先确定好关系，才能进入下一步。如图：</p>
+<p><img src="./images/你看Http的 三次握手0.png" /></p>
+<p>客户端会创立一个Tcp链接，当TCP链接成功创建之后，然后在发送http request 请求。<br />
+那么，问题来了，怎么知道这对情侣确定好关系了呢？ 这需要传说中的TCP三次握手来帮忙了哇。请看下面的时序图</p>
+<p><img src="./images/你看Http的 三次握手1.png" /></p>
+<ol>
+<li>首先客户端会送一个数据包 包含（SYN,Seq=x） <em>为什么叫这个名字俺也不知道，可能是甲鱼的臀部——龟腚 即SYN就是询问： 你能听得到吗？ ACK就是回到： 我能听得到啊。</em></li>
+<li>服务端接受这个数据包，并且返回一个数据包（SYN,ACK = X+1 ,Seq = y），这里多个ACK验证，并且值是穿过来的x+1，Seq赋值给了y</li>
+<li>客户端接受数据包，并且又发送一个数据包（ACK = Y+1 Seq = Z）告诉服务端:咱俩关系确定了，接下来可以自由传输数据了。</li>
+</ol>
+<p>TCP 设计中一个基本设定就是，通过TCP 连接发送的每一个包，都有一个sequence number。而因为每个包都是有序列号的，所以都能被确认收到这些包。确认机制是累计的，所以一个对sequence number X 的确认，意味着 X 序列号之前(不包括 X) 包都是被确认接收到的。三次握手的原则设计是防止旧复用链接的初始化导致问题。</p>
+<h3 id="为什么一定是三次才能确定关系呢">为什么一定是三次才能确定关系呢？</h3>
+<p>举个栗子：<br />
+如果客户端给服务端发了个第一次握手，服务端返回的数据由于一些种种原因，客户端并没有收到，客户端一般都会有设置超时时间，到点了人家客户端就关闭了，但是由于木有收到服务端的回应，无法给那个可怜的服务端发送回应数据包，咱服务端就一直在傻傻的等着，服务端就是个老实人，这样做多伤害人家。 开个玩笑，权威解释其实是酱紫的：</p>
+<blockquote>
+<p>已失效的连接请求报文段” 的产生在这样一种情况下：client 发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达 server。本来这是一个早已失效的报文段。但 server 收到此失效的连接请求报文段后，就误认为是 client 再次发出的一个新的连接请求。于是就向 client 发出确认报文段，同意建立连接。假设不采用 “三次握手”，那么只要 server 发出确认，新的连接就建立了。由于现在 client 并没有发出建立连接的请求，因此不会理睬 server 的确认，也不会向 server 发送数据。但 server 却以为新的运输连接已经建立，并一直等待 client 发来数据。这样，server 的很多资源就白白浪费掉了。采用 “三次握手” 的办法可以防止上述现象发生。例如刚才那种情况，client 不会向 server 的确认发出确认。server 由于收不到确认，就知道 client 并没有要求建立连接。”</p>
+</blockquote>
+<h3 id="两次不能确定关系嘛">两次不能确定关系嘛？</h3>
+<p>官腔解释如下：</p>
+<blockquote>
+<p>防止失效的连接请求报文段被服务端接收，从而产生错误,若客户端向服务端发送的连接请求丢失，客户端等待应答超时后就会再次发送连接请求，此时，上一个连接请求就是『失效的』。若建立连接只需两次握手，客户端并没有太大的变化，仍然需要获得服务端的应答后才进入ESTABLISHED状态，而服务端在收到连接请求后就进入ESTABLISHED状态。此时如果网络拥塞，客户端发送的连接请求迟迟到不了服务端，客户端便超时重发请求，如果服务端正确接收并确认应答，双方便开始通信，通信结束后释放连接。此时，如果那个失效的连接请求抵达了服务端，由于只有两次握手，服务端收到请求就会进入ESTABLISHED状态，等待发送数据或主动发送数据。但此时的客户端早已进入CLOSED状态，服务端将会一直等待下去，这样浪费服务端连接资源。&gt;</p>
+</blockquote>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

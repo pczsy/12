@@ -1,0 +1,262 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序 自定义头部导航栏和导航栏背景图片 navigationStyle' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序 自定义头部导航栏和导航栏背景图片 navigationStyle</center></div><div class='banquan'>原文出处:本文由博客园博主王梓瑞提供。<br/>
+原文连接:https://www.cnblogs.com/wangzirui98/p/11249317.html</div><br>
+    <p>​ 这两天因为要做一个带背景的小程序头，哭了，小程序导航栏有背景也就算了，还得让导航栏上的背景顺下来，心态小崩。现在可以单独设置一个页面的小程序头了，但是前提是要微信7.0以上的版本，考虑到兼容性问题，还是不要贸然的上了，所以用老版本的替换所有页面的小程序头来做。</p>
+<p>​ 参考了<a href="https://www.jianshu.com/u/e48d635e7abe">jiuyucha</a>的文章,但是没有解决自定义背景的和返回按钮的颜色的问题，还有因为IOS的橡皮筋效果，对IOS端不太友好，屏幕会乱划。所以针对性的改动了这些功能，因为才学小程序两三天，所以其中踩了很多坑，但好在最后效果还是达到了。</p>
+<p>下面是效果图：</p>
+<p><img src="./images/微信小程序 自定义头部导航栏和导航栏背景图片 navigationStyle0.png" /></p>
+<p>​ 原理其实就是通过将原来的头禁用，然后PAGE自然而然的顶上去以后，定义一个头的组件，将他设置成fixed布局固定在原来头的部分，然后给page加上Margin-top，所以还原原来的感觉。背景待会再说。</p>
+<h2 id="app配置">1.app配置</h2>
+<p>​ 首先禁用所有头导航，在app.json的window里加一行这个，你会发现所有头都消失了。然后禁止滑动页面，滑动问题用<code>scroll-view</code>解决</p>
+<pre><code><code>&quot;window&quot;: {
+    &quot;navigationStyle&quot;: &quot;custom&quot;
+}, 
+&quot;disableScroll&quot;: true</code></pre>
+<p>​ 然后在app.js里获取导航头的高度的全局数据</p>
+<pre class="javascript"><code>// app.js
+
+App({
+  globalData: {
+    statusBarHeight: wx.getSystemInfoSync()[&#39;statusBarHeight&#39;]
+  },
+  // 判断是否由分享进入小程序
+    if (e.scene == 1007 || e.scene == 1008) {
+      this.globalData.share = true
+    } else {
+      this.globalData.share = false
+    }
+    //获取设备顶部窗口的高度（不同设备窗口高度不一样，根据这个来设置自定义导航栏的高度）
+    //这个最初我是在组件中获取，但是出现了一个问题，当第一次进入小程序时导航栏会把
+    //页面内容盖住一部分,当打开调试重新进入时就没有问题，这个问题弄得我是莫名其妙
+    //虽然最后解决了，但是花费了不少时间
+    wx.getSystemInfo({
+      success: res =&gt; {
+        this.globalData.height = res.statusBarHeight
+      }
+    })
+  },
+  globalData: {
+    userInfo: null,
+    share: false, // 分享默认为false
+    height: 0 // 顶部高度
+  }
+})
+</code></pre>
+<p>​ 在app.wxss给page加一个高度百分之百。</p>
+<pre class="css"><code>/* app.wxss */
+page {
+  height: 100%;
+}</code></pre>
+<p>​ app配置到这里应该完事了。</p>
+<h2 id="组件配置">2.组件配置</h2>
+<p>组件结构：</p>
+<p><img src="./images/微信小程序 自定义头部导航栏和导航栏背景图片 navigationStyle1.png" /></p>
+<p>放源码吧</p>
+<pre class="html"><code>// navbar.wxml
+
+&lt;view class=&#39;nav-wrap&#39; style=&#39;height: {{height*2 + 20}}px;&#39;&gt;
+  &lt;!-- 导航栏背景图片 --&gt;
+  &lt;image class=&quot;backgroundimg&quot; src=&quot;{{navbarData.address}}&quot; bindload=&quot;imgLoaded&quot; style=&quot;width:{{imageWidth}}px;height:{{imageHeight}}px&quot; /&gt;
+  &lt;!-- // 导航栏 中间的标题 --&gt;
+  &lt;view class=&#39;nav-title&#39; wx:if=&#39;{{!navbarData.white}}&#39; style=&#39;line-height: {{height*2 + 44}}px;&#39;&gt;
+    {{navbarData.title}}
+  &lt;/view&gt;
+  &lt;view class=&#39;nav-title&#39; wx:else=&#39;{{!navbarData.white}}&#39; style=&#39;line-height: {{height*2 + 44}}px; color:#ffffff&#39;&gt;
+    {{navbarData.title}}
+  &lt;/view&gt;
+  &lt;view style=&#39;display: flex; justify-content: space-around;flex-direction: column&#39;&gt;
+    &lt;!-- // 导航栏  左上角的返回按钮 --&gt;
+    &lt;!-- //  其中wx:if=&#39;{{navbarData.showCapsule}}&#39; 是控制左上角按钮的显示隐藏，首页不显示 --&gt;
+    &lt;view class=&#39;nav-capsule&#39; style=&#39;height: {{height*2 + 44}}px;&#39; wx:if=&#39;{{navbarData.showCapsule}}&#39;&gt;
+      &lt;!-- //左上角的返回按钮，wx:if=&#39;{{!share}}&#39;空制返回按钮显示 --&gt;
+      &lt;!-- //从分享进入小程序时 返回上一级按钮不应该存在 --&gt;
+      &lt;!-- navbarData.white是控制按钮颜色的，因为背景有深浅色,返回按钮自己找图片 --&gt;
+      &lt;view bindtap=&#39;_navback&#39; wx:if=&#39;{{!share&amp;&amp;navbarData.white}}&#39;&gt;
+        &lt;image src=&#39;../../images/返 回 (1).svg&#39; mode=&#39;aspectFit&#39; class=&#39;back-pre&#39;&gt;&lt;/image&gt;
+      &lt;/view&gt;
+      &lt;view bindtap=&#39;_navback&#39; wx:else=&#39;{{!share}}&#39;&gt;
+        &lt;image src=&#39;../../images/返 回.svg&#39; mode=&#39;aspectFit&#39; class=&#39;back-pre&#39;&gt;&lt;/image&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/view&gt;
+&lt;!-- 导航栏下面的背景图片 --&gt;
+&lt;image class=&quot;backgroundimg&quot; src=&quot;{{navbarData.address}}&quot; bindload=&quot;imgLoaded&quot; style=&quot;width:{{imageWidth}}px;height:{{imageHeight}}px&quot; /&gt;</code></pre>
+<p>CSS：</p>
+<pre class="css"><code>/* navbar.wxss */
+
+/* 顶部要固定定位   标题要居中   自定义按钮和标题要和右边微信原生的胶囊上下对齐 */
+.nav-wrap {
+  /* display: none; */
+  position: fixed;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  color: #000;
+  z-index: 9999999;
+  background: #000;
+  overflow: hidden;
+}
+/* 背景图 */
+.backgroundimg {
+  position: absolute;
+  z-index: -1;
+}
+/* 标题要居中 */
+.nav-title {
+  position: absolute;
+  text-align: center;
+  max-width: 400rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  font-size: 36rpx;
+  color: #2c2b2b;
+  font-weight: 450;
+}
+
+.nav-capsule {
+  display: flex;
+  align-items: center;
+  margin-left: 30rpx;
+  width: 140rpx;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.back-pre {
+  width: 32rpx;
+  height: 36rpx;
+  margin-top: 4rpx;
+  padding: 10rpx;
+}
+.nav-capsule {
+  width: 36rpx;
+  height: 40rpx;
+  margin-top: 3rpx;
+}
+</code></pre>
+<p>在JSON里声明我是个组件</p>
+<pre><code><code>{
+  &quot;component&quot;: true,
+  &quot;usingComponents&quot;: {}
+}</code></pre>
+<p>最后是js。</p>
+<pre class="javascript"><code>const app = getApp()
+Component({
+  properties: {
+    navbarData: {
+      //navbarData   由父页面传递的数据，变量名字自命名
+      type: Object,
+      value: {},
+      observer: function(newVal, oldVal) {}
+    }
+  },
+  data: {
+    height: &#39;&#39;,
+    //默认值  默认显示左上角
+    navbarData: {
+      showCapsule: 1
+    },
+    imageWidth: wx.getSystemInfoSync().windowWidth, // 背景图片的高度
+    imageHeight: &#39;&#39; // 背景图片的长度，通过计算获取
+  },
+  attached: function() {
+    // 获取是否是通过分享进入的小程序
+    this.setData({
+      share: app.globalData.share
+    })
+    // 定义导航栏的高度   方便对齐
+    this.setData({
+      height: app.globalData.height
+    })
+  },
+  methods: {
+    // 返回上一页面
+    _navback() {
+      wx.navigateBack()
+    },
+    // 计算图片高度
+    imgLoaded(e) {
+      this.setData({
+        imageHeight:
+          e.detail.height *
+          (wx.getSystemInfoSync().windowWidth / e.detail.width)
+      })
+    }
+    //返回到首页
+    // _backhome() {
+    //   wx.switchTab({
+    //     url: &#39;/pages/index/index&#39;
+    //   })
+    // }
+  }
+})
+</code></pre>
+<p>​ 大概就是这么多，怎么在页面上用呢</p>
+<h2 id="具体页面配置">3.具体页面配置</h2>
+<p>​ 页面的HTML，我是内容里面放页面的东西。</p>
+<pre class="html"><code>&lt;nav-bar navbar-data=&#39;{{nvabarData}}&#39;&gt;&lt;/nav-bar&gt;
+&lt;scroll-view scroll-y style=&quot;height: 100%;&quot;&gt;
+  &lt;view class=&quot;scroll-view-item&quot; style=&#39;padding-top: {{height}}px;&#39;&gt;我是内容&lt;/view&gt;
+&lt;/scroll-view&gt;</code></pre>
+<p>​ 页面的JSON，<code>navigationBarTextStyle</code>是用来配置胶囊颜色的，因为胶囊是微信给的，不能自定义，只能改颜色，所以委屈一下从这里改一下吧</p>
+<pre><code><code>{
+  &quot;usingComponents&quot;: {
+    &quot;nav-bar&quot;: &quot;../../components/navbar/navbar&quot;
+  },
+  &quot;navigationBarTextStyle&quot;: &quot;white&quot;
+}
+</code></pre>
+<p>​ 页面JS,图片自己填上地址就好了。注意<code>getApp()</code>不要省。</p>
+<pre class="javascript"><code>const app = getApp()
+Page({
+  data: {
+    // 导航头组件所需的参数
+    nvabarData: {
+      showCapsule: 1, //是否显示左上角图标   1表示显示    0表示不显示
+      title: &#39;标题&#39;, //导航栏 中间的标题
+      white: true, // 是就显示白的，不是就显示黑的。
+      address: &#39;../../images/蒙版组 1@2x.png&#39; // 加个背景 不加就是没有
+    },
+    // 导航头的高度
+    height: app.globalData.height * 2 + 20
+  }
+})
+</code></pre>
+<h2 id="存在的问题">4.存在的问题</h2>
+<h3 id="上拉刷新">上拉刷新</h3>
+<p>​ 我没有试过哈，不过原生的微信上拉刷新这么用是准定不行了，如果喜欢IOS橡皮筋模式的同学或者想要刷新的同学可以在具体页面里删掉scroll-view组件换成view（记得保留那个padding-top！），然后把app.json的禁用滑动删除掉。具体的我也没有深入，大家自行解决吧。</p>
+<h2 id="踩的坑">5.踩的坑</h2>
+<p>​ 单纯分享下，不看也可以，首先就是设置页面的背景的时候，我考虑过直接在css上设置background image，但是有一个问题是，<strong>小程序的background image 只支持在线的地址或者是base64</strong>。我不知道为什么要这么做。真的很迷。但是线上的不稳定，base64太长了,代码不好看也不好整理，所以考虑了一下还是用Image组件吧。</p>
+<p>​ 然后第二个坑又来了，image组件自带宽高，而且用Mode里的任何值都不能完成需求。如果我设置成<code>width:100%</code>占满父元素的话，他的长还是默认的340px,所以还是鼓捣了鼓捣，先设置宽度不是100%了，而是通过<code>wx.**getSystemInfoSync**().windowWidth</code>；来获取的屏幕宽度。然后再通过image组件的事件获取原图的长宽，探后计算屏幕宽和原图宽的率，然后再将这个率乘上原图长度，就可以获取到一个占满父元素又对着比例的图了，然后给父元素套上<code>overflow:hidden</code>就好了。</p>
+<p>​ 第三个坑，就是怎么做背景的拼接，想了想也不是个坑，直接在组件的最外层再加一个一模一样的image标签就行了，这样就做到了标签上显示半个背景图，然后在他的下层又能显示一个完整的背景图，因为上面被盖住了，所以地下的下半部分和导航栏的上半部分背景正好拼接起来，所以问题也就这么解决了。</p>
+<p>​ 最后的话欢迎大家指正我的问题，毕竟小白一个，不是很懂小程序这方面。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

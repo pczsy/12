@@ -1,0 +1,107 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修mpvue小程序开发之 实现一个弹幕评论' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>mpvue小程序开发之 实现一个弹幕评论</center></div><div class='banquan'>原文出处:本文由博客园博主我正经七百九十九提供。<br/>
+原文连接:https://www.cnblogs.com/style-hyh/p/11919241.html</div><br>
+    <p><img src="./images/mpvue小程序开发之 实现一个弹幕评论0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;先上图</p>
+<p>就是一个简单的弹幕发送功能</p>
+<p>弹幕区的页面：</p>
+<div class="cnblogs_code">
+<pre><code>      &lt;div class="content" v-show="doommData.length"&gt;
+        &lt;div class="textLeft"&gt;&lt;/div&gt;
+        &lt;div class="textItem"&gt;
+          &lt;p class="text aon" v-<span style="color: #0000ff;">if</span>="item.display" v-<span style="color: #0000ff;">for</span>="(item,index) in doommData" :key="index" :id="item.id" :style="{'animation-duration':item.time+'s', top:item.top+'%',color:'#333',background:item.result.bgColor}"&gt;
+            &lt;image :src="item.result.faceImage" class="headImg" /&gt;
+            &lt;span class="name"&gt;{{item.result.name}}:&lt;/span&gt;
+            &lt;span class="text"&gt;{{item.result.sendMessage}}&lt;/span&gt;
+          &lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;</pre>
+</div>
+<p>弹幕区的代码逻辑：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 弹幕参数</span>
+<span style="color: #000000;">class Doomm {
+  constructor(result, top, time, color, id) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">内容，顶部距离，运行时间，颜色,id（参数可自定义增加）</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">*
+     * result数据结构
+     * faceImage:"",
+     * bgColor: "#57B2FF",
+     * sendMessage: "66666",
+     * sendTime: "2019-11-06 15:10:15",
+     * name: "eve"
+     *
+     </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">this</span>.result =<span style="color: #000000;"> result;
+    </span><span style="color: #0000ff;">this</span>.top =<span style="color: #000000;"> top;
+    </span><span style="color: #0000ff;">this</span>.time =<span style="color: #000000;"> time;
+    </span><span style="color: #0000ff;">this</span>.color =<span style="color: #000000;"> color;
+    </span><span style="color: #0000ff;">this</span>.display = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.id =<span style="color: #000000;"> id;
+  }
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">随机字体颜色</span>
+<span style="color: #000000;">getRandomColor() {
+  let rgb </span>=<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">for</span> (let i = 0; i &lt; 3; ++<span style="color: #000000;">i) {
+    let color </span>= Math.floor(Math.random() * 256).toString(16<span style="color: #000000;">);
+    color </span>= color.length == 1 ? "0" +<span style="color: #000000;"> color : color;
+    rgb.push(color);
+  }
+  </span><span style="color: #0000ff;">return</span> "#" + rgb.join(""<span style="color: #000000;">);
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">节流函数</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> throttle(fn, wait) {
+  </span><span style="color: #0000ff;">var</span> canUse = <span style="color: #0000ff;">true</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 设置一个开关</span>
+  <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;">(item) {
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">canUse) {
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    } </span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果开关已经关掉了就不用往下了</span>
+    canUse = <span style="color: #0000ff;">false</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 利用闭包刚进来的时候关闭开关</span>
+    setTimeout(() =&gt;<span style="color: #000000;"> {
+      fn(item);
+      canUse </span>= <span style="color: #0000ff;">true</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> 执行完才打开开关</span>
+<span style="color: #000000;">    }, wait);
+  };
+}
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">添加弹幕列表</span>
+<span style="color: #000000;">    async barrageCyclic() {
+      await </span><span style="color: #0000ff;">this</span>.Arr.forEach((ele, i) =&gt;<span style="color: #000000;"> {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">往弹幕列表里面添加数据</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.doommList.push(
+          </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Doomm(
+            ele,
+            Math.ceil(Math.random() </span>* 70 + 10<span style="color: #000000;">),
+            Math.floor(Math.random() </span>* 20 + 10<span style="color: #000000;">),
+            getRandomColor(),
+            i
+          )
+        );
+      });
+      </span><span style="color: #0000ff;">this</span>.doommData = <span style="color: #0000ff;">this</span><span style="color: #000000;">.doommList;
+    },</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

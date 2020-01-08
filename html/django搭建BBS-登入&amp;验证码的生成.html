@@ -1,0 +1,424 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修django搭建BBS-登入&amp;验证码的生成' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>django搭建BBS-登入&amp;验证码的生成</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11408318.html</div><br>
+    <h1 id="django搭建bbs-登入验证码的生成">django搭建BBS-登入&amp;验证码的生成</h1>
+<p><code>基于注册完成后</code></p>
+<h2 id="文件结构">文件结构</h2>
+<ul>
+<li>app 接口
+<ul>
+<li>migrations</li>
+<li>__inint__.py</li>
+<li>admin.py <code>管理员页面注册表单用</code></li>
+<li>apps.py</li>
+<li>bbsform.py <code>form组件相关设置</code></li>
+<li>models.py <code>模型存放</code></li>
+<li>tests.py</li>
+<li>views.py <code>业务逻辑</code></li>
+</ul></li>
+<li>avatar <code>图片文件存储</code></li>
+<li>BBS <code>项目名称以及路由存放</code>
+<ul>
+<li>__inint__.py</li>
+<li>settings.py</li>
+<li>urls.py</li>
+<li>wsgi.py</li>
+</ul></li>
+<li>static
+<ul>
+<li>bootstrap-3.3.7-dist <code>bootstrap文件网上下载的</code></li>
+<li>jquery-3.4.1.min.js <code>jq文件</code></li>
+</ul></li>
+<li>templates <code>页面文件存放</code></li>
+</ul>
+<h2 id="一.创建图片验证">一.创建图片验证</h2>
+<h3 id="路由">1.路由</h3>
+<p><code>urls.py</code></p>
+<pre><code><code>from django.conf.urls import url
+from django.contrib import admin
+#主路由导入视图内函数
+from app import views
+urlpatterns = [
+    url(r&#39;^admin/&#39;, admin.site.urls),
+    url(r&#39;^register/&#39;, views.register),
+    url(r&#39;^login/&#39;, views.login),
+    url(r&#39;^get_code/&#39;, views.get_code),
+]</code></pre>
+<h3 id="逻辑业务">2.逻辑业务</h3>
+<p><code>views.py</code></p>
+<pre><code><code>from django.shortcuts import render,HttpResponse,redirect
+from django.http import JsonResponse
+#Image导入
+#ImageDraw在图片上写字
+#ImageFont 写字的格式
+from PIL import Image,ImageDraw,ImageFont
+import random
+# 相当于把文件以byte格式存到内存中
+from io import BytesIO
+
+from django.contrib import auth
+
+from app.bbsforms import Register
+from app import models
+
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from django.db.models import F
+
+
+
+
+
+# Create your views here.
+def register(request):
+    if request.method==&#39;GET&#39;:
+        form=Register()
+        return render(request,&#39;register.html&#39;,{&#39;form&#39;:form})
+    elif request.is_ajax():
+        response={&#39;code&#39;:100,&#39;msg&#39;:None}
+        form = Register(request.POST)
+        if form.is_valid():
+            #校验通过的数据
+            clean_data=form.cleaned_data
+            #把re_pwd剔除
+            clean_data.pop(&#39;re_pwd&#39;)
+            #取出头像
+            avatar=request.FILES.get(&#39;avatar&#39;)
+            if avatar:
+                #因为用的是FileField，只需要把文件对象赋值给avatar字段，自动做保存
+                clean_data[&#39;avatar&#39;]=avatar
+            user=models.UserInfo.objects.create_user(**clean_data)
+            if user:
+                response[&#39;msg&#39;] = &#39;创建成功&#39;
+            else:
+                response[&#39;code&#39;] = 103
+                # 把校验不通过的数据返回
+                response[&#39;msg&#39;] = &#39;创建失败&#39;
+        else:
+            response[&#39;code&#39;]=101
+            #把校验不通过的数据返回
+            response[&#39;msg&#39;]=form.errors
+            print(type(form.errors))
+        return JsonResponse(response,safe=False)
+
+
+def login(request):
+    if request.method==&#39;GET&#39;:
+        return render(request,&#39;login.html&#39;)
+
+
+def get_code(request):
+    if request.method == &#39;GET&#39;:
+        img = Image.new(&#39;RGB&#39;, (350, 40), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        # 写文字
+        # 生成一个字体对象
+        font = ImageFont.truetype(&#39;/static/Gabriola.ttf&#39;, 34)
+        # 调用方法，返回一个画板对象
+        draw = ImageDraw.Draw(img)
+
+        new_text =&#39;&#39;
+        # 生成随机8位数字
+        for x_index in range(1, 8):
+            num = chr(random.randint(48, 57))
+            word = chr(random.randint(65, 90))
+            word_1 = chr(random.randint(97, 122))
+            text =random.choice((num, word, word_1))
+            draw.text((x_index * 32, 0),text, font=font)
+            new_text +=text
+
+        # 加点线
+        width = 320
+        height = 35
+        for i in range(5):
+            x1 = random.randint(0, width)
+            x2 = random.randint(0, width)
+            y1 = random.randint(0, height)
+            y2 = random.randint(0, height)
+            # 在图片上画线
+            draw.line((x1, y1, x2, y2), fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+        for i in range(33):
+            # 画点
+            draw.point([random.randint(0, width), random.randint(0, height)], fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            x = random.randint(0, width)
+            y = random.randint(0, height)
+            # 画弧形
+            draw.arc((x, y, x + 4, y + 4), 0, 90, fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        print(new_text)
+        #存在session中
+        request.session[&#39;code&#39;]=new_text
+        #存内存
+        f = BytesIO()
+        img.save(f, &#39;png&#39;)
+        return HttpResponse(f.getvalue())</code></pre>
+<h3 id="网页">3.网页</h3>
+<p><code>login.html</code></p>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    {% include &#39;bootstrap.html&#39; %}&lt;--载入bootstrap--&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;登入&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container-fluid center-block&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6 col-md-offset-3&quot;&gt;
+            &lt;h1&gt;登陆&lt;/h1&gt;
+            &lt;form action=&quot;&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;id_name&quot;&gt;用户名&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;name&quot; id=&quot;id_name&quot; class=&quot;form-control&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;pwd&quot;&gt;密码&lt;/label&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;pwd&quot; id=&quot;pwd&quot; class=&quot;form-control&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;id_code&quot;&gt;验证码&lt;/label&gt;
+                    &lt;div class=&quot;row&quot;&gt;
+                        &lt;div class=&quot;col-md-6&quot;&gt;
+                            &lt;input type=&quot;text&quot; name=&quot;code&quot; id=&quot;id_code&quot; class=&quot;form-control&quot;&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;col-md-6&quot; id=&quot;img&quot;&gt;
+                            &lt;img src=&quot;/get_code/&quot; height=&quot;40&quot; width=&quot;350&quot; class=&quot;img-code&quot;&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;input type=&quot;submit&quot; value=&quot;提交&quot; class=&quot;btn-success&quot;&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+{% include &#39;jq.html&#39; %} &lt;--载入jq--&gt;
+&lt;script&gt;  &lt;--利用img标标签属性src发送改变后会自己去找--&gt;
+    $(&#39;.img-code&#39;).click(function () {
+        var img_code_src = $(this).attr(&#39;src&#39;);
+        img_code_src += &#39;1&#39;;
+        console.log(img_code_src);
+        $(this).attr(&#39;src&#39;,img_code_src)
+    })
+&lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="二.账号信息进行验证">二.账号信息进行验证</h2>
+<p><code>login.html</code></p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    {% include &#39;bootstrap.html&#39; %}
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt;登入&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div class=&quot;container-fluid center-block&quot;&gt;
+    &lt;div class=&quot;row&quot;&gt;
+        &lt;div class=&quot;col-md-6 col-md-offset-3&quot;&gt;
+            {% csrf_token %}
+            &lt;h1&gt;登陆&lt;/h1&gt;
+            &lt;form action=&quot;&quot;&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;id_name&quot;&gt;用户名&lt;/label&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;name&quot; id=&quot;id_name&quot; class=&quot;form-control&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;pwd&quot;&gt;密码&lt;/label&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;pwd&quot; id=&quot;pwd&quot; class=&quot;form-control&quot;&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;form-group&quot;&gt;
+                    &lt;label for=&quot;id_code&quot;&gt;验证码&lt;/label&gt;
+                    &lt;div class=&quot;row&quot;&gt;
+                        &lt;div class=&quot;col-md-6&quot;&gt;
+                            &lt;input type=&quot;text&quot; name=&quot;code&quot; id=&quot;id_code&quot; class=&quot;form-control&quot;&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;col-md-6&quot; id=&quot;img&quot;&gt;
+                            &lt;img src=&quot;/get_code/&quot; height=&quot;40&quot; width=&quot;350&quot; class=&quot;img-code&quot;&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;input type=&quot;button&quot; value=&quot;提交&quot; class=&quot;btn-success&quot; id=&quot;up_data&quot;&gt;
+                &lt;span style=&quot;color: red&quot; id=&quot;msg&quot;&gt;&lt;/span&gt;
+            &lt;/form&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+{% include &#39;jq.html&#39; %}
+&lt;script&gt;
+    $(&#39;.img-code&#39;).click(function () {
+        var img_code_src = $(this).attr(&#39;src&#39;);
+        img_code_src += &#39;1&#39;;
+        console.log(img_code_src);
+        $(this).attr(&#39;src&#39;,img_code_src)
+    })
+&lt;/script&gt;
+
+
+&lt;script&gt;
+    $(&#39;#up_data&#39;).click(function () {
+        $.ajax({
+            type:&#39;post&#39;,
+            url:&#39;/login/&#39;,
+            data:{&#39;name&#39;:$(&#39;#id_name&#39;).val(),
+                &#39;pwd&#39;:$(&#39;#pwd&#39;).val(),
+                &#39;code&#39;:$(&#39;#id_code&#39;).val(),
+                &#39;csrfmiddlewaretoken&#39;:&#39;{{csrf_token}}&#39;
+            },
+            success:function (msg) {
+                console.log(msg);
+                $(&#39;#msg&#39;).text(msg);
+                if (msg ==&#39;登入成功&#39;){
+                    console.log(&#39;sb&#39;);
+                    window.location.replace(&#39;http://www.baidu.com&#39;);&lt;--暂时先放百度--&gt;
+                }
+            }
+        })
+    })
+&lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+<p><code>views.py</code></p>
+<pre><code><code>from django.shortcuts import render,HttpResponse,redirect
+from django.http import JsonResponse
+#Image导入
+#ImageDraw在图片上写字
+#ImageFont 写字的格式
+from PIL import Image,ImageDraw,ImageFont
+import random
+# 相当于把文件以byte格式存到内存中
+from io import BytesIO
+
+from django.contrib import auth
+
+from app.bbsforms import Register
+from app import models
+
+from django.db.models import Count
+from django.db.models.functions import TruncMonth
+from django.db.models import F
+
+
+
+
+
+# Create your views here.
+def register(request):
+    if request.method==&#39;GET&#39;:
+        form=Register()
+        return render(request,&#39;register.html&#39;,{&#39;form&#39;:form})
+    elif request.is_ajax():
+        response={&#39;code&#39;:100,&#39;msg&#39;:None}
+        form = Register(request.POST)
+        if form.is_valid():
+            #校验通过的数据
+            clean_data=form.cleaned_data
+            #把re_pwd剔除
+            clean_data.pop(&#39;re_pwd&#39;)
+            #取出头像
+            avatar=request.FILES.get(&#39;avatar&#39;)
+            if avatar:
+                #因为用的是FileField，只需要把文件对象赋值给avatar字段，自动做保存
+                clean_data[&#39;avatar&#39;]=avatar
+            user=models.UserInfo.objects.create_user(**clean_data)
+            if user:
+                response[&#39;msg&#39;] = &#39;创建成功&#39;
+            else:
+                response[&#39;code&#39;] = 103
+                # 把校验不通过的数据返回
+                response[&#39;msg&#39;] = &#39;创建失败&#39;
+        else:
+            response[&#39;code&#39;]=101
+            #把校验不通过的数据返回
+            response[&#39;msg&#39;]=form.errors
+            print(type(form.errors))
+        return JsonResponse(response,safe=False)
+
+
+def login(request):
+    if request.method==&#39;GET&#39;:
+        return render(request,&#39;login.html&#39;)
+    else:
+        print(request.POST)
+        user_name=request.POST.get(&#39;name&#39;)
+        pwd=request.POST.get(&#39;pwd&#39;)
+        code=request.POST.get(&#39;code&#39;)
+
+        user=auth.authenticate(username=user_name,password=pwd)
+        print(user)
+        if request.session.get(&#39;code&#39;).upper() !=code.upper(): #忽略大小写
+            return HttpResponse(&#39;验证码错误&#39;)
+        elif not user:
+            return HttpResponse(&#39;账号密码错误&#39;)
+        else:
+            return HttpResponse(&#39;登入成功&#39;)
+
+
+
+def get_code(request):
+    if request.method == &#39;GET&#39;:
+        img = Image.new(&#39;RGB&#39;, (350, 40), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        # 写文字
+        # 生成一个字体对象
+        font = ImageFont.truetype(&#39;/static/Gabriola.ttf&#39;, 34)
+        # 调用方法，返回一个画板对象
+        draw = ImageDraw.Draw(img)
+
+        new_text =&#39;&#39;
+        # 生成随机8位数字
+        for x_index in range(1, 8):
+            num = chr(random.randint(48, 57))
+            word = chr(random.randint(65, 90))
+            word_1 = chr(random.randint(97, 122))
+            text =random.choice((num, word, word_1))
+            draw.text((x_index * 32, 0),text, font=font)
+            new_text +=text
+
+        # 加点线
+        width = 320
+        height = 35
+        for i in range(5):
+            x1 = random.randint(0, width)
+            x2 = random.randint(0, width)
+            y1 = random.randint(0, height)
+            y2 = random.randint(0, height)
+            # 在图片上画线
+            draw.line((x1, y1, x2, y2), fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+
+        for i in range(33):
+            # 画点
+            draw.point([random.randint(0, width), random.randint(0, height)], fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            x = random.randint(0, width)
+            y = random.randint(0, height)
+            # 画弧形
+            draw.arc((x, y, x + 4, y + 4), 0, 90, fill=(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+        print(new_text)
+        #存在session中
+        request.session[&#39;code&#39;]=new_text
+        #存内存
+        f = BytesIO()
+        img.save(f, &#39;png&#39;)
+        return HttpResponse(f.getvalue())</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

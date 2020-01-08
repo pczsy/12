@@ -1,0 +1,69 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css+vue实现流程图' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css+vue实现流程图</center></div><div class='banquan'>原文出处:本文由博客园博主疯魔掉书袋提供。<br/>
+原文连接:https://www.cnblogs.com/scdisplay/p/12029074.html</div><br>
+    <p>　　</p>
+<p>主要用css+flex布局实现样式部分，vue实现组件逻辑。首先看下效果吧：</p>
+<p><img src="./images/css+vue实现流程图0.png" alt="" width="351" height="361" /></p>
+<p>&nbsp;</p>
+<p>当空间不够时还可以使用拖拽功能</p>
+<p><img src="./images/css+vue实现流程图1.png" alt="" width="392" height="405" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>接下来说明下实现思路</p>
+<p><span style="font-size: 14px;">1.首先是实现单个节点样式，这个很简单不谈了，节点后都跟有一小段连接线，只有叶子节点没有连接线。使用伪元素after实现连接线，子节点添加额外样式来取消连接线。</span></p>
+<p><img src="./images/css+vue实现流程图2.png" alt="" width="779" height="165" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">2.然后是父子节点之间的连接线，因为有两种情况（a.只有一个子节点的；b.有多个子节点），所以要分情况实现</span></p>
+<p><img src="./images/css+vue实现流程图3.png" alt="" width="790" height="410" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">2.1子节点公共样式process-tree-childNodes设置为inline-block；<span class="webkit-css-property">vertical-align<span class="styles-name-value-separator">: <span class="value">middle;以此来实现与父节点的样式对齐；</span></span></span>&nbsp;紧跟的div设置为flex竖排布局</span></p>
+<p><span style="font-size: 14px;">2.2单个子节点添加额外样式single-node，设置他的伪元素before为横向连接线,；多个子节点添加额外样式multiply-node，设置伪元素before为竖向的连接线</span></p>
+<p><span style="font-size: 14px;">2.3多个子节点时的竖向连接线会多出来一部分，通过设置第一个子树节点的after伪元素和最后一个子树节点的after伪元素来遮盖住超出部分，其余的横向连接线都通过设置子树节点的before伪元素实现</span></p>
+<p><img src="./images/css+vue实现流程图4.png" alt="" width="832" height="335" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">&nbsp;好了样式部分的大体思路就是这样了。</span></p>
+<p><span style="font-size: 14px;">然后是vue部分的实现，主要是各种样式的添加，树结构的数据要求组件应该可以递归使用</span></p>
+<p><img src="./images/css+vue实现流程图5.png" alt="" width="519" height="525" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">&nbsp;最后是拖拽功能，通过指令实现</span></p>
+<p><span style="font-size: 14px;">首先在外部包装一层，设置overflow：hidden，内部的流程树组件设置scrolll</span></p>
+<p><img src="./images/css+vue实现流程图6.png" alt="" width="471" height="600" /></p>
+<p>&nbsp;<img src="./images/css+vue实现流程图7.png" alt="" width="369" height="441" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">&nbsp;initDomwidth方法用来设置树的宽度，通过获取所有叶子节点的距离根节点左边的距离，取最大值做为树的宽度，防止宽度不够导致树变形。为了能够拖拽，在乘以一个系数作为最终的树宽度。</span></p>
+<p><img src="./images/css+vue实现流程图8.png" alt="" width="581" height="297" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>我已经上传了组件到npm，感兴趣的盆友可以试试看，npm install process-tree-vue。</p>
+<p>最后，这个只是试验性质的demo，因为流程图多用于做展示，展示要求各种各样，可以在此基础上做调整修改来适应要求。</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

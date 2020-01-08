@@ -1,0 +1,127 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修小程序导航栏跟随滑动' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>小程序导航栏跟随滑动</center></div><div class='banquan'>原文出处:本文由博客园博主一夜幽提供。<br/>
+原文连接:https://www.cnblogs.com/zwyboom/p/10819004.html</div><br>
+    <p>效果图</p>
+<p><img src="./images/小程序导航栏跟随滑动0.png" alt="" /></p>
+<p>.wxml</p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;view class='tabBar'&gt;
+&lt;view class='tabItem wx:if="{{tabClick===0?"click":""}}"' bindtap='clickTab' data-index='0'&gt;tab1&lt;/view&gt;
+&lt;view class='tabItem wx:if="{{tabClick===1?"click":""}}"' bindtap='clickTab' data-index='1'&gt;tab2 &lt;/view&gt;
+&lt;view class='tabItem wx:if="{{tabClick===2?"click":""}}"' bindtap='clickTab' data-index='2'&gt;tab3 &lt;/view&gt;
+&lt;view class='underline' animation="{{animationData}}" style='left:{{isLeft}}'&gt;&lt;/view&gt;
+&lt;/view&gt;</pre>
+</div>
+<p>.wxss</p>
+<div class="cnblogs_Highlighter">
+<pre><code>.tabBar{
+height: 80rpx;
+background-color:#50B7EA;
+width: 100%;
+font-size: 28rpx;
+color: rgba(255,255,255,0.50);
+position: fixed;
+top: 0;
+left: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 997;
+}
+.tabItem{
+width: 33.333%;
+display: flex;
+align-content: center;
+justify-content: center;
+position: relative;
+height: 100%;
+font-size: 28rpx;
+}
+.click{
+color: white;
+}
+.underline{
+position: absolute;
+content: '';
+width: 84rpx;
+height: 3px;
+background-color:white;
+bottom: 0;
+}
+</pre>
+</div>
+<p>　　</p>
+<p>.js</p>
+<div class="cnblogs_Highlighter">
+<pre><code>data:{
+tabClick: 0,
+animationData: {},
+ isLeft: '12%'
+},
+
+swiperTab: function (e) {
+var that = this;
+var index = e.detail.current
+console.log(e.detail.current)
+var animation = wx.createAnimation({
+duration: 1000,
+timingFunction: "ease",
+})
+this.animation = animation
+if (index === 0) {
+animation.translate(0, 0).step();
+
+that.setData({
+animationData: animation.export()
+})
+that.setData({
+tabClick: e.detail.current
+});
+} else if (index === 1) {
+var w = wx.getSystemInfoSync().windowWidth;
+w = w * 0.32
+animation.translate(w, 0).step();
+that.setData({
+animationData: animation.export()
+})
+that.setData({
+tabClick: e.detail.current
+});
+} else if(index === 2){
+var w = wx.getSystemInfoSync().windowWidth;
+w = w * 0.65
+animation.translate(w, 0).step();
+that.setData({
+animationData: animation.export()
+})
+that.setData({
+tabClick: e.detail.current
+});
+}
+},
+</pre>
+</div>
+<p>　　</p>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

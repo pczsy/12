@@ -1,0 +1,446 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修ios浏览器调试踩坑（1）----mescroll.js和vue-scroller' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>ios浏览器调试踩坑（1）----mescroll.js和vue-scroller</center></div><div class='banquan'>原文出处:本文由博客园博主低调的小牛提供。<br/>
+原文连接:https://www.cnblogs.com/dnlm/p/11060160.html</div><br>
+    <p style="text-align: left;"><strong>主要记录在ios浏览器出现触摸无限加载的情况</strong></p>
+<p style="text-align: left;"><strong>使用<strong>vue-scroller</strong>和mescroll.js/mescroll.vue先踩ios浏览器默认滑动会影响mescroll的方法调用。</strong></p>
+<p style="text-align: left;"><strong>首先给公共js加入以下代码禁用我们的页面在ios浏览器下会滑动上下页面。</strong></p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;">&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code>&lt;script&gt;
+<span style="color: #008000;">//</span><span style="color: #008000;">禁止ios手机双击放大以及缩小</span>
+window.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 阻止双击放大</span>
+<span style="color: #0000ff;">var</span> lastTouchEnd = 0<span style="color: #000000;">;
+document.addEventListener(</span>'touchstart', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (event) {
+</span><span style="color: #0000ff;">if</span> (event.touches.length &gt; 1<span style="color: #000000;">) {
+event.preventDefault();
+}
+});
+document.addEventListener(</span>'touchend', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (event) {
+</span><span style="color: #0000ff;">var</span> now = (<span style="color: #0000ff;">new</span><span style="color: #000000;"> Date()).getTime();
+</span><span style="color: #0000ff;">if</span> (now - lastTouchEnd &lt;= 300<span style="color: #000000;">) {
+event.preventDefault();
+}
+lastTouchEnd </span>=<span style="color: #000000;"> now;
+}, </span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 阻止双指放大</span>
+document.addEventListener('gesturestart', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (event) {
+event.preventDefault();
+});
+
+
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">在ios浏览器调试的时候禁止页面滚动</span>
+<span style="color: #0000ff;">var</span> ios = navigator.userAgent.indexOf('iPhone');<span style="color: #008000;">//</span><span style="color: #008000;">判断是否为ios</span>
+<span style="color: #0000ff;">if</span> (ios != -1<span style="color: #000000;">) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">ios下运行</span>
+<span style="color: #0000ff;">var</span> scroll = document.getElementById("scroll")<span style="color: #008000;">//</span><span style="color: #008000;">你需要滑动的dom元素</span>
+<span style="color: #000000;">touchScroll(scroll);
+}
+
+</span><span style="color: #0000ff;">var</span> canScroll = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> touchScroll(el) {
+canScroll </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">el需要滑动的元素</span>
+el.addEventListener('touchmove', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (e) {
+canScroll </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+})
+document.body.addEventListener(</span>'touchmove', <span style="color: #0000ff;">function</span><span style="color: #000000;"> (e) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">       alert(canScroll);</span>
+<span style="color: #0000ff;">if</span> (!<span style="color: #000000;">canScroll) {
+e.preventDefault(); </span><span style="color: #008000;">//</span><span style="color: #008000;">阻止默认事件(上下滑动)</span>
+} <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">需要滑动的区域</span>
+<span style="color: #0000ff;">var</span> top = el.scrollTop; <span style="color: #008000;">//</span><span style="color: #008000;">对象最顶端和窗口最顶端之间的距离</span>
+<span style="color: #0000ff;">var</span> scrollH = el.scrollHeight; <span style="color: #008000;">//</span><span style="color: #008000;">含滚动内容的元素大小</span>
+<span style="color: #0000ff;">var</span> offsetH = el.offsetHeight; <span style="color: #008000;">//</span><span style="color: #008000;">网页可见区域高</span>
+<span style="color: #0000ff;">var</span> cScroll = top + offsetH; <span style="color: #008000;">//</span><span style="color: #008000;">当前滚动的距离</span>
+
+<span style="color: #008000;">//</span><span style="color: #008000;">被滑动到最上方和最下方的时候</span>
+<span style="color: #0000ff;">if</span> (top == 0<span style="color: #000000;">) {
+top </span>= 1; <span style="color: #008000;">//</span><span style="color: #008000;">0～1之间的小数会被当成0</span>
+} <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cScroll ===<span style="color: #000000;"> scrollH) {
+el.scrollTop </span>= top - 0.1<span style="color: #000000;">;
+}
+}
+}, { passive: </span><span style="color: #0000ff;">false</span> }) <span style="color: #008000;">//</span><span style="color: #008000;">passive防止阻止默认事件不生效</span>
+<span style="color: #000000;">}
+}
+
+</span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<div style="text-align: left;">
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div><strong>下面给body设置样式：</strong></div>
+<div>&nbsp;</div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"> 
+html,
+body {
+height: 100%;
+width: 100%;
+position: fixed;
+top: 0;
+left: 0;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<div>
+<div>&nbsp;</div>
+<div><strong>接下来就是vue页面使用vue-scroller或者mescroll.js/mescroll.vue;</strong></div>
+<div>&nbsp;</div>
+<div><strong>mescroll.js</strong></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+&lt;div class="bg-box"&gt;
+&lt;div id="mescroll" class="mescroll"&gt;
+&lt;div&gt;
+&lt;mescroll-vue ref="mescroll" :down="mescrollDown" :up="mescrollUp" @init="mescrollInit" class="scrollView"&gt;
+&lt;div class="invoiceList"&gt;
+&lt;div v-<span style="color: #0000ff;">for</span>="(item,index) in invoiceList" class="invoiceList-box" :key="index"&gt;
+&lt;a :class="item.isShow?'items-selected':'items'" @click="onItemClick(item,index)"&gt;&lt;/a&gt;
+&lt;div class="information"&gt;
+&lt;p class="numvber"&gt;单号：{{item.OrderNo}}&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon1"&gt;&lt;/span&gt;始发地 &mdash;&mdash;&mdash;&mdash; 目的地&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon2"&gt;&lt;/span&gt;件数 : {{item.Pse}}件&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon2"&gt;&lt;/span&gt;重量 : {{item.Weight}}KG&lt;/p&gt;
+&lt;p class="invoicedate"&gt;{{item.DownOrderTime}}&lt;/p&gt;
+&lt;/div&gt;
+&lt;p class="price"&gt;￥{{item.TotalMoney}}&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/mescroll-vue&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+import MescrollVue from </span>"mescroll.js/mescroll.vue"<span style="color: #000000;">;
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+components: {
+MescrollVue
+},
+data() {
+</span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+mescroll: </span><span style="color: #0000ff;">null</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> mescroll实例对象</span>
+mescrollDown: {}, <span style="color: #008000;">//</span><span style="color: #008000;">下拉刷新的配置. (如果下拉刷新和上拉加载处理的逻辑是一样的,则mescrollDown可不用写了)</span>
+<span style="color: #000000;">mescrollUp: {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 上拉加载的配置.</span>
+callback: <span style="color: #0000ff;">this</span>.upCallback, <span style="color: #008000;">//</span><span style="color: #008000;"> 上拉回调,此处简写; 相当于 callback: function(page, mescroll) { }</span><span style="color: #008000;">
+//</span><span style="color: #008000;">以下是一些常用的配置,当然不写也可以的.</span>
+<span style="color: #000000;">page: {
+num: </span>0, <span style="color: #008000;">//</span><span style="color: #008000;">当前页 默认0,回调之前会加1; 即callback(page)会从1开始</span>
+size: 5 <span style="color: #008000;">//</span><span style="color: #008000;">每页数据条数,默认10</span>
+<span style="color: #000000;">},
+noMoreSize: </span>5, <span style="color: #008000;">//</span><span style="color: #008000;">如果列表已无数据,可设置列表的总数量要大于5才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看</span>
+<span style="color: #000000;">toTop: {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">回到顶部按钮</span>
+src: "./static/mescroll/mescroll-totop.png", <span style="color: #008000;">//</span><span style="color: #008000;">图片路径,默认null,支持网络图</span>
+offset: 1000 <span style="color: #008000;">//</span><span style="color: #008000;">列表滚动1000px才显示回到顶部按钮</span>
+<span style="color: #000000;">},
+htmlContent:
+</span>'&lt;p class="downwarp-progress"&gt;&lt;/p&gt;&lt;p class="downwarp-tip"&gt;下拉刷新 &lt;/p&gt;', <span style="color: #008000;">//</span><span style="color: #008000;">布局内容</span>
+<span style="color: #000000;">empty: {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">列表第一页无任何数据时,显示的空提示布局; 需配置warpId才显示</span>
+warpId: "xxid", <span style="color: #008000;">//</span><span style="color: #008000;">父布局的id (1.3.5版本支持传入dom元素)</span>
+icon: "./static/mescroll/mescroll-empty.png", <span style="color: #008000;">//</span><span style="color: #008000;">图标,默认null,支持网络图</span>
+tip: "暂无相关数据~" <span style="color: #008000;">//</span><span style="color: #008000;">提示</span>
+<span style="color: #000000;">}
+}
+};
+},
+beforeRouteEnter(to, from, next) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果没有配置回到顶部按钮或isBounce,则beforeRouteEnter不用写</span>
+next(vm =&gt;<span style="color: #000000;"> {
+vm.$refs.mescroll.beforeRouteEnter(); </span><span style="color: #008000;">//</span><span style="color: #008000;"> 进入路由时,滚动到原来的列表位置,恢复回到顶部按钮和isBounce的配置</span>
+<span style="color: #000000;">});
+},
+beforeRouteLeave(to, from, next) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 如果没有配置回到顶部按钮或isBounce,则beforeRouteLeave不用写</span>
+<span style="color: #0000ff;">this</span>.$refs.mescroll.beforeRouteLeave(); <span style="color: #008000;">//</span><span style="color: #008000;"> 退出路由时,记录列表滚动的位置,隐藏回到顶部按钮和isBounce的配置</span>
+<span style="color: #000000;">next();
+},
+methods: {
+mescrollInit(mescroll) {
+</span><span style="color: #0000ff;">this</span>.mescroll =<span style="color: #000000;"> mescroll;
+},
+upCallback(page, mescroll) {
+let data </span>=<span style="color: #000000;"> {};
+data.uId </span>= 1<span style="color: #000000;">;
+data.type </span>= 10<span style="color: #000000;">;
+data.pageIndex </span>=<span style="color: #000000;"> page.num;
+data.pageSize </span>=<span style="color: #000000;"> page.size;
+let str </span>= `uId=${data.uId}&amp;type=${data.type}&amp;pageIndex=<span style="color: #000000;">${
+data.pageIndex
+}</span>&amp;pageSize=<span style="color: #000000;">${data.pageSize}`;
+</span><span style="color: #0000ff;">this</span>.$http.get(str) <span style="color: #008000;">//</span><span style="color: #008000;">地址换成自己的</span>
+.then(res =&gt;<span style="color: #000000;"> {
+</span><span style="color: #0000ff;">if</span> (res &amp;&amp; res.Total &gt; 0<span style="color: #000000;">) {
+</span><span style="color: #0000ff;">if</span> (page.num == 1<span style="color: #000000;">) {
+</span><span style="color: #0000ff;">this</span>.invoiceList =<span style="color: #000000;"> [];
+}
+</span><span style="color: #0000ff;">this</span>.invoiceList = <span style="color: #0000ff;">this</span><span style="color: #000000;">.invoiceList.concat(res.DataList);
+</span><span style="color: #0000ff;">this</span>.invoiceList.map(item =&gt;<span style="color: #000000;"> {
+</span><span style="color: #0000ff;">this</span>.$set(item, "isShow", <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+});
+</span><span style="color: #0000ff;">this</span>.$nextTick(() =&gt;<span style="color: #000000;"> {
+mescroll.endSuccess(res.DataList.length);
+});
+}
+})
+.</span><span style="color: #0000ff;">catch</span>(e =&gt;<span style="color: #000000;"> {
+mescroll.endErr();
+});
+}
+}
+};
+</span>&lt;/script&gt;
+&lt;style lang="less" scoped&gt;<span style="color: #000000;">
+.mescroll {
+position: absolute;
+width: </span>100%<span style="color: #000000;">;
+height: </span>100%<span style="color: #000000;">;
+top: </span>0<span style="color: #000000;">;
+bottom: </span>0<span style="color: #000000;">;
+left: </span>0<span style="color: #000000;">;
+right: </span>0<span style="color: #000000;">;
+background: #eee;
+overflow: auto;
+</span>-webkit-overflow-<span style="color: #000000;">scrolling: touch;
+.mescroll {
+position: fixed;
+top: </span>0<span style="color: #000000;">;
+bottom: </span>0<span style="color: #000000;">;
+height: auto;
+}
+}
+</span>&lt;/style&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+
+
+
+</div>
+
+
+</div>
+<div>&nbsp;</div>
+<div><strong>效果</strong></div>
+<div><img src="./images/ios浏览器调试踩坑（1）----mescroll.js和vue-scroller0.png" alt="" />
+<p>&nbsp;</p>
+<div><strong>vue-scroller(在main.js引入就不需要再引入了)</strong></div>
+<div>&nbsp;</div>
+<div>附代码：</div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>
+<div>
+<div>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+&lt;div&gt;
+&lt;div class="content"&gt;
+&lt;div class="content-box"&gt;
+&lt;scroller :on-refresh="refresh" :on-infinite="infinite" ref="scrollerBottom" refresh-layer-color="#4b8bf4" loading-layer-color="#ec4949"&gt;
+&lt;!-- 上拉刷新动画 --&gt;
+&lt;svg class="spinner" style="stroke: #4b8bf4;" slot="refresh-spinner" viewBox="0 0 64 64"&gt;
+&lt;g stroke-width="7" stroke-linecap="round"&gt;
+&lt;line x1="10" x2="10" y1="27.3836" y2="36.4931"&gt;
+&lt;animate attributeName="y1" dur="750ms" values="16;18;28;18;16;16" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="y2" dur="750ms" values="48;46;36;44;48;48" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="stroke-opacity" dur="750ms" values="1;.4;.5;.8;1;1" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/line&gt;
+&lt;line x1="24" x2="24" y1="18.6164" y2="45.3836"&gt;
+&lt;animate attributeName="y1" dur="750ms" values="16;16;18;28;18;16" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="y2" dur="750ms" values="48;48;46;36;44;48" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="stroke-opacity" dur="750ms" values="1;1;.4;.5;.8;1" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/line&gt;
+&lt;line x1="38" x2="38" y1="16.1233" y2="47.8767"&gt;
+&lt;animate attributeName="y1" dur="750ms" values="18;16;16;18;28;18" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="y2" dur="750ms" values="44;48;48;46;36;44" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="stroke-opacity" dur="750ms" values=".8;1;1;.4;.5;.8" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/line&gt;
+&lt;line x1="52" x2="52" y1="16" y2="48"&gt;
+&lt;animate attributeName="y1" dur="750ms" values="28;18;16;16;18;28" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="y2" dur="750ms" values="36;44;48;48;46;36" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="stroke-opacity" dur="750ms" values=".5;.8;1;1;.4;.5" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/line&gt;
+&lt;/g&gt;
+&lt;/svg&gt;
+&lt;div class="invoiceList"&gt;
+&lt;div v-<span style="color: #0000ff;">for</span>="(item,index) in invoiceList" class="invoiceList-box" @click="InvoiceDetails(item)" :key="index"&gt;
+&lt;div class="slecets"&gt;
+&lt;/div&gt;
+&lt;div class="information"&gt;
+&lt;p class="numvber"&gt;单号：{{item.OrderNo}}&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon1"&gt;&lt;/span&gt;始发地 &mdash;&mdash;&mdash;&mdash; 目的地&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon2"&gt;&lt;/span&gt;件数 : {{item.Pse}}件&lt;/p&gt;
+&lt;p&gt;&lt;span class="icon2"&gt;&lt;/span&gt;重量 : {{item.Weight}}KG&lt;/p&gt;
+&lt;p class="invoicedate"&gt;{{item.DownOrderTime}}&lt;/p&gt;
+&lt;/div&gt;
+&lt;p class="bitch"&gt;已开发票&lt;/p&gt;
+&lt;p class="price"&gt;￥{{item.TotalMoney}}&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 下拉加载动画 --&gt;
+&lt;svg class="spinner" style="fill: #ec4949;" slot="infinite-spinner" viewBox="0 0 64 64"&gt;
+&lt;g&gt;
+&lt;circle cx="16" cy="32" stroke-width="0" r="3"&gt;
+&lt;animate attributeName="fill-opacity" dur="750ms" values=".5;.6;.8;1;.8;.6;.5;.5" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="r" dur="750ms" values="3;3;4;5;6;5;4;3" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/circle&gt;
+&lt;circle cx="32" cy="32" stroke-width="0" r="3.09351"&gt;
+&lt;animate attributeName="fill-opacity" dur="750ms" values=".5;.5;.6;.8;1;.8;.6;.5" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="r" dur="750ms" values="4;3;3;4;5;6;5;4" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/circle&gt;
+&lt;circle cx="48" cy="32" stroke-width="0" r="4.09351"&gt;
+&lt;animate attributeName="fill-opacity" dur="750ms" values=".6;.5;.5;.6;.8;1;.8;.6" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;animate attributeName="r" dur="750ms" values="5;4;3;3;4;5;6;5" repeatCount="indefinite"&gt;&lt;/animate&gt;
+&lt;/circle&gt;
+&lt;/g&gt;
+&lt;/svg&gt;
+&lt;/scroller&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+data() {
+</span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+invoiceList: [],
+pageIndex: </span>0<span style="color: #000000;">,
+pageSize: </span>5<span style="color: #000000;">,
+noDate: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+};
+},
+mounted() {},
+methods: {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">获取开票历史列表</span>
+<span style="color: #000000;">InvoiceList(offset, fn) {
+let data </span>=<span style="color: #000000;"> {};
+data.uId </span>= 1<span style="color: #000000;">;
+data.type </span>= 20<span style="color: #000000;">;
+data.pageIndex </span>=<span style="color: #000000;"> offset;
+data.pageSize </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.pageSize;
+let str </span>= `uId=${data.uId}&amp;type=${data.type}&amp;pageIndex=<span style="color: #000000;">${
+data.pageIndex
+}</span>&amp;pageSize=<span style="color: #000000;">${data.pageSize}`;
+</span><span style="color: #0000ff;">this</span>.$http.get(str).then(res =&gt; { <span style="color: #008000;">//</span><span style="color: #008000;">一样换成自己的接口</span>
+<span style="color: #0000ff;">if</span> (res &amp;&amp; res.Total &gt; 0<span style="color: #000000;">) {
+let maxNum </span>= Math.ceil(res.Total / data.pageSize); <span style="color: #008000;">//</span><span style="color: #008000;">判断总共有多少页</span>
+
+<span style="color: #0000ff;">if</span> (offset &gt;<span style="color: #000000;"> maxNum) {
+</span><span style="color: #008000;">//</span><span style="color: #008000;">如果当前页大于总页数判断显示没有更多数据</span>
+fn(<span style="color: #0000ff;">true</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+} </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (fn) {
+fn();
+}
+}
+</span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.pageIndex == 1<span style="color: #000000;">) {
+</span><span style="color: #0000ff;">this</span>.invoiceList =<span style="color: #000000;"> res.DataList;
+} </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #0000ff;">this</span>.invoiceList = <span style="color: #0000ff;">this</span><span style="color: #000000;">.invoiceList.concat(res.DataList);
+}
+}
+});
+},
+</span><span style="color: #008000;">//</span><span style="color: #008000;">下拉刷新</span>
+<span style="color: #000000;">refresh(done) {
+</span><span style="color: #0000ff;">this</span>.pageIndex = 1<span style="color: #000000;">;
+setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+</span><span style="color: #0000ff;">this</span>.InvoiceList(1<span style="color: #000000;">, done);
+}, </span>1500<span style="color: #000000;">);
+},
+</span><span style="color: #008000;">//</span><span style="color: #008000;">上拉加载数据</span>
+<span style="color: #000000;">infinite(done) {
+setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+</span><span style="color: #0000ff;">this</span>.pageIndex++<span style="color: #000000;">;
+</span><span style="color: #0000ff;">this</span>.InvoiceList(<span style="color: #0000ff;">this</span><span style="color: #000000;">.pageIndex, done);
+}, </span>1500<span style="color: #000000;">);
+}
+}
+};
+</span>&lt;/script&gt;
+&lt;style lang="less" scoped&gt;<span style="color: #000000;">
+@import </span>"../../main.less"<span style="color: #000000;">;
+.content {
+text</span>-<span style="color: #000000;">align: center;
+height: </span>100%<span style="color: #000000;">;
+overflow: hidden;
+.content</span>-<span style="color: #000000;">box {
+position: absolute;
+width: </span>100%<span style="color: #000000;">;
+top: </span>3<span style="color: #000000;">.14rem;
+bottom: </span>0<span style="color: #000000;">;
+left: </span>0<span style="color: #000000;">;
+right: </span>0<span style="color: #000000;">;
+background: #eee;
+}
+}
+</span>&lt;/style&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+
+
+</div>
+
+</div>
+<div>&nbsp;</div>
+<div><strong><strong><img src="./images/ios浏览器调试踩坑（1）----mescroll.js和vue-scroller1.png" alt="" /></strong></strong>
+<p>&nbsp;</p>
+</div>
+<div>&nbsp;</div>
+<div><strong>安装教程我就不贴了，自行百度。。。</strong></div>
+<div>&nbsp;</div>
+<div><strong>踩坑之路。莫喷。。。。</strong></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+
+</div>
+
+
+</div>
+
+
+
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

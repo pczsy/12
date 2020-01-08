@@ -1,0 +1,429 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS 预处理语言之 Scss 篇' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS 预处理语言之 Scss 篇</center></div><div class='banquan'>原文出处:本文由博客园博主Y先生灬提供。<br/>
+原文连接:https://www.cnblogs.com/blog-Y/p/11654371.html</div><br>
+    <h3 id="简介">简介</h3>
+<h4 id="sass-和-scss">1. Sass 和 Scss</h4>
+<blockquote>
+<p>Sass 和 Scss 其实是同一种东西，我们平时都称之为 Sass；Scss 是 Sass 3 引入新的语法，其语法完全兼容 CSS3，并且继承了 Sass 的强大功能。也就是说，任何标准的 CSS3 样式表都是具有相同语义的有效的 Scss文件。</p>
+<p>两者之间不同之处有以下两点：</p>
+<ol>
+<li>文件<strong>扩展名</strong>不同，Sass 是以“.sass”后缀为扩展名，而 Scss 是以“.scss”后缀为扩展名</li>
+<li>语法书写方式不同，Sass 是以<strong>严格的缩进式</strong>语法规则来书写，<strong>不带大括号({})和分号(;)</strong>，而 SCSS 的语法书写和我们的 CSS 语法书写方式非常类似。</li>
+</ol>
+</blockquote>
+<p>示例:</p>
+<pre><code><code>// Sass 语法
+$w:200px; //定义变量
+$h:300px; //定义变量
+body
+    width:$w;
+    height:$h;</code></pre>
+<pre><code><code>// Scss 语法
+$w:200px;
+$h:300px;
+body{
+    width:$w;
+    height:$h;
+}</code></pre>
+<pre class="css"><code>/* 编译出来的css*/
+body{
+    width:200px;
+    height:300px;
+}</code></pre>
+<h4 id="sassscss-和-css">2. Sass/Scss 和 Css</h4>
+<ul>
+<li><p>Sass 和 Css</p>
+<blockquote>
+<p>Sass 和 CSS 写法的确存在一定的差异，由于 Sass 是基于 Ruby 写出来，所以其延续了 Ruby 的书写规范。在书写 Sass 时<strong>不带有大括号和分号</strong>，其主要是依靠<strong>严格的缩进方式</strong>来控制的。</p>
+</blockquote></li>
+<li><p>Scss 和 Css</p>
+<blockquote>
+<p>SCSS 和 CSS 写法无差别，这也是 Sass 后来越来越受大众喜欢原因之一。简单点说，把你现有的“.css”文件直接修改成“.scss”即可使用。</p>
+</blockquote></li>
+</ul>
+<h3 id="安装">安装</h3>
+<h4 id="mac-系统">Mac 系统</h4>
+<h5 id="ruby-安装">1. Ruby 安装</h5>
+<blockquote>
+<p>确认是否安装了Ruby，打开终端，输入 <code>ruby -v</code> .</p>
+</blockquote>
+<ul>
+<li>有 ruby 信息 -- 已安装 .</li>
+<li><p>没有 ruby 信息，使用 <code>brew install ruby</code> 安装 ruby .</p>
+<p>链接： <a href="https://www.ruby-lang.org/zh_cn/documentation/installation/#rubyinstaller">安装 Ruby</a> .</p></li>
+</ul>
+<h5 id="sass-安装">2. Sass 安装</h5>
+<blockquote>
+<p>使用 <code>sass -v</code> 查看 sass 版本号，检查是否安装了 sass .</p>
+</blockquote>
+<ul>
+<li><p>在线安装</p>
+<ul>
+<li>使用 <code>sudo gem install sass</code> 进行安装 sass .</li>
+</ul></li>
+<li><p>本地安装</p>
+<blockquote>
+<p>由于有时候直接使用上面的命令安装会让你无法正常实现安装（网络受限原因），当碰到这种情况之时，那么安装需要特殊去处理，可以通过下面的方法来实现 Sass 的正常安装：</p>
+</blockquote>
+<ul>
+<li>下载 sass 文件，链接： <a href="https://rubygems.org/gems/sass">Sass 下载</a> .</li>
+</ul></li>
+</ul>
+<p><img src="./images/CSS 预处理语言之 Scss 篇0.png" alt="sass" /></p>
+<ul>
+<li><p>使用 <code>sudo gem install XXX/sass-3.7.4.gem</code> 进行安装 sass .</p>
+<blockquote>
+<p>XXX ：下载的 sass 文件路径。</p>
+</blockquote></li>
+</ul>
+<h4 id="windows-系统">Windows 系统</h4>
+<h5 id="ruby-安装-1">1. Ruby 安装</h5>
+<ul>
+<li><p>下载 Ruby 安装包，链接： <a href="http://rubyinstaller.org/downloads">Ruby 的官网</a> .</p></li>
+<li><p>安装 Ruby，将Ruby可执行文件添加到您的PATH</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇1.png" alt="ruby-setup" /></p></li>
+<li><p>Ruby 安装完成后，在开始菜单中找到新安装的 Ruby，并启动 Ruby 的 Command 控制面板</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇2.png" alt="start-ruby" /></p></li>
+</ul>
+<h5 id="sass-安装-1">2. Sass 安装</h5>
+<ul>
+<li><p>在线安装</p>
+<ul>
+<li><p>使用 <code>gem install sass</code> 进行安装 sass .</p></li>
+<li><p>或者：使用 <code>gem install compass</code> 通过 Compass 来安装 Sass.</p>
+<blockquote>
+<p>Compass 是基于 Sass 开发的一个框架。也就是说，你安装了 Compass，也就同时安装好了 Sass。</p>
+<p>Compass 是一个成熟的、基于 Sass 开发的一个框架，这里面集成了很多写好的 mixins 和 Sass 函数。</p>
+</blockquote></li>
+</ul></li>
+<li><p>本地安装 (<strong>通 Mac 系统 Sass 的本地安装</strong>)</p></li>
+</ul>
+<h3 id="查测更新及卸载">查测、更新及卸载</h3>
+<pre class="javascript"><code>// 查看
+sass -v
+
+// 更新
+gem update sass
+
+// 卸载
+gem uninstall sass</code></pre>
+<h3 id="语法格式">语法格式</h3>
+<h4 id="sass-语法格式">1. Sass 语法格式</h4>
+<blockquote>
+<p>这里说的 Sass 语法是 Sass 的最初语法格式，他是通过 tab 键控制缩进的一种语法规则，而且这种缩进要求非常严格。另外其不带有任何的分号和大括号。常常把这种格式称为 Sass 老版本，其文件名以“.sass”为扩展名。</p>
+</blockquote>
+<h4 id="scss-语法格式">2. Scss 语法格式</h4>
+<blockquote>
+<p>SCSS 是 Sass 的新语法格式，从外形上来判断他和 CSS 长得几乎是一模一样，代码都包裹在一对大括号里，并且末尾结束处都有一个分号。其文件名格式常常以“.scss”为扩展名。</p>
+</blockquote>
+<h4 id="注">【注】：</h4>
+<p><img src="./images/CSS 预处理语言之 Scss 篇3.png" alt="sass 和 scss" /></p>
+<blockquote>
+<p>“.sass”只能使用 Sass 老语法规则（缩进规则），“.scss”使用的是 Sass 的新语法规则，也就是 SCSS 语法规则（类似 CSS 语法格式）。</p>
+</blockquote>
+<h3 id="编译调试">编译调试</h3>
+<h4 id="sass-编译">1. Sass 编译</h4>
+<h5 id="命令编译">①、命令编译</h5>
+<blockquote>
+<p>使用电脑中的命令终端，通过输入 Sass 指令来编译 Sass</p>
+</blockquote>
+<ul>
+<li><p>单文件编译 <code>sass &lt;要编译的Sass文件路径&gt;/style.scss:&lt;要输出CSS文件路径&gt;/style.css</code> .</p>
+<pre class="javascript"><code>// ex: 有一个 test.scss 文件需需要编译
+sass test.scss:test.css</code></pre></li>
+<li><p>多文件编译 <code>sass sass/:css/</code>.</p>
+<blockquote>
+<p>上面的命令表示将项目中“sass”文件夹中所有“.scss”(“.sass”)文件编译成“.css”文件，并且将这些 CSS 文件都放在项目中“css”文件夹中。</p>
+</blockquote></li>
+<li><p>开启“<strong>watch</strong>”功能 <code>sass --watch &lt;要编译的Sass文件路径&gt;/style.scss:&lt;要输出CSS文件路径&gt;/style.css</code>.</p>
+<pre class="javascript"><code>// 单文件
+sass --watch test.scss:test.css
+
+// 多文件
+sass --watch sass/:css/</code></pre>
+<blockquote>
+<p>这样只要你的代码进行任保修改，都能自动监测到代码的变化，并且给你直接编译出来：</p>
+</blockquote></li>
+</ul>
+<h5 id="gui-界面工具编辑">②、GUI 界面工具编辑</h5>
+<p>推荐：<a href="http://koala-app.com/">Koala</a> .</p>
+<h5 id="自动化编译x">③、自动化编译(X)</h5>
+<h4 id="不同样式风格的输出方法">2. 不同样式风格的输出方法</h4>
+<h5 id="嵌套输出方式-nested">①、嵌套输出方式 nested</h5>
+<pre class="javascript"><code>sass --watch test.scss:test.css --style nested</code></pre>
+<p><img src="./images/CSS 预处理语言之 Scss 篇4.png" alt="--style nested" /></p>
+<h5 id="展开输出方式-expanded">②、展开输出方式 expanded</h5>
+<blockquote>
+<p>输出的 CSS 样式风格和 nested 类似，只是大括号在另起一行</p>
+</blockquote>
+<pre class="javascript"><code>sass --watch test.scss:test.css --style expanded</code></pre>
+<p><img src="./images/CSS 预处理语言之 Scss 篇5.png" alt="--style expanded" /></p>
+<h5 id="紧凑输出方式-compact">③、紧凑输出方式 compact</h5>
+<pre class="javascript"><code>sass --watch test.scss:test.css --style compact</code></pre>
+<p><img src="./images/CSS 预处理语言之 Scss 篇6.png" alt="--style compact" /></p>
+<h5 id="压缩输出方式-compressed">④、压缩输出方式 compressed</h5>
+<blockquote>
+<p>压缩输出方式会去掉标准的 Sass 和 CSS 注释及空格</p>
+</blockquote>
+<pre class="javascript"><code>sass --watch test.scss:test.css --style compressed</code></pre>
+<p><img src="./images/CSS 预处理语言之 Scss 篇7.png" alt="--style compressed" /></p>
+<h4 id="调试x">3. 调试(X)</h4>
+<h3 id="基本特性">基本特性</h3>
+<h4 id="基础">基础</h4>
+<h5 id="变量">1. 变量</h5>
+<blockquote>
+<p>Sass 的变量包括三个部分：</p>
+<ol>
+<li>声明变量的符号“$”</li>
+<li>变量名称</li>
+<li>赋予变量的值</li>
+</ol>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇8.png" alt="定义变量图解" /></p>
+<ul>
+<li><p>默认变量</p>
+<blockquote>
+<p>值后面加上!default 。</p>
+</blockquote>
+<pre><code><code>$color : #fff !default;</code></pre>
+<blockquote>
+<p>sass 的默认变量一般是用来设置默认值，然后根据需求来覆盖，覆盖的方式 - 只需要在<strong>调用</strong>该变量之前重新声明下变量即可。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇9.png" alt="sass-var" /></p></li>
+<li><p>全局变量和局部变量</p>
+<blockquote>
+<p>定义全局变量(在选择器、函数、混合宏...的外面定义的变量为全局变量)。</p>
+<p>可以简单的理解成，<strong>全局变量就是定义在元素外面的变量，而定义在元素内部的变量就是局部变量</strong> 。</p>
+</blockquote></li>
+<li><p>全局变量的影子</p>
+<blockquote>
+<p>当在局部范围（选择器内、函数内、混合宏内...）声明一个已经存在于全局范围内的变量时，局部变量就成为了<strong>全局变量的影子</strong>。基本上，<strong>局部变量只会在局部范围内覆盖全局变量</strong>。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇10.png" alt="sass-var2" /></p></li>
+</ul>
+<h5 id="嵌套">2. 嵌套</h5>
+<ul>
+<li><p>选择器嵌套</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇11.png" alt="sass-qiantao" /></p></li>
+<li><p>属性嵌套</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇12.png" alt="sass-qiantao-shuxing" /></p>
+<blockquote>
+<p><strong>避免选择器嵌套：</strong></p>
+<ul>
+<li>选择器嵌套最大的问题是将使最终的代码难以阅读。开发者需要花费巨大精力计算不同缩进级别下的选择器具体的表现效果。</li>
+<li>选择器越具体则声明语句越冗长，而且对最近选择器的引用(&amp;)也越频繁。在某些时候，出现混淆选择器路径和探索下一级选择器的错误率很高，这非常不值得。</li>
+</ul>
+</blockquote></li>
+<li><p>伪类嵌套</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇13.png" alt="sass-var-weilei" /></p></li>
+</ul>
+<h5 id="混合宏">3. 混合宏</h5>
+<blockquote>
+<p>在 Sass 中，使用“@mixin”来声明一个混合宏。<br />
+使用“@include”来调用声明好的混合宏。</p>
+</blockquote>
+<ul>
+<li><p>不带参数混合宏</p>
+<pre><code><code>@mixin bdr{
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}</code></pre>
+<blockquote>
+<p>@mixin 是用来声明混合宏的关键词；<br />
+bdr 是混合宏的名称；<br />
+大括号里面是复用的样式代码。</p>
+</blockquote></li>
+<li><p>带参数混合宏</p>
+<blockquote>
+<p>参数：不带值的参数、带值的参数、多个参数<br />
+有一个特别的参数“<strong>…</strong>”。当混合宏传的参数过多之时，可以使用参数来替代。</p>
+</blockquote>
+<pre><code><code>// 带值的参数
+@mixin bdr($radius:10px){
+    -webkit-border-radius: $radius;
+    border-radius: $radius;
+}</code></pre></li>
+<li><p>复杂的混合宏</p>
+<pre><code><code>@mixin box-shadow($shadow...) {
+  @if length($shadow) &gt;= 1 {
+    @include prefixer(box-shadow, $shadow);
+  } @else{
+    $shadow:0 0 4px rgba(0,0,0,.3);
+    @include prefixer(box-shadow, $shadow);
+  }
+}</code></pre>
+<blockquote>
+<p>这个 box-shadow 的混合宏，带有多个参数，这个时候可以使用“ … ”来替代。简单的解释一下，当 $shadow 的参数数量值大于或等于“ 1 ”时，表示有多个阴影值，反之调用默认的参数值“ 0 0 4px rgba(0,0,0,.3) ”。</p>
+</blockquote></li>
+<li><p>调用混合宏</p>
+<p><img src="./images/CSS 预处理语言之 Scss 篇14.png" alt="sass-mixin" /></p></li>
+<li><p>混合宏的不足</p>
+<blockquote>
+<p>混合宏在实际编码中给我们带来很多方便之处，特别是对于复用重复代码块。但其最大的不足之处是会生成冗余的代码块。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇15.png" alt="sass-mixin-buzu" /></p>
+<blockquote>
+<p>在调用相同的混合宏时，并不能智能的将相同的样式代码块合并在一起。这也是 Sass 的混合宏最不足之处。</p>
+</blockquote></li>
+</ul>
+<h5 id="扩展继承">4. 扩展/继承</h5>
+<blockquote>
+<p>在 Sass 中是通过关键词 “@extend”来继承已存在的类样式块，从而实现代码的继承。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇16.png" alt="sass-extend" /></p>
+<blockquote>
+<p>在 Sass 中的继承，可以继承类样式块中所有样式代码，而且编译出来的 CSS 会将选择器合并在一起，形成组合选择器。</p>
+</blockquote>
+<h5 id="占位符">5. 占位符</h5>
+<blockquote>
+<p>Sass 中的占位符 %placeholder 功能是一个很强大，很实用的一个功能。<br />
+他可以取代以前 CSS 中的基类造成的代码冗余的情形。<br />
+因为 %placeholder 声明的代码，如果不被 @extend 调用的话，不会产生任何代码。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇17.png" alt="sass-zhanweifu" /></p>
+<blockquote>
+<p>从编译出来的 CSS 代码可以看出，通过 @extend 调用的占位符，编译出来的代码会将相同的代码合并在一起，让你的代码变得更为干净。</p>
+</blockquote>
+<h5 id="混合宏-vs-继承-vs-占位符">6. 混合宏 VS 继承 VS 占位符</h5>
+<ul>
+<li><p>Sass 中的混合宏使用</p>
+<blockquote>
+<p><strong>总结：</strong>编译出来的 CSS 清晰告诉了大家，他不会自动合并相同的样式代码，如果在样式文件中调用同一个混合宏，会产生多个对应的样式代码，造成代码的冗余，这也是 CSSer 无法忍受的一件事情。不过他并不是一无事处，他可以传参数。</p>
+<p><strong>个人建议</strong>：如果你的代码块中<strong>涉及到变量</strong>，建议使用混合宏来创建相同的代码块。</p>
+</blockquote></li>
+<li><p>Sass 中继承</p></li>
+</ul>
+<blockquote>
+<p><strong>总结：</strong>使用继承后，编译出来的 CSS 会将使用继承的代码块合并到一起，通过组合选择器的方式向大家展现。这样编译出来的代码相对于混合宏来说要干净的多，也是 CSSer 期望看到。但是他不能传变量参数。</p>
+<p><strong>个人建议</strong>：如果你的代码块<strong>不需要传任何变量参数</strong>，而且有一个基类已在文件中存在，那么建议使用 Sass 的继承。</p>
+</blockquote>
+<ul>
+<li><p>占位符</p>
+<blockquote>
+<p><strong>总结：</strong>编译出来的 CSS 代码和使用继承基本上是相同，只是不会在代码中生成占位符 mt 的选择器。那么占位符和继承的主要区别的，“占位符是独立定义，不调用的时候是不会在 CSS 中产生任何代码；继承是首先有一个基类存在，不管调用与不调用，基类的样式都将会出现在编译出来的 CSS 代码中。”</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS 预处理语言之 Scss 篇18.png" alt="混合宏 VS 继承 VS 占位符" /></p>
+<h5 id="插值">7. 插值</h5>
+<blockquote>
+<h1 id="section">{}</h1>
+<p>可构建属性、选择器、@extend 中；<br />
+不能在 Sass 变量、@include 中调用。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇19.png" alt="sass-chazhi" /></p>
+<h5 id="注释">8. 注释</h5>
+<ul>
+<li><p>单行注释</p>
+<blockquote>
+<p>类似 JavaScript 的注释方式，使用“//”</p>
+<p>在编译出来的 CSS 中不会显示</p>
+</blockquote></li>
+<li><p>多行注释</p>
+<blockquote>
+<p>类似 CSS 的注释方式，使用 ”/* ”开头，结尾使用 ”*/ ”</p>
+<p>在编译出来的 CSS 显示</p>
+</blockquote></li>
+</ul>
+<h4 id="运算">运算</h4>
+<h5 id="加减">1. 加/减</h5>
+<blockquote>
+<p>携带单位类型要一致。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇20.png" alt="sass-add" /></p>
+<blockquote>
+<p>in 是英寸。8in 即 8英寸。<br />
+1英寸约等于 2.54厘米,1英寸大约是96像素<br />
+width: 20px + 8in;<br />
+8in = 8 * 96px = 768px<br />
+即width = 20px + 768px = 788px;</p>
+</blockquote>
+<h5 id="乘">2. 乘</h5>
+<blockquote>
+<p>进行乘法运算时，两个值单位相同时，只需要为一个数值提供单位即可。</p>
+<p>乘法运算和加法、减法运算一样，在运算中有不同类型的单位时，也将会报错。</p>
+</blockquote>
+<h5 id="除">3. 除</h5>
+<blockquote>
+<p>规则 通 乘法运算，有一个特殊之处：“<strong>/</strong>” 符号在 CSS 中已做为一种符号使用。因此在 Sass 中做除法运算时，直接使用 “/” 符号做为除号时，将不会生效，编译时既得不到我们需要的效果，也不会报错。</p>
+</blockquote>
+<pre><code><code>p {
+    font: 10px/8px;             // 纯 CSS，不是除法运算
+
+    $width: 1000px;
+    width: $width/2;            // 使用了变量，是除法运算
+
+    width: round(1.5)/2;        // 使用了函数，是除法运算
+
+    height: (500px/2);          // 使用了圆括号，是除法运算
+
+    margin-left: 5px + 8px/2px; // 使用了加（+）号，是除法运算
+}</code></pre>
+<p>编译之后</p>
+<pre class="css"><code>p {
+    font: 10px/8px;
+    width: 500px;
+    height: 250px;
+    margin-left: 9px;
+}</code></pre>
+<blockquote>
+<p>如果两个值带有相同的单位值时，除法运算之后会得到一个不带单位的数值。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇21.png" alt="sass-chu" /></p>
+<h5 id="颜色运算">4. 颜色运算</h5>
+<blockquote>
+<p>所有算数运算都支持颜色值，并且是分段运算的。也就是说，红、绿和蓝各颜色分段单独进行运算。<br />
+也能将数字和颜色值 一起运算，<strong>同样也是分段运算的</strong>。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇22.png" alt="sass-yunsuan" /></p>
+<blockquote>
+<p>计算公式为：</p>
+<p>01 + 04 = 05、02 + 05 = 07 和 03 + 06 = 09， 并且被合成。<br />
+01 * 2 = 02、02 * 2 = 04 和 03 * 2 = 06， 并且被合成。</p>
+</blockquote>
+<h5 id="字符运算">5. 字符运算</h5>
+<blockquote>
+<p>在 Sass 中可以通过加法符号“+”来对字符串进行连接。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇23.png" alt="sass-zifuchuan" /></p>
+<blockquote>
+<p>除了在变量中做字符连接运算之外，还可以直接通过 +，把字符连接在一起。</p>
+</blockquote>
+<pre><code><code>div {
+  cursor: e + -resize;
+}
+
+// 编译之后
+div {
+  cursor: e-resize;
+}</code></pre>
+<blockquote>
+<p>注意，如果有引号的字符串被添加了一个没有引号的字符串 （也就是，带引号的字符串在 + 符号左侧）， 结果会是一个有引号的字符串。 同样的，如果一个没有引号的字符串被添加了一个有引号的字符串 （没有引号的字符串在 + 符号左侧）， 结果将是一个没有引号的字符串。</p>
+</blockquote>
+<p><img src="./images/CSS 预处理语言之 Scss 篇24.png" alt="sass-zifuchuan2" /></p>
+<h3 id="附录">附录</h3>
+<p>​ <a href="https://www.imooc.com/learn/311">Sass 教程</a> .</p>
+<p>​ <a href="https://www.sass.hk/">Sass 中文网</a> .</p>
+<p>​ <a href="http://sass.bootcss.com/">Sass 中文文档</a> .</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

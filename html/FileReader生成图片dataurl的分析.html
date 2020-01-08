@@ -1,0 +1,251 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修FileReader生成图片dataurl的分析' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>FileReader生成图片dataurl的分析</center></div><div class='banquan'>原文出处:本文由博客园博主peterzhangsnail提供。<br/>
+原文连接:https://www.cnblogs.com/peterzhangsnail/p/11006163.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#相关代码及html来源百度百科">相关代码及html(来源:百度百科)</a></li>
+        <li><a href="#file-api及filereader简介">File API及FileReader简介</a></li>
+        <li><a href="#结合补充知识进行代码分析">结合补充知识进行代码分析</a></li>
+        <li><a href="#修改尝试-拖曳图片到网页完成转换">修改尝试: 拖曳图片到网页完成转换</a></li>
+        </ul>
+    </div>
+</div>
+<h1 id="相关代码及html来源百度百科">相关代码及html(来源:百度百科)</h1>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;DataUrlBuilder&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;p&gt;利用HTML5的FileReader生成dataurl&lt;/p&gt;
+    &lt;input type=&quot;file&quot; value=&quot;&quot; onchange=&quot;BuildDataUrl(this)&quot; style=&quot;border:1px solid black;width:300px&quot;&gt;
+    &lt;br&gt;
+    &lt;textarea name=&quot;&quot; id=&quot;txtBase64&quot; cols=&quot;50&quot; rows=&quot;30&quot;&gt;&lt;/textarea&gt;
+    &lt;img id=&quot;imgView&quot; src=&quot;&quot; style=&quot;width:300px&quot;&gt;
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        function BuildDataUrl(source){
+            var file = source.files[0];
+            if(window.FileReader){
+                var fr = new FileReader();
+                fr.onloadend = function(e){
+                    document.getElementById(&quot;txtBase64&quot;).value=e.target.result;
+                    document.getElementById(&quot;imgView&quot;).src=e.target.result;
+                };
+                fr.readAsDataURL(file);
+            }
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;html&gt;</code></pre>
+<hr />
+<h1 id="file-api及filereader简介">File API及FileReader简介</h1>
+<p><strong>参考资料</strong></p>
+<p>1.[File接口][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/File" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/File</a>]</p>
+<p>2.[FileReader接口][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/FileReader</a>]</p>
+<p>3.[FileList接口][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/FileList" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/FileList</a>]</p>
+<p>4.[DataTransfer接口][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer</a>]</p>
+<p><strong>总结:</strong></p>
+<p>1.File接口提供文件信息,并允许网页js访问其中内容</p>
+<p>2.File对象的来源可能是:</p>
+<ul>
+<li>input元素上选择文件后返回的 FileList对象(InuputElement.files)</li>
+<li>自由拖放操作生成的 DataTransfer 对象</li>
+<li>来自 HTMLCanvasElement上的 <code>mozGetAsFile</code>() API</li>
+</ul>
+<p>3.FileList对象: File对象的一个列表</p>
+<p>​ 访问方法: FileList[index] 或 FileList.item(index)</p>
+<p>4.FileReader对象允许Web应用程序异步读取存储在用户计算机上的文件（或原始数据缓冲区）的内容,使用 File或 Blob对象指定要读取的文件或数据.</p>
+<p>5.FileReader对象的属性,方法,事件处理:</p>
+<p>属性</p>
+<ul>
+<li><p>FileReader.error(只读): 表示在读取文件时发生的错误</p></li>
+<li><p>FileReader.readyState(只读): 表示<code>FileReader</code>读取状态的数字</p>
+<table>
+<thead>
+<tr class="header">
+<th>常量名</th>
+<th>值</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>EMPTY</td>
+<td>0</td>
+<td>尚未加载任何数据</td>
+</tr>
+<tr class="even">
+<td>LOADING</td>
+<td>1</td>
+<td>数据正在加载中</td>
+</tr>
+<tr class="odd">
+<td>DONE</td>
+<td>2</td>
+<td>已完成全部加载请求</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>FileReader.result(只读): 上一次读取的文件的内容(仅在读取操作完成后才有效，数据的格式取决于使用哪个方法来启动读取操作--这是用FileReader将图片转换为dataurl的关键)</p></li>
+</ul>
+<p>方法</p>
+<ul>
+<li>FileReader.abort(): 中止读取,返回时readyState设为DONE</li>
+<li>FileReader.readAsArrayBuffer(): 读取指定Blob中的内容, 一旦完成, result 属性中保存的将是被读取文件的 ArrayBuffer数据对象</li>
+<li>FileReader.readAsDataURL(): 读取指定Blob中的内容, 一旦完成, result 属性中将包含一个data:URL格式字符串表示所读内容</li>
+<li>FileReader.readAsText(): 读取指定Blob中的内容, 一旦完成, result 属性中将包含一个字符串表示所读内容</li>
+</ul>
+<p>事件</p>
+<table>
+<thead>
+<tr class="header">
+<th>事件</th>
+<th>触发时机</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FileReader.onabort</td>
+<td>读取被中断</td>
+</tr>
+<tr class="even">
+<td>FileReader.onerror</td>
+<td>读取出错</td>
+</tr>
+<tr class="odd">
+<td>FileReader.onload</td>
+<td>读取成功</td>
+</tr>
+<tr class="even">
+<td>FileReader.onloadstart</td>
+<td>开始读取时</td>
+</tr>
+<tr class="odd">
+<td>FileReader.onloadend</td>
+<td>读取完毕(成功/失败)</td>
+</tr>
+<tr class="even">
+<td>FileReader.onprogress</td>
+<td>读取过程中</td>
+</tr>
+</tbody>
+</table>
+<p>注:FileReader继承自EventTarget，所以所有这些事件也可以通过addEventListener方法使用。</p>
+<hr />
+<h1 id="结合补充知识进行代码分析">结合补充知识进行代码分析</h1>
+<pre><code><code>&lt;input type=&quot;file&quot; value=&quot;&quot; onchange=&quot;BuildDataUrl(this)&quot; style=&quot;border:1px solid black;width:300px&quot;&gt;</code></pre>
+<p>用input元素(type为file),通过选择文件获取File对象列表并为之绑定onchange事件.当选择文件时,input输入域内容改变,调用dataurl的产生函数BuildDataUrl()</p>
+<pre class="javascript"><code>function BuildDataUrl(source){
+            var file = source.files[0]; //通过input的files属性获取选择的文件对应的File对象
+            if(window.FileReader){ //浏览器支持检测
+                var fr = new FileReader(); //构造一个FileReader对象fr
+                fr.onloadend = function(e){ //为fr对象绑定onloadend事件(当文件读取完毕时触发,此时result已经获取了加载内容)
+                    document.getElementById(&quot;txtBase64&quot;).value=e.target.result; //e.target等同于this
+                    document.getElementById(&quot;imgView&quot;).src=e.target.result;
+                };
+                fr.readAsDataURL(file); //以data:URL格式读取选择的文件,读取完毕时触发fr的onloadend事件
+            }
+        }</code></pre>
+<hr />
+<h1 id="修改尝试-拖曳图片到网页完成转换">修改尝试: 拖曳图片到网页完成转换</h1>
+<p>1.实质: 修改File对象的来源及输入方式</p>
+<p>2.知识补充:</p>
+<p>[DataTransfer接口][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/DataTransfer</a>]</p>
+<p>[html拖放API][<a href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_Drag_and_Drop_API" class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/HTML_Drag_and_Drop_API</a>]</p>
+<p>[html5拖放][<a href="http://www.w3school.com.cn/html5/html_5_draganddrop.asp" class="uri">http://www.w3school.com.cn/html5/html_5_draganddrop.asp</a>]</p>
+<p><strong>总结:</strong></p>
+<p>​ 1.DataTransfer对象: 在进行拖放操作时,用来保存,通过拖放动作,拖动到浏览器的数据。它可以保存一项或多项数据、一种或者多种数据类型。</p>
+<p>我们用到的属性: files--拖动文件时的有效文件列表(不涉及文件拖动时,此列表为空)</p>
+<p>​ 2.DataTransfer对象的获取: 在拖动事件的事件对象event中的dataTransfer属性中保存</p>
+<p>​ 3.拖放操作涉及的步骤:</p>
+<ul>
+<li>设置元素为可拖放(draggable 属性设置为 true)</li>
+<li>拖动什么 - ondragstart 和 setData()设置被拖数据</li>
+<li>放到何处 - ondragover(需要取消事件的默认操作)</li>
+<li>进行放置及数据处理 - ondrop(需要取消事件的默认操作)</li>
+</ul>
+<p>3.我们本次尝试只涉及到最后两步,代码如下:</p>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;DataUrlBuilder&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;p&gt;利用HTML5的FileReader生成dataurl&lt;/p&gt;
+    
+    &lt;div style=&quot;width:300px;height:100px;border:1px solid black;text-align:center;&quot; ondragover=&quot;allowDrop(event)&quot; ondrop=&quot;drop(event)&quot;&gt;拖曳图片到此处完成转换&lt;/div&gt;
+    
+    &lt;img id=&quot;imgView&quot; src=&quot;&quot; style=&quot;width:300px&quot; alt=&quot;图片预览&quot;&gt;
+
+    &lt;textarea name=&quot;&quot; id=&quot;txtBase64&quot; cols=&quot;50&quot; rows=&quot;30&quot;&gt;&lt;/textarea&gt;
+    
+    &lt;script type=&quot;text/javascript&quot;&gt;
+        function BuildDataUrl(source){
+            var file = source.files[0];
+            if(window.FileReader){
+                var fr = new FileReader();
+                fr.onloadend = function(e){
+                    document.getElementById(&quot;txtBase64&quot;).value=this.result;
+                    document.getElementById(&quot;imgView&quot;).src=this.result;
+                };
+                fr.readAsDataURL(file);
+            }
+        }
+
+        function allowDrop(event){
+            event.preventDefault();
+        }
+
+        function drop(event){
+            event.preventDefault();
+            BuildDataUrl(event.dataTransfer);
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<p>4.代码分析:</p>
+<ul>
+<li>div元素设置被拖动文件的放置区
+<ul>
+<li>绑定事件ondragover来允许文件的放置(取消事件默认行为)</li>
+<li>绑定事件ondrop来进行文件放置后的数据转处理</li>
+</ul></li>
+<li>img元素设置图片的预览区</li>
+<li>script元素--js代码:
+<ul>
+<li>函数BuildDataUrl()保持不变</li>
+<li>函数allowDrop()--ondragover事件的触发函数</li>
+<li>函数drop()--ondrop事件的触发函数: 通过event.dataTransfer属性获取DataTransfer对象,并以之作为参数调用BuildDataUrl函数</li>
+</ul></li>
+</ul>
+<hr />
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

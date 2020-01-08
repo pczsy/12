@@ -1,0 +1,123 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修TweenMax—ScrambleText插件 实现类似电脑破译密码的特效' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>TweenMax—ScrambleText插件 实现类似电脑破译密码的特效</center></div><div class='banquan'>原文出处:本文由博客园博主YJZJZQA提供。<br/>
+原文连接:https://www.cnblogs.com/YJZJZQA/p/11179430.html</div><br>
+    <blockquote>
+<h4>首先贴一下TweenMax的中文网：<a href="https://www.tweenmax.com.cn/">https://www.tweenmax.com.cn/</a></h4>
+</blockquote>
+<blockquote>
+<p><span style="font-family: 宋体; font-size: 18pt;"><strong>首先先展示一下最后的效果，需要的就继续看下去：</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18pt;"><strong><img src="./images/TweenMax—ScrambleText插件 实现类似电脑破译密码的特效0.png" alt="" /></strong></span></p>
+<p><img src="./images/TweenMax—ScrambleText插件 实现类似电脑破译密码的特效1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><strong>那团乱码是会一直变的</strong></p>
+<p><strong>那么如何实现上图的效果呢？？？</strong></p>
+<p><strong>其实就是运用了TweenMax的插件<em>ScrambleTextPlugin（在这个页面可以下载：<a href="https://www.tweenmax.com.cn/source/">https://www.tweenmax.com.cn/source/</a>）</em></strong></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>代码如下：</strong></p>
+<p><span style="font-size: 18pt;"><strong>JS</strong></span></p>
+<div class="cnblogs_code">
+<pre><code>$(document).ready(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">var</span> tl = <span style="color: #0000ff;">new</span><span style="color: #000000;"> TimelineLite();
+    tl.to(</span>"#scramble1",3,{delay:2<span style="color: #000000;">})//<span style="color: #ff0000;">这边的delay就是用来做延迟显示的，也可以去掉的。用scrambleText这个插件的意义其实就是：当第一个动画结束之后，第二个动画才会开始，所以应该是去避免使用delay属性的</span>
+      .to(</span>"#scramble1",8,{scrambleText:{text:"{original}", chars:"upperAndLowerCase", revealDelay:0.5, tweenLength:<span style="color: #0000ff;">true</span>, newClass:"class2", oldClass:"class1",speed:10,delimiter:""<span style="color: #000000;">}, ease:Linear.easeNone})
+      .to(</span>"#scramble2",3,{delay:2<span style="color: #000000;">}) 
+      .to(</span>"#scramble2",8,{scrambleText:{text:"{original}", chars:"upperAndLowerCase", revealDelay:0.5, tweenLength:<span style="color: #0000ff;">true</span>, newClass:"class2", oldClass:"class1",speed:10,delimiter:""<span style="color: #000000;">}, ease:Linear.easeNone})
+      .to(</span>"#scramble3",3,{delay:2<span style="color: #000000;">})
+      .to(</span>"#scramble3",8,{scrambleText:{text:"{original}", chars:"upperAndLowerCase", revealDelay:0.5, tweenLength:<span style="color: #0000ff;">true</span>, newClass:"class2", oldClass:"class1",speed:10,delimiter:""<span style="color: #000000;">}, ease:Linear.easeNone})
+      .to(</span>"#scramble4",3,{delay:2<span style="color: #000000;">})
+      .to(</span>"#scramble4",8,{scrambleText:{text:"{original}", chars:"upperAndLowerCase", revealDelay:0.5, tweenLength:<span style="color: #0000ff;">true</span>, newClass:"class2", oldClass:"class1",speed:10,delimiter:""<span style="color: #000000;">}, ease:Linear.easeNone});
+})<br /><br /></span></pre>
+</div>
+<p><span style="font-size: 16px; color: #ff0000;"><strong>相应的参数如下图所示：</strong></span></p>
+<p><img src="./images/TweenMax—ScrambleText插件 实现类似电脑破译密码的特效2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="color: #000000;"><strong><span style="background-color: initial; font-size: 18pt;">HTML&nbsp;</span></strong></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>  
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="IE=edge,chrome=1"</span><span style="color: #0000ff;">&gt;</span> 
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="keywords"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="twelve"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Chat<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://code.jquery.com/jquery-3.3.1.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/chatting_room.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/ScrambleTextPlugin.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;<br /><br /></span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="css/chatting_room.css"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body </span><span style="color: #ff0000;">onselectstart</span><span style="color: #0000ff;">="return false"</span><span style="color: #ff0000;"> oncontextmenu</span><span style="color: #0000ff;">=self.event.returnValue=false</span><span style="color: #0000ff;">&gt;</span><span style="color: #008000;">&lt;!----&gt;</span>
+        
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="scramble1"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            Hel..hello... can u see me?? Okk, listen ...press F11, better to look...
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="scramble2"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            Well.. I'm twelve, glad tooooooooo see u...
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="scramble3"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            And...Sorry  This page is developing...and I don't know what ... what this page will be...  
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="scramble4"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+            (end... :-)  
+        </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="js/ScrambleTextPlugin.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18pt;"><strong><span style="color: #000000;">CSS</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">body {
+    background</span>-color: rgb(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+}
+div {
+    font</span>-size: <span style="color: #800080;">60</span>%<span style="color: #000000;">;
+}
+.class1 {
+    background</span>-color: rgb(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    color: rgb(</span><span style="color: #800080;">21</span>, <span style="color: #800080;">170</span>, <span style="color: #800080;">8</span><span style="color: #000000;">);
+}
+.class2 {
+    background</span>-color: rgb(<span style="color: #800080;">0</span>, <span style="color: #800080;">0</span>, <span style="color: #800080;">0</span><span style="color: #000000;">);
+    color: rgb(</span><span style="color: #800080;">28</span>, <span style="color: #800080;">224</span>, <span style="color: #800080;">10</span><span style="color: #000000;">);
+    font</span>-family: Arial, Helvetica, sans-<span style="color: #000000;">serif;
+
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p><strong>结束疗~ 如果有错误或者需要改进的欢迎在评论区留言，我会尽快回复和改正的！谢谢浏览~</strong></p>
+<p><strong>或者html/css/js 的结构写的不漂亮的话也欢迎大家指出来！谢谢！</strong></p>
+<p>&nbsp;</p>
+</blockquote>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

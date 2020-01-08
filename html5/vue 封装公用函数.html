@@ -1,0 +1,329 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue 封装公用函数' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue 封装公用函数</center></div><div class='banquan'>原文出处:本文由博客园博主腾坤提供。<br/>
+原文连接:https://www.cnblogs.com/FGang/p/11124070.html</div><br>
+    <p style="text-align: center;"><span style="font-size: 18px;"><strong>Vue 函数封装</strong></span></p>
+<ol>
+<li>&nbsp;格式化浏览器时间
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 格式化时间
+ * @param params
+ * @param blo 默认为true
+ * @returns {string}
+ * @constructor 冯刚 2019年6月12日11点01分
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function TimeConversion(</span><span style="color: #0000ff;">params</span>,blo=<span style="color: #0000ff;">true</span><span style="color: #000000;">){
+    </span><span style="color: #0000ff;">var</span> stamp = Date.parse(<span style="color: #0000ff;">params</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> newDate= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date(stamp);
+    </span><span style="color: #0000ff;">var</span> year =<span style="color: #000000;"> newDate.getFullYear();
+    </span><span style="color: #0000ff;">var</span> month = newDate.getMonth() + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> date =<span style="color: #000000;"> newDate.getDate();
+    </span><span style="color: #0000ff;">var</span> h =<span style="color: #000000;"> newDate.getHours();
+    </span><span style="color: #0000ff;">var</span> m =<span style="color: #000000;"> newDate.getMinutes();
+    </span><span style="color: #0000ff;">var</span> s =<span style="color: #000000;"> newDate.getSeconds();
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(blo)
+        </span><span style="color: #0000ff;">return</span> year + <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> + getNow(month) + <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> getNow(date);
+    </span><span style="color: #0000ff;">return</span> year + <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> + getNow(month) + <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> + getNow(date) + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> + getNow(h) + <span style="color: #800000;">'</span><span style="color: #800000;">:</span><span style="color: #800000;">'</span> + getNow(m) + <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> getNow(s);
+
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>校验字符串最后是否存在斜杠
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 验证最后是否有反斜杠
+ * @param value
+ * @returns {*}
+ * @constructor 冯刚 2019年6月12日
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function Verification(value) {
+    </span><span style="color: #0000ff;">if</span> (value.length &gt; <span style="color: #800080;">0</span> &amp;&amp; value !== <span style="color: #800000;">''</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> str = value.substr(value.length - <span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+        </span><span style="color: #0000ff;">if</span> (str !== <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span> &amp;&amp; str !== <span style="color: #800000;">''</span><span style="color: #000000;">) {
+            value </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> value;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>字符串加密
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 加密
+ * @param code 要加密的字符串
+ * @returns {string}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function compileStr(code) {
+    </span><span style="color: #0000ff;">var</span> c = String.fromCharCode(code.charCodeAt(<span style="color: #800080;">0</span>) +<span style="color: #000000;"> code.length);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = <span style="color: #800080;">1</span>; i &lt; code.length; i++<span style="color: #000000;">) {
+        c </span>+= String.fromCharCode(code.charCodeAt(i) + code.charCodeAt(i - <span style="color: #800080;">1</span><span style="color: #000000;">));
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> escape(c);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>字符串解密
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 解密
+ * @param code 要解密的字符串
+ * @returns {string}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function uncompileStr(code) {
+    code </span>=<span style="color: #000000;"> unescape(code);
+    </span><span style="color: #0000ff;">var</span> c = String.fromCharCode(code.charCodeAt(<span style="color: #800080;">0</span>) -<span style="color: #000000;"> code.length);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = <span style="color: #800080;">1</span>; i &lt; code.length; i++<span style="color: #000000;">)
+        c </span>+= String.fromCharCode(code.charCodeAt(i) - c.charCodeAt(i - <span style="color: #800080;">1</span><span style="color: #000000;">));
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> c;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>根据key获取浏览器地址后参数
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * js获取url传递指定参数,解决url中带中文乱码的问题(根据key获取value)
+ * @param key
+ * @returns {string|null}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function getQueryString(key) {
+    </span><span style="color: #0000ff;">var</span> reg = <span style="color: #0000ff;">new</span> RegExp(<span style="color: #800000;">"</span><span style="color: #800000;">(^|&amp;)</span><span style="color: #800000;">"</span> + key + <span style="color: #800000;">"</span><span style="color: #800000;">=([^&amp;]*)(&amp;|$)</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">i</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> r = window.location.search.substr(<span style="color: #800080;">1</span><span style="color: #000000;">).match(reg);
+    </span><span style="color: #0000ff;">if</span> (r !== <span style="color: #0000ff;">null</span>) <span style="color: #0000ff;">return</span> decodeURI(r[<span style="color: #800080;">2</span>]); <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>文本框非空校验，文本框添加红色样式
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 文本框非空验证
+ * @param type 自定义类型(.或#)
+ * @param name 页面中自定义类型名称
+ * @author 冯刚 2019年6月12日
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function isNotNull(type, name) {
+    </span><span style="color: #0000ff;">var</span> temp, <span style="color: #0000ff;">select</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> isNull = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (checkValue(type, name))
+        isNull </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    temp </span>= type +<span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isNull)
+        $($(temp)).each(function () {
+            </span><span style="color: #0000ff;">var</span> _this = $(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+            _this </span>=<span style="color: #000000;"> reductionStyle(_this);
+            temp </span>= _this.children(<span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span><span style="color: #000000;">).val();
+            </span><span style="color: #0000ff;">select</span> = _this.children(<span style="color: #800000;">'</span><span style="color: #800000;">div</span><span style="color: #800000;">'</span>).children(<span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span><span style="color: #000000;">).val();
+            </span><span style="color: #0000ff;">if</span> (temp === <span style="color: #800000;">''</span> || temp === <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                isNull </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                _this.children(</span><span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span>).css(<span style="color: #800000;">'</span><span style="color: #800000;">border</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">solid red 1px</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            }
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">select</span> === <span style="color: #800000;">''</span> || <span style="color: #0000ff;">select</span> === <span style="color: #0000ff;">null</span><span style="color: #000000;">) {
+                isNull </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                _this.children(</span><span style="color: #800000;">'</span><span style="color: #800000;">div</span><span style="color: #800000;">'</span>).children(<span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span>).css(<span style="color: #800000;">'</span><span style="color: #800000;">border</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">solid red 1px</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+            }
+        });
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> isNull;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>重置初始化样式
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 重置初始化样式
+ * @param type
+ * @param name
+ * @returns {boolean}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function resetStyle(type, name) {
+    </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> temp;
+    </span><span style="color: #0000ff;">var</span> isBool = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (checkValue(type, name))
+        isBool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    temp </span>= type +<span style="color: #000000;"> name;
+    </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">isBool)
+        $($(temp)).each(function () {
+            </span><span style="color: #0000ff;">var</span> _this = $(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+            _this </span>=<span style="color: #000000;"> reductionStyle(_this);
+            isBool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        });
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> isBool;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>数据封装成 data 对象，并且去除空格
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 封装数据
+ * @param data 数据对象(用于添加修改)部分可用
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function packData(data){
+    </span><span style="color: #0000ff;">var</span> vmData=<span style="color: #000000;">{};
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> o <span style="color: #0000ff;">in</span><span style="color: #000000;"> data) {
+        </span><span style="color: #0000ff;">if</span> (data[o] !== <span style="color: #0000ff;">null</span> &amp;&amp;<span style="color: #000000;"> data[o] instanceof Array)
+            vmData[o]</span>=<span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">typeof</span> data[o] === <span style="color: #800000;">'</span><span style="color: #800000;">string</span><span style="color: #800000;">'</span> &amp;&amp; data[o].length &gt; <span style="color: #800080;">0</span><span style="color: #000000;">)
+                vmData[o]</span>=<span style="color: #000000;">data[o].trim();
+            </span><span style="color: #0000ff;">else</span><span style="color: #000000;">
+                vmData[o]</span>=<span style="color: #000000;">data[o];
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vmData;
+}</span></pre>
+</div>
+<p>&nbsp;&nbsp;&nbsp;</p>
+</li>
+<li>动态绑定数据
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 动态赋值（用于查看编辑）
+ * @param orgObj
+ * @param newObj
+ * @returns {*}
+ * @constructor fg 2019年6月12日
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function AssignmentObject(orgObj, newObj){
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> o <span style="color: #0000ff;">in</span><span style="color: #000000;"> orgObj) {
+        </span><span style="color: #0000ff;">if</span> (!(orgObj[o] !== <span style="color: #0000ff;">null</span> &amp;&amp;<span style="color: #000000;"> orgObj[o] instanceof Array))
+        {
+            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> n <span style="color: #0000ff;">in</span><span style="color: #000000;"> newObj){
+                </span><span style="color: #0000ff;">if</span>(o==<span style="color: #000000;">n){
+                    orgObj[o]</span>=<span style="color: #000000;">newObj[n];
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                }
+            }
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> orgObj;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>清空文本框内容，重置内容
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 按钮重置内容
+ * @param data
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function clearContent(data) {
+    </span><span style="color: #0000ff;">var</span> v_data =<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> o <span style="color: #0000ff;">in</span><span style="color: #000000;"> data) {
+        </span><span style="color: #0000ff;">if</span> (data[o] !== <span style="color: #0000ff;">null</span> &amp;&amp;<span style="color: #000000;"> data[o] instanceof Array)
+            v_data[o] </span>=<span style="color: #000000;"> data[o];
+        </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            v_data[o] </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> v_data;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>部分函数校验
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 内部引用 还原样式
+ * @param obj
+ * @returns {*}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function reductionStyle(obj) {
+    obj.children(</span><span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span>).css(<span style="color: #800000;">'</span><span style="color: #800000;">border</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1px solid #dcdfe6</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    obj.children(</span><span style="color: #800000;">'</span><span style="color: #800000;">div</span><span style="color: #800000;">'</span>).children(<span style="color: #800000;">'</span><span style="color: #800000;">input</span><span style="color: #800000;">'</span>).css(<span style="color: #800000;">'</span><span style="color: #800000;">border</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">1px solid #dcdfe6</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> obj;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 内部引用 检测选择器以及类型名称是否输入全
+ * @param key
+ * @param value
+ * @returns {boolean}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function checkValue(key, value) {
+    </span><span style="color: #0000ff;">var</span> isBool = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (isCheck(key) &amp;&amp;<span style="color: #000000;"> isCheck(value)) {
+        isBool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        alert(</span><span style="color: #800000;">'</span><span style="color: #800000;">请检查选择器类型及名称</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isCheck(key)) {
+        isBool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        alert(</span><span style="color: #800000;">'</span><span style="color: #800000;">选择器类型不能为空:(./#)</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isCheck(value)) {
+        isBool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        alert(</span><span style="color: #800000;">'</span><span style="color: #800000;">选择器名称不能为空</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> isBool;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 内部引用 校验值是否为空
+ * @param value
+ * @returns {boolean}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function isCheck(value) {
+    value </span>=<span style="color: #000000;"> value.trim();
+    </span><span style="color: #0000ff;">if</span> (value === <span style="color: #0000ff;">null</span> || value === <span style="color: #800000;">''</span> || value === <span style="color: #800000;">'</span><span style="color: #800000;">undefined</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+        </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>获取当前时间
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 校验时间
+ * @param s
+ * @returns {string}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function getNow(s) {
+    </span><span style="color: #0000ff;">return</span> s &lt; <span style="color: #800080;">10</span> ? <span style="color: #800000;">'</span><span style="color: #800000;">0</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> s : s;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">*
+ * 获取当前时间
+ * @returns {string}
+ </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+function getDate() {
+    </span><span style="color: #0000ff;">var</span> myDate = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Date();
+    </span><span style="color: #0000ff;">var</span> year =<span style="color: #000000;"> myDate.getFullYear();
+    </span><span style="color: #0000ff;">var</span> month = myDate.getMonth() + <span style="color: #800080;">1</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> date =<span style="color: #000000;"> myDate.getDate();
+    </span><span style="color: #0000ff;">var</span> h =<span style="color: #000000;"> myDate.getHours();
+    </span><span style="color: #0000ff;">var</span> m =<span style="color: #000000;"> myDate.getMinutes();
+    </span><span style="color: #0000ff;">var</span> s =<span style="color: #000000;"> myDate.getSeconds();
+    </span><span style="color: #0000ff;">return</span> year + <span style="color: #800000;">'</span><span style="color: #800000;">-</span><span style="color: #800000;">'</span> + getNow(month) + <span style="color: #800000;">"</span><span style="color: #800000;">-</span><span style="color: #800000;">"</span> + getNow(date) + <span style="color: #800000;">"</span> <span style="color: #800000;">"</span> + getNow(h) + <span style="color: #800000;">'</span><span style="color: #800000;">:</span><span style="color: #800000;">'</span> + getNow(m) + <span style="color: #800000;">"</span><span style="color: #800000;">:</span><span style="color: #800000;">"</span> +<span style="color: #000000;"> getNow(s);
+}</span></pre>
+</div>
+<p>&nbsp;作者地址：<a href="https://www.cnblogs.com/FGang/p/11124070.html">https://www.cnblogs.com/FGang/p/11124070.html</a></p>
+</li>
+</ol>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

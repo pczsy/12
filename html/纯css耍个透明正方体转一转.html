@@ -1,0 +1,146 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修纯css耍个透明正方体转一转' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>纯css耍个透明正方体转一转</center></div><div class='banquan'>原文出处:本文由博客园博主柏大乖要乖呀提供。<br/>
+原文连接:https://www.cnblogs.com/zuoWendong/p/11557350.html</div><br>
+    <h3>效果</h3>
+<p>效果图如下</p>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_image cke_image_nocaption cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="图像" data-cke-widget-id="6">
+<p class="cke_widget_element" data-cke-widget-data="{&amp;quot;hasCaption&amp;quot;:false,&amp;quot;src&amp;quot;:&amp;quot;./images/纯css耍个透明正方体转一转0.png&amp;quot;,&amp;quot;alt&amp;quot;:&amp;quot;&amp;quot;,&amp;quot;width&amp;quot;:&amp;quot;415&amp;quot;,&amp;quot;height&amp;quot;:&amp;quot;299&amp;quot;,&amp;quot;lock&amp;quot;:true,&amp;quot;align&amp;quot;:&amp;quot;center&amp;quot;,&amp;quot;classes&amp;quot;:{&amp;quot;has&amp;quot;:1}}" data-cke-widget-upcasted="1" data-cke-widget-keep-attr="0" data-widget="image"><span class="cke_image_resizer_wrapper"><img class="has" src="./images/纯css耍个透明正方体转一转0.png" alt="" width="415" height="299" data-cke-saved-src="./images/纯css耍个透明正方体转一转0.png" /><span class="cke_image_resizer" title="点击并拖拽以改变尺寸">​</span></span></p>
+<span class="cke_reset cke_widget_drag_handler_container"><img class="cke_reset cke_widget_drag_handler" title="点击并拖拽以移动" src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="" width="15" height="15" data-cke-widget-drag-handler="1" /></span></div>
+<h3>实现思路</h3>
+<ol>
+<li>定义一个最外层的容器，用来控制显示的位置</li>
+<li>定义一个父容器，用来设置元素被查看位置的视图，这里使用到CSS3的perspective 属性</li>
+<li>定义子容器，设置为相对定位，利用transform-style属性，使被转换的子元素保留其 3D 转换</li>
+<li>定义6个div，构成正方体的6个面</li>
+</ol>
+<h3>dom结构</h3>
+<p>按照实现思路，我们需要如下的dom结构</p>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="5">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="cube-wrap"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="cube"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="front"</span><span style="color: #0000ff;">&gt;</span>front<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="back"</span><span style="color: #0000ff;">&gt;</span>back<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="top"</span><span style="color: #0000ff;">&gt;</span>top<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="bottom"</span><span style="color: #0000ff;">&gt;</span>bottom<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 1.17em;">css样式</span></p>
+</div>
+<p>1、最外层容器样式</p>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="4">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.container</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 250px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 250px</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 250px auto</span>;
+}</pre>
+</div>
+<p>2、父容器设置perspective 属性</p>
+</div>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="3">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.cube-wrap</span>{<span style="color: #ff0000;">
+    perspective</span>:<span style="color: #0000ff;"> 800px</span>;<span style="color: #ff0000;">
+    perspective-origin</span>:<span style="color: #0000ff;"> 50% 100px</span>;
+}</pre>
+</div>
+<p>3、子容器设置transform-style属性，同时子容器有控制着正方体旋转的动画</p>
+</div>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="2">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.cube</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;"> 0 auto</span>;<span style="color: #ff0000;">
+    transform-style</span>:<span style="color: #0000ff;"> preserve-3d</span>;<span style="color: #ff0000;">
+    animation</span>:<span style="color: #0000ff;"> cube-spin 5s infinite linear</span>; 
+}<span style="color: #800000;">
+
+@keyframes cube-spin</span>{<span style="color: #ff0000;">
+    from{
+        transform</span>:<span style="color: #0000ff;"> rotateY(0)</span>;
+    }<span style="color: #800000;">
+    to</span>{<span style="color: #ff0000;">
+        transform</span>:<span style="color: #0000ff;"> rotateY(360deg)</span>;
+    }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>4、正方体6个面的样式</p>
+</div>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="1">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.cube div</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+    background</span>:<span style="color: #0000ff;"> rgba(255,255,255,0.1)</span>;<span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;"> inset 0 0 30px rgba(125,125,125,0.8)</span>;<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 20px</span>;<span style="color: #ff0000;">
+    text-align</span>:<span style="color: #0000ff;"> center</span>;<span style="color: #ff0000;">
+    line-height</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> rgba(0,0,0,0.5)</span>;<span style="color: #ff0000;">
+    text-transform</span>:<span style="color: #0000ff;"> uppercase</span>;
+}</pre>
+</div>
+<p>5、将6个面分别进行位置的变换转移，构成一个正方体</p>
+</div>
+<div class="cke_widget_wrapper cke_widget_block cke_widget_codeSnippet cke_widget_wrapper_has cke_widget_selected" data-cke-widget-wrapper="1" data-cke-filter="off" data-cke-display-name="代码段" data-cke-widget-id="0">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.front</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> translateZ(100px)</span>;
+}<span style="color: #800000;">
+
+.back</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> rotateY(180deg) translateZ(100px)</span>;
+}<span style="color: #800000;">
+
+.top</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> rotateX(-90deg) translateY(-100px)</span>;<span style="color: #ff0000;">
+    transform-origin</span>:<span style="color: #0000ff;"> top center</span>;
+}<span style="color: #800000;">
+
+.bottom</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> rotateX(90deg) translateY(100px)</span>;<span style="color: #ff0000;">
+    transform-origin</span>:<span style="color: #0000ff;"> bottom center</span>;
+}<span style="color: #800000;">
+
+.left</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> rotateY(270deg) translateX(-100px)</span>;<span style="color: #ff0000;">
+    transform-origin</span>:<span style="color: #0000ff;"> center left</span>;
+}<span style="color: #800000;">
+
+.right</span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> rotateY(-270deg) translateX(100px)</span>;<span style="color: #ff0000;">
+    transform-origin</span>:<span style="color: #0000ff;"> top right</span>;
+}</pre>
+</div>
+<p>搞定，逻辑很清晰有没有，跟着实现一遍，你也可以画出超酷炫的透明正方体咯~</p>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

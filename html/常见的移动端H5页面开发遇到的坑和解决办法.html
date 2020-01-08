@@ -1,0 +1,657 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修常见的移动端H5页面开发遇到的坑和解决办法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>常见的移动端H5页面开发遇到的坑和解决办法</center></div><div class='banquan'>原文出处:本文由博客园博主如若菇凉提供。<br/>
+原文连接:https://www.cnblogs.com/ruruo/p/11325479.html</div><br>
+    <h1 class="postTitle">&nbsp;</h1>
+<div class="postBody">
+<div id="cnblogs_post_body" class="blogpost-body ">
+<p>转过来，平时看看。虽然还有很多问题至今无解。比如：华为麒麟950的P8和meta打开我们的应用首页经常偶发白屏。！！</p>
+<p>1、安卓浏览器看背景图片，有些设备会模糊。</p>
+<p>&nbsp;</p>
+<p>用同等比例的图片在PC机上很清楚，但是手机上很模糊，原因是什么呢？</p>
+<p>&nbsp;</p>
+<p>经过研究，是devicePixelRatio作怪，因为手机分辨率太小，如果按照分辨率来显示网页，这样字会非常小，所以苹果当初就把iPhone 4的960640分辨率，在网页里只显示了480320，这样devicePixelRatio＝2。现在android比较乱，有1.5的，有2的也有3的。</p>
+<p>&nbsp;</p>
+<p>想让图片在手机里显示更为清晰，必须使用2x的背景图来代替img标签（一般情况都是用2倍）。例如一个div的宽高是100100，背景图必须得200200，然后background-size:contain;，这样显示出来的图片就比较清晰了。</p>
+<p>&nbsp;</p>
+<p>代码如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>background:url(../images/icon/all.png)&nbsp;no-repeat center center;</code></p>
+<p><code>-webkit-background-size:50px&nbsp;50px;</code></p>
+<p><code>background-size:&nbsp;50px&nbsp;50px;display:inline-block;&nbsp;width:100%;&nbsp;height:50px;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>或者指定 background-size:contain;都可以，大家试试！</p>
+<p>&nbsp;</p>
+<p>2、图片加载</p>
+<p>&nbsp;</p>
+<p>若您遇到图片加载很慢的问题，对这种情况，手机开发一般用canvas方法加载：</p>
+<p>&nbsp;</p>
+<p>具体的canvas API 参见：http://javascript.ruanyifeng.com/htmlapi/canvas.html</p>
+<p>&nbsp;</p>
+<p>下面举例说明一个canvas的例子：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;li&gt;&lt;canvas&gt;&lt;/canvas&gt;&lt;/li&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>js动态加载图片和li 总共举例17张图片！</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>var&nbsp;total=17;</code></p>
+<p><code>var&nbsp;zWin=$(window);</code></p>
+<p><code>var&nbsp;render=function(){</code></p>
+<p><code>&nbsp;var&nbsp;padding=2;</code></p>
+<p><code>&nbsp;var&nbsp;winWidth=zWin.width();</code></p>
+<p><code>&nbsp;var&nbsp;picWidth=Math.floor((winWidth-padding*3)/4);</code></p>
+<p><code>&nbsp;var&nbsp;tmpl&nbsp;='';</code></p>
+<p><code>&nbsp;for&nbsp;(var&nbsp;i=1;i&lt;=totla;i++){</code></p>
+<p><code>&nbsp;var&nbsp;p=padding;</code></p>
+<p><code>&nbsp;var&nbsp;imgSrc='img/'+i+'.jpg';</code></p>
+<p><code>&nbsp;if(i%4==1){</code></p>
+<p><code>&nbsp; p=0;</code></p>
+<p><code>&nbsp;}</code></p>
+<p><code>&nbsp;tmpl&nbsp;+='&lt;li style="width:'+picWidth+'px;height:'+picWidth+'px;padding-left:'+p+'px;padding-top:'+padding+'px;"&gt;&lt;canvas id="cvs_'+i+'"&gt;&lt;/canvas&gt;&lt;/li&gt;';</code></p>
+<p><code>&nbsp;var&nbsp;imageObj&nbsp;=&nbsp;new&nbsp;Image();</code></p>
+<p><code>&nbsp;imageObj.index&nbsp;=&nbsp;i;</code></p>
+<p><code>&nbsp;imageObj.onload&nbsp;=&nbsp;function(){</code></p>
+<p><code>&nbsp; &nbsp;var&nbsp;cvs&nbsp;=$('#cvs_'+this.index)[0].getContext('2d');</code></p>
+<p><code>&nbsp; &nbsp;cvs.width&nbsp;=&nbsp;this.width;</code></p>
+<p><code>&nbsp; &nbsp;cvs.height=this.height;</code></p>
+<p><code>&nbsp; &nbsp;cvs.drawImage(this,0,0);</code></p>
+<p><code>&nbsp;}</code></p>
+<p><code>&nbsp;imageObj.src=imgSrc;</code></p>
+<p><code>&nbsp;}</code></p>
+<p>&nbsp;</p>
+<p><code>}</code></p>
+<p><code>render();</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>3、假如手机网站不用兼容IE浏览器，一般我们会使用zeptojs。</p>
+<p>&nbsp;</p>
+<p>zeptojs内置Touch events方法，具体可以看http://zeptojs.com/#Touch events</p>
+<p>&nbsp;</p>
+<p>看了一下zeptio新版的API，已经支持IE10以上浏览器，对zeptojs可以选择使用！</p>
+<p>&nbsp;</p>
+<p>4、防止手机中网页放大和缩小。</p>
+<p>&nbsp;</p>
+<p>这点是最基本的，最为手机网站开发者来说应该都知道的，就是设置meta中的viewport</p>
+<p>&nbsp;</p>
+<p>还有就是，有些手机网站我们看到如下声明：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>设置了DTD的方式是XHTML的写法，假如我们页面运用的是html5，可以不用设置DTD,直接声明&lt;!DOCTYPE html&gt;。</p>
+<p>&nbsp;</p>
+<p>使用viewport使页面禁止缩放。 通常把user-scalable设置为0来关闭用户对页面视图缩放的行为</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="viewport"&nbsp;content="user-scalable=0"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>但是为了更好的兼容，我们会使用完整的viewport设置。</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="viewport"&nbsp;content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>当然，user-scalable=0,有的人也写成user-scalable=no，都可以的。</p>
+<p>&nbsp;</p>
+<p>5、apple-mobile-web-app-capable</p>
+<p>&nbsp;</p>
+<p>apple-mobile-web-app-capable是设置Web应用是否以全屏模式运行。</p>
+<p>&nbsp;</p>
+<p>语法：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="apple-mobile-web-app-capable"&nbsp;content="yes"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>说明：</p>
+<p>如果content设置为yes，Web应用会以全屏模式运行，反之，则不会。content的默认值是no，表示正常显示。你可以通过只读属性window.navigator.standalone来确定网页是否以全屏模式显示。</p>
+<p>&nbsp;</p>
+<p>6、format-detection</p>
+<p>&nbsp;</p>
+<p>format-detection 启动或禁用自动识别页面中的电话号码。</p>
+<p>语法：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="format-detection"&nbsp;content="telephone=no"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>说明：</p>
+<p>默认情况下，设备会自动识别任何可能是电话号码的字符串。设置telephone=no可以禁用这项功能。</p>
+<p>&nbsp;</p>
+<p>7、html5调用安卓或者ios的拨号功能</p>
+<p>&nbsp;</p>
+<p>html5提供了自动调用拨号的标签，只要在a标签的href中添加tel:就可以了。</p>
+<p>如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;a&nbsp;href="tel:10010"&gt;10010&lt;/a&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>8、html5GPS定位功能</p>
+<p>&nbsp;</p>
+<p>具体请看：<a target="_blank">http://www.w3school.com.cn/html5/html_5_geolocation.asp</a></p>
+<p>&nbsp;</p>
+<p>9、上下拉动滚动条时卡顿、慢</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>body {</code></p>
+<p><code>&nbsp;-webkit-overflow-scrolling: touch;</code></p>
+<p><code>&nbsp;overflow-scrolling: touch;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>10、禁止复制、选中文本</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>Element&nbsp;{</code></p>
+<p><code>&nbsp;-webkit-user-select:&nbsp;none;</code></p>
+<p><code>&nbsp;-moz-user-select:&nbsp;none;</code></p>
+<p><code>&nbsp;-khtml-user-select:&nbsp;none;</code></p>
+<p><code>&nbsp; user-select:&nbsp;none;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>解决移动设备可选中页面文本(视产品需要而定)</p>
+<p>&nbsp;</p>
+<p>11、长时间按住页面出现闪退</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>element&nbsp;{</code></p>
+<p><code>&nbsp;-webkit-touch-callout:&nbsp;none;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>12、iphone及ipad下输入框默认内阴影</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>Element{</code></p>
+<p><code>&nbsp;-webkit-appearance:&nbsp;none;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>13、ios和android下触摸元素时出现半透明灰色遮罩</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>Element&nbsp;{</code></p>
+<p><code>&nbsp;-webkit-tap-highlight-color:rgba(255,255,255,0)</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>14、active兼容处理 即 伪类 :active 失效</p>
+<p>&nbsp;</p>
+<p>方法一：body添加ontouchstart</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;body&nbsp;ontouchstart=""&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>方法二：js给 document 绑定 touchstart 或 touchend 事件</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;style&gt;</code></p>
+<p><code>a&nbsp;{</code></p>
+<p><code>color:&nbsp;#000;</code></p>
+<p><code>}</code></p>
+<p><code>a:active&nbsp;{</code></p>
+<p><code>color:&nbsp;#fff;</code></p>
+<p><code>}</code></p>
+<p><code>&lt;/style&gt;</code></p>
+<p><code>&lt;a&nbsp;herf=foo&nbsp;&gt;bar&lt;/a&gt;</code></p>
+<p><code>&lt;script&gt;</code></p>
+<p><code>document.addEventListener('touchstart',function(){},false);</code></p>
+<p><code>&lt;/script&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>15、动画定义3D启用硬件加速</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>Element&nbsp;{</code></p>
+<p><code>&nbsp;-webkit-transform:translate3d(0,&nbsp;0,&nbsp;0)</code></p>
+<p><code>&nbsp;transform:&nbsp;translate3d(0,&nbsp;0,&nbsp;0);</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>16、Retina屏的1px边框</p>
+<p>&nbsp;</p>
+<p>具体请百度谷歌关键字，解决方案有很多</p>
+<p>&nbsp;</p>
+<p>17、webkit mask 兼容处理</p>
+<p>&nbsp;</p>
+<p>某些低端手机不支持css3 mask，可以选择性的降级处理。</p>
+<p>比如可以使用js判断来引用不同class：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>if(&nbsp;'WebkitMask'&nbsp;in document.documentElement.style){</code></p>
+<p><code>&nbsp;alert('支持mask');</code></p>
+<p><code>}&nbsp;else&nbsp;{</code></p>
+<p><code>&nbsp;alert('不支持mask');</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>18、旋转屏幕时，字体大小调整的问题</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>html,&nbsp;body,&nbsp;form,&nbsp;fieldset,&nbsp;p,&nbsp;div,&nbsp;h1,&nbsp;h2,&nbsp;h3,&nbsp;h4,&nbsp;h5,&nbsp;h6&nbsp;{</code></p>
+<p><code>&nbsp;-webkit-text-size-adjust:100%;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>19、transition闪屏</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>/设置内嵌的元素在 3D 空间如何呈现：保留3D /</code></p>
+<p><code>-webkit-transform-style:&nbsp;preserve-3d;</code></p>
+<p><code>/ 设置进行转换的元素的背面在面对用户时是否可见：隐藏 /</code></p>
+<p><code>-webkit-backface-visibility:hidden;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>20、圆角bug</p>
+<p>&nbsp;</p>
+<p>某些Android手机圆角失效</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>background-clip:&nbsp;padding-box;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>21、顶部状态栏背景色</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="apple-mobile-web-app-status-bar-style"&nbsp;content="black"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>说明：</p>
+<p>除非你先使用apple-mobile-web-app-capable指定全屏模式，否则这个meta标签不会起任何作用。</p>
+<p>&nbsp;</p>
+<p>如果content设置为default，则状态栏正常显示。如果设置为blank，则状态栏会有一个黑色的背景。如果设置为blank-translucent，则状态栏显示为黑色半透明。</p>
+<p>&nbsp;</p>
+<p>如果设置为default或blank，则页面显示在状态栏的下方，即状态栏占据上方部分，页面占据下方部分，二者没有遮挡对方或被遮挡。</p>
+<p>&nbsp;</p>
+<p>如果设置为blank-translucent，则页面会充满屏幕，其中页面顶部会被状态栏遮盖住（会覆盖页面20px高度，而iphone4和itouch4的Retina屏幕为40px）。</p>
+<p>&nbsp;</p>
+<p>默认值是default。</p>
+<p>&nbsp;</p>
+<p>22、设置缓存</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;http-equiv="Cache-Control"&nbsp;content="no-cache"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>手机页面通常在第一次加载后会进行缓存，然后每次刷新会使用缓存而不是去重新向服务器发送请求。如果不希望使用缓存可以设置no-cache。</p>
+<p>&nbsp;</p>
+<p>23、桌面图标</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;link&nbsp;rel="apple-touch-icon"&nbsp;href="touch-icon-iphone.png"&nbsp;/&gt;</code></p>
+<p><code>&lt;link&nbsp;rel="apple-touch-icon"&nbsp;sizes="76x76"&nbsp;href="touch-icon-ipad.png"&nbsp;/&gt;</code></p>
+<p><code>&lt;link&nbsp;rel="apple-touch-icon"&nbsp;sizes="120x120"&nbsp;href="touch-icon-iphone-retina.png"&nbsp;/&gt;</code></p>
+<p><code>&lt;link&nbsp;rel="apple-touch-icon"&nbsp;sizes="152x152"&nbsp;href="touch-icon-ipad-retina.png"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>iOS下针对不同设备定义不同的桌面图标。如果不定义则以当前屏幕截图作为图标。</p>
+<p>&nbsp;</p>
+<p>上面的写法可能大家会觉得会有默认光泽，下面这种设置方法可以去掉光泽效果，还原设计图的效果！</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;link&nbsp;rel="apple-touch-icon-precomposed"&nbsp;href="touch-icon-iphone.png"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>图片尺寸可以设定为57*57（px）或者Retina可以定为114*114（px），ipad尺寸为72*72（px)</p>
+<p>&nbsp;</p>
+<p>24、启动画面</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;link&nbsp;rel="apple-touch-startup-image"&nbsp;href="start.png"/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>iOS下页面启动加载时显示的画面图片，避免加载时的白屏。</p>
+<p>可以通过madia来指定不同的大小：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;!--iPhone--&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-320x460.png"&nbsp;media="(device-width: 320px)"&nbsp;rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPhone Retina --&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-640x920.png"&nbsp;media="(device-width: 320px) and (-webkit-device-pixel-ratio: 2)"&nbsp;rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPhone 5 --&gt;</code></p>
+<p><code>&lt;link&nbsp;rel="apple-touch-startup-image"&nbsp;media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"&nbsp;href="apple-touch-startup-image-640x1096.png"&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPad portrait --&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-768x1004.png"&nbsp;media="(device-width: 768px) and (orientation: portrait)"&nbsp;rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPad landscape --&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-748x1024.png"&nbsp;media="(device-width: 768px) and (orientation: landscape)"&nbsp;rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPad Retina portrait --&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-1536x2008.png"&nbsp;media="(device-width: 1536px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)"&nbsp;rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>&lt;!-- iPad Retina landscape --&gt;</code></p>
+<p><code>&lt;link&nbsp;href="apple-touch-startup-image-1496x2048.png"media="(device-width: 1536px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)"rel="apple-touch-startup-image"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>25、浏览器私有及其它meta</p>
+<p>&nbsp;</p>
+<p>以下属性在项目中没有应用过，可以写一个demo测试以下！</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;!-- QQ浏览器私有 --&gt;</code></p>
+<p><code>&lt;!-- 全屏模式 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="x5-fullscreen"&nbsp;content="true"&gt;</code></p>
+<p><code>&lt;!-- 强制竖屏 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="x5-orientation"&nbsp;content="portrait"&gt;</code></p>
+<p><code>&lt;!-- 强制横屏 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="x5-orientation"&nbsp;content="landscape"&gt;</code></p>
+<p><code>&lt;!-- 应用模式 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="x5-page-mode"&nbsp;content="app"&gt;</code></p>
+<p><code>&nbsp;</code></p>
+<p><code>&lt;!-- UC浏览器私有 --&gt;</code></p>
+<p><code>&lt;!-- 全屏模式 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="full-screen"&nbsp;content="yes"&gt;</code></p>
+<p><code>&lt;!-- 强制竖屏 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="screen-orientation"&nbsp;content="portrait"&gt;</code></p>
+<p><code>&lt;!-- 强制横屏 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="screen-orientation"&nbsp;content="landscape"&gt;</code></p>
+<p><code>&lt;!-- 应用模式 --&gt;</code></p>
+<p><code>&lt;meta&nbsp;name="browsermode"&nbsp;content="application"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>其它,针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="HandheldFriendly"&nbsp;content="true"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>微软的老式浏览器</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="MobileOptimized"&nbsp;content="320"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>windows phone 点击无高光</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;meta&nbsp;name="msapplication-tap-highlight"&nbsp;content="no"&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>26、 IOS中input键盘事件keyup、keydown、keypress支持不是很好</p>
+<p>&nbsp;</p>
+<p>问题是这样的，用input search做模糊搜索的时候，在键盘里面输入关键词，会通过ajax后台查询，然后返回数据，然后再对返回的数据进行关键词标红。</p>
+<p>&nbsp;</p>
+<p>用input监听键盘keyup事件，在安卓手机浏览器中是可以的，但是在ios手机浏览器中变红很慢，用输入法输入之后，并未立刻相应keyup事件，只有在通过删除之后才能相应！</p>
+<p>&nbsp;</p>
+<p>解决办法：</p>
+<p>可以用html5的oninput事件去代替keyup</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;type="text"&nbsp;id="testInput"&gt;</code></p>
+<p><code>&lt;script&nbsp;type="text/javascript"&gt;</code></p>
+<p><code>&nbsp;document.getElementById('testInput').addEventListener('input',&nbsp;function(e){</code></p>
+<p><code>&nbsp; &nbsp;var&nbsp;value&nbsp;=&nbsp;e.target.value;</code></p>
+<p><code>&nbsp;});</code></p>
+<p><code>&lt;/script&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>然后就达到类似keyup的效果！</p>
+<p>&nbsp;</p>
+<p>27、h5网站input 设置为type=number的问题</p>
+<p>&nbsp;</p>
+<p>h5网页input 的type设置为number一般会产生三个问题，一个问题是maxlength属性不好用了。另外一个是form提交的时候，默认给取整了。三是部分安卓手机出现样式问题。</p>
+<p>&nbsp;</p>
+<p>问题一解决，我目前用的是js。如下</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;type="number"&nbsp;oninput="checkTextLength(this&nbsp;,10)"&gt;</code></p>
+<p>&nbsp;</p>
+<p><code>function checkTextLength(obj, length) {</code></p>
+<p><code>&nbsp; &nbsp; &nbsp;if(obj.value.length &gt; length) &nbsp;{ &nbsp; &nbsp;</code></p>
+<p><code>&nbsp; &nbsp; &nbsp; &nbsp;obj.value = obj.value.substr(0, length);</code></p>
+<p><code>&nbsp; &nbsp; &nbsp;}</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>问题二，是因为form提交默认做了表单验证，step默认是1,要设置step属性，假如保留2位小数，写法如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;type="number"&nbsp;step="0.01"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>关于step，我在这里做简单的介绍，input 中type=number，一般会自动生成一个上下箭头，点击上箭头默认增加一个step，点击下箭头默认会减少一个step。number中默认step是1。也就是step=0.01,可以允许输入2位小数，并且点击上下箭头分别增加0.01和减少0.01。</p>
+<p>&nbsp;</p>
+<p>假如step和min一起使用，那么数值必须在min和max之间。</p>
+<p>&nbsp;</p>
+<p>看下面的例子：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;type="number"&nbsp;step="3.1"&nbsp;min="1"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>输入框可以输入哪些数字？</p>
+<p>&nbsp;</p>
+<p>首先，最小值是1，那么可以输入1.0，第二个是可以输入（1+3.1）那就是4.1,以此类推，每次点击上下箭头都会增加或者减少3.1，输入其他数字无效。这就是step的简单介绍。</p>
+<p>&nbsp;</p>
+<p>问题三，去除input默认样式</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>input[type=number] {</code></p>
+<p><code>&nbsp;-moz-appearance:textfield;</code></p>
+<p><code>}</code></p>
+<p><code>input[type=number]::-webkit-inner-spin-button,</code></p>
+<p><code>input[type=number]::-webkit-outer-spin-button {</code></p>
+<p><code>&nbsp;-webkit-appearance: none;</code></p>
+<p><code>&nbsp;margin: 0;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>28、ios 设置input 按钮样式会被默认样式覆盖</p>
+<p>&nbsp;</p>
+<p>解决方式如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>input,</code></p>
+<p><code>textarea&nbsp;{</code></p>
+<p><code>&nbsp;border:&nbsp;0;</code></p>
+<p><code>&nbsp;-webkit-appearance:&nbsp;none;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>设置默认样式为none</p>
+<p>&nbsp;</p>
+<p>29、IOS键盘字母输入，默认首字母大写</p>
+<p>&nbsp;</p>
+<p>解决方案，设置如下属性</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;type="text"&nbsp;autocapitalize="off"&nbsp;/&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>30、select 下拉选择设置右对齐</p>
+<p>&nbsp;</p>
+<p>设置如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>select option {</code></p>
+<p><code>direction: rtl;</code></p>
+<p><code>}</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>31、通过transform进行skew变形，rotate旋转会造成出现锯齿现象</p>
+<p>&nbsp;</p>
+<p>可以设置如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>-webkit-transform: rotate(-4deg) skew(10deg) translateZ(0);</code></p>
+<p><code>transform: rotate(-4deg) skew(10deg) translateZ(0);</code></p>
+<p><code>outline: 1px solid rgba(255,255,255,0)</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>32、移动端点击300ms延迟</p>
+<p>&nbsp;</p>
+<p>300ms尚可接受，不过因为300ms产生的问题，我们必须要解决。300ms导致用户体验并不是很好，解决这个问题，我们一般在移动端用tap事件来取代click事件。</p>
+<p>&nbsp;</p>
+<p>推荐两个js，一个是fastclick，一个是tap.js</p>
+<p>&nbsp;</p>
+<p>关于300ms延迟，具体请看：http://thx.github.io/mobile/300ms-click-delay/</p>
+<p>&nbsp;</p>
+<p>33、移动端点透问题</p>
+<p>&nbsp;</p>
+<p>案例如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;div&nbsp;id="haorooms"&gt;点头事件测试&lt;/div&gt;</code></p>
+<p><code>&lt;a&nbsp;href="#"&gt;www.xxx.com&lt;/a&gt;</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>div是绝对定位的蒙层,并且z-index高于a。而a标签是页面中的一个链接，我们给div绑定tap事件：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>$('#haorooms').on('tap',function(){</code></p>
+<p><code>$('#haorooms').hide();</code></p>
+<p><code>});</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>我们点击蒙层时 div正常消失，但是当我们在a标签上点击蒙层时，发现a链接被触发，这就是所谓的点透事件。</p>
+<p>&nbsp;</p>
+<p>原因：</p>
+<p>&nbsp;</p>
+<p>touchstart 早于 touchend 早于click。 亦即click的触发是有延迟的，这个时间大概在300ms左右，也就是说我们tap触发之后蒙层隐藏， 此时 click还没有触发，300ms之后由于蒙层隐藏，我们的click触发到了下面的a链接上。</p>
+<p><br />解决：</p>
+<p>（1）尽量都使用touch事件来替换click事件。例如用touchend事件(推荐)。<br />（2）用fastclick，https://github.com/ftlabs/fastclick<br />（3）用preventDefault阻止a标签的click<br />（4）延迟一定的时间(300ms+)来处理事件 （不推荐）<br />（5）以上一般都能解决，实在不行就换成click事件。<br /><br /></p>
+<p>下面介绍一下touchend事件，如下：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>$("#haorooms").on("touchend",&nbsp;function&nbsp;(event)&nbsp;{</code></p>
+<p><code>&nbsp; event.preventDefault();</code></p>
+<p>&nbsp;</p>
+<p><code>});</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>34、消除 IE10 里面的那个叉号</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>input:-ms-clear{display:none;}</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>35、关于 iOS 与 OS X 端字体的优化(横竖屏会出现字体加粗不一致等)</p>
+<p>&nbsp;</p>
+<p>iOS 浏览器横屏时会重置字体大小，设置 text-size-adjust 为 none 可以解决 iOS 上的问题，但桌面版 Safari 的字体缩放功能会失效，因此最佳方案是将 text-size-adjust 为 100% 。</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>-webkit-text-size-adjust:&nbsp;100%;</code></p>
+<p><code>-ms-text-size-adjust:&nbsp;100%;</code></p>
+<p><code>text-size-adjust:&nbsp;100%;</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>36、关于 iOS 系统中，中文输入法输入英文时，字母之间可能会出现一个六分之一空格</p>
+<p>&nbsp;</p>
+<p>可以通过正则去掉</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>this.value&nbsp;=&nbsp;this.value.replace(/\u2006/g,&nbsp;'');</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>37、移动端 HTML5 audio autoplay 失效问题</p>
+<p>&nbsp;</p>
+<p>这个不是 BUG，由于自动播放网页中的音频或视频，会给用户带来一些困扰或者不必要的流量消耗，所以苹果系统和安卓系统通常都会禁止自动播放和使用 JS 的触发播放，必须由用户来触发才可以播放。</p>
+<p>&nbsp;</p>
+<p>解决方法思路：先通过用户 touchstart 触碰，触发播放并暂停（音频开始加载，后面用 JS 再操作就没问题了）。</p>
+<p>&nbsp;</p>
+<p>解决代码：</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>document.addEventListener('touchstart',&nbsp;function&nbsp;()&nbsp;{</code></p>
+<p><code>&nbsp;document.getElementsByTagName('audio')[0].play();</code></p>
+<p><code>&nbsp;document.getElementsByTagName('audio')[0].pause();</code></p>
+<p><code>});</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>38、移动端 HTML5 input date 不支持 placeholder 问题</p>
+<p>&nbsp;</p>
+<p>这个我感觉没有什么好的解决方案，用如下方法</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>&lt;input&nbsp;placeholder="Date"&nbsp;class="textbox-n"&nbsp;type="text"&nbsp;onfocus="(this.type='date')"&nbsp;&nbsp;id="date"&gt;</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>有的浏览器可能要点击两遍！</p>
+<p>&nbsp;</p>
+<p>39、部分机型存在type为search的input，自带close按钮样式修改方法</p>
+<p>&nbsp;</p>
+<p>有些机型的搜索input控件会自带close按钮（一个伪元素），而通常为了兼容所有浏览器，我们会自己实现一个，此时去掉原生close按钮的方法为</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>#Search::-webkit-search-cancel-button{</code></p>
+<p><code>&nbsp;display:&nbsp;none;</code></p>
+<p><code>}</code></p>
+
+</blockquote>
+<p>&nbsp;</p>
+<p>如果想使用原生close按钮，又想使其符合设计风格，可以对这个伪元素的样式进行修改。</p>
+<p>&nbsp;</p>
+<p>40、唤起select的option展开</p>
+<p>zepto方式:</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>$(sltElement).trrgger("mousedown");</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<p>原生js方式:</p>
+<p>&nbsp;</p>
+<blockquote>
+<p><code>function&nbsp;showDropdown(sltElement)&nbsp;{</code></p>
+<p><code>&nbsp;var&nbsp;event;</code></p>
+<p><code>&nbsp;event&nbsp;=&nbsp;document.createEvent('MouseEvents');</code></p>
+<p><code>&nbsp;event.initMouseEvent('mousedown',&nbsp;true,&nbsp;true,&nbsp;window);</code></p>
+<p><code>&nbsp;sltElement.dispatchEvent(event);</code></p>
+<p><code>};</code></p>
+</blockquote>
+<p>转自：<span style="color: #888888;"><a href="https://www.cnblogs.com/LiuJL/p/7744473.html"><span style="color: #888888;">https://www.cnblogs.com/LiuJL/p/7744473.html</span></a></span></p>
+<p>&nbsp;</p>
+
+
+</div>
+
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

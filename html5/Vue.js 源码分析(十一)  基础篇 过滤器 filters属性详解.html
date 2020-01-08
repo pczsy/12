@@ -1,0 +1,132 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十一)  基础篇 过滤器 filters属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十一)  基础篇 过滤器 filters属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11081321.html</div><br>
+    <p>&nbsp;Vue.js 允许你自定义过滤器，可被用于一些常见的文本格式化。过滤器可以用在两个地方：<strong>双花括号插值和 <code>v-bind</code> 表达式</strong> (后者从 2.1.0+ 开始支持)。过滤器应该被添加在 JavaScript 表达式的尾部，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{no | add(100) }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">debugger</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data:{no:</span><span style="background-color: #f5f5f5; color: #000000;">123</span><span style="background-color: #f5f5f5; color: #000000;">},
+            filters:{
+                add:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(val,i){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> val</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">i}
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>     
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染结果为:</p>
+<p><img src="./images/Vue.js 源码分析(十一)  基础篇 过滤器 filters属性详解0.png" alt="" /></p>
+<p>当我们在页面里输出某些数据，需要进行格式转换的时候可以用这个过滤器</p>
+<p>&nbsp;</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;parse()解析模板时遇到文本时会执行parseText()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> parseText (    <span style="color: #008000;">//</span><span style="color: #008000;">第8575行 解析模板时用于解析文本</span>
+<span style="color: #000000;">  text,
+  delimiters
+) {
+  </span><span style="color: #0000ff;">var</span> tagRE = delimiters ?<span style="color: #000000;"> buildRegex(delimiters) : defaultTagRE;       
+  </span><span style="color: #0000ff;">if</span> (!tagRE.test(text)) {                                              <span style="color: #008000;">//</span><span style="color: #008000;">匹配是否有表达式,比如:{{message}}  如果没有，则表示是纯文本节点,则直接返回不做处理</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> tokens =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> rawTokens =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> lastIndex = tagRE.lastIndex = 0<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> match, index, tokenValue;
+  </span><span style="color: #0000ff;">while</span> ((match = tagRE.exec(text))) {                                  <span style="color: #008000;">//</span><span style="color: #008000;">用正则tagRE去匹配text,此时match就是text里的每个值，对于:{{item}}:{{index}}来说,match等于Array["{{item}}","item"] 、 Array["{{index}}","index"]</span>
+    index = match.index;                                                  <span style="color: #008000;">//</span><span style="color: #008000;">该数据的起始索引</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> push text token</span>
+    <span style="color: #0000ff;">if</span> (index &gt; lastIndex) {                                              <span style="color: #008000;">//</span><span style="color: #008000;">如果index大于lastIndex，表明中间还有一段文本，比如:{{item}}:{{index}}，中间的:就是文本</span>
+      rawTokens.push(tokenValue =<span style="color: #000000;"> text.slice(lastIndex, index));
+      tokens.push(JSON.stringify(tokenValue));
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> tag token</span>
+    <span style="color: #0000ff;">var</span> exp = parseFilters(match[1].trim());                               <span style="color: #008000;">//</span><span style="color: #008000;">调用parseFilters对match[1做解析]   ;例如{{no | add(100) }}，解析后的格式为:_f("add")(no,100)</span>
+    tokens.push(("_s(" + exp + ")"<span style="color: #000000;">));
+    rawTokens.push({ </span>'@binding'<span style="color: #000000;">: exp });
+    lastIndex </span>= index + match[0].length;                                      <span style="color: #008000;">//</span><span style="color: #008000;">设置下一次开始匹配的位置</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">if</span> (lastIndex &lt;<span style="color: #000000;"> text.length) {
+    rawTokens.push(tokenValue </span>=<span style="color: #000000;"> text.slice(lastIndex));
+    tokens.push(JSON.stringify(tokenValue));
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+    expression: tokens.join(</span>'+'),                                             <span style="color: #008000;">//</span><span style="color: #008000;">拼凑成一个 表达式，例如:"_s(item)+":"+_s(index)"</span>
+    tokens: rawTokens                                                         <span style="color: #008000;">//</span><span style="color: #008000;">模板信息，例如[{@binding: "item"},":",{@binding: "index"}]</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<pre><code>parseFilters定义在6436行，就是解析每个字符，最后拼凑出一个_f的字符，例子中执行完后等于</pre>
+<p><img src="./images/Vue.js 源码分析(十一)  基础篇 过滤器 filters属性详解1.png" alt="" /></p>
+<p>最后执行render函数的时候会执行_f函数，也就是Vue内部的resolveFilter函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveFilter (id) {       <span style="color: #008000;">//</span><span style="color: #008000;">第3774行 过滤器对应的函数</span>
+  <span style="color: #0000ff;">return</span> resolveAsset(<span style="color: #0000ff;">this</span>.$options, 'filters', id, <span style="color: #0000ff;">true</span>) || identity   <span style="color: #008000;">//执行<span style="color: #008000;">resolveAsset函数</span></span>
+}</pre>
+</div>
+<p><span style="color: #000000;">resolveAsset会获取对应资源(过滤器、组件、指令等),返回对应函数，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> resolveAsset (         <span style="color: #008000;">//</span><span style="color: #008000;">第1498行 options:Vue实例的$options对象 type:类型，比如:components、filters id:获取的ID</span>
+<span style="color: #000000;">  options,
+  type,
+  id,
+  warnMissing
+) {
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> id !== 'string'<span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> assets =<span style="color: #000000;"> options[type];
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> check local registration variations first</span>
+  <span style="color: #0000ff;">if</span> (hasOwn(assets, id)) { <span style="color: #0000ff;">return</span> assets[id] }                         <span style="color: #008000;">//</span><span style="color: #008000;">先从当前实例上找id</span>
+  <span style="color: #0000ff;">var</span> camelizedId =<span style="color: #000000;"> camelize(id);
+  </span><span style="color: #0000ff;">if</span> (hasOwn(assets, camelizedId)) { <span style="color: #0000ff;">return</span> assets[camelizedId] }       <span style="color: #008000;">//</span><span style="color: #008000;">将id转化为驼峰式后再找</span>
+  <span style="color: #0000ff;">var</span> PascalCaseId =<span style="color: #000000;"> capitalize(camelizedId);
+  </span><span style="color: #0000ff;">if</span> (hasOwn(assets, PascalCaseId)) { <span style="color: #0000ff;">return</span> assets[PascalCaseId] }     <span style="color: #008000;">//</span><span style="color: #008000;">如果还没找到则尝试将首字母大写查找</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> fallback to prototype chain</span>
+  <span style="color: #0000ff;">var</span> res = assets[id] || assets[camelizedId] || assets[PascalCaseId];  <span style="color: #008000;">//</span><span style="color: #008000;">最后通过原型来查找</span>
+  <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; warnMissing &amp;&amp; !<span style="color: #000000;">res) {
+    warn(
+      </span>'Failed to resolve ' + type.slice(0, -1) + ': ' +<span style="color: #000000;"> id,
+      options
+    );
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+}</span></pre>
+</div>
+<p>执行完后_f("add")(no,100)里的_f("add")就会变成app实例里的<span style="color: #000000;">add</span>过滤器对应的函数了</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

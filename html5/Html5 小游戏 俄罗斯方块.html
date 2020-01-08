@@ -1,0 +1,669 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Html5 小游戏 俄罗斯方块' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Html5 小游戏 俄罗斯方块</center></div><div class='banquan'>原文出处:本文由博客园博主团子好软提供。<br/>
+原文连接:https://www.cnblogs.com/zyyz1126/p/11976260.html</div><br>
+    <p><span style="font-size: 18pt;">导言</span></p>
+<p>在一个风和日丽的一天，看完了疯狂HTML 5+CSS 3+JavaScript讲义,跟着做了书里最后一章的俄罗斯方块小游戏，并做了一些改进，作为自己前端学习的第一站。</p>
+<p><span style="font-size: 18pt;">游戏效果：</span></p>
+<p><span style="font-size: 18pt;"><img src="./images/Html5 小游戏 俄罗斯方块0.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="./images/Html5 小游戏 俄罗斯方块1.png" alt="" /></p>
+<p><span style="font-size: 18pt;">制作思路</span></p>
+<p><img src="./images/Html5 小游戏 俄罗斯方块2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>因为书里的俄罗斯方块比较普通，太常规了，不是很好看，所以我在网上找了上面那张图片，打算照着它来做。（请无视成品和原图的差距）</p>
+<p>然后便是游戏界面和常规的俄罗斯方块游戏逻辑。</p>
+<p>接着便是游戏结束界面了。</p>
+<p>原本想做个弹出层，但觉得找图片有点麻烦，所以就在网上找了文字特效，套用了一下。</p>
+<p><span style="font-size: 18pt;">代码实现：</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;首先是html文件和css文件，主要涉及了布局方面。作为新手，在上面真的是翻来覆去的踩坑。o(╥﹏╥)o</p>
+<p>index.html</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>俄罗斯方块<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="Content-Type"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="text/html;charset=utf-8"</span><span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">=stylesheet </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="teris.css"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">导入外部的字体文件</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+        @font-face</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-family</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">tmb</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">为字体命名为tmb</span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            src</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">url("DS-DIGIB.TTF") format("TrueType")</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;">format为字体文件格式，TrueType为ttf</span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        div&gt;span</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-family</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">tmb</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            font-size</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">18pt</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">green</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+        <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="container"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="bg"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">ui</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="ui_bg"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="float:left;margin-right:4px;"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+                速度：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cur_speed"</span><span style="color: #0000ff;">&gt;</span>1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="float:left;"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+                当前分数：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cur_points"</span><span style="color: #0000ff;">&gt;</span>0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">style</span><span style="color: #0000ff;">="float:right;"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+                最高分数：</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="max_points"</span><span style="color: #0000ff;">&gt;</span>0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="position:absolute;"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="stage"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="position:absolute;"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='EasePack.min.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='TweenLite.min.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='easeljs-0.7.1.min.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='requestAnimationFrame.js'</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="jquery-3.4.1.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="teris.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>teris.css</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">*</span>{<span style="color: #ff0000;">
+    margin</span>:<span style="color: #0000ff;">0</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;">0</span>;
+}<span style="color: #800000;">
+html, body</span>{<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;">100%</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;">100%</span>;
+}<span style="color: #800000;">
+
+.bg</span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;">13pt</span>;<span style="color: #ff0000;">
+    background-color</span>:<span style="color: #0000ff;">rgb(239, 239, 227)</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">好看的渐变色</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    background-image</span>:<span style="color: #0000ff;">radial-gradient(rgb(239, 239, 227), rgb(230, 220, 212))</span>;
+    <span style="color: #008000;">/*</span><span style="color: #008000;">阴影</span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    box-shadow</span>:<span style="color: #0000ff;">#cdc8c1 -1px -1px 7px 0px</span>;<span style="color: #ff0000;">
+    padding-bottom</span>:<span style="color: #0000ff;">4px</span>;
+}<span style="color: #800000;">
+
+.ui_bg</span>{<span style="color: #ff0000;">
+    border-bottom</span>:<span style="color: #0000ff;">1px #a69e9ea3 solid</span>;<span style="color: #ff0000;">
+    padding-bottom</span>:<span style="color: #0000ff;">2px</span>;<span style="color: #ff0000;">
+    overflow</span>:<span style="color: #0000ff;">hidden</span>;<span style="color: #008000;">/*</span><span style="color: #008000;">没有这句的话因为子div都设置了float，所以是浮在网页上的，所以父div就没有高度，这句清除了浮动，让父div有了子div的高度</span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>然后是重头戏，teris.js</p>
+<p>游戏变量</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">游戏设定</span>
+<span style="color: #0000ff;">var</span> TETRIS_ROWS = 20<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> TETRIS_COLS = 14<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> CELL_SIZE = 24<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> NO_BLOCK=0<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> HAVE_BLOCK=1<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 定义几种可能出现的方块组合</span>
+<span style="color: #0000ff;">var</span> blockArr =<span style="color: #000000;"> [
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Z</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 + 1 , y:1<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 反Z</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 + 1 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:1<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 田</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> L</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1, y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:2<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:2<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> J</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2  , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2  , y:2<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1, y:2<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> □□□□</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:2<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:3<span style="color: #000000;">}
+    ],
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ┴</span>
+<span style="color: #000000;">    [
+        {x: TETRIS_COLS </span>/ 2 , y:0<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 - 1 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 , y:1<span style="color: #000000;">},
+        {x: TETRIS_COLS </span>/ 2 + 1, y:1<span style="color: #000000;">}
+    ]
+];
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 记录当前积分</span>
+<span style="color: #0000ff;">var</span> curScore=0<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 记录曾经的最高积分</span>
+<span style="color: #0000ff;">var</span> maxScore=1<span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> curSpeed=1<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">ui元素</span>
+<span style="color: #0000ff;">var</span> curSpeedEle=document.getElementById("cur_speed"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> curScoreEle=document.getElementById("cur_points"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> maxScoreEle=document.getElementById("max_points"<span style="color: #000000;">);
+
+</span><span style="color: #0000ff;">var</span> timer;<span style="color: #008000;">//</span><span style="color: #008000;">方块下落控制</span>
+
+<span style="color: #0000ff;">var</span><span style="color: #000000;"> myCanvas;
+</span><span style="color: #0000ff;">var</span><span style="color: #000000;"> canvasCtx;
+</span><span style="color: #0000ff;">var</span> tetris_status;<span style="color: #008000;">//</span><span style="color: #008000;">地图数据</span>
+<span style="color: #0000ff;">var</span> currentFall;<span style="color: #008000;">//</span><span style="color: #008000;">当前下落的block</span></pre>
+</div>
+<p>游戏界面的完善</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3989c7a7-21a2-437b-99fd-9a27fee91694')"><img id="code_img_closed_3989c7a7-21a2-437b-99fd-9a27fee91694" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_3989c7a7-21a2-437b-99fd-9a27fee91694" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('3989c7a7-21a2-437b-99fd-9a27fee91694',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_3989c7a7-21a2-437b-99fd-9a27fee91694" class="cnblogs_code_hide">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">create canvas</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> createCanvas(){
+    myCanvas</span>=document.createElement("canvas"<span style="color: #000000;">);
+    myCanvas.width</span>=TETRIS_COLS*<span style="color: #000000;">CELL_SIZE;
+    myCanvas.height</span>=TETRIS_ROWS*<span style="color: #000000;">CELL_SIZE;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制背景</span>
+    canvasCtx=myCanvas.getContext("2d"<span style="color: #000000;">);
+    canvasCtx.beginPath();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">TETRIS_COS</span>
+    <span style="color: #0000ff;">for</span>(let i=1; i&lt;TETRIS_COLS; i++<span style="color: #000000;">){
+        canvasCtx.moveTo(i</span>*CELL_SIZE, 0<span style="color: #000000;">);
+        canvasCtx.lineTo(i</span>*<span style="color: #000000;">CELL_SIZE, myCanvas.height);
+    }
+    </span><span style="color: #0000ff;">for</span>(let i=1; i&lt;TETRIS_ROWS; i++<span style="color: #000000;">){
+        canvasCtx.moveTo(</span>0, i*<span style="color: #000000;">CELL_SIZE);
+        canvasCtx.lineTo(myCanvas.width, i</span>*<span style="color: #000000;">CELL_SIZE);
+    }
+    canvasCtx.closePath();
+    canvasCtx.strokeStyle</span>="#b4a79d"<span style="color: #000000;">;
+    canvasCtx.lineWidth</span>=0.6<span style="color: #000000;">;
+    canvasCtx.stroke();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">第一行,最后一行,第一列，最后一列粗一点。</span>
+<span style="color: #000000;">    canvasCtx.beginPath();
+    canvasCtx.moveTo(</span>0, 0<span style="color: #000000;">);
+    canvasCtx.lineTo(myCanvas.width, </span>0<span style="color: #000000;">);
+    canvasCtx.moveTo(</span>0<span style="color: #000000;">, myCanvas.height);
+    canvasCtx.lineTo(myCanvas.width, myCanvas.height);
+    canvasCtx.moveTo(</span>0, 0<span style="color: #000000;">);
+    canvasCtx.lineTo(</span>0<span style="color: #000000;">, myCanvas.height);
+    canvasCtx.moveTo(myCanvas.width, </span>0<span style="color: #000000;">);
+    canvasCtx.lineTo(myCanvas.width, myCanvas.height);
+    canvasCtx.closePath();
+    canvasCtx.strokeStyle</span>="#b4a79d"<span style="color: #000000;">;
+    canvasCtx.lineWidth</span>=4<span style="color: #000000;">;
+    canvasCtx.stroke();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">设置绘制block时的style</span>
+    canvasCtx.fillStyle="#201a14"<span style="color: #000000;">;
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">draw canvas</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('49d90f42-1011-42a9-a1c6-43545c7a5be0')"><img id="code_img_closed_49d90f42-1011-42a9-a1c6-43545c7a5be0" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_49d90f42-1011-42a9-a1c6-43545c7a5be0" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('49d90f42-1011-42a9-a1c6-43545c7a5be0',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_49d90f42-1011-42a9-a1c6-43545c7a5be0" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> changeWidthAndHeight(w, h){
+</span><span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;">通过jquery设置css</span>
+<span style="color: #008080;"> 3</span>     h+=$("ui_bg").css("height")+$("ui_bg").css("margin-rop")+$("ui_bg").css("margin-bottom")+$("ui_bg").css("padding-top")+$("ui_bg").css("padding-bottom"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 4</span>     $(".bg"<span style="color: #000000;">).css({
+</span><span style="color: #008080;"> 5</span>         "width"<span style="color: #000000;">:w,
+</span><span style="color: #008080;"> 6</span>         "height"<span style="color: #000000;">:h,
+</span><span style="color: #008080;"> 7</span>         "top":0, "bottom":0, "right":0, "left":0<span style="color: #000000;">,
+</span><span style="color: #008080;"> 8</span>         "margin":"auto"
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">    });
+</span><span style="color: #008080;">10</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">change width and height</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('22b5b2da-7c2b-4772-8caa-4d8c48692105')"><img id="code_img_closed_22b5b2da-7c2b-4772-8caa-4d8c48692105" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_22b5b2da-7c2b-4772-8caa-4d8c48692105" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('22b5b2da-7c2b-4772-8caa-4d8c48692105',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_22b5b2da-7c2b-4772-8caa-4d8c48692105" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">draw blocks</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> drawBlocks(){
+</span><span style="color: #008080;"> 3</span>     <span style="color: #008000;">//</span><span style="color: #008000;">清空地图</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">for</span>(let i=0; i&lt;TETRIS_ROWS;i++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(let j=0;j&lt;TETRIS_COLS;j++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span>             canvasCtx.clearRect(j*CELL_SIZE+1, i*CELL_SIZE+1, CELL_SIZE-2, CELL_SIZE-2<span style="color: #000000;">);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 8</span>     <span style="color: #008000;">//</span><span style="color: #008000;">绘制地图</span>
+<span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">for</span>(let i=0; i&lt;TETRIS_ROWS;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">for</span>(let j=0;j&lt;TETRIS_COLS;j++<span style="color: #000000;">){
+</span><span style="color: #008080;">11</span>             <span style="color: #0000ff;">if</span>(tetris_status[i][j]!=<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;">12</span>                 canvasCtx.fillRect(j*CELL_SIZE+1, i*CELL_SIZE+1, CELL_SIZE-2, CELL_SIZE-2);<span style="color: #008000;">//</span><span style="color: #008000;">中间留点缝隙</span>
+<span style="color: #008080;">13</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">15</span>     <span style="color: #008000;">//</span><span style="color: #008000;">绘制currentFall</span>
+<span style="color: #008080;">16</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">17</span>         canvasCtx.fillRect(currentFall[i].x*CELL_SIZE+1, currentFall[i].y*CELL_SIZE+1, CELL_SIZE-2,CELL_SIZE-2<span style="color: #000000;">);
+</span><span style="color: #008080;">18</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">draw block</span></div>
+<p>游戏逻辑</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('74f7eeb2-4acf-4deb-b81d-6684208830dd')"><img id="code_img_closed_74f7eeb2-4acf-4deb-b81d-6684208830dd" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_74f7eeb2-4acf-4deb-b81d-6684208830dd" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('74f7eeb2-4acf-4deb-b81d-6684208830dd',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_74f7eeb2-4acf-4deb-b81d-6684208830dd" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> rotate(){
+</span><span style="color: #008080;"> 2</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 定义记录能否旋转的旗标</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">var</span> canRotate = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0 ; i &lt; currentFall.length ; i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">var</span> preX =<span style="color: #000000;"> currentFall[i].x;
+</span><span style="color: #008080;"> 7</span>         <span style="color: #0000ff;">var</span> preY =<span style="color: #000000;"> currentFall[i].y;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> 始终以第三个方块作为旋转的中心,</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #008000;">//</span><span style="color: #008000;"> i == 2时，说明是旋转的中心</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">if</span>(i != 2<span style="color: #000000;">)
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        {
+</span><span style="color: #008080;">12</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 计算方块旋转后的x、y坐标</span>
+<span style="color: #008080;">13</span>             <span style="color: #0000ff;">var</span> afterRotateX = currentFall[2].x + preY - currentFall[2<span style="color: #000000;">].y;
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">var</span> afterRotateY = currentFall[2].y + currentFall[2].x -<span style="color: #000000;"> preX;
+</span><span style="color: #008080;">15</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 如果旋转后所在位置已有方块，表明不能旋转</span>
+<span style="color: #008080;">16</span>             <span style="color: #0000ff;">if</span>(tetris_status[afterRotateY][afterRotateX + 1] !=<span style="color: #000000;"> NO_BLOCK)
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">18</span>                 canRotate = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">19</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">21</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 如果旋转后的坐标已经超出了最左边边界</span>
+<span style="color: #008080;">22</span>             <span style="color: #0000ff;">if</span>(afterRotateX &lt; 0 || tetris_status[afterRotateY - 1][afterRotateX] !=<span style="color: #000000;"> NO_BLOCK)
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">                moveRight();
+</span><span style="color: #008080;">25</span>                 afterRotateX = currentFall[2].x + preY - currentFall[2<span style="color: #000000;">].y;
+</span><span style="color: #008080;">26</span>                 afterRotateY = currentFall[2].y + currentFall[2].x -<span style="color: #000000;"> preX;
+</span><span style="color: #008080;">27</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">29</span>             <span style="color: #0000ff;">if</span>(afterRotateX &lt; 0 || tetris_status[afterRotateY-1][afterRotateX] !=<span style="color: #000000;"> NO_BLOCK)
+</span><span style="color: #008080;">30</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">31</span> <span style="color: #000000;">                moveRight();
+</span><span style="color: #008080;">32</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">34</span>             <span style="color: #008000;">//</span><span style="color: #008000;"> 如果旋转后的坐标已经超出了最右边边界</span>
+<span style="color: #008080;">35</span>             <span style="color: #0000ff;">if</span>(afterRotateX &gt;= TETRIS_COLS - 1 || 
+<span style="color: #008080;">36</span>                 tetris_status[afterRotateY][afterRotateX+1] !=<span style="color: #000000;"> NO_BLOCK)
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">                moveLeft();
+</span><span style="color: #008080;">39</span>                 afterRotateX = currentFall[2].x + preY - currentFall[2<span style="color: #000000;">].y;
+</span><span style="color: #008080;">40</span>                 afterRotateY = currentFall[2].y + currentFall[2].x -<span style="color: #000000;"> preX;
+</span><span style="color: #008080;">41</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">43</span>             <span style="color: #0000ff;">if</span>(afterRotateX &gt;= TETRIS_COLS - 1 || 
+<span style="color: #008080;">44</span>                 tetris_status[afterRotateY][afterRotateX+1] !=<span style="color: #000000;"> NO_BLOCK)
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">            {
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">                moveLeft();
+</span><span style="color: #008080;">47</span>                 <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">51</span>     <span style="color: #0000ff;">if</span><span style="color: #000000;">(canRotate){
+</span><span style="color: #008080;">52</span>         <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0 ; i &lt; currentFall.length ; i++<span style="color: #000000;">){
+</span><span style="color: #008080;">53</span>             <span style="color: #0000ff;">var</span> preX =<span style="color: #000000;"> currentFall[i].x;
+</span><span style="color: #008080;">54</span>             <span style="color: #0000ff;">var</span> preY =<span style="color: #000000;"> currentFall[i].y;
+</span><span style="color: #008080;">55</span>             <span style="color: #0000ff;">if</span>(i != 2<span style="color: #000000;">){
+</span><span style="color: #008080;">56</span>                 currentFall[i].x = currentFall[2].x + 
+<span style="color: #008080;">57</span>                     preY - currentFall[2<span style="color: #000000;">].y;
+</span><span style="color: #008080;">58</span>                 currentFall[i].y = currentFall[2].y + 
+<span style="color: #008080;">59</span>                     currentFall[2].x -<span style="color: #000000;"> preX;
+</span><span style="color: #008080;">60</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">61</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">62</span>         localStorage.setItem("currentFall"<span style="color: #000000;">, JSON.stringify(currentFall));
+</span><span style="color: #008080;">63</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">64</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">旋转</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('5bfe63fe-6098-49bc-b9b8-4c05ae8c955f')"><img id="code_img_closed_5bfe63fe-6098-49bc-b9b8-4c05ae8c955f" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_5bfe63fe-6098-49bc-b9b8-4c05ae8c955f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('5bfe63fe-6098-49bc-b9b8-4c05ae8c955f',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_5bfe63fe-6098-49bc-b9b8-4c05ae8c955f" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">按下 下 或 interval到了</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> next(){
+</span><span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">if</span><span style="color: #000000;">(moveDown()){
+</span><span style="color: #008080;"> 4</span>         <span style="color: #008000;">//</span><span style="color: #008000;">记录block</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span>             tetris_status[currentFall[i].y][currentFall[i].x]=<span style="color: #000000;">HAVE_BLOCK;
+</span><span style="color: #008080;"> 7</span>         <span style="color: #008000;">//</span><span style="color: #008000;">判断有没有满行的</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">for</span>(let j=0;j&lt;currentFall.length;j++<span style="color: #000000;">){
+</span><span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">for</span>(let i=0;i&lt;TETRIS_COLS; i++<span style="color: #000000;">){
+</span><span style="color: #008080;">10</span>                 <span style="color: #0000ff;">if</span>(tetris_status[currentFall[j].y][i]==<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;">11</span>                     <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">最后一行满了</span>
+<span style="color: #008080;">13</span>                 <span style="color: #0000ff;">if</span>(i==TETRIS_COLS-1<span style="color: #000000;">){
+</span><span style="color: #008080;">14</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">消除最后一行</span>
+<span style="color: #008080;">15</span>                     <span style="color: #0000ff;">for</span>(let i=currentFall[j].y; i&gt;0;i--<span style="color: #000000;">){
+</span><span style="color: #008080;">16</span>                         <span style="color: #0000ff;">for</span>(let j=0;j&lt;TETRIS_COLS;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">17</span>                             tetris_status[i][j]=tetris_status[i-1<span style="color: #000000;">][j];
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">19</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">分数增加</span>
+<span style="color: #008080;">20</span>                     curScore+=5<span style="color: #000000;">;
+</span><span style="color: #008080;">21</span>                     localStorage.setItem("curScore"<span style="color: #000000;">, curScore);
+</span><span style="color: #008080;">22</span>                     <span style="color: #0000ff;">if</span>(curScore&gt;<span style="color: #000000;">maxScore){
+</span><span style="color: #008080;">23</span>                         <span style="color: #008000;">//</span><span style="color: #008000;">超越最高分</span>
+<span style="color: #008080;">24</span>                         maxScore=<span style="color: #000000;">curScore;
+</span><span style="color: #008080;">25</span>                         localStorage.setItem("maxScore"<span style="color: #000000;">, maxScore);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">                    }
+</span><span style="color: #008080;">27</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">加速</span>
+<span style="color: #008080;">28</span>                     curSpeed+=0.1<span style="color: #000000;">;
+</span><span style="color: #008080;">29</span>                     localStorage.setItem("curSpeed"<span style="color: #000000;">, curSpeed);
+</span><span style="color: #008080;">30</span>                     <span style="color: #008000;">//</span><span style="color: #008000;">ui输出</span>
+<span style="color: #008080;">31</span>                     curScoreEle.innerHTML=""+<span style="color: #000000;">curScore;
+</span><span style="color: #008080;">32</span>                     maxScoreEle.innerHTML=""+<span style="color: #000000;">maxScore;
+</span><span style="color: #008080;">33</span>                     curSpeedEle.innerHTML=curSpeed.toFixed(1);<span style="color: #008000;">//</span><span style="color: #008000;">保留两位小数</span>
+<span style="color: #008080;">34</span> <span style="color: #000000;">                    clearInterval(timer);
+</span><span style="color: #008080;">35</span>                     timer=setInterval(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">                        next();
+</span><span style="color: #008080;">37</span>                     }, 500/curSpeed);
+<span style="color: #008080;">38</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">41</span>         <span style="color: #008000;">//</span><span style="color: #008000;">判断是否触顶</span>
+<span style="color: #008080;">42</span>         <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">43</span>             <span style="color: #0000ff;">if</span>(currentFall[i].y==0<span style="color: #000000;">){
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">                gameEnd();
+</span><span style="color: #008080;">45</span>                 <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">            }
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">48</span>         localStorage.setItem("tetris_status"<span style="color: #000000;">, JSON.stringify(tetris_status));
+</span><span style="color: #008080;">49</span>         <span style="color: #008000;">//</span><span style="color: #008000;">新的block</span>
+<span style="color: #008080;">50</span> <span style="color: #000000;">        createBlock();
+</span><span style="color: #008080;">51</span>         localStorage.setItem("currentFall"<span style="color: #000000;">, JSON.stringify(currentFall));
+</span><span style="color: #008080;">52</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">    drawBlocks();
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">55</span> 
+<span style="color: #008080;">56</span> <span style="color: #008000;">//</span><span style="color: #008000;">右移</span>
+<span style="color: #008080;">57</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> moveRight(){
+</span><span style="color: #008080;">58</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">59</span>         <span style="color: #0000ff;">if</span>(currentFall[i].x+1&gt;=TETRIS_ROWS || tetris_status[currentFall[i].y][currentFall[i].x+1]!=<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;">60</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">61</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">62</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">63</span>         currentFall[i].x++<span style="color: #000000;">;
+</span><span style="color: #008080;">64</span>     localStorage.setItem("currentFall"<span style="color: #000000;">, JSON.stringify(currentFall));
+</span><span style="color: #008080;">65</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">67</span> <span style="color: #008000;">//</span><span style="color: #008000;">左移</span>
+<span style="color: #008080;">68</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> moveLeft(){
+</span><span style="color: #008080;">69</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">70</span>         <span style="color: #0000ff;">if</span>(currentFall[i].x-1&lt;0 || tetris_status[currentFall[i].y][currentFall[i].x-1]!=<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;">71</span>             <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">72</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">73</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">74</span>         currentFall[i].x--<span style="color: #000000;">;
+</span><span style="color: #008080;">75</span>     localStorage.setItem("currentFall"<span style="color: #000000;">, JSON.stringify(currentFall));
+</span><span style="color: #008080;">76</span>     <span style="color: #0000ff;">return</span><span style="color: #000000;">;
+</span><span style="color: #008080;">77</span> <span style="color: #000000;">}
+</span><span style="color: #008080;">78</span> <span style="color: #008000;">//</span><span style="color: #008000;">judge can move down and if arrive at end return 1, if touch other blocks return 2, else, return 0</span>
+<span style="color: #008080;">79</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> moveDown(){
+</span><span style="color: #008080;">80</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">81</span>         <span style="color: #0000ff;">if</span>(currentFall[i].y&gt;=TETRIS_ROWS-1 || tetris_status[currentFall[i].y+1][currentFall[i].x]!=<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;">82</span>             <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">83</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">84</span> 
+<span style="color: #008080;">85</span>     <span style="color: #0000ff;">for</span>(let i=0;i&lt;currentFall.length;i++<span style="color: #000000;">)
+</span><span style="color: #008080;">86</span>         currentFall[i].y+=1<span style="color: #000000;">;
+</span><span style="color: #008080;">87</span>     <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">88</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">上下左右移动</span></div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('33c534a1-77e8-4ff9-b9a4-2725fadac40d')"><img id="code_img_closed_33c534a1-77e8-4ff9-b9a4-2725fadac40d" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_33c534a1-77e8-4ff9-b9a4-2725fadac40d" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('33c534a1-77e8-4ff9-b9a4-2725fadac40d',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_33c534a1-77e8-4ff9-b9a4-2725fadac40d" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> gameKeyEvent(evt){
+</span><span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">switch</span><span style="color: #000000;">(evt.keyCode){
+</span><span style="color: #008080;"> 3</span>         <span style="color: #008000;">//</span><span style="color: #008000;">向下</span>
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">case</span> 40:<span style="color: #008000;">//</span><span style="color: #008000;">&darr;</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">case</span> 83:<span style="color: #008000;">//</span><span style="color: #008000;">S</span>
+<span style="color: #008080;"> 6</span> <span style="color: #000000;">            next();
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">            drawBlocks();
+</span><span style="color: #008080;"> 8</span>             <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 9</span>         <span style="color: #008000;">//</span><span style="color: #008000;">向左</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">case</span> 37:<span style="color: #008000;">//</span><span style="color: #008000;">&larr;</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">case</span> 65:<span style="color: #008000;">//</span><span style="color: #008000;">A</span>
+<span style="color: #008080;">12</span> <span style="color: #000000;">            moveLeft();
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">            drawBlocks();
+</span><span style="color: #008080;">14</span>             <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">15</span>         <span style="color: #008000;">//</span><span style="color: #008000;">向右</span>
+<span style="color: #008080;">16</span>         <span style="color: #0000ff;">case</span> 39:<span style="color: #008000;">//</span><span style="color: #008000;">&rarr;</span>
+<span style="color: #008080;">17</span>         <span style="color: #0000ff;">case</span> 68:<span style="color: #008000;">//</span><span style="color: #008000;">D</span>
+<span style="color: #008080;">18</span> <span style="color: #000000;">            moveRight();
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">            drawBlocks();
+</span><span style="color: #008080;">20</span>             <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">21</span>         <span style="color: #008000;">//</span><span style="color: #008000;">旋转</span>
+<span style="color: #008080;">22</span>         <span style="color: #0000ff;">case</span> 38:<span style="color: #008000;">//</span><span style="color: #008000;">&uarr;</span>
+<span style="color: #008080;">23</span>         <span style="color: #0000ff;">case</span> 87:<span style="color: #008000;">//</span><span style="color: #008000;">W</span>
+<span style="color: #008080;">24</span> <span style="color: #000000;">            rotate();
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">            drawBlocks();
+</span><span style="color: #008080;">26</span>             <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">28</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">keydown事件监听</span></div>
+<p>其他的详细情况可以看源代码，我就不整理了。</p>
+<p>接下来我们看游戏结束时的特效。因为我也不是很懂，所以在这里整理的会比较详细。当做学习。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">//</span><span style="color: #008000;">game end</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> gameEnd(){
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    clearInterval(timer);
+</span><span style="color: #008080;"> 4</span>     <span style="color: #008000;">//</span><span style="color: #008000;">键盘输入监听结束</span>
+<span style="color: #008080;"> 5</span>     window.onkeydown=<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+</span><span style="color: #008080;"> 6</span>         <span style="color: #008000;">//</span><span style="color: #008000;">按任意键重新开始游戏</span>
+<span style="color: #008080;"> 7</span>         window.onkeydown=<span style="color: #000000;">gameKeyEvent;
+</span><span style="color: #008080;"> 8</span>         <span style="color: #008000;">//</span><span style="color: #008000;">初始化游戏数据</span>
+<span style="color: #008080;"> 9</span> <span style="color: #000000;">        initData();
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">        createBlock();
+</span><span style="color: #008080;">11</span>         localStorage.setItem("currentFall"<span style="color: #000000;">, JSON.stringify(currentFall));
+</span><span style="color: #008080;">12</span>         localStorage.setItem("tetris_status"<span style="color: #000000;">, JSON.stringify(tetris_status));
+</span><span style="color: #008080;">13</span>         localStorage.setItem("curScore"<span style="color: #000000;">, curScore);
+</span><span style="color: #008080;">14</span>         localStorage.setItem("curSpeed"<span style="color: #000000;">, curSpeed);
+</span><span style="color: #008080;">15</span>         <span style="color: #008000;">//</span><span style="color: #008000;">绘制</span>
+<span style="color: #008080;">16</span>         curScoreEle.innerHTML=""+<span style="color: #000000;">curScore;
+</span><span style="color: #008080;">17</span>         curSpeedEle.innerHTML=curSpeed.toFixed(1);<span style="color: #008000;">//</span><span style="color: #008000;">保留两位小数</span>
+<span style="color: #008080;">18</span> <span style="color: #000000;">        drawBlocks();
+</span><span style="color: #008080;">19</span>         timer=setInterval(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">            next();
+</span><span style="color: #008080;">21</span>         }, 500/curSpeed);
+<span style="color: #008080;">22</span>         <span style="color: #008000;">//</span><span style="color: #008000;">清除特效</span>
+<span style="color: #008080;">23</span>         <span style="color: #0000ff;">this</span><span style="color: #000000;">.stage.removeAllChildren();
+</span><span style="color: #008080;">24</span>         <span style="color: #0000ff;">this</span><span style="color: #000000;">.textStage.removeAllChildren();
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">    };
+</span><span style="color: #008080;">26</span>     <span style="color: #008000;">//</span><span style="color: #008000;">特效，游戏结束</span>
+<span style="color: #008080;">27</span>     setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">        initAnim();
+</span><span style="color: #008080;">29</span>         <span style="color: #008000;">//</span><span style="color: #008000;">擦除黑色方块</span>
+<span style="color: #008080;">30</span>         <span style="color: #0000ff;">for</span>(let i=0; i&lt;TETRIS_ROWS;i++<span style="color: #000000;">){
+</span><span style="color: #008080;">31</span>             <span style="color: #0000ff;">for</span>(let j=0;j&lt;TETRIS_COLS;j++<span style="color: #000000;">)
+</span><span style="color: #008080;">32</span>                 canvasCtx.clearRect(j*CELL_SIZE+1, i*CELL_SIZE+1, CELL_SIZE-2, CELL_SIZE-2<span style="color: #000000;">);
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">34</span>     }, 200<span style="color: #000000;">);
+</span><span style="color: #008080;">35</span>     <span style="color: #008000;">//</span><span style="color: #008000;">推迟显示Failed</span>
+<span style="color: #008080;">36</span>     setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+</span><span style="color: #008080;">37</span>         <span style="color: #0000ff;">if</span><span style="color: #000000;">(textFormed) {
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">            explode();
+</span><span style="color: #008080;">39</span>             setTimeout(<span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">40</span>                 createText("FAILED"<span style="color: #000000;">);
+</span><span style="color: #008080;">41</span>             }, 810<span style="color: #000000;">);
+</span><span style="color: #008080;">42</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">43</span>             createText("FAILED"<span style="color: #000000;">);
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">45</span>     }, 800<span style="color: #000000;">);
+</span><span style="color: #008080;">46</span> }</pre>
+</div>
+<p>上面代码里的localstorage是html5的本地数据存储。因为不是运用很难，所以具体看代码。</p>
+<p>整个特效是运用了createjs插件。要引入几个文件。</p>
+<p><img src="./images/Html5 小游戏 俄罗斯方块15.png" alt="" /></p>
+<p>easeljs-0.7.1.min.js,&nbsp;EasePacj.min.js,&nbsp;requestAnimationFrame.js和TweenLite.min.js<br />游戏重新开始就要清除特效。我看<a href="http://www.createjs.cc/easeljs/docs/classes/Stage.html" target="_blank">api</a>里我第一眼望过去最明显的就是removeAllChildren()，所以就选了这个。其他的改进日后再说。</p>
+<div class="cnblogs_code">
+<pre><code>        <span style="color: #008000;">//</span><span style="color: #008000;">清除特效</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.stage.removeAllChildren();
+        </span><span style="color: #0000ff;">this</span>.textStage.removeAllChildren();</pre>
+</div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('495980b5-3345-4b88-ab7d-f6917825ede5')"><img id="code_img_closed_495980b5-3345-4b88-ab7d-f6917825ede5" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_495980b5-3345-4b88-ab7d-f6917825ede5" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('495980b5-3345-4b88-ab7d-f6917825ede5',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_495980b5-3345-4b88-ab7d-f6917825ede5" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> initAnim() {
+    initStages();
+    initText();
+    initCircles();
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">在stage下方添加文字&mdash;&mdash;按任意键重新开始游戏.</span>
+    tmp = <span style="color: #0000ff;">new</span> createjs.Text("t", "12px 'Source Sans Pro'", "#54555C"<span style="color: #000000;">);
+    tmp.textAlign </span>= 'center'<span style="color: #000000;">;
+    tmp.x </span>= 180<span style="color: #000000;">;
+    tmp.y</span>=350<span style="color: #000000;">;
+    tmp.text </span>= "按任意键重新开始游戏"<span style="color: #000000;">;
+    stage.addChild(tmp);
+    animate();
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">initAnim</span></div>
+<p>上面初始化了一个stage，用于存放特效，一个textstage，用于形成&ldquo;FAILED&rdquo;的像素图片。还有一个按任意键重新游戏的提示。同时开始每隔一段时间就刷新stage。</p>
+<p>根据block的位置来初始化小圆点。</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('72f5b9d4-5af0-4439-983a-124c81602a01')"><img id="code_img_closed_72f5b9d4-5af0-4439-983a-124c81602a01" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_72f5b9d4-5af0-4439-983a-124c81602a01" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('72f5b9d4-5af0-4439-983a-124c81602a01',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_72f5b9d4-5af0-4439-983a-124c81602a01" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> initCircles() {
+</span><span style="color: #008080;"> 2</span>     circles =<span style="color: #000000;"> [];
+</span><span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">var</span> p=<span style="color: #000000;">[];
+</span><span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">var</span> count=0<span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">for</span>(let i=0; i&lt;TETRIS_ROWS;i++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">for</span>(let j=0;j&lt;TETRIS_COLS;j++<span style="color: #000000;">)
+</span><span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">if</span>(tetris_status[i][j]!=<span style="color: #000000;">NO_BLOCK)
+</span><span style="color: #008080;"> 8</span>                 p.push({'x':j*CELL_SIZE+2, 'y':i*CELL_SIZE+2, 'w':CELL_SIZE-3, 'h':CELL_SIZE-4<span style="color: #000000;">});
+</span><span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0; i&lt;250; i++<span style="color: #000000;">) {
+</span><span style="color: #008080;">10</span>         <span style="color: #0000ff;">var</span> circle = <span style="color: #0000ff;">new</span><span style="color: #000000;"> createjs.Shape();
+</span><span style="color: #008080;">11</span>         <span style="color: #0000ff;">var</span> r = 7<span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>         <span style="color: #008000;">//</span><span style="color: #008000;">x和y范围限定在黑色block内</span>
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">var</span> x = p[count]['x']+p[count]['w']*<span style="color: #000000;">Math.random();
+</span><span style="color: #008080;">14</span>         <span style="color: #0000ff;">var</span> y = p[count]['y']+p[count]['h']*<span style="color: #000000;">Math.random();
+</span><span style="color: #008080;">15</span>         count++<span style="color: #000000;">;
+</span><span style="color: #008080;">16</span>         <span style="color: #0000ff;">if</span>(count&gt;=<span style="color: #000000;">p.length)
+</span><span style="color: #008080;">17</span>             count=0<span style="color: #000000;">;
+</span><span style="color: #008080;">18</span>         <span style="color: #0000ff;">var</span> color = colors[Math.floor(i%<span style="color: #000000;">colors.length)];
+</span><span style="color: #008080;">19</span>         <span style="color: #0000ff;">var</span> alpha = 0.2 + Math.random()*0.5<span style="color: #000000;">;
+</span><span style="color: #008080;">20</span>         circle.alpha =<span style="color: #000000;"> alpha;
+</span><span style="color: #008080;">21</span>         circle.radius =<span style="color: #000000;"> r;
+</span><span style="color: #008080;">22</span>         circle.graphics.beginFill(color).drawCircle(0, 0<span style="color: #000000;">, r);
+</span><span style="color: #008080;">23</span>         circle.x =<span style="color: #000000;"> x;
+</span><span style="color: #008080;">24</span>         circle.y =<span style="color: #000000;"> y;
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">        circles.push(circle);
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">        stage.addChild(circle);
+</span><span style="color: #008080;">27</span>         circle.movement = 'float'<span style="color: #000000;">;
+</span><span style="color: #008080;">28</span> <span style="color: #000000;">        tweenCircle(circle);
+</span><span style="color: #008080;">29</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">30</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">initCircles</span></div>
+<p>然后再讲显示特效Failed的createText（）。先将FAILED的text显示在textstage里，然后ctx.getImageData.data获取像素数据，并以此来为每个小圆点定义位置。</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('9c049415-cf08-43b3-a304-eb97248459fb')"><img id="code_img_closed_9c049415-cf08-43b3-a304-eb97248459fb" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_9c049415-cf08-43b3-a304-eb97248459fb" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('9c049415-cf08-43b3-a304-eb97248459fb',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_9c049415-cf08-43b3-a304-eb97248459fb" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> createText(t) {
+</span><span style="color: #008080;"> 2</span>     curText=<span style="color: #000000;">t;
+</span><span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">var</span> fontSize = 500/(t.length);
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">if</span> (fontSize &gt; 80) fontSize = 80<span style="color: #000000;">;
+</span><span style="color: #008080;"> 5</span>     text.text =<span style="color: #000000;"> t;
+</span><span style="color: #008080;"> 6</span>     text.font = "900 "+fontSize+"px 'Source Sans Pro'"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 7</span>     text.textAlign = 'center'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 8</span>     text.x = TETRIS_COLS*CELL_SIZE/2;
+<span style="color: #008080;"> 9</span>     text.y = 0<span style="color: #000000;">;
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">    textStage.addChild(text);
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    textStage.update();
+</span><span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">var</span> ctx = document.getElementById('text').getContext('2d'<span style="color: #000000;">);
+</span><span style="color: #008080;">14</span>     <span style="color: #0000ff;">var</span> pix = ctx.getImageData(0,0,600,200<span style="color: #000000;">).data;
+</span><span style="color: #008080;">15</span>     textPixels =<span style="color: #000000;"> [];
+</span><span style="color: #008080;">16</span>     <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = pix.length; i &gt;= 0; i -= 4<span style="color: #000000;">) {
+</span><span style="color: #008080;">17</span>         <span style="color: #0000ff;">if</span> (pix[i] != 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">18</span>             <span style="color: #0000ff;">var</span> x = (i / 4) % 600<span style="color: #000000;">;
+</span><span style="color: #008080;">19</span>             <span style="color: #0000ff;">var</span> y = Math.floor(Math.floor(i/600)/4<span style="color: #000000;">);
+</span><span style="color: #008080;">20</span>             <span style="color: #0000ff;">if</span>((x &amp;&amp; x%8 == 0) &amp;&amp; (y &amp;&amp; y%8 == 0<span style="color: #000000;">)) textPixels.push({x: x, y: y});
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">23</span> 
+<span style="color: #008080;">24</span> <span style="color: #000000;">    formText();
+</span><span style="color: #008080;">25</span>     textStage.clear();<span style="color: #008000;">//</span><span style="color: #008000;">清楚text的显示</span>
+<span style="color: #008080;">26</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">CreateText</span></div>
+<p>跟着代码的节奏走，我们现在来到了formtext.</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('315313da-0b4d-4b2f-aa2e-11b7706434ce')"><img id="code_img_closed_315313da-0b4d-4b2f-aa2e-11b7706434ce" class="code_img_closed" src="./images/Html5 小游戏 俄罗斯方块3.png" alt="" /><img id="code_img_opened_315313da-0b4d-4b2f-aa2e-11b7706434ce" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('315313da-0b4d-4b2f-aa2e-11b7706434ce',event)" src="./images/Html5 小游戏 俄罗斯方块4.png" alt="" />
+<div id="cnblogs_code_open_315313da-0b4d-4b2f-aa2e-11b7706434ce" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> formText() {
+</span><span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i= 0, l=textPixels.length; i&lt;l; i++<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 3</span>         circles[i].originX = offsetX +<span style="color: #000000;"> textPixels[i].x;
+</span><span style="color: #008080;"> 4</span>         circles[i].originY = offsetY +<span style="color: #000000;"> textPixels[i].y;
+</span><span style="color: #008080;"> 5</span>         tweenCircle(circles[i], 'in'<span style="color: #000000;">);
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;"> 7</span>     textFormed = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">if</span>(textPixels.length &lt;<span style="color: #000000;"> circles.length) {
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> j = textPixels.length; j&lt;circles.length; j++<span style="color: #000000;">) {
+</span><span style="color: #008080;">10</span>             circles[j].tween = TweenLite.to(circles[j], 0.4, {alpha: 0.1<span style="color: #000000;">});
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">13</span> }</pre>
+</div>
+<span class="cnblogs_code_collapse">formtext</span></div>
+<p>explode()就是讲已组成字的小圆点给重新遣散。</p>
+<p>动画实现是使用了tweenlite.</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> tweenCircle(c, dir) {
+</span><span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">if</span><span style="color: #000000;">(c.tween) c.tween.kill();
+</span><span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">if</span>(dir == 'in'<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 4</span>         <span style="color: #008000;">/*</span><span style="color: #008000;">TweenLite.to 改变c实例的x坐标，y坐标，使用easeInOut弹性函数，透明度提到1，改变大小,radius，总用时0.4s</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 5</span>         c.tween = TweenLite.to(c, 0.4, {x: c.originX, y: c.originY, ease:Quad.easeInOut, alpha: 1, radius: 5, scaleX: 0.4, scaleY: 0.4, onComplete: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;"> 6</span>             c.movement = 'jiggle';<span style="color: #008000;">/*</span><span style="color: #008000;">轻摇</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 7</span> <span style="color: #000000;">            tweenCircle(c);
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">        }});
+</span><span style="color: #008080;"> 9</span>     } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(dir == 'out'<span style="color: #000000;">) {
+</span><span style="color: #008080;">10</span>         c.tween = TweenLite.to(c, 0.8, {x: window.innerWidth*Math.random(), y: window.innerHeight*Math.random(), ease:Quad.easeInOut, alpha: 0.2 + Math.random()*0.5, scaleX: 1, scaleY: 1, onComplete: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">11</span>             c.movement = 'float'<span style="color: #000000;">;
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">            tweenCircle(c);
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">        }});
+</span><span style="color: #008080;">14</span>     } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">15</span>         <span style="color: #0000ff;">if</span>(c.movement == 'float'<span style="color: #000000;">) {
+</span><span style="color: #008080;">16</span>             c.tween = TweenLite.to(c, 5 + Math.random()*3.5, {x: c.x + -100+Math.random()*200, y: c.y + -100+Math.random()*200, ease:Quad.easeInOut, alpha: 0.2 + Math.random()*0.5<span style="color: #000000;">,
+</span><span style="color: #008080;">17</span>                 onComplete: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">                    tweenCircle(c);
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">                }});
+</span><span style="color: #008080;">20</span>         } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">21</span>             c.tween = TweenLite.to(c, 0.05, {x: c.originX + Math.random()*3, y: c.originY + Math.random()*3<span style="color: #000000;">, ease:Quad.easeInOut,
+</span><span style="color: #008080;">22</span>                 onComplete: <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                    tweenCircle(c);
+</span><span style="color: #008080;">24</span> <span style="color: #000000;">                }});
+</span><span style="color: #008080;">25</span> <span style="color: #000000;">        }
+</span><span style="color: #008080;">26</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">27</span> }</pre>
+</div>
+<p>TweenLite.to函数第一个参数，要做动画的实例，第二个参数，事件，第三个参数，动画改变参数。</p>
+<div>Quad.easeInOut()意思是在动画开始和结束时缓动。</div>
+<div>onComplete动画完成时调用的函数。易得，在我们的应用中，我们将开始下一次动画。</div>
+<p>&nbsp;<span style="font-size: 18pt;">个人感言</span></p>
+<p><span style="font-size: 12px;">其实刚开始没想做这么复杂，所以文件排的比较随意，然后就导致了后期项目完成时那副杂乱无章的样子。^_^，以后改。等我等看懂动画效果时在说，现在用的有点半懵半懂。</span></p>
+<p><span style="font-size: 12px;">这篇博客写得有点乱。新手之作，就先这样吧。同上，以后改。因为不知道这个项目会不会拿来直接当我们计算机职业实践的作业。要是的话，我就彻改，连同博客。</span></p>
+<p><span style="font-size: 12px;">以下是源代码地址。(我还以为csdn的下载要的积分是自己定的。等我下次彻改的时候我传到github上。现在将就一下)</span></p>
+<p>https://download.csdn.net/download/qq_26136211/12011640</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

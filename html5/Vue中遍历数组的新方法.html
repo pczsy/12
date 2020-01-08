@@ -1,0 +1,205 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue中遍历数组的新方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue中遍历数组的新方法</center></div><div class='banquan'>原文出处:本文由博客园博主稻火提供。<br/>
+原文连接:https://www.cnblogs.com/liuzhengkun/p/11216966.html</div><br>
+    <p>1、foreach</p>
+<p>　　foreach循环对不能使用return来停止循环</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">search(keyword){
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">        var newList = []
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">        this.urls.forEach(item =&gt;{
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">          if(item.name.indexOf(keyword) != -1){
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">            newList.push(item)
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">          }
+</span><span style="color: #008080;">7</span> <span style="color: #000000;">        })
+</span><span style="color: #008080;">8</span> <span style="color: #000000;">        return newList
+</span><span style="color: #008080;">9</span>       }</pre>
+</div>
+<p>2、filter</p>
+<p>　　item对象就是遍历数组中的一个元素，includes是es6中的新方法，在search方法中直接返回新数组</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">search(keyword){
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">        return this.urls.filter(item =&gt;{
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">          if(item.name.includes(keyword)){
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">            return item
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">       }
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">   })
+</span><span style="color: #008080;">7</span> }</pre>
+</div>
+<p>&nbsp;</p>
+<p>3、findIndex</p>
+<p>　　返回true后index就可以获取到匹配的元素在进行删除</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">del(row){
+          this.$confirm("确定要删除吗？", "删除").then(action=&gt;{
+          var index = this.urls.findIndex(item =&gt;{
+            if(item.name == row.name){
+              return true;
+            }
+          })
+          this.urls.splice(index, 1)
+});    </span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4、some</p>
+<p>　　如果匹配成功就return true跳出some的循环</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">del(row){
+        this.$confirm("确定要删除吗？", "删除").then(action=&gt;{
+            this.urls.some((item, i) =&gt;{
+            if(item.name == row.name){
+              this.urls.splice(i, 1)
+              return true;
+            }
+          }) 
+    });
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>5、上例子，在一个vue的data中存入一个固定的数组，对数组进行遍历，实现搜索功能，删除功能</p>
+<p>　　在el-table中 :data中绑定一个方法，方法中对固定的数组urls进行遍历，返回一个新的数组实现搜索功能</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div&gt;
+     &lt;label style=<span style="color: #800000;">"</span><span style="color: #800000;">float: left;</span><span style="color: #800000;">"</span>&gt;<span style="color: #000000;">
+      搜索关键字：
+      </span>&lt;input type=<span style="color: #800000;">"</span><span style="color: #800000;">text</span><span style="color: #800000;">"</span> <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">form-control</span><span style="color: #800000;">"</span> v-model=<span style="color: #800000;">"</span><span style="color: #800000;">keyword</span><span style="color: #800000;">"</span>&gt;
+    &lt;/label&gt;
+        &lt;el-table :data=<span style="color: #800000;">"</span><span style="color: #800000;">search(keyword)</span><span style="color: #800000;">"</span> size=<span style="color: #800000;">"</span><span style="color: #800000;">small</span><span style="color: #800000;">"</span> :stripe=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span> :border=<span style="color: #800000;">"</span><span style="color: #800000;">true</span><span style="color: #800000;">"</span> @select=<span style="color: #800000;">"</span><span style="color: #800000;">select</span><span style="color: #800000;">"</span> @select-all=<span style="color: #800000;">"</span><span style="color: #800000;">select</span><span style="color: #800000;">"</span>&gt;
+            &lt;el-table-column type=<span style="color: #800000;">"</span><span style="color: #800000;">selection</span><span style="color: #800000;">"</span>&gt;&lt;/el-table-column&gt;
+            &lt;el-table-column type=<span style="color: #800000;">"</span><span style="color: #800000;">index</span><span style="color: #800000;">"</span>&gt;&lt;/el-table-column&gt;
+            &lt;el-table-column label=<span style="color: #800000;">"</span><span style="color: #800000;">网站名</span><span style="color: #800000;">"</span> prop=<span style="color: #800000;">"</span><span style="color: #800000;">name</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">200</span><span style="color: #800000;">"</span>&gt;
+                &lt;template slot-scope=<span style="color: #800000;">"</span><span style="color: #800000;">slot</span><span style="color: #800000;">"</span>&gt;
+                    &lt;a href=<span style="color: #800000;">"</span><span style="color: #800000;">slot.row.url</span><span style="color: #800000;">"</span> target=<span style="color: #800000;">"</span><span style="color: #800000;">_blank</span><span style="color: #800000;">"</span>&gt;{{slot.row.name}}&lt;/a&gt;
+                &lt;/template&gt;
+            &lt;/el-table-column&gt;
+            &lt;el-table-column label=<span style="color: #800000;">"</span><span style="color: #800000;">网址</span><span style="color: #800000;">"</span> prop=<span style="color: #800000;">"</span><span style="color: #800000;">url</span><span style="color: #800000;">"</span>&gt;&lt;/el-table-column&gt;
+            &lt;el-table-column label=<span style="color: #800000;">"</span><span style="color: #800000;">类型</span><span style="color: #800000;">"</span> prop=<span style="color: #800000;">"</span><span style="color: #800000;">type</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">50</span><span style="color: #800000;">"</span>&gt;&lt;/el-table-column&gt;
+            &lt;el-table-column label=<span style="color: #800000;">"</span><span style="color: #800000;">国家</span><span style="color: #800000;">"</span> prop=<span style="color: #800000;">"</span><span style="color: #800000;">country</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">50</span><span style="color: #800000;">"</span>&gt;&lt;/el-table-column&gt;
+            &lt;el-table-column label=<span style="color: #800000;">"</span><span style="color: #800000;">操作</span><span style="color: #800000;">"</span> width=<span style="color: #800000;">"</span><span style="color: #800000;">50</span><span style="color: #800000;">"</span>&gt;
+                &lt;template slot-scope=<span style="color: #800000;">"</span><span style="color: #800000;">slot</span><span style="color: #800000;">"</span>&gt;
+                    &lt;el-button size=<span style="color: #800000;">"</span><span style="color: #800000;">mini</span><span style="color: #800000;">"</span> type=<span style="color: #800000;">"</span><span style="color: #800000;">text</span><span style="color: #800000;">"</span> icon=<span style="color: #800000;">"</span><span style="color: #800000;">el-icon-delete</span><span style="color: #800000;">"</span> @click=<span style="color: #800000;">"</span><span style="color: #800000;">del(slot.row)</span><span style="color: #800000;">"</span>&gt;&lt;/el-button&gt;
+                &lt;/template&gt;
+            &lt;/el-table-column&gt;
+        &lt;/el-table&gt;
+        &lt;el-divider content-position=<span style="color: #800000;">"</span><span style="color: #800000;">left</span><span style="color: #800000;">"</span>&gt;表格操作&lt;/el-divider&gt;
+        &lt;el-button @click=<span style="color: #800000;">"</span><span style="color: #800000;">batchDelete</span><span style="color: #800000;">"</span> type=<span style="color: #800000;">"</span><span style="color: #800000;">danger</span><span style="color: #800000;">"</span> icon=<span style="color: #800000;">"</span><span style="color: #800000;">el-icon-delete</span><span style="color: #800000;">"</span> size=<span style="color: #800000;">"</span><span style="color: #800000;">small</span><span style="color: #800000;">"</span>&gt;批量删除&lt;/el-button&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+    export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+        data() {
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+        keyword:</span><span style="color: #800000;">''</span><span style="color: #000000;">,
+                selections: [],
+                urls: [{
+                        name: </span><span style="color: #800000;">"</span><span style="color: #800000;">新浪</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        url: </span><span style="color: #800000;">"</span><span style="color: #800000;">http://www.sina.com</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        type: </span><span style="color: #800000;">"</span><span style="color: #800000;">资讯</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        country: </span><span style="color: #800000;">"</span><span style="color: #800000;">中国</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                    },
+                    {
+                        name: </span><span style="color: #800000;">"</span><span style="color: #800000;">腾讯</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        url: </span><span style="color: #800000;">"</span><span style="color: #800000;">http://www.tencent.com</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        type: </span><span style="color: #800000;">"</span><span style="color: #800000;">聊天</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        country: </span><span style="color: #800000;">"</span><span style="color: #800000;">中国</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                    },
+                    {
+                        name: </span><span style="color: #800000;">"</span><span style="color: #800000;">谷歌</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        url: </span><span style="color: #800000;">"</span><span style="color: #800000;">http://www.google.com</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        type: </span><span style="color: #800000;">"</span><span style="color: #800000;">资讯</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        country: </span><span style="color: #800000;">"</span><span style="color: #800000;">美国</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                    },
+                    {
+                        name: </span><span style="color: #800000;">"</span><span style="color: #800000;">韬睿</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        url: </span><span style="color: #800000;">"</span><span style="color: #800000;">http://www.51i-star.com</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        type: </span><span style="color: #800000;">"</span><span style="color: #800000;">教育</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+                        country: </span><span style="color: #800000;">"</span><span style="color: #800000;">中国</span><span style="color: #800000;">"</span><span style="color: #000000;">
+                    }
+                ]
+            };
+        },
+        methods: {
+            del(row){
+                </span><span style="color: #0000ff;">this</span>.$confirm(<span style="color: #800000;">"</span><span style="color: #800000;">确定要删除吗？</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">删除</span><span style="color: #800000;">"</span>).then(action=&gt;<span style="color: #000000;">{
+          </span><span style="color: #008000;">/*</span><span style="color: #008000;"> this.urls.some((item, i) =&gt;{
+            if(item.name == row.name){
+              this.urls.splice(i, 1)
+              return true;
+            }
+          }) </span><span style="color: #008000;">*/</span>
+          <span style="color: #0000ff;">var</span> index = <span style="color: #0000ff;">this</span>.urls.findIndex(item =&gt;<span style="color: #000000;">{
+            </span><span style="color: #0000ff;">if</span>(item.name ==<span style="color: #000000;"> row.name){
+              </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+            }
+          })
+          </span><span style="color: #0000ff;">this</span>.urls.splice(index, <span style="color: #800080;">1</span><span style="color: #000000;">)
+                });
+            },
+            </span><span style="color: #0000ff;">select</span><span style="color: #000000;">(selections, row) {
+                </span><span style="color: #0000ff;">this</span>.selections =<span style="color: #000000;"> selections;
+            },
+            batchDelete() {
+                </span><span style="color: #0000ff;">this</span>.$confirm(<span style="color: #800000;">"</span><span style="color: #800000;">确定要删除吗？</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">删除</span><span style="color: #800000;">"</span><span style="color: #000000;">)
+                    .then(action </span>=&gt;<span style="color: #000000;"> {
+                        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = <span style="color: #0000ff;">this</span>.urls.length - <span style="color: #800080;">1</span>; i &gt;= <span style="color: #800080;">0</span>; i--<span style="color: #000000;">) {
+                            </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> j = <span style="color: #0000ff;">this</span>.selections.length - <span style="color: #800080;">1</span>; j &gt;= <span style="color: #800080;">0</span>; j--<span style="color: #000000;">) {
+                                </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.urls[i].name == <span style="color: #0000ff;">this</span><span style="color: #000000;">.selections[j].name) {
+                                    </span><span style="color: #0000ff;">this</span>.urls.splice(i, <span style="color: #800080;">1</span><span style="color: #000000;">);
+                                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                                }
+                            }
+                        }
+                    })
+                    .</span><span style="color: #0000ff;">catch</span>(error =&gt;<span style="color: #000000;"> {
+                        alert(error);
+                        </span><span style="color: #0000ff;">this</span>.$message(<span style="color: #800000;">'</span><span style="color: #800000;">删除取消</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+                    });
+            },
+      search(keyword){
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;"> var newList = []
+        this.urls.forEach(item =&gt;{
+          if(item.name.indexOf(keyword) != -1){
+            newList.push(item)
+          }
+        })
+        return newList </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.urls.filter(item =&gt;<span style="color: #000000;">{
+          </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(item.name.includes(keyword)){
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> item
+          }
+        })
+      }
+
+        }
+    }
+</span>&lt;/script&gt;
+
+&lt;style&gt;
+
+&lt;/style&gt;</pre>
+</div>
+<p>6、效果图为</p>
+<p><img src="./images/Vue中遍历数组的新方法0.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

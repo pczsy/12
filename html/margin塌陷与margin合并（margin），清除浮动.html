@@ -1,0 +1,59 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修margin塌陷与margin合并（margin），清除浮动' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>margin塌陷与margin合并（margin），清除浮动</center></div><div class='banquan'>原文出处:本文由博客园博主扎扎小成提供。<br/>
+原文连接:https://www.cnblogs.com/LiAnChenglac/p/margin.html</div><br>
+    <p><span style="font-size: 18px;">**1、margin塌陷**</span><br />问题：垂直方向的父子关系的盒子使用不当会产生margin塌陷。给子级设置margin-top时，他不会相对父级一起动，只有他的margin超过父级的margin时，才会生效，但会带着父级一起动（作者总结，官方定义自己查看）。<br />如：</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px; background-color:red;margin-top:20px;margin-left:20px"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;//20pxmargin-top<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```</p>
+<p>效果：</p>
+<p><img src="./images/margin塌陷与margin合并（margin），清除浮动0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />**解决方法：**<br />（1）给父级盒子加上边框border:1px silod black;（改变结构了，不推荐使用）</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px;<br />    background-color:red;margin-top:20px;margin-left:20px;border:1px solid black"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```</p>
+<p>效果：</p>
+<p><img src="./images/margin塌陷与margin合并（margin），清除浮动1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />（2）触发盒子的BFC模型（不懂就去百度吧）<br />如何触发盒子的BFC呢？<br />1.Position：absolute；<br />2.display:inline-block;<br />3.float:left/right;<br />4.overflow:hiddle;<br />1.Position：absolute；给父级加上绝对定位，让子级相对父级动。</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px;<br />    background-color:red;margin-top:20px;margin-left:20px;position: absolute;"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />2.display:inline-block;让父级同时具有行级属性和块级属性。</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px;<br /> background-color:red;margin-top:20px;margin-left:20px;display: inline-block;"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />3.float:left/right;让父级产生浮动流</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px;<br /> background-color:red;margin-top:20px;margin-left:20px; float:left;"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />4.overflow:hiddle;溢出部分隐藏</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;div class="parent" style="width:200px;height:200px;<br /> background-color:red;margin-top:20px;margin-left:20px; overflow: hidden;"&gt;<br />        &lt;div class="son" style="width:100px;height:100px; background-color:yellow; margin-top:20px "&gt;<br />        &lt;/div&gt;<br />    &lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动5.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br /><span style="font-size: 18px;">**2、margin合并**</span><br />问题:<br />margin-left和margin-right区域不能共用。只会叠加。</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;span class="box1" style="background-color:yellow; margin-right:30px;"&gt;1&lt;/span&gt;<br />    &lt;span class="box2" style="background-color:red; margin-left:50px;"&gt;2&lt;/span&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动6.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />两个兄弟结构垂直方向的margin共用。</p>
+<p>```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;span class="box1" style="background-color:yellow; margin-right:30px;"&gt;1&lt;/span&gt;<br />    &lt;span class="box2" style="background-color:red; margin-left:50px;"&gt;2&lt;/span&gt;<br />    &lt;div class="demo1" style="background-color:blue; margin-bottom:100px ;"&gt;3&lt;/div&gt;<br />    &lt;div class="demo2" style="background-color:salmon; margin-top: 100px;"&gt;3&lt;/div&gt;<br />&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动7.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br />解决垂直方向的margin合并问题也是触动盒子的BFC。<br />解决方法如下：（嵌套盒子：然后：overflower:hidden;）<br />```<br />&lt;!DOCTYPE html&gt;<br />&lt;html lang="en"&gt;<br />&lt;head&gt;<br />    &lt;meta charset="UTF-8"&gt;<br />    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;<br />    &lt;meta http-equiv="X-UA-Compatible" content="ie=edge"&gt;<br />    &lt;title&gt;Document&lt;/title&gt;<br />&lt;/head&gt;<br />&lt;body&gt;<br />    &lt;span class="box1" style="background-color:yellow; margin-right:30px;"&gt;1&lt;/span&gt;<br />    &lt;span class="box2" style="background-color:red; margin-left:50px;"&gt;2&lt;/span&gt;<br />    &lt;div style="overflow:hidden;"&gt;<br />    &lt;div class="demo1" style="background-color:blue; margin-bottom:100px ;"&gt;3&lt;/div&gt;<br />&lt;/div&gt;<br />    &lt;div class="demo2" style="background-color:salmon; margin-top: 100px;"&gt;3&lt;/div&gt;</p>
+<p>&lt;/body&gt;<br />&lt;/html&gt;<br />```<br />效果：<br /><img src="./images/margin塌陷与margin合并（margin），清除浮动8.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><br /><strong>**总结：**</strong><br />      在实际开发时不解决这个问题，比如说要解决垂直方面200px，为什么不直接top200px呢，不用top100px,然后bottom100px。<br /><strong>**顺带说一下清除浮动的两种两种方法：**</strong><br />（1）在有浮动的元素的后面加入一个标签。<br />下面我就简单举例了：<br />&lt;div class = "clear"&gt;&lt;/div&gt;<br />css中：<br />.clrar{clear:both;}<br />(2)使用伪类元素，找到需要清除的标签，直接使用三件套：<br />.warpper::after{<br />content:"";<br />clrar:both;<br />display:block;<br />}</p>
+<p><strong>**想看更清除浮动更详细的解答，请继续关注作者的更新。**</strong></p>
+<p><strong>如发现错误，请联系作者！！！！</strong></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

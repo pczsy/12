@@ -1,0 +1,73 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【微信小程序】mpvue中页面之间传值（全网唯一真正可行的方法，中指推了一下隐形眼镜）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【微信小程序】mpvue中页面之间传值（全网唯一真正可行的方法，中指推了一下隐形眼镜）</center></div><div class='banquan'>原文出处:本文由博客园博主等一轮新月提供。<br/>
+原文连接:https://www.cnblogs.com/yfgg/p/11203004.html</div><br>
+    <p>摘要： mpvue中页面之间传值（注意：是页面之间，不是组件之间）</p>
+<p>场景：A页面跳转B页面，在B页面选择商品，将商品名带回A页面并显示</p>
+<p>使用api：<span style="background-color: #ff0000; color: #ffffff;">&nbsp;getCurrentPages&nbsp;</span></p>
+<p><span style="background-color: #ff0000; color: #ffffff;">&nbsp;</span></p>
+<p><span style="background-color: #ffffff;">step1：</span></p>
+<p><span style="background-color: #ffffff;">A页面js:</span></p>
+<p><span style="background-color: #ffffff;">先定义一个全局的对象that，然后在mouted中把this赋给that</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> that </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">;
+export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+  data () {
+    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+      setData: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (key,value) {
+        that[key] </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> value
+      }
+    }
+  },
+}
+</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">script</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">  mounted () {
+    that = this;
+  },</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ffffff;">step2：&nbsp;</span></p>
+<p><span style="background-color: #ffffff;">B页面js</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">    getBrand (brand) {
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">      let { from } = this.$root.$mp.query
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">      let pages = getCurrentPages()
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">      let page = pages.find( item =&gt; item.route.indexOf(from) != -1)
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">      page.data.$root[0].setData('brand',brand)
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">      wx.navigateBack({
+</span><span style="color: #008080;">7</span> <span style="color: #000000;">        delta: 1
+</span><span style="color: #008080;">8</span> <span style="color: #000000;">      });
+</span><span style="color: #008080;">9</span>     }</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffff00;">讲解完毕，88， 下次见</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

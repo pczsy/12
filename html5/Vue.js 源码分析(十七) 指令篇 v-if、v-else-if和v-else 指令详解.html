@@ -1,0 +1,189 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十七) 指令篇 v-if、v-else-if和v-else 指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十七) 指令篇 v-if、v-else-if和v-else 指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11127935.html</div><br>
+    <p>v-if 指令用于条件性地渲染一块内容。这块内容只会在指令的表达式返回true值的时候被渲染。</p>
+<p>v-else-if，顾名思义，充当 v-if 的&ldquo;else-if 块&rdquo;，可以连续使用：</p>
+<p>也可以使用 v-else 指令来表示 v-if 的&ldquo;else 块&rdquo;：</p>
+<p>挺好理解的，就和大多数的语言的if()....else if()...else逻辑语句是一样的，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="no&lt;0"</span><span style="color: #0000ff;">&gt;</span>n小于0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-else-if</span><span style="color: #0000ff;">="no==0"</span><span style="color: #0000ff;">&gt;</span>no等于0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-else</span><span style="color: #0000ff;">&gt;</span>no大于0<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,data:{no:</span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">}})</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>渲染为:</p>
+<p><img src="./images/Vue.js 源码分析(十七) 指令篇 v-if、v-else-if和v-else 指令详解0.png" alt="" /></p>
+<p>有两个注意点：</p>
+<p>　　<span style="color: #ff0000;"><code>v-else和v-else-if</code> 必须紧跟在带 <code>v-if</code> 或者 <code>v-else-if</code> 的元素之后，一会儿将源码的时候会讲到为什么</span></p>
+<p>　　<span style="color: #ff0000;">因为 <code>v-if</code> 是一个指令，所以必须将它添加到一个元素上。但是如果想切换多个元素呢？此时可以把一个 <code>&lt;template&gt;</code> 元素当做不可见的包裹元素，</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;Vue内部会把v-if、v-else、v-else-if解析称为一个<span style="color: #ff0000;">三元运算符</span>，如果有多个v-else,则三元运算符内再嵌套一个三元运算符，以例子里的为例:</p>
+<p>解析模板解析到<span style="color: #0000ff;">&lt;<span style="color: #800000;">p <span style="color: #ff0000;">v-if<span style="color: #0000ff;">="no&lt;0"<span style="color: #0000ff;">&gt;n小于0<span style="color: #0000ff;">&lt;/<span style="color: #800000;">p<span style="color: #0000ff;">&gt;</span></span></span></span></span></span></span></span>这个DOM元素时会执行到processIf()函数</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processIf (el) {               <span style="color: #008000;">//</span><span style="color: #008000;">第9402行  解析v-if指令</span>
+  <span style="color: #0000ff;">var</span> exp = getAndRemoveAttr(el, 'v-if');   <span style="color: #008000;">//</span><span style="color: #008000;">获取表达式，例如:"no&lt;0"  </span>
+  <span style="color: #0000ff;">if</span> (exp) {                                  <span style="color: #008000;">//</span><span style="color: #008000;">如果存在v-if属性</span>
+    el.<span style="color: #0000ff;">if</span> = exp;                                  <span style="color: #008000;">//</span><span style="color: #008000;">增加if属性</span>
+    addIfCondition(el, {                          <span style="color: #008000;">//</span><span style="color: #008000;">调用addIfCondition()函数给el增加一个ifConditions属性,值是一个对象，其中 exp表示当前v-if的值，block是当前AST对象的引用(一会儿给v-else和v-else-if用的)</span>
+<span style="color: #000000;">      exp: exp,
+      block: el
+    });
+  } </span><span style="color: #0000ff;">else</span> {                                  <span style="color: #008000;">//</span><span style="color: #008000;">如果不存在v-if属性</span>
+    <span style="color: #0000ff;">if</span> (getAndRemoveAttr(el, 'v-else') != <span style="color: #0000ff;">null</span>) {     <span style="color: #008000;">//</span><span style="color: #008000;">如果存在else命令，则在el.else上增加一个else属性</span>
+      el.<span style="color: #0000ff;">else</span> = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">var</span> elseif = getAndRemoveAttr(el, 'v-else-if'); <span style="color: #008000;">//</span><span style="color: #008000;">如果存在v-else-if指令，则添加elseif属性</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (elseif) {
+      el.elseif </span>=<span style="color: #000000;"> elseif;
+    }
+  }
+}
+</span><span style="color: #0000ff;">function</span> addIfCondition (el, condition) { <span style="color: #008000;">//</span><span style="color: #008000;">第9453行 增加一个ifConditions属性，</span>
+  <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">el.ifConditions) {
+    el.ifConditions </span>= [];                     <span style="color: #008000;">//</span><span style="color: #008000;">如果ifConditions属性不存在则初始化为一个空数组</span>
+<span style="color: #000000;">  }
+  el.ifConditions.push(condition);            </span><span style="color: #008000;">//</span><span style="color: #008000;">将参数condition这个对象push进来</span>
+}</pre>
+</div>
+<p>对于v-if节点只是增加一个if和ifConditions属性，对于<span style="color: #0000ff;">&lt;<span style="color: #800000;">p <span style="color: #ff0000;">v-if<span style="color: #0000ff;">="no&lt;0"<span style="color: #0000ff;">&gt;n小于0<span style="color: #0000ff;">&lt;/<span style="color: #800000;">p<span style="color: #0000ff;">&gt;</span></span></span></span></span></span></span></span>来说，对应的AST对象增加的属性如下:</p>
+<p><img src="./images/Vue.js 源码分析(十七) 指令篇 v-if、v-else-if和v-else 指令详解1.png" alt="" /></p>
+<p>解析模板时，对于v-else和v-else-if来说,并没有把当前对应的AST对象加到AST树中，而是把自己对应的AST对象添加到最近的v-if的ifConditions里，代码如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">if</span> (currentParent &amp;&amp; !element.forbidden) {      <span style="color: #008000;">//</span><span style="color: #008000;">第9223行 如果当前对象不是根对象， 且不是style和text/javascript类型script标签</span>
+  <span style="color: #0000ff;">if</span> (element.elseif || element.<span style="color: #0000ff;">else</span>) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果有elseif或else指令存在(设置了v-else或v-elseif指令)</span>
+    processIfConditions(element, currentParent);      <span style="color: #008000;">//</span><span style="color: #008000;">则调用processIfConditions()函数</span>
+  } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (element.slotScope) { <span style="color: #008000;">//</span><span style="color: #008000;"> scoped slot    //如果element是作用域插槽</span>
+    currentParent.plain = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> name = element.slotTarget || '"default"';(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] =<span style="color: #000000;"> element;
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    currentParent.children.push(element);
+    element.parent </span>=<span style="color: #000000;"> currentParent;
+  }
+}</span></pre>
+</div>
+<p>&nbsp;processIfConditions会在之前的AST节点，也就是v-if的AST节点的ifConditions上把当前的ast对象添加进去，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processIfConditions (el, parent) {       <span style="color: #008000;">//</span><span style="color: #008000;">第9421行  解析v-else、v-else-if指令</span>
+  <span style="color: #0000ff;">var</span> prev = findPrevElement(parent.children);         <span style="color: #008000;">//</span><span style="color: #008000;">调用findPrevElement获取el之前的AST对象(只查找普通元素AST)</span>
+  <span style="color: #0000ff;">if</span> (prev &amp;&amp; prev.<span style="color: #0000ff;">if</span>) {                                <span style="color: #008000;">//</span><span style="color: #008000;">如果prev存在，且它含有v-if指令</span>
+    addIfCondition(prev, {                                  <span style="color: #008000;">//</span><span style="color: #008000;">则调用addIfCondition给prev的ifConditions添加一条语句</span>
+<span style="color: #000000;">      exp: el.elseif,
+      block: el
+    });
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    warn$</span>2<span style="color: #000000;">(
+      </span>"v-" + (el.elseif ? ('else-if="' + el.elseif + '"') : 'else') + " " +
+      "used on element &lt;" + (el.tag) + "&gt; without corresponding v-if."<span style="color: #000000;">
+    );
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> findPrevElement (children) {           <span style="color: #008000;">//</span><span style="color: #008000;">第9436行 查找children前一个文本AST对象</span>
+  <span style="color: #0000ff;">var</span> i =<span style="color: #000000;"> children.length;
+  </span><span style="color: #0000ff;">while</span> (i--) {                                   <span style="color: #008000;">//</span><span style="color: #008000;">遍历children，从后开始</span>
+    <span style="color: #0000ff;">if</span> (children[i].type === 1) {                     <span style="color: #008000;">//</span><span style="color: #008000;">如果是普通节点</span>
+      <span style="color: #0000ff;">return</span> children[i]                                <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回该元素</span>
+    } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; children[i].text !== ' ') {   <span style="color: #008000;">//</span><span style="color: #008000;">开发模式下，如果该节点不是普通节点，则报错</span>
+        warn$2<span style="color: #000000;">(
+          </span>"text \"" + (children[i].text.trim()) + "\" between v-if and v-else(-if) " +
+          "will be ignored."<span style="color: #000000;">
+        );
+      }
+      children.pop();
+    }
+  }
+}</span></pre>
+</div>
+<p>执行完后整个AST对象树如下:</p>
+<p><img src="./images/Vue.js 源码分析(十七) 指令篇 v-if、v-else-if和v-else 指令详解2.png" alt="" /></p>
+<p>接下来执行generate生成rendre函数时时发现有有if属性就执行genIf()函数:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genIf (                <span style="color: #008000;">//</span><span style="color: #008000;">第10205行  //渲染v-if指令</span>
+<span style="color: #000000;">  el,
+  state,
+  altGen,
+  altEmpty
+) {
+  el.ifProcessed </span>= <span style="color: #0000ff;">true</span>; <span style="color: #008000;">//</span><span style="color: #008000;"> avoid recursion                                   //避免递归</span>
+  <span style="color: #0000ff;">return</span> genIfConditions(el.ifConditions.slice(), state, altGen, altEmpty)    <span style="color: #008000;">//</span><span style="color: #008000;">调用genIfConditions函数</span>
+<span style="color: #000000;">}
+  
+</span><span style="color: #0000ff;">function</span> genIfConditions (      <span style="color: #008000;">//</span><span style="color: #008000;">第10215行 拼凑if表达式 conditions:比如:[{exp: "ok", block: {&hellip;}}] </span>
+<span style="color: #000000;">  conditions,
+  state,
+  altGen,
+  altEmpty
+) {
+  </span><span style="color: #0000ff;">if</span> (!conditions.length) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果conditions不存在</span>
+    <span style="color: #0000ff;">return</span> altEmpty || '_e()'             <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回altEmpty</span>
+<span style="color: #000000;">  }
+
+  </span><span style="color: #0000ff;">var</span> condition = conditions.shift();    <span style="color: #008000;">//</span><span style="color: #008000;">获取内容，比如:{exp: "no&lt;0", block: {&hellip;}}</span>
+  <span style="color: #0000ff;">if</span> (condition.exp) {                   <span style="color: #008000;">//</span><span style="color: #008000;">拼凑三元运算符</span>
+    <span style="color: #0000ff;">return</span> ("(" + (condition.exp) + ")?" + (genTernaryExp(condition.block)) + ":" +<span style="color: #000000;"> (genIfConditions(conditions, state, altGen, altEmpty)))
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span> ("" +<span style="color: #000000;"> (genTernaryExp(condition.block)))
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> v-if with v-once should generate code like (a)?_m(0):_m(1)</span>
+  <span style="color: #0000ff;">function</span> genTernaryExp (el) {         <span style="color: #008000;">//</span><span style="color: #008000;">再次调用genElement()函数</span>
+    <span style="color: #0000ff;">return</span><span style="color: #000000;"> altGen
+      </span>?<span style="color: #000000;"> altGen(el, state)
+      : el.once
+        </span>?<span style="color: #000000;"> genOnce(el, state)
+        : genElement(el, state)
+  }
+}</span></pre>
+</div>
+<p>最后渲染的render函数为:</p>
+<div class="cnblogs_code">
+<pre><code>_c('div',{attrs:{"id":"app"}},[(no&lt;0)?_c('p',[_v("n小于0")]):(no==0)?_c('p',[_v("no等于0")]):_c('p',[_v("no大于0")])])</pre>
+</div>
+<p>其中</p>
+<div class="cnblogs_code">
+<pre><code>(no&lt;0)?_c('p',[_v("n小于0")]):(no==0)?_c('p',[_v("no等于0")]):_c('p',[_v("no大于0")])</pre>
+</div>
+<p>就是对应的例子里的v-if、v-else、v-else-if结构了</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

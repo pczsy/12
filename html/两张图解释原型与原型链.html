@@ -1,0 +1,52 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修两张图解释原型与原型链' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>两张图解释原型与原型链</center></div><div class='banquan'>原文出处:本文由博客园博主freedom雲提供。<br/>
+原文连接:https://www.cnblogs.com/cmk1018/p/11347442.html</div><br>
+    <p><img src="./images/两张图解释原型与原型链0.png" /><br />
+上面这张图出自 <a href="https://github.com/mqyqingfeng/Blog/issues/2">冴羽的博客</a>，这张图已经能很好地解释原型与原型链了，其涉及到的属性如下：</p>
+<ul>
+<li><code>prototype</code>: 每个函数都有一个 prototype（原型）属性，这个属性是一个指针，指向一个对象，而这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法，如果使用这个函数生成了实例，那么称这个对象为所有实例的原型。</li>
+<li><code>__proto__</code>： 每个对象都拥有<code>__proto__</code>属性，该属性用于实现原型链，当访问一个对象的属性时，如果该对象内部不存在这个属性，就通过原型链找直到找到或者到终点 null。</li>
+<li><code>constructor</code>：每个原型都有一个 constructor 属性指向关联的构造函数</li>
+</ul>
+<p>我们可以用下面这段代码验证一下：</p>
+<pre><code><code>function Person () {
+
+}
+
+let person = new Person()
+console.log(person.__proto__ === Person.prototype) // true
+console.log(Person.prototype.constructor === Person) // true
+console.log(Person.prototype.__proto__ === Object.prototype) // true</code></pre>
+<hr />
+<p>下面这张图咱自己画的，主要是分析下 Object 与 Function 的原型问题：<br />
+所有的对象都是由 Object() 构造函数构造的，所有的函数声明 / 函数表达式都是 Function() 构造函数的实例，而 Object() 构造函数本身又是 Function() 构造函数的实例，其原型关系如下：<br />
+<img src="./images/两张图解释原型与原型链1.png" /></p>
+<p>需要注意的是 Function() 的<code>__proto__</code>属性直接指向的是其原型对象。<br />
+我们可以用下面的代码来验证这张图：在 node 环境及浏览器环境下都是一样的结果</p>
+<pre><code><code>console.log(Object.__proto__ === Function.prototype) // true
+console.log(Function.__proto__ === Function.prototype) // true
+console.log(Function.prototype.__proto__ === Object.prototype) // true
+console.log(Object.prototype.__proto__ === null) // true</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

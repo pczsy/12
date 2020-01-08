@@ -1,0 +1,173 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css知识笔记：水平垂直居中（别只看，请实操！！！）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css知识笔记：水平垂直居中（别只看，请实操！！！）</center></div><div class='banquan'>原文出处:本文由博客园博主马赛克就是我提供。<br/>
+原文连接:https://www.cnblogs.com/M-Silencer/p/11986365.html</div><br>
+    <h1 id="css实现元素的水平垂直居中">css实现元素的水平垂直居中。</h1>
+<p>（尝试采用5W2H方法说明）：</p>
+<h2 id="别只看请实操">别只看，请实操！！！</h2>
+<p><strong>What：</strong><br />
+1.这篇文档主要描述元素水平方向居中的几种最常见和最实用的几种方式，并说明优缺点。<br />
+2.写这篇文章的目的，是为了巩固自己的知识，也分享给大家一起学习研究，欢迎大家指正和评论。</p>
+<p><strong>Why：</strong><br />
+需要水平居中的原因，就是为了让元素位于视觉中心突出重点，可视化布局的简介明了，主题明确，提高用户体验度。</p>
+<p><strong>When：</strong><br />
+我是星期六下午开始编写，一直到晚上12点。<br />
+对于你自己，如果你感觉自己对这些掌握还不牢靠，请立刻！马上！Now！开始动手尝试起来，不然一开始就浇灭你的小火苗，让你丧失了激情和男人该有的冲动。</p>
+<p><strong>Where：</strong><br />
+学习的场所可以是anywhere；咖啡厅、家里、饭店、火车上（我就是在高铁上码的文章），不必拘泥场所，只要不冷能动手就做起来。</p>
+<p><strong>Who：</strong><br />
+针对人员比如像我这种遗忘型、刚入门的初学者、以及在css懵懂过程中徘徊的你，大神请绕路或留个脚印踩踩也行。<br />
+我，一个大老爷们，没啥好说的；你们，一群智商200+，给个支点就能撬动地球的你们，动动手指你们就全学会了。</p>
+<p><strong>How Long：</strong><br />
+你要问我学懂这个大概多长时间，以大家高达200+赶超爱因斯坦的智商，说半天就能搞懂我都感觉是瞧不起大家，以各位看官的智商，半个小时，顶多半个小时，你就能掌握。<br />
+<strong>How：</strong><br />
+请忽略以上的部分废话，以下的怎么做才是重点：</p>
+<h2 id="行内元素居中方式">行内元素居中方式：</h2>
+<pre><code><code>   &lt;div style=&quot;height:50px;border:1px solid red;&quot;&gt;
+        &lt;label style=&quot;line-height:50px&quot;&gt;单行文本label垂直居中：设置line-height为父级行高&lt;/label&gt;
+   &lt;/div&gt;</code></pre>
+<h2 id="水平垂直居中方式">水平垂直居中方式</h2>
+<h3 id="方式一flex布局-推荐">方式一：Flex布局 [推荐]</h3>
+<p>优点：内容块的高度任意，优雅的溢出。<br />
+缺点：IE8/IE9不支持，需要浏览器前缀，渲染可能会有问题。</p>
+<pre><code><code>    &lt;div class=&quot;hv_flex&quot;&gt;
+      &lt;div style=&quot;width: 20px;&quot;&gt;左&lt;/div&gt;
+      &lt;div class=&quot;hv_flexChild&quot;&gt;flex布局垂直水平居中&lt;/div&gt;
+      &lt;div style=&quot;width: 20px;&quot;&gt;右&lt;/div&gt;
+    &lt;/div&gt;
+
+.hv_flex {
+  display: flex;
+  width: 600px;
+  height: 100px;
+  border: 1px solid red;
+  justify-content: center;
+  align-content: center;
+  align-items: stretch; /*  stretch让盒子内的每个元素的高度都等于行高 */
+}
+.hv_flexChild {
+  flex: 1;
+  border: 2px solid green;
+  left: 10px;
+  right: 10px;
+}</code></pre>
+<h3 id="方式二after伪元素实现水平垂直居中-推荐">方式二：after伪元素实现水平垂直居中 [推荐]</h3>
+<p>优点：兼容所有游览器</p>
+<pre><code><code>&lt;div class=&quot;parent&quot;&gt;
+        &lt;div class=&quot;son&quot;&gt;after伪元素实现水平垂直居中&lt;/div&gt;
+&lt;/div&gt;
+
+.parent {
+  border: 2px solid blue;
+  text-align: center;
+  height: 100px;
+  width: 600px;
+  /* overflow: hidden; */
+}
+
+.parent::after {
+  content: &quot;&quot;;
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  /* width: 100%; */
+}
+
+.son {
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid red;
+  /* width: 100%; */
+}</code></pre>
+<h3 id="方式三left0right0top0bottom0marginauto">方式三：left:0;right:0;top:0;bottom:0;margin:auto;</h3>
+<p>优点:简单<br />
+缺点:没有足够空间时, 子元素会被截断, 但不会有滚动条.</p>
+<pre><code><code>  &lt;div class=&quot;hv_parent&quot;&gt;
+      &lt;div class=&quot;hv_child1&quot;&gt;
+        方式一：left:0;right:0;top:0;bottom:0;margin:auto;
+      &lt;/div&gt;
+    &lt;/div&gt;
+.hv_parent {
+  position: relative;
+  width: 600px;
+  height: 180px;
+  border: 1px solid red;
+}
+
+.hv_child1 {
+  border: 2px solid green;
+  position: absolute;
+  /* height: 40px; */
+  /* width: 400px; */
+  left: 10px;
+  right: 10px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+</code></pre>
+<h3 id="方式四left-50top-50transform-translate-50--50-推荐">方式四：left: 50%;top: 50%;transform: translate(-50%, -50%); [推荐]</h3>
+<p>优点:代码量少<br />
+缺点:IE8不支持, 属性需要追加浏览器厂商前缀, 可能干扰其他 transform 效果, 某些情形下会出现文本或元素边界渲染模糊的现象.</p>
+<pre><code><code>    &lt;div class=&quot;hv_parent&quot;&gt;
+      &lt;div class=&quot;hv_child2&quot;&gt;
+        方式二：left: 50%;top: 50%;transform: translate(-50%, -50%);
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+.hv_parent {
+  position: relative;
+  width: 600px;
+  height: 180px;
+  border: 1px solid red;
+}
+.hv_child2 {
+  border: 2px solid blue;
+  /* margin-left:50%; */
+  /* margin-top: 50%; */
+  width: 400px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}</code></pre>
+<h3 id="方式五height固定width固定left50top50margin-top-0.5heightmargin-left--0.5width">方式五：height:固定;width:固定;left:50%;top:50%;margin-top:-0.5<em>height;margin-left:- 0.5</em>width;</h3>
+<p>优点: 适用于所有浏览器.<br />
+缺点: 父元素空间不够时, 子元素可能不可见(当浏览器窗口缩小时,滚动条不出现时).如果子元素设置了overflow:auto, 则高度不够时, 会出现滚动条.</p>
+<pre><code><code>    &lt;div class=&quot;hv_parent&quot;&gt;
+      &lt;div class=&quot;hv_child3&quot;&gt;
+        方式三：height:固定;width:固定;left:50%;top:50%;margin-top:-0.5*height;margin-left:- 0.5*width;
+      &lt;/div&gt;
+    &lt;/div&gt;</code></pre>
+<p><br/><br />
+<strong>参考文献</strong><br />
+[1] (<a href="https://louiszhai.github.io/2016/03/12/css-center/" class="uri">https://louiszhai.github.io/2016/03/12/css-center/</a>)</p>
+<p><strong>结后语：</strong><br />
+兄dei,实操吧！<br />
+不然做起来只看感觉都看懂了，一关闭我的文章就：嗯？水平居中都哪几种方式来着？再次打开看了之后回想：嗯？水平居中这几种方式都会有什么问题或优缺点？<br />
+看的时候都会以为看懂了：这不是很简单吗？<br />
+做的时候都突然感觉自己是个麻瓜：我去！这么简单怎么布局就不对呢？哪影响了？调好之后，咦~，怎么突然就好了呢？<br />
+所以，</p>
+<h2 id="别只看请实操-1">别只看，请实操！！！</h2>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

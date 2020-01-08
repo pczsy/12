@@ -1,0 +1,89 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【带着canvas去流浪（10）】文字烟花' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【带着canvas去流浪（10）】文字烟花</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/10878409.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-文字烟花">一. 文字烟花</a></li>
+        <li><a href="#二.-动画原理">二. 动画原理</a><ul>
+        <li><a href="#像素操作">2.1 像素操作</a></li>
+        <li><a href="#烟花生成算法">2.2 烟花生成算法</a></li>
+        <li><a href="#计时器">2.3 计时器</a></li>
+        </ul></li>
+        </ul>
+    </div>
+</div>
+<p><img src="./images/【带着canvas去流浪（10）】文字烟花0.png" /></p>
+<blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/canvas-echarts/10.text-fire">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<h2 id="一.-文字烟花">一. 文字烟花</h2>
+<p>文字烟花的小控件是下面这样的效果，你或许在很多个人博客中见过：</p>
+<p><img src="./images/【带着canvas去流浪（10）】文字烟花1.png" /></p>
+<p>这一节我们就来讲述一下这个小动画的实现方法。</p>
+<h2 id="二.-动画原理">二. 动画原理</h2>
+<p>首先动画的主框架仍然是我们反复使用的逐帧动画框架，烟花生成以后的部分也不难理解，我们之前已经对物理碰撞进行过仿真，这里实际上就是模拟了带有初速度的自由落体。所以这个小动画里唯一的难点，就是如何根据文字生成烟花，只要做到这一步，其他的部分都比较容易实现。</p>
+<h3 id="像素操作">2.1 像素操作</h3>
+<p>这里就要用到canvas像素操作的API——<code>context.getImageData( )</code>了，它可以将画布上指定矩形区域以像素点的形式返回回来，像素数据挂载在返回对象的<code>data</code>属性上，它是一个一维的<code>Uint8ClampedArray</code>定型数组，每个值只能取0-255之间的整数，如果赋值超过这个范围，则自动修改为<code>[0,255]</code>而不会报错。这个一维数组是矩形区域的像素点数据逐行拼接在一起的，每4个点代表一个像素点的<strong>RGBA</strong>的颜色数据，最后一个通道是透明度数据，例如一个红色的像素点的数据就是[...,255,0,0,0....]。比如你截取了一个长为200像素高为10像素的矩形区域的数据点，那么就会得到一个<code>200*10*4=8000</code>个数据点的数组。</p>
+<p>这是<code>canvas</code>非常重要的一个API，它的应用场景非常多，例如结合<code>WebRTC</code>输入的流数据来做视频弹幕，或者使用算法对像素数据进行加工实现各种各样的图片滤镜等，还可以使用离屏<code>canvas</code>来进行性能提升，具体的应用就留给你自己去探索喽。</p>
+<h3 id="烟花生成算法">2.2 烟花生成算法</h3>
+<p>获取到像素数据后，我们就可以对其进行分析，分析算法如下：</p>
+<p><img src="./images/【带着canvas去流浪（10）】文字烟花2.png" /></p>
+<ol>
+<li>将要获取像素的部分分成大小适中的网格，网格太小则渲染压力大，网格太大动画效果不好。</li>
+<li>遍历每一个网格，取出小方块区域内所有像素点，也可以一次性读取整个区域的像素点然后按小区域来取用，然后统计其中<code>dirty</code>的像素点数量（判断其对应的颜色值是否都为255，如果不是则判定为<code>dirty</code>），如果区域内脏点的比例超过一定阈值（示例中为<code>60%</code>）则判定该区域需要被烟花点替换。</li>
+<li>在需要生成烟花的区域以随机大小和颜色生成一个小球，并根据其位置指定水平初速度的方向，小球均受到竖直向下的重力影响。</li>
+<li>在帧动画中更新小球状态。</li>
+</ol>
+<h3 id="计时器">2.3 计时器</h3>
+<p>最后，我们还需要一个新的<code>timer</code>对象，之前我们接触到的精灵动画大都是连续的，每一帧都需要进行状态更新，而本节中时间文字的更新是离散的，一秒钟才更新一次，烟花由于有动画过程，也不太适合每秒都生成。所以我们需要在<code>timer</code>中实现一个内部计时器，每1秒更新一次渲染文字，每2秒触发一次。如果对时间精度要求较高，可以记录时间戳进行比对，如果精度要求不高，可以在<code>update</code>方法中递增直接对更新周期进行取模即可。</p>
+<p><code>Timer</code>类的定义如下：</p>
+<pre><code><code>//计时器类
+class Timer{
+    constructor(){
+        this.lastTime = Date.now(); //初始化的时候记录一次时间
+        this.label = new Date(this.lastTime).Format(&#39;hh:mm:ss&#39;);//Format是自定义的格式化方法
+        this.step = 0;//标记是否刷新时间文字
+        this.shouldAnim = 0;//标记是否需要生成新的烟花
+    }
+
+    update(){
+       this.step = (this.step + 1) % 60;//时间文字每60帧刷新一次
+       this.shouldAnim = (this.shouldAnim + 1) % 120;//烟花每120帧生成一次
+       if (!this.step) {
+          this.lastTime = Date.now();
+          this.label = new Date(this.lastTime).Format(&#39;hh:mm:ss&#39;);
+       }
+    }
+
+    paint(ctx){
+        context.fillStyle = &quot;#353535&quot;;
+        ctx.fillText(this.label, 200, 100);
+    }
+}</code></pre>
+<p>主框架部分的代码已经讲过非常多次，本文不再赘述。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

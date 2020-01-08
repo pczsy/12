@@ -1,0 +1,202 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修数据采集之js埋点' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>数据采集之js埋点</center></div><div class='banquan'>原文出处:本文由博客园博主阿文awen提供。<br/>
+原文连接:https://www.cnblogs.com/gentle-awen/p/10910703.html</div><br>
+    <p>一、后台nginx环境搭建　</p>
+<p style="margin-left: 30px;">web点数据采集后台配置nginx：<br />https://blog.csdn.net/weixin_37490221/article/details/80894827</p>
+<p style="margin-left: 30px;">下载数据源：<br />wget -O lua-nginx-module-0.10.0.tar.gz https://github.com/openresty/lua-nginx-module/archive/v0.10.0.tar.gz</p>
+<p style="margin-left: 30px;">wget --no-check-certificate -Oecho-nginx-module-0.58.tar.gz 'https://github.com/openresty/echo-nginx-module/archive/v0.58.tar.gz'</p>
+<p style="margin-left: 30px;">wget --no-check-certificate -O nginx_devel_kit-0.2.19.tar.gz https://github.com/simpl/ngx_devel_kit/archive/v0.2.19.tar.gz</p>
+<p style="margin-left: 30px;">wget https://openresty.org/download/openresty-1.9.7.3.tar.gz</p>
+<p style="margin-left: 30px;">wget --no-check-certificate -Oset-misc-nginx-module-0.29.tar.gz 'https://github.com/openresty/set-misc-nginx-module/archive/v0.29.tar.gz'</p>
+<p>二、前端埋点</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;前端页面中需要加载ma.js的脚本代码</p>
+<div class="cnblogs_code">
+<pre><code>    &lt;script type=<span style="color: #800000;">"</span><span style="color: #800000;">text/javascript</span><span style="color: #800000;">"</span>&gt;
+                        <span style="color: #0000ff;">var</span> _maq = _maq ||<span style="color: #000000;"> [];
+                        _maq.push([</span><span style="color: #800000;">'</span><span style="color: #800000;">_setAccount</span><span style="color: #800000;">'</span>, <span style="color: #800000;">'</span><span style="color: #800000;">zaomianbao</span><span style="color: #800000;">'</span><span style="color: #000000;">]);
+
+                        (function() {
+                                </span><span style="color: #0000ff;">var</span> ma = document.createElement(<span style="color: #800000;">'</span><span style="color: #800000;">script</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+                                ma.type </span>= <span style="color: #800000;">'</span><span style="color: #800000;">text/javascript</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                                ma.</span><span style="color: #0000ff;">async</span> = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+                                ma.src </span>= <span style="color: #800000;">'</span><span style="color: #800000;">http://IP111/ma.js</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                                </span><span style="color: #0000ff;">var</span> s = document.getElementsByTagName(<span style="color: #800000;">'</span><span style="color: #800000;">script</span><span style="color: #800000;">'</span><span style="color: #000000;">)[
+</span><span style="color: #800080;">0</span><span style="color: #000000;">];
+                                s.parentNode.insertBefore(ma, s);
+                        })();
+</span>&lt;/script&gt;</pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;放到后台的前端代码</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">(function () {
+    </span><span style="color: #0000ff;">var</span> <span style="color: #0000ff;">params</span> =<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">var</span> args = <span style="color: #800000;">''</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(document) {
+        </span><span style="color: #0000ff;">params</span>.domain = document.domain || <span style="color: #800000;">''</span><span style="color: #000000;">; 
+        </span><span style="color: #0000ff;">params</span>.url = document.URL || <span style="color: #800000;">''</span><span style="color: #000000;">; 
+        </span><span style="color: #0000ff;">params</span>.title = document.title || <span style="color: #800000;">''</span><span style="color: #000000;">; 
+        </span><span style="color: #0000ff;">params</span>.referrer = document.referrer || <span style="color: #800000;">''</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">params</span>.bio = document.getElementById(<span style="color: #800000;">"</span><span style="color: #800000;">username</span><span style="color: #800000;">"</span>).innerHTML || <span style="color: #800000;">''</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">params</span>.clickbio = <span style="color: #800000;">''</span><span style="color: #000000;">; 
+    }   
+   
+       document.querySelector(</span><span style="color: #800000;">"</span><span style="color: #800000;">div#page-wrapper .wrapper.wrapper-content.animated.fadeInRight</span><span style="color: #800000;">"</span>).addEventListener(<span style="color: #800000;">"</span><span style="color: #800000;">click</span><span style="color: #800000;">"</span><span style="color: #000000;">,function(e){
+        </span><span style="color: #0000ff;">params</span>.clickbio =<span style="color: #000000;"> GetChinese(e.target.innerHTML);
+        console.log(</span><span style="color: #0000ff;">params</span><span style="color: #000000;">.clickbio)
+        args </span>= <span style="color: #800000;">''</span><span style="color: #000000;">;
+        console.log(</span><span style="color: #0000ff;">params</span><span style="color: #000000;">.clickbio) 
+         </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">params</span><span style="color: #000000;">) {
+                </span><span style="color: #0000ff;">if</span>(args != <span style="color: #800000;">''</span><span style="color: #000000;">) {
+                        args </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">&amp;</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                }
+                args </span>+= i + <span style="color: #800000;">'</span><span style="color: #800000;">=</span><span style="color: #800000;">'</span> + encodeURIComponent(<span style="color: #0000ff;">params</span><span style="color: #000000;">[i]);
+            }
+
+            </span><span style="color: #0000ff;">var</span> img = <span style="color: #0000ff;">new</span> Image(<span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">);
+            img.src </span>= <span style="color: #800000;">'</span><span style="color: #800000;">http://IP111/log.gif?</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> args;
+    })
+
+     function&nbsp;GetChinese(strValue)&nbsp;{ &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff;">if</span>(strValue!=&nbsp;<span style="color: #0000ff;">null</span>&nbsp;&amp;&amp;&nbsp;strValue!=&nbsp;<span style="color: #800000;">""</span><span style="color: #000000;">){ &nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff;">var</span>&nbsp;reg&nbsp;=&nbsp;/[\u4e00-\u9fa5]/<span style="color: #000000;">g; &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff;">return</span>&nbsp;strValue.match(reg).join(<span style="color: #800000;">""</span><span style="color: #000000;">);&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;
+}
+ 
+    </span><span style="color: #0000ff;">if</span>(window &amp;&amp;<span style="color: #000000;"> window.screen) {
+        </span><span style="color: #0000ff;">params</span>.sh = window.screen.height || <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">params</span>.sw = window.screen.width || <span style="color: #800080;">0</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">params</span>.cd = window.screen.colorDepth || <span style="color: #800080;">0</span><span style="color: #000000;">;
+    }   
+    
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(navigator) {
+        </span><span style="color: #0000ff;">params</span>.lang = navigator.language || <span style="color: #800000;">''</span><span style="color: #000000;">; 
+    }   
+    
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(_maq) {
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i <span style="color: #0000ff;">in</span><span style="color: #000000;"> _maq) {
+            </span><span style="color: #0000ff;">switch</span>(_maq[i][<span style="color: #800080;">0</span><span style="color: #000000;">]) {
+                </span><span style="color: #0000ff;">case</span> <span style="color: #800000;">'</span><span style="color: #800000;">_setAccount</span><span style="color: #800000;">'</span><span style="color: #000000;">:
+                    </span><span style="color: #0000ff;">params</span>.account = _maq[i][<span style="color: #800080;">1</span><span style="color: #000000;">];
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+                </span><span style="color: #0000ff;">default</span><span style="color: #000000;">:
+                    </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            }   
+        }   
+    }   
+    
+    </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">params</span><span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">if</span>(args != <span style="color: #800000;">''</span><span style="color: #000000;">) {
+            args </span>+= <span style="color: #800000;">'</span><span style="color: #800000;">&amp;</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+        }   
+        args </span>+= i + <span style="color: #800000;">'</span><span style="color: #800000;">=</span><span style="color: #800000;">'</span> + encodeURIComponent(<span style="color: #0000ff;">params</span><span style="color: #000000;">[i]);
+    }   
+ 
+    
+    </span><span style="color: #0000ff;">var</span> img = <span style="color: #0000ff;">new</span> Image(<span style="color: #800080;">1</span>, <span style="color: #800080;">1</span><span style="color: #000000;">); 
+    img.src </span>= <span style="color: #800000;">'</span><span style="color: #800000;">http://IP111/log.gif?</span><span style="color: #800000;">'</span> +<span style="color: #000000;"> args;
+})();</span></pre>
+</div>
+<p>三、后端配置</p>
+<p>&nbsp; &nbsp; 配置nginx服务器日志格式</p>
+<div class="cnblogs_code">
+<pre><code>worker_processes  <span style="color: #800080;">2</span><span style="color: #000000;">;
+
+events {
+    worker_connections  </span><span style="color: #800080;">1024</span><span style="color: #000000;">;
+}
+
+http {
+    include       mime.types;
+    default_type  application</span>/octet-<span style="color: #000000;">stream;
+
+        log_format  main  </span><span style="color: #800000;">'</span><span style="color: #800000;">$remote_addr - $remote_user [$time_local] "$request" </span><span style="color: #800000;">'</span>  <span style="color: #800000;">'</span><span style="color: #800000;">$status $body_bytes_sent "$http_referer" </span><span style="color: #800000;">'</span> <span style="color: #800000;">'</span><span style="color: #800000;">"$http_user_agent" "$http_x_forwarded_for"</span><span style="color: #800000;">'</span><span style="color: #000000;">;
+                                          
+        log_format user_log_format </span><span style="color: #800000;">"</span><span style="color: #800000;">$u_clickbio||$u_bio||$time_local||$msec||$remote_addr||$status||$body_bytes_sent||$u_domain||$u_url||$u_title||$u_referrer||$u_sh||$u_sw||$u_cd||$u_lang||$http_user_agent||$u_account</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+    
+    sendfile        on;
+
+    keepalive_timeout  </span><span style="color: #800080;">65</span><span style="color: #000000;">;
+
+    server {
+        listen       </span><span style="color: #800080;">80</span><span style="color: #000000;">;
+        server_name  localhost;
+                location </span>/<span style="color: #000000;">log.gif {
+
+                        default_type image</span>/<span style="color: #000000;">gif;    
+
+                        access_log  logs</span>/<span style="color: #000000;">access.log  main;
+
+                        access_by_lua </span><span style="color: #800000;">"
+</span><span style="color: #000000;">
+                                local uid </span>= ngx.<span style="color: #0000ff;">var</span><span style="color: #000000;">.cookie___utrace        
+                                </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> not uid then
+
+                                        uid </span>= ngx.md5(ngx.now() .. ngx.<span style="color: #0000ff;">var</span>.remote_addr .. ngx.<span style="color: #0000ff;">var</span><span style="color: #000000;">.http_user_agent)
+                                end 
+                                ngx.header[</span><span style="color: #800000;">'</span><span style="color: #800000;">Set-Cookie</span><span style="color: #800000;">'</span>] = {<span style="color: #800000;">'</span><span style="color: #800000;">__utrace=</span><span style="color: #800000;">'</span> .. uid .. <span style="color: #800000;">'</span><span style="color: #800000;">; path=/</span><span style="color: #800000;">'</span><span style="color: #000000;">}
+                                </span><span style="color: #0000ff;">if</span> ngx.<span style="color: #0000ff;">var</span><span style="color: #000000;">.arg_domain then
+
+                                        ngx.location.capture(</span><span style="color: #800000;">'</span><span style="color: #800000;">/i-log?</span><span style="color: #800000;">'</span> .. ngx.<span style="color: #0000ff;">var</span>.args .. <span style="color: #800000;">'</span><span style="color: #800000;">&amp;utrace=</span><span style="color: #800000;">'</span><span style="color: #000000;"> .. uid)
+                                end 
+                        </span><span style="color: #800000;">"</span><span style="color: #800000;">;  </span>
+<span style="color: #000000;">
+
+                        add_header Expires </span><span style="color: #800000;">"</span><span style="color: #800000;">Fri, 01 Jan 1980 00:00:00 GMT</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+                        add_header Pragma </span><span style="color: #800000;">"</span><span style="color: #800000;">no-cache</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+                        add_header Cache</span>-Control <span style="color: #800000;">"</span><span style="color: #800000;">no-cache, max-age=0, must-revalidate</span><span style="color: #800000;">"</span><span style="color: #000000;">;
+
+
+                        empty_gif;
+                }   
+
+                location </span>/i-<span style="color: #000000;">log {
+
+                        </span><span style="color: #0000ff;">internal</span><span style="color: #000000;">;
+                    
+                        set_unescape_uri $u_clickbio $arg_clickbio;
+                        set_unescape_uri $u_bio $arg_bio;
+                        set_unescape_uri $u_domain $arg_domain;
+                        set_unescape_uri $u_url $arg_url;
+                        set_unescape_uri $u_title $arg_title;
+                        set_unescape_uri $u_referrer $arg_referrer;
+                        set_unescape_uri $u_sh $arg_sh;
+                        set_unescape_uri $u_sw $arg_sw;
+                        set_unescape_uri $u_cd $arg_cd;
+                        set_unescape_uri $u_lang $arg_lang;
+                        set_unescape_uri $u_account $arg_account;
+
+
+                        log_subrequest on;
+
+                        access_log logs</span>/<span style="color: #000000;">user_defined.log user_log_format;
+
+                        echo </span><span style="color: #800000;">''</span><span style="color: #000000;">;
+                }
+
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

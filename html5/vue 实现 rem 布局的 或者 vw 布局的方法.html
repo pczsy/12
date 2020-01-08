@@ -1,0 +1,141 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue 实现 rem 布局的 或者 vw 布局的方法' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue 实现 rem 布局的 或者 vw 布局的方法</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/11847746.html</div><br>
+    <h2 id="vue-实现-rem-布局的-或者-vw-布局的方法">vue 实现 rem 布局的 或者 vw 布局的方法</h2>
+<h3 id="一实现-rem-布局">一、实现 rem 布局</h3>
+<p>移动端</p>
+<pre><code><code>&lt;meta
+  name=&quot;viewport&quot;
+  content=&quot;width=device-width, initial-scale=1, maximum-scale=1&quot;
+/&gt;</code></pre>
+<h4 id="方法一在-index.html-或者-main.js-中添加以下代码">方法一、在 index.html 或者 main.js 中添加以下代码：</h4>
+<pre class="javascript"><code>const setHtmlFontSize = () =&gt; {
+  let deviceWidth =
+    document.documentElement.clientWidth || document.body.clientWidth
+  if (deviceWidth &gt;= 750) {
+    deviceWidth = 750
+  }
+  if (deviceWidth &lt;= 320) {
+    deviceWidth = 320
+  }
+  document.documentElement.style.fontSize = `${deviceWidth / 7.5}px`
+}
+window.onresize = setHtmlFontSize
+setHtmlFontSize()</code></pre>
+<p>之后，在写 css 时，只要将 px 单位替换成 rem，这里设置的比例是 100px=1rem,例如，宽度为 100px 时，可以直接写成 1rem。</p>
+<h4 id="方法二cli3-使用-lib-flexible-和-将-px-自动转换为-rem-插件">方法二、cli3 使用 lib-flexible 和 将 px 自动转换为 rem 插件</h4>
+<p>1、安装插件<br />
+npm install lib-flexible --save</p>
+<p>npm install px2rem-loader --save-dev<br />
+或选择<br />
+npm install postcss-plugin-px2rem --save-dev（推荐）<br />
+或选择<br />
+npm install postcss-px2rem --save-dev</p>
+<p>2、配置插件<br />
+在入口文件 main.js 中引入 lib-flexible</p>
+<pre class="javascript"><code>import &#39;lib-flexible/flexible&#39;</code></pre>
+<p>3、三种插件的 cli3 配置：<br />
+在 vue.config.js 中</p>
+<pre class="javascript"><code>//px2rem-loader配置
+module.exports = {
+  chainWebpack: config =&gt; {
+    config.module
+      .rule(&#39;css&#39;)
+      .test(/\.css$/)
+      .oneOf(&#39;vue&#39;)
+      .resourceQuery(/\?vue/)
+      .use(&#39;px2rem&#39;)
+      .loader(&#39;px2rem-loader&#39;)
+      .options({
+        remUnit: 75
+      })
+  }
+}</code></pre>
+<pre class="javascript"><code>//postcss-plugin-px2rem
+module.exports = {
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require(&#39;postcss-plugin-px2rem&#39;)({
+            rootValue: 75, //换算基数， 默认100  ，这样的话把根标签的字体规定为1rem为50px,这样就可以从设计稿上量出多少个px直接在代码中写多上px了。
+            // unitPrecision: 5, //允许REM单位增长到的十进制数字。
+            //propWhiteList: [],  //默认值是一个空数组，这意味着禁用白名单并启用所有属性。
+            // propBlackList: [], //黑名单
+            exclude: /(node_module)/, //默认false，可以（reg）利用正则表达式排除某些文件夹的方法，例如/(node_module)\/如果想把前端UI框架内的px也转换成rem，请把此属性设为默认值
+            // selectorBlackList: [], //要忽略并保留为px的选择器
+            // ignoreIdentifier: false,  //（boolean/string）忽略单个属性的方法，启用ignoreidentifier后，replace将自动设置为true。
+            // replace: true, // （布尔值）替换包含REM的规则，而不是添加回退。
+            mediaQuery: false, //（布尔值）允许在媒体查询中转换px。
+            minPixelValue: 3 //设置要替换的最小像素值(3px会被转rem)。 默认 0
+          })
+        ]
+      }
+    }
+  }
+}</code></pre>
+<pre class="javascript"><code>//postcss-px2rem配置
+module.exports = {
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require(&#39;postcss-px2rem&#39;)({
+            remUnit: 37.5 //设计图除10之后的一半，兼容第三方库px转成rem样式变小的情况
+          })
+        ]
+      }
+    }
+  }
+}</code></pre>
+<h3 id="二cli3-实现-vw-布局">二、cli3 实现 vw 布局</h3>
+<p>vw 是基于 Viewport 视窗的长度单位</p>
+<p>vw：是 Viewport's width 的简写,1vw 等于 window.innerWidth 的 1%<br />
+vh：和 vw 类似，是 Viewport's height 的简写，1vh 等于 window.innerHeihgt 的 1%<br />
+vmin：vmin 的值是当前 vw 和 vh 中较小的值<br />
+vmax：vmax 的值是当前 vw 和 vh 中较大的值</p>
+<p>1、安装插件(可以直接转换 px 为 vw)<br />
+npm i postcss-px-to-viewport -D<br />
+2、在 vue.config.js 中</p>
+<pre class="javascript"><code>module.exports = {
+  css: {
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require(&#39;postcss-px-to-viewport&#39;)({
+            viewportWidth: 750, //视口宽度，这里设置为跟设计稿宽度一致；
+            viewportHeight: 1334, //视口高度，随便设置一个就可以；
+            unitPrecision: 3, //转换后值的精度，3表示保留3位小数；
+            viewportUnit: &#39;vw&#39;, //转换成什么视口单位，这里当然是vw；
+            selectorBlackList: [&#39;.ignore&#39;, &#39;.hairlines&#39;], //是一个选择符数组，对应声明中的像素单位不会转换；
+            minPixelValue: 1, //最小像素值，大于等于这个值才会转换；
+            mediaQuery: false //是否转换媒体查询中的像素。
+          })
+        ]
+      }
+    }
+  }
+}</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

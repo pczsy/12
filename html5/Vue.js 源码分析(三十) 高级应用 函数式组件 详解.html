@@ -1,0 +1,229 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(三十) 高级应用 函数式组件 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(三十) 高级应用 函数式组件 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11277686.html</div><br>
+    <p>函数式组件比较特殊，也非常的灵活，它可以根据传入该组件的内容动态的渲染成任意想要的节点，在一些比较复杂的高级组件里用到，比如Vue-router里的&lt;router-view&gt;组件就是一个函数式组件。</p>
+<p>因为函数式组件只是函数，所以渲染开销也低很多,当需要做这些时，函数式组件非常有用:</p>
+<p>　　程序化地在多个组件中选择一个来代为渲染。</p>
+<p>　　在将children、props、data传递给子组件之前操作它们。</p>
+<p>函数式组件的定义和普通组件类似，也是一个对象，不过而且为了区分普通的组件，定义函数式组件需要指定一个属性，名为functional，值为true，另外需要自定义一个render函数，该render函数可以带两个参数，分别如下:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; createElement&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 等于全局的createElement函数，用于创建VNode</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; context &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 一个对象,组件需要的一切都是通过context参数传递</p>
+<p>context对象可以包含如下属性:</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; parent&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;父组件的引用<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;props&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;提供所有prop的对象，经过验证了<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;children&nbsp;&nbsp; &nbsp;;VNode 子节点的数组<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;slots&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;一个函数，返回了包含所有插槽的对象<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;scopedSlots&nbsp;&nbsp; &nbsp;;个暴露传入的作用域插槽的对象。也以函数形式暴露普通插槽。<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;data&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;;传递给组件的整个数据对象，作为 createElement 的第二个参数传入组件<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;listeners&nbsp;&nbsp; &nbsp;;组件的自定义事件<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;injections &nbsp;&nbsp; &nbsp;;如果使用了 inject 选项，则该对象包含了应当被注入的属性。</p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">smart-list </span><span style="color: #ff0000;">:items</span><span style="color: #0000ff;">=items</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">smart-list</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">smart-list</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, {
+            functional: </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">, 　　　　　　　　　　　　　　　　　　　　　　<span style="color: #ff0000;">//指定这是一个函数式组件</span>
+            render: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (createElement, context) {
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> appropriateListComponent (){
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (context.props.items.length</span><span style="background-color: #f5f5f5; color: #000000;">==</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">){             </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">当父组件传来的items元素为空时渲染这个</span>
+                        <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {template:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;Enpty item&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">}
+                    }
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">ul</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">
+                }
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> createElement(appropriateListComponent(),Array.apply(</span><span style="background-color: #f5f5f5; color: #0000ff;">null</span><span style="background-color: #f5f5f5; color: #000000;">,{length:context.props.items.length}).map(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(val,index){
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> createElement(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">li</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,context.props.items[index].name)
+                }))
+            },
+            props: {
+                items: {type: Array,required: </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">},
+                isOrdered: Boolean
+            }
+        });
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app  </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data:{
+                items:[{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">a</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,id:</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">},{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">b</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,id:</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">},{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">c</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,id:</span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">}]
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>    
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(三十) 高级应用 函数式组件 详解0.png" alt="" /></p>
+<p>对应的DOM树如下:</p>
+<p><img src="./images/Vue.js 源码分析(三十) 高级应用 函数式组件 详解1.png" alt="" /></p>
+<p>如果<span style="color: #000000;">items</span>.item为空数组，则会渲染成:</p>
+<p><img src="./images/Vue.js 源码分析(三十) 高级应用 函数式组件 详解2.png" alt="" /></p>
+<p>这是在因为我们再render内做了判断，返回了该值</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>组件在Vue实例化时会先执行createComponent()函数，在该函数内执行extractPropsFromVNodeData(data, Ctor, tag)从组件的基础构造器上获取到props信息后就会判断options.functional是否为true,如果为true则执行createFunctionalComponent函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> createComponent (  <span style="color: #008000;">//</span><span style="color: #008000;">第4181行 创建组件节点</span>
+<span style="color: #000000;">  Ctor, 
+  data,
+  context,
+  children,
+  tag
+) {
+  </span><span style="color: #008000;">/**/</span>
+  <span style="color: #0000ff;">var</span> propsData = extractPropsFromVNodeData(data, Ctor, tag);                 <span style="color: #008000;">//</span><span style="color: #008000;">对props做处理</span>
+ 
+  <span style="color: #008000;">//</span><span style="color: #008000;"> functional component</span>
+  <span style="color: #0000ff;">if</span> (isTrue(Ctor.options.functional)) {                                      <span style="color: #008000;">//</span><span style="color: #ff0000;">如果options.functional为true，即这是对函数组件</span>
+    <span style="color: #0000ff;">return</span> createFunctionalComponent(Ctor, propsData, data, context, children)  <span style="color: #008000;">//</span><span style="color: #008000;">则调用createFunctionalComponent()创建函数式组件</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>例子执行到这里对应的propsData如下:</p>
+<p><img src="./images/Vue.js 源码分析(三十) 高级应用 函数式组件 详解3.png" alt="" /></p>
+<p>也就是获取到了组件上传入的props，然后执行createFunctionalComponent函数，并将结果返回，该函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> createFunctionalComponent (      <span style="color: #008000;">//</span><span style="color: #008000;">第4026行  函数式组件的实现</span>
+  Ctor,                                       <span style="color: #008000;">//</span><span style="color: #008000;">Ctro:组件的构造对象(Vue.extend()里的那个Sub函数)</span>
+  propsData,                                  <span style="color: #008000;">//</span><span style="color: #008000;">propsData:父组件传递过来的数据(还未验证)</span>
+  data,                                       <span style="color: #008000;">//</span><span style="color: #008000;">data:组件的数据</span>
+  contextVm,                                  <span style="color: #008000;">//</span><span style="color: #008000;">contextVm:Vue实例 </span>
+  children                                    <span style="color: #008000;">//</span><span style="color: #008000;">children:引用该组件时定义的子节点</span>
+<span style="color: #000000;">) {
+  </span><span style="color: #0000ff;">var</span> options =<span style="color: #000000;"> Ctor.options;
+  </span><span style="color: #0000ff;">var</span> props =<span style="color: #000000;"> {};
+  </span><span style="color: #0000ff;">var</span> propOptions =<span style="color: #000000;"> options.props;
+  </span><span style="color: #0000ff;">if</span> (isDef(propOptions)) {                   <span style="color: #008000;">//</span><span style="color: #008000;">如果propOptions非空(父组件向当前组件传入了信息)</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> propOptions) {              <span style="color: #008000;">//</span><span style="color: #008000;">遍历propOptions</span>
+      props[key] = validateProp(key, propOptions, propsData || emptyObject);    <span style="color: #008000;">//</span><span style="color: #008000;">调用validateProp()依次进行检验</span>
+<span style="color: #000000;">    }
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(data.attrs)) { mergeProps(props, data.attrs); }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isDef(data.props)) { mergeProps(props, data.props); }
+  }
+
+  </span><span style="color: #0000ff;">var</span> renderContext = <span style="color: #0000ff;">new</span> FunctionalRenderContext(      <span style="color: #008000;">//</span><span style="color: #ff0000;">创建一个函数的上下文</span>
+<span style="color: #000000;">    data,
+    props,
+    children,
+    contextVm,
+    Ctor
+  );
+
+  </span><span style="color: #0000ff;">var</span> vnode = options.render.call(<span style="color: #0000ff;">null</span>, renderContext._c, renderContext);     <span style="color: #008000;">//</span><span style="color: #ff0000;">执行render函数，参数1为createElement，参数2为renderContext,也就是我们在组件内定义的render函数</span>
+
+  <span style="color: #0000ff;">if</span> (vnode <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> VNode) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> cloneAndMarkFunctionalResult(vnode, data, renderContext.parent, options)
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (Array.isArray(vnode)) {
+    </span><span style="color: #0000ff;">var</span> vnodes = normalizeChildren(vnode) ||<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">var</span> res = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Array(vnodes.length);
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; vnodes.length; i++<span style="color: #000000;">) {
+      res[i] </span>=<span style="color: #000000;"> cloneAndMarkFunctionalResult(vnodes[i], data, renderContext.parent, options);
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+  }
+}</span></pre>
+</div>
+<p>&nbsp;FunctionalRenderContext就是一个函数对应，new的时候会给当前对象设置一些data、props之类的属性，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> FunctionalRenderContext (      <span style="color: #008000;">//</span><span style="color: #008000;">第3976行 创建rendrer函数的上下文 parent:调用当前组件的父组件实例</span>
+<span style="color: #000000;">  data,
+  props,
+  children,
+  parent,
+  Ctor
+) {
+  </span><span style="color: #0000ff;">var</span> options =<span style="color: #000000;"> Ctor.options;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> ensure the createElement function in functional components</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> gets a unique context - this is necessary for correct named slot check</span>
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> contextVm;
+  </span><span style="color: #0000ff;">if</span> (hasOwn(parent, '_uid')) {                 <span style="color: #008000;">//</span><span style="color: #008000;">如果父Vue含有_uid属性(是个Vue实例)</span>
+    contextVm = Object.create(parent);            <span style="color: #008000;">//</span><span style="color: #008000;">以parent为原型，创建一个实例，保存到contextVm里面</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+    contextVm._original =<span style="color: #000000;"> parent;
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> the context vm passed in is a functional context as well.</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> in this case we want to make sure we are able to get a hold to the</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> real context instance.</span>
+    contextVm =<span style="color: #000000;"> parent;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> $flow-disable-line</span>
+    parent =<span style="color: #000000;"> parent._original;
+  }
+  </span><span style="color: #0000ff;">var</span> isCompiled =<span style="color: #000000;"> isTrue(options._compiled);
+  </span><span style="color: #0000ff;">var</span> needNormalization = !<span style="color: #000000;">isCompiled;
+
+  </span><span style="color: #0000ff;">this</span>.data = data;                                                       <span style="color: #008000;">//</span><span style="color: #008000;">data</span>
+  <span style="color: #0000ff;">this</span>.props = props;                                                     <span style="color: #008000;">//</span><span style="color: #008000;">props</span>
+  <span style="color: #0000ff;">this</span>.children = children;                                               <span style="color: #008000;">//</span><span style="color: #008000;">children</span>
+  <span style="color: #0000ff;">this</span>.parent = parent;                                                   <span style="color: #008000;">//</span><span style="color: #008000;">parent，也就是引用当前函数组件的Vue实例</span>
+  <span style="color: #0000ff;">this</span>.listeners = data.on || emptyObject;                                <span style="color: #008000;">//</span><span style="color: #008000;">自定义事件</span>
+  <span style="color: #0000ff;">this</span>.injections =<span style="color: #000000;"> resolveInject(options.inject, parent);
+  </span><span style="color: #0000ff;">this</span>.slots = <span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span><span style="color: #000000;"> resolveSlots(children, parent); };
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> support for compiled functional template</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isCompiled) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> exposing $options for renderStatic()</span>
+    <span style="color: #0000ff;">this</span>.$options =<span style="color: #000000;"> options;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> pre-resolve slots for renderSlot()</span>
+    <span style="color: #0000ff;">this</span>.$slots = <span style="color: #0000ff;">this</span><span style="color: #000000;">.slots();
+    </span><span style="color: #0000ff;">this</span>.$scopedSlots = data.scopedSlots ||<span style="color: #000000;"> emptyObject;
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (options._scopeId) {
+    </span><span style="color: #0000ff;">this</span>._c = <span style="color: #0000ff;">function</span><span style="color: #000000;"> (a, b, c, d) {
+      </span><span style="color: #0000ff;">var</span> vnode =<span style="color: #000000;"> createElement(contextVm, a, b, c, d, needNormalization);
+      </span><span style="color: #0000ff;">if</span> (vnode &amp;&amp; !<span style="color: #000000;">Array.isArray(vnode)) {
+        vnode.fnScopeId </span>=<span style="color: #000000;"> options._scopeId;
+        vnode.fnContext </span>=<span style="color: #000000;"> parent;
+      }
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vnode
+    };
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">this</span>._c = <span style="color: #0000ff;">function</span> (a, b, c, d) { <span style="color: #0000ff;">return</span> createElement(contextVm, a, b, c, d, needNormalization); };    <span style="color: #008000;">//</span><span style="color: #008000;">初始化一个_c函数，等于全局的createElement函数</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>对于例子来说执行到这里FunctionalRenderContext返回的对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(三十) 高级应用 函数式组件 详解4.png" alt="" /></p>
+<p>回到createFunctionalComponent最后会执行我们的render函数，也就是例子里我们自定义的<span style="color: #000000;">smart-list</span>组件的render函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code>render: <span style="color: #0000ff;">function</span><span style="color: #000000;"> (createElement, context) {
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> appropriateListComponent (){
+        </span><span style="color: #0000ff;">if</span> (context.props.items.length==0){             <span style="color: #008000;">//</span><span style="color: #008000;">当父组件传来的items元素为空时渲染这个</span>
+            <span style="color: #0000ff;">return</span> {template:"&lt;div&gt;Enpty item&lt;/div&gt;"<span style="color: #000000;">}
+        }
+        </span><span style="color: #0000ff;">return</span> 'ul'<span style="color: #000000;">
+    }
+    </span><span style="color: #0000ff;">return</span> createElement(appropriateListComponent(),Array.apply(<span style="color: #0000ff;">null</span>,{length:context.props.items.length}).map(<span style="color: #0000ff;">function</span>(val,index){  <span style="color: #008000;">//</span><span style="color: #008000;">调用createElement也就是Vue全局的createElement函数</span>
+        <span style="color: #0000ff;">return</span> createElement('li'<span style="color: #000000;">,context.props.items[index].name)
+    }))
+},</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>在我们自定义的render函数内，会先执行appropriateListComponent()函数，该函数会判断当前组件是否有传入items特性，如果有则返回ul,这样createElement的参数1就是ul了，也就是穿件一个tag为ul的虚拟VNode,如果没有传入items则返回一个内容为Emptry item的div</p>
+<p>createElement的参数2是一个数组，每个元素又是一个createElement的返回值，Array.apply(<span style="color: #0000ff;">null,{length:context.props.items.length})</span>可以根据一个数组的个数再创建一个数组，新数组每个元素的值为undefined</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

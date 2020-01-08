@@ -1,0 +1,474 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修nodeJS从入门到进阶一（基础部分）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>nodeJS从入门到进阶一（基础部分）</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/11417534.html</div><br>
+    <h2 id="一node.js基础知识">一、Node.js基础知识</h2>
+<h3 id="概念">1、概念</h3>
+<ul>
+<li>简单的说 Node.js 就是运行在服务端的 JavaScript。</li>
+<li>Node.js 是JavaScript的运行环境</li>
+<li>Node.js 使用了一个事件驱动、非阻塞式 I/O 的模型，使其轻量又高效。</li>
+</ul>
+<h3 id="安装使用">2、安装使用</h3>
+<p>官网下载地址：http://nodejs.cn/</p>
+<h4 id="nodejs5个基本对象">nodeJS5个基本对象：</h4>
+<ul>
+<li>1、require 引入模块</li>
+<li>2、export 导出对象
+<ul>
+<li>语法：
+<ul>
+<li>export.属性 = 值；</li>
+<li>export.方法名 = 函数；</li>
+</ul></li>
+<li>注意：
+<ul>
+<li>export时module对象的引用 export == module.export （指向同一个内存空间）</li>
+<li>export是module.export的引用， 不能改指向，只能添加属性和方法</li>
+<li>module.export才是真正的暴露对象，指向哪里就暴露哪里-----推荐使用</li>
+</ul></li>
+</ul></li>
+<li>3、module 模块对象
+<ul>
+<li>module.export
+<ul>
+<li>module.export.属性 = 值</li>
+<li>module.export.方法名 = 函数</li>
+<li>module.export = 对象或函数</li>
+</ul></li>
+<li>module.id 模块id，模块名称</li>
+<li>module.parent 模块父级</li>
+<li>module.filename 模块文件名和路径</li>
+<li>module.children 子模块列表</li>
+<li>module.paths 模块查找路径，如果当前目录找不到</li>
+<li>node_modules就去上一级目录找，直到根目录</li>
+</ul></li>
+<li>4、__filename 当前js文件的绝对路径</li>
+<li>5、__dirname 当前js文件所在文件夹绝对路径</li>
+</ul>
+<h4 id="npm包管理器node-package-manager">npm包管理器（node Package Manager)</h4>
+<ul>
+<li>package.json是node.js的项目描述文件，以json格式的形式描述项目</li>
+<li>创建package.json文件 ----&gt; npm init ------ npm init -y ----&gt;自动全部yes创建</li>
+<li>package.json常用属性
+<ul>
+<li>name: 项目名称</li>
+<li>version:版本号<br />
+</li>
+<li>description:项目描述<br />
+</li>
+<li>main：主模块<br />
+</li>
+<li>dependencies：项目依赖</li>
+<li>devDependencies ：开发时依赖</li>
+<li>scripts:脚本命令，可以使用npm命令执行<br />
+</li>
+<li>license:开源协议</li>
+</ul></li>
+<li>npm常用指令：
+<ul>
+<li>npm install <包的名称> i---&gt;install<br />
+</li>
+<li>npm i <包的名称>@版本号 //安装指定版本</li>
+<li>npm i <包的名称> -g全局安装 -S(save)写入项目依赖列表 -D(dev)写入开发依赖列表<br />
+</li>
+<li>npm search <包的名称> //搜索包</li>
+<li>npm view <包的名称> //查看包</li>
+<li>npm uninstall <包的名称> //卸载包</li>
+<li>npm update <包的名称> //更新包</li>
+</ul></li>
+</ul>
+<h4 id="cnpm-淘宝镜像">cnpm （淘宝镜像）</h4>
+<ul>
+<li>npm install -g cnpm --registry=https://registry.npm.taobao.org</li>
+</ul>
+<h4 id="nodejs回调函数">nodeJS回调函数</h4>
+<ul>
+<li>回调函数机制：
+<ul>
+<li>a.定义一个普通函数</li>
+<li>b.将函数作为参数传入另一个函数（调用者）</li>
+<li>c.调用者在执行过程中根据时机和条件决定是否调用函数</li>
+</ul></li>
+<li>回调函数用途：
+<ul>
+<li>通常用于在达到某个时机或条件时，需要执行代码的情况,使用回调函数</li>
+</ul></li>
+</ul>
+<h4 id="同步和异步">同步和异步</h4>
+<ul>
+<li>同步：上一行执行完成后，下一行才能得到执行</li>
+<li>异步：将比较复杂的任务以任务线程实现，不用等上一句执行完成，下一句也能执行。</li>
+<li>异步的三种实现方式:
+<ul>
+<li>(1) 回调函数<br />
+回调函数不一定是异步（forEacch），异步一定有回调函数</li>
+<li>(2) 事件 （针对服务器端的事件）<br />
+事件源.on('事件名称'，回调函数)</li>
+</ul>
+<pre><code><code>/* 开启一个服务器*/
+var http = require(&#39;http&#39;);
+// 建立服务器
+var app = http.createServer(function(request, response) {
+    response.writeHead(200, {
+        &quot;Content-Type&quot;: &quot;text/plain&quot;   
+    });
+    response.end(&quot;Hello world!&quot;);
+});
+//启动服务器
+app.listen(80,function(){
+    console.log(&#39;服务器已运行&#39;)
+})</code></pre>
+<ul>
+<li>(3) promise 承诺对象</li>
+</ul>
+<pre><code><code>/*
+什么是promise?
+    promise是es6中新增的承诺对象，用于对异步的操作进行消息的传递
+promise的状态?
+    Pending     等待中
+    Resolved    成功
+    Rejected    失败
+    Pending =&gt; Resolved
+    Pending =&gt; Rejected
+promise 有什么用？
+    promise可以传递异步消息
+    由于异步的返回结果时间顺序不可控，所以需要使用promise来统一控制输出结果
+*/
+var promise = new Promise(function(resove,reject){
+    resolve()
+})
+//调用对象
+promise.then(res&gt;{
+    //成功的回调
+}).catch(err=&gt;{
+    //失败的回调
+})
+
+//利用promise对象的all方法可以实现手动调整输出顺序，相当于把异步变为同步
+Promise.all([p1,p2]).then(datas=&gt;{
+    //返回数组
+})</code></pre></li>
+</ul>
+<h2 id="二buffer缓存区和文件模块">二、Buffer缓存区和文件模块</h2>
+<h3 id="buffer缓存区">1、Buffer缓存区</h3>
+<h4 id="概念-1">概念</h4>
+<p>在内存中开辟了一个临时区域，用于存放我们需要运算的字节码</p>
+<h4 id="创建缓存区">创建缓存区</h4>
+<ul>
+<li>创建指定长度的缓存区</li>
+</ul>
+<pre><code><code>var buf = new Buffer(大小) //创建5个字节的缓存区
+buf.write(&#39;a&#39;) //存入一个字节  转成16进制 的Ascall码的61  在node中默认使用utf-8编码，一个中文3个字节</code></pre>
+<ul>
+<li>按指定的数组编码创建缓存区</li>
+</ul>
+<pre><code><code>var buf = new Buffer([十进制编码]) //数字小可以</code></pre>
+<ul>
+<li>按指定字符创建缓存区</li>
+</ul>
+<pre><code><code>var buf = new Buffer(&#39;字符串&#39;)</code></pre>
+<h4 id="写入缓存区">写入缓存区</h4>
+<pre><code><code>buf.write(&#39;字符串&#39;)</code></pre>
+<h4 id="读缓存区">读缓存区</h4>
+<pre><code><code>buf.toString()</code></pre>
+<h4 id="复制缓存区">复制缓存区</h4>
+<pre><code><code>buf.copy(buf2)</code></pre>
+<h3 id="文件模块fs">2、文件模块（fs）</h3>
+<h4 id="读取文件">读取文件</h4>
+<ul>
+<li>由于nodejs是服务端程序，必须要有文件读写操作，在客户端没有这样的功能</li>
+<li>文件读写有两种方式：
+<ul>
+<li>直接读取：
+<ul>
+<li>将硬盘上的所有内容全部读入内存以后才触发回调函数</li>
+<li>两种写法：</li>
+</ul>
+<pre><code><code>//异步：定义一个回调函数，接收读取到的内容
+    fs.readFile(&#39;文件路径&#39;,(err,data)=&gt;{})
+
+//同步：几乎所有fs的函数都有同步版本，只需在异步版本后面加Sync即可 （Async：异步）
+    fs.readFileSync(&#39;文件路径&#39;)</code></pre></li>
+<li>流式读取：
+<ul>
+<li>将数据从硬盘中读取一节就触发回调函数，实现大文件操作</li>
+</ul></li>
+</ul></li>
+</ul>
+<h4 id="写文件">写文件</h4>
+<p>同步版本:</p>
+<pre><code><code>fs.writeFileSync(&#39;文件名&#39;，&#39;数据&#39;)</code></pre>
+<p>异步版本:</p>
+<pre><code><code>fs.writeFile(&#39;文件名&#39;，&#39;数据&#39;，funciton(err){/*写完文件以后执行的代码*/})</code></pre>
+<h4 id="读取文件信息">读取文件信息</h4>
+<pre><code><code>fs.stat(&#39;文件名&#39;,function(err,state){
+    //state时文件信息对象，包含了常用的文件信息
+    //size： 文件大小，单位字节
+    //mtime: 文件修改时间
+    //birthtime 文件创建时间
+
+    //方法
+        .isFile() //判断当前查看的对象是不是一个文件
+        .isDirectory() //判断是不是一个目录  
+})</code></pre>
+<h4 id="删除文件">删除文件</h4>
+<pre><code><code>fs.unlink(&#39;文件名&#39;,function(err){}) </code></pre>
+<h4 id="需求填写代码实现删除一个非空目录">需求：填写代码实现删除一个非空目录</h4>
+<ul>
+<li>删除空目录</li>
+</ul>
+<pre><code><code>fs.rmdir()</code></pre>
+<ul>
+<li>读取目录中的文件及文件夹列表</li>
+</ul>
+<pre><code><code>fs.readdir()</code></pre>
+<ul>
+<li>读取每一个文件夹的详细信息</li>
+</ul>
+<pre><code><code>fs.stat()</code></pre>
+<ul>
+<li>判断如果是文件</li>
+</ul>
+<pre><code><code>fs.unlink()</code></pre>
+<ul>
+<li>判断如果是目录</li>
+</ul>
+<pre><code><code>//递归调用自己</code></pre>
+<ul>
+<li>删除空目录</li>
+</ul>
+<pre><code><code>fs.rmdir()</code></pre>
+<ul>
+<li>演示代码</li>
+</ul>
+<pre><code><code>var fs = require(&#39;fs&#39;);
+var path = require(&#39;path&#39;);
+function rmdir(p){
+    //获取文件列表
+    var list = fs.readdirSync(p);
+    list.forEach((item)=&gt;{
+        //拼接路径
+        let p1 = path.join(p,item);
+        //判断是否为文件
+        if(fs.statSync(p1).isFile()){
+            fs.unlinkSync(p1);
+        }else{
+            //递归调用自己
+            arguments.callee(p1);
+        }
+    })
+    //删除空文件夹
+    fs.rmdirSync(p);
+}
+rmdir(&#39;./data1&#39;);</code></pre>
+<h4 id="流式读取">流式读取</h4>
+<ul>
+<li>流：什么是流
+<ul>
+<li>所有互联网的数据都是以流的方式，流式一组有起点有终点的数据传输方式</li>
+</ul></li>
+<li>流的操作：
+<ul>
+<li>流式读取文件</li>
+</ul>
+<pre><code><code>//可读取数据的流
+var fs = require(&quot;fs&quot;);
+var data = &#39;&#39;;
+
+// 创建可读流
+var readerStream = fs.createReadStream(&#39;input.txt&#39;);
+
+// 设置编码为 utf8。
+readerStream.setEncoding(&#39;UTF8&#39;);
+
+// 处理流事件 --&gt; data, end, and error
+readerStream.on(&#39;data&#39;, function(chunk) {
+data += chunk;
+});
+
+readerStream.on(&#39;end&#39;,function(){
+    console.log(data);
+});
+
+readerStream.on(&#39;error&#39;, function(err){
+    console.log(err.stack);
+});
+console.log(&quot;程序执行完毕&quot;);</code></pre>
+<ul>
+<li>以流的方式写文件</li>
+</ul>
+<pre><code><code>//可写入数据的流
+var fs = require(&quot;fs&quot;);
+var data = &#39;hello world&#39;;
+
+// 创建一个可以写入的流，写入到文件 output.txt 中
+var writerStream = fs.createWriteStream(&#39;output.txt&#39;);
+
+// 使用 utf8 编码写入数据
+writerStream.write(data,&#39;UTF8&#39;);
+
+// 标记文件末尾
+writerStream.end();
+
+// 处理流事件 --&gt; data, end, and error
+writerStream.on(&#39;finish&#39;, function() {
+    console.log(&quot;写入完成。&quot;);
+});
+
+writerStream.on(&#39;error&#39;, function(err){
+    console.log(err.stack);
+});
+
+console.log(&quot;程序执行完毕&quot;);</code></pre>
+<ul>
+<li>管道流<br />
+管道提供了一个输出流到输入流的机制。通常我们用于从一个流中获取数据并将数据传递到另外一个流中<br />
+<img src="./images/nodeJS从入门到进阶一（基础部分）0.png" /></li>
+</ul>
+<pre><code><code>var fs = require(&quot;fs&quot;);
+
+// 创建一个可读流
+var readerStream = fs.createReadStream(&#39;input.txt&#39;);
+
+// 创建一个可写流
+var writerStream = fs.createWriteStream(&#39;output.txt&#39;);
+
+// 管道读写操作
+// 读取 input.txt 文件内容，并将内容写入到 output.txt 文件中
+readerStream.pipe(writerStream);
+
+console.log(&quot;程序执行完毕&quot;);</code></pre>
+<ul>
+<li>链式流</li>
+</ul>
+<pre><code><code>//压缩文件
+var fs = require(&#39;fs&#39;);
+var zlib = require(&#39;zlib&#39;);
+// 压缩 input.txt 文件为 input.txt.gz
+fs.createReadStream(&#39;input.txt&#39;)
+    .pipe(zlib.createGzip())
+    .pipe(fs.createWriteStream(&#39;input.txt.gz&#39;))
+console.log(&quot;文件压缩完成。&quot;);
+
+//解压文件
+var fs = require(&quot;fs&quot;);
+var zlib = require(&#39;zlib&#39;);
+
+// 解压 input.txt.gz 文件为 input.txt
+fs.createReadStream(&#39;input.txt.gz&#39;)
+.pipe(zlib.createGunzip())
+.pipe(fs.createWriteStream(&#39;input.txt&#39;));
+
+console.log(&quot;文件解压完成。&quot;);</code></pre></li>
+</ul>
+<h2 id="三常用模块与网络爬虫">三、常用模块与网络爬虫</h2>
+<h3 id="常用模块">1、常用模块</h3>
+<h4 id="path模块">path模块</h4>
+<ul>
+<li>格式化路径</li>
+</ul>
+<pre><code><code>path.nomalize(p)</code></pre>
+<ul>
+<li>拼接路径（将多个字符串拼接成一个完整路径）</li>
+</ul>
+<pre><code><code>/*使用path.jon拼接文件路径和 连接符 拼接优点
+    1.自动帮我们添加路径分隔符（根据当前操作系统）
+    2.自动改正错误的路径分隔符
+*/
+path.join(path1,path2)
+let url = path.join(__dirname,path1); //常用</code></pre>
+<ul>
+<li>返回路径中文件夹部分</li>
+</ul>
+<pre><code><code>path.dirname(p)</code></pre>
+<ul>
+<li>返回路径中文件部分(文件名和扩展名)</li>
+</ul>
+<pre><code><code>path.basename(p)</code></pre>
+<ul>
+<li>返回路径中文件的后缀名</li>
+</ul>
+<pre><code><code>path.extname(p)</code></pre>
+<ul>
+<li>返回路径字符串的对象。</li>
+</ul>
+<pre><code><code>path.parse(path)</code></pre>
+<ul>
+<li>从对象中返回路径字符串,和parse相反</li>
+</ul>
+<pre><code><code>path.format(path)</code></pre>
+<h4 id="url模块">url模块</h4>
+<p><img src="./images/nodeJS从入门到进阶一（基础部分）1.png" /></p>
+<ul>
+<li>什么是url？
+<ul>
+<li>url是全球统一资源定位符，对网站资源的一种简洁表达式，简称网址</li>
+</ul></li>
+<li>url的构成
+<ul>
+<li>完整<br />
+协议://用户名:密码@主机名.名.域:端口号/目录名/文件名.扩展名?参数名=参数值&amp;参数名2=参数值2#hash</li>
+<li>常见<br />
+协议://主机名.名.域/目录名/文件名.扩展名?参数名=参数值&amp;参数名2=参数值2#hash</li>
+</ul></li>
+<li>node.js的url模块
+<ul>
+<li>在node.js中提供了两套给予url进行处理的API功能</li>
+<li>url模块 和 （WHATWG URL标准模块）</li>
+</ul></li>
+</ul>
+<h4 id="http模块">http模块</h4>
+<ul>
+<li>http协议</li>
+<li>软件开发模式
+<ul>
+<li>单机模式</li>
+<li>C/S模式 (Client / Server)</li>
+<li>B/S模式 (Brower / Server)</li>
+</ul></li>
+<li>http模块
+<ul>
+<li>get方法(用于模仿客户端从服务器获取数据)</li>
+</ul>
+<pre><code><code>    var http = require(&#39;http&#39;);
+    http.get(&#39;url&#39;,function(res){
+        //res 是返回对象，接收到服务器响应的所有内容
+        res.on(&quot;data&quot;,function(a){
+            a //以流的方式获取数据 //每节64kb
+        })
+    })</code></pre></li>
+</ul>
+<h3 id="网络爬虫">2、网络爬虫</h3>
+<h4 id="概念-2">概念</h4>
+<p>是一种自动获取网页内容的程序</p>
+<h4 id="实现思路">实现思路</h4>
+<ul>
+<li>打开网页内容，查看源代码，分析需要获取的内容规律</li>
+<li>编写代码，打开网页，获取html源代码</li>
+<li>通过正则表达式提出所需要的内容</li>
+<li><p>遍历数据，批量获取所需要的内容</p></li>
+<li><p><a href="https://www.cnblogs.com/sgs123/p/11425008.html">示例代码请点击这里</a></p></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

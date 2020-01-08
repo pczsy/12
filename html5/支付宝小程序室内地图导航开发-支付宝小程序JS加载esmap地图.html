@@ -1,0 +1,65 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图</center></div><div class='banquan'>原文出处:本文由博客园博主室内三维地图提供。<br/>
+原文连接:https://www.cnblogs.com/esmap/p/11683502.html</div><br>
+    <h4 class="c-title">如果是微信小程序开发，请参考<a title="微信小程序室内地图导航开发-微信小程序JS加载esmap地图" href="https://www.cnblogs.com/esmap/archive/2019/09/04/11458022.html" target="_blank">微信小程序室内地图导航开发-微信小程序JS加载esmap地图文章</a></h4>
+<h4 class="c-title">一、在支付宝小程序里显示室内三维地图 需要满足的两个条件</h4>
+<p class="indent">调用ESMap室内地图需要用到小程序web-view组件，想要通过 web-view 调用ESMap室内地图需要满足以下 2 个条件：</p>
+<p>1. 小程序是企业主体，支付宝 web-view 组件不对个人类型的小程序开放。</p>
+<p>2. 您需要有一个自己的域名，在嵌入网页的时候需要在支付宝后台验证域名（只有自己域名下的网页才能被正确地显示哦，不能随便找一个公开链接）。</p>
+<p>支付宝小程序管理中心 &gt; 设置 &gt; 开发设置 &gt; H5域名配置 里设置（如下图）</p>
+<p><img src="./images/支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图0.png" alt="" /></p>
+<h4 class="c-title">二、具体实现步骤</h4>
+<p>1、域名验证：</p>
+<p class="indent">由于支付宝平台的规定，web-view 指向的地址，必须是在支付宝小程序后台登记的域名，否则无法使用。</p>
+<p>首先我们找到支付宝小程序管理中心 &gt; 设置 &gt; 开发设置 &gt; H5域名配置，并填上你需要绑定的域名。</p>
+<p><img src="./images/支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图1.png" alt="" /></p>
+<p class="indent">需要注意的是，这里的域名强制 https，需要配置好 https 证书，购买服务器的时候也要注意购买支持 https 的服务器。</p>
+<p class="indent">接下来，我们需要下载一个支付宝的验证文件，放在你域名的根目录下，并且支持访问。</p>
+<p class="indent">具体来说，如果您的域名www.esmap.cn，支付宝的验证文件是WATLNxupm4.txt，您需要确保https://www.esmap.cn/WATLNxupm4.txt 可以公开访问。确认无误之后，点击保存即可成功保存。</p>
+<p>注：小程序所有用到的https请求都需要配置合法域名</p>
+<p>2、嵌入带有室内地图的web-view</p>
+<p>这个过程其实很简单，找到你支付宝小程序的.wxml文件，添加以下代码</p>
+<pre><code><code>
+    <span class="hljs-tag">&lt;<span class="hljs-name">web-view&nbsp;<span class="hljs-attr">src=<span class="hljs-string">"https://www.esmap.cn /esmap.html"/&gt;
+            </span></span></span></span></code></pre>
+<p>其中&nbsp;https://www.esmap.cn /esmap.html&nbsp;是带有地图的 H5 页面</p>
+<p>室内地图制作流程，您可以使用下面两种方式构建这个页面：</p>
+<p>1) 从https://www.esmap.cn 官网中复制测试地图源码DEMO，在您自己的服务器进行免费部署。</p>
+<p>2) 参考https://www.esmap.cn 室内三维地图SDK开发说明，在您已有的 H5 页面上添加自己制作的室内地图。</p>
+<h4 class="c-title">3、小程序 web-view 的一些提示</h4>
+<p>支付宝小程序的 web-view 只能是全屏的，并且会覆盖页面中的所有其他组件。</p>
+<p>1) 支付宝小程序给网页传递信息方法</p>
+<pre><code><code class="hljs javascript">
+<span class="hljs-keyword">this.webViewContext = my.createWebViewContext(<span class="hljs-string">'web-view-1');
+<span class="hljs-keyword">this.webViewContext.postMessage({<span class="hljs-string">'sendToWebView': <span class="hljs-string">'1'});
+
+            </span></span></span></span></span></code></pre>
+<p>2) 如果网页想给支付宝小程序传递信息，可以通过 my.postMessage({'sendToMiniProgram': '0'}); 方法。</p>
+<h4 class="c-title">三、支付宝小程序里面可以进行蓝牙定位导航，由易景空间提供完整的定位导航方案，不用写一行代码就可以完成商场定位导航等方案的现场部署！</h4>
+<h4 class="c-title">四、更多效果！</h4>
+<p><img src="./images/支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图2.png" alt="" width="463" height="824" /><img src="./images/支付宝小程序室内地图导航开发-支付宝小程序JS加载esmap地图3.png" alt="" width="463" height="824" /></p>
+<p>&nbsp;</p>
+<p>更多室内三维地图引擎例子功能体验</p>
+<p><a title="室内三维地图演示链接" href="https://www.esmap.cn/sdk-demo/demo/index.html?tt=cnblogs6" target="_blank">https://www.esmap.cn/sdk-demo/demo/index.html?tt=cnblogs6</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

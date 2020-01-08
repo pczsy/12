@@ -1,0 +1,159 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue+vant-UI框架写的购物车的复选框全选和反选' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue+vant-UI框架写的购物车的复选框全选和反选</center></div><div class='banquan'>原文出处:本文由博客园博主阿铭~提供。<br/>
+原文连接:https://www.cnblogs.com/wzm-view/p/11793144.html</div><br>
+    <p><span style="font-size: 18px;"><strong>购物车页面的设计图</strong></span></p>
+<p><span style="font-size: 18px;"><strong><img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选0.png" alt="" width="150" height="267" /></strong></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>商品的列表</p>
+<p>&nbsp;<img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;代码：</p>
+<div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3997b149-2f0f-45c0-aedc-1b429d6c9659')"><img id="code_img_closed_3997b149-2f0f-45c0-aedc-1b429d6c9659" class="code_img_closed" src="./images/vue+vant-UI框架写的购物车的复选框全选和反选2.png" alt="" /><img id="code_img_opened_3997b149-2f0f-45c0-aedc-1b429d6c9659" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('3997b149-2f0f-45c0-aedc-1b429d6c9659',event)" src="./images/vue+vant-UI框架写的购物车的复选框全选和反选3.png" alt="" />
+<div id="cnblogs_code_open_3997b149-2f0f-45c0-aedc-1b429d6c9659" class="cnblogs_code_hide">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="shoppingListData.rows.length"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li
+</span><span style="color: #008080;"> 3</span> <span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item,index) in shoppingListData.rows"</span>
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">:key</span><span style="color: #0000ff;">="index"</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">van-checkbox
+</span><span style="color: #008080;"> 7</span> <span style="color: #ff0000;">:value</span><span style="color: #0000ff;">="item.goods_id"</span>
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="item.isChecked"</span>
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">checked-color</span><span style="color: #0000ff;">="#07c160"</span>
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="chooseChange(item.goods_id)"</span>
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">van-checkbox</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="list_details"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="shop_img"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">img
+</span><span style="color: #008080;">14</span> <span style="color: #ff0000;">:src</span><span style="color: #0000ff;">="item.goods_image+'?w=150&amp;h=150&amp;crop=1'"</span>
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">alt</span><span style="color: #0000ff;">=""</span>
+<span style="color: #008080;">16</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="goods_presentation"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pTitle"</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="p1"</span><span style="color: #0000ff;">&gt;</span>{{item.goods_name}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> &lt;p class="p2"&gt;{{item.color}}&lt;/p&gt; </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">20</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="price"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="spanSprice"</span><span style="color: #0000ff;">&gt;</span>{{item.now_price | formatMoney}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="span_step"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">23</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button
+</span><span style="color: #008080;">24</span> <span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="handleReduce(index)"</span>
+<span style="color: #008080;">25</span> <span style="color: #ff0000;">:disabled</span><span style="color: #0000ff;">="item.goods_qty===1"</span>
+<span style="color: #008080;">26</span> <span style="color: #0000ff;">&gt;</span>-<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">27</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>{{item.goods_qty}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">28</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="handleAdd(index)"</span><span style="color: #0000ff;">&gt;</span>+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">29</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">30</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">31</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">32</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">33</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">34</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<span class="cnblogs_code_collapse">商品列表</span></div>
+<p>全选的复选框</p>
+<p><img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;全选的代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="footerflex"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">van-checkbox
+</span><span style="color: #008080;"> 3</span>             <span style="color: #ff0000;">v-model</span><span style="color: #0000ff;">="AllChecked"</span>
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">            @click</span><span style="color: #0000ff;">="checkAll"</span>
+<span style="color: #008080;"> 5</span>           <span style="color: #0000ff;">&gt;</span>全选<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">van-checkbox</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span 
+</span><span style="color: #008080;"> 7</span>           <span style="color: #ff0000;">class</span><span style="color: #0000ff;">="management"</span> 
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">          v-if</span><span style="color: #0000ff;">="managementShow"</span>
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">          @click</span><span style="color: #0000ff;">="management()"</span>
+<span style="color: #008080;">10</span>           <span style="color: #0000ff;">&gt;</span>管理<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span 
+</span><span style="color: #008080;">12</span>           <span style="color: #ff0000;">class</span><span style="color: #0000ff;">="finish"</span>
+<span style="color: #008080;">13</span> <span style="color: #ff0000;">          v-if</span><span style="color: #0000ff;">="finishShow"</span>
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">          @click</span><span style="color: #0000ff;">="management()"</span>
+<span style="color: #008080;">15</span>           <span style="color: #0000ff;">&gt;</span>完成<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">van-button </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="default"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">='delete' </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="sureDel()"</span><span style="color: #ff0000;"> v-if</span><span style="color: #0000ff;">="finishShow"</span><span style="color: #0000ff;">&gt;</span>删除<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">van-button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="managementShow"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="summation"</span><span style="color: #0000ff;">&gt;</span>合计<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>{{ totalPrice }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">20</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">van-button </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="default"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="pay"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="closeAnAccount()"</span><span style="color: #0000ff;">&gt;</span>结算<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">van-button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span>           <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>单选的change事件</p>
+<p><img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选5.png" alt="" /></p>
+<p>&nbsp;代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 单选的change事件</span>
+<span style="color: #008080;"> 2</span> <span style="color: #000000;">    chooseChange(id) {
+</span><span style="color: #008080;"> 3</span>       <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.selectedData.indexOf(id) &gt; -1<span style="color: #000000;">) {
+</span><span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">this</span>.remove(<span style="color: #0000ff;">this</span><span style="color: #000000;">.selectedData, id);
+</span><span style="color: #008080;"> 5</span>       } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">this</span><span style="color: #000000;">.selectedData.push(id);
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;"> 8</span>       <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.selectedData.length &lt; <span style="color: #0000ff;">this</span><span style="color: #000000;">.shoppingListData.total) {
+</span><span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">this</span>.AllChecked = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;">10</span>       } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">11</span>         <span style="color: #0000ff;">this</span>.AllChecked = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;">13</span>       console.log(<span style="color: #0000ff;">this</span><span style="color: #000000;">.selectedData);
+</span><span style="color: #008080;">14</span>     }</pre>
+</div>
+<p>全选的JS</p>
+<p><img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选6.png" alt="" /></p>
+<p>&nbsp;全选的代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 全选和反选</span>
+<span style="color: #008080;"> 2</span> <span style="color: #000000;">    checkAll() {
+</span><span style="color: #008080;"> 3</span>       let list = <span style="color: #0000ff;">this</span><span style="color: #000000;">.shoppingListData.rows;
+</span><span style="color: #008080;"> 4</span>       <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.AllChecked) {
+</span><span style="color: #008080;"> 5</span>         list.forEach(element =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;"> 6</span>           element.isChecked = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">        });
+</span><span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">this</span>.selectedData =<span style="color: #000000;"> [];
+</span><span style="color: #008080;"> 9</span>       } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+</span><span style="color: #008080;">10</span>         list.forEach(element =&gt;<span style="color: #000000;"> {
+</span><span style="color: #008080;">11</span>           element.isChecked = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+</span><span style="color: #008080;">12</span>           <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.selectedData.indexOf(element.goods_id) &lt; 0<span style="color: #000000;">) {
+</span><span style="color: #008080;">13</span>             <span style="color: #0000ff;">this</span><span style="color: #000000;">.selectedData.push(element.goods_id);
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">          }
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">        });
+</span><span style="color: #008080;">16</span>         console.log(<span style="color: #0000ff;">this</span><span style="color: #000000;">.selectedData);
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;">18</span>     },</pre>
+</div>
+<p>数组删除</p>
+<p><img src="./images/vue+vant-UI框架写的购物车的复选框全选和反选7.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;代码</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>     <span style="color: #008000;">//</span><span style="color: #008000;">数组删除</span>
+<span style="color: #008080;">2</span> <span style="color: #000000;">    remove(arr, val) {
+</span><span style="color: #008080;">3</span>       <span style="color: #0000ff;">var</span> index =<span style="color: #000000;"> arr.indexOf(val);
+</span><span style="color: #008080;">4</span>       <span style="color: #0000ff;">if</span> (index &gt; -1<span style="color: #000000;">) {
+</span><span style="color: #008080;">5</span>         arr.splice(index, 1<span style="color: #000000;">);
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">      }
+</span><span style="color: #008080;">7</span>     }</pre>
+</div>
+<p>综上所述就能实现全选和反选的功能</p>
+<p>&nbsp;</p>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

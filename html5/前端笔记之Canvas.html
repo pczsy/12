@@ -1,0 +1,1431 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端笔记之Canvas' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端笔记之Canvas</center></div><div class='banquan'>原文出处:本文由博客园博主RopeHuo提供。<br/>
+原文连接:https://www.cnblogs.com/rope/p/10724189.html</div><br>
+    <h1>一、<strong>Canvas<span style="font-family: 宋体;">基本使用</span></strong></h1>
+<p>Canvas<span style="font-family: 宋体;">是</span><span style="font-family: Consolas;">HTML5</span><span style="font-family: 宋体;">的画布，</span><span style="font-family: Consolas;">Canvas</span><span style="font-family: 宋体;">算是&ldquo;不务正业&rdquo;的面向对象大总结，将面向对象玩极致。</span></p>
+<p><span style="color: #ff0000;"><strong><span style="font-family: 宋体;">算法为王！就是说</span>canvas<span style="font-family: 宋体;">你不会，但是算法好，不怕写业务，不怕代码量，只要稍微学学</span><span style="font-family: Consolas;">API</span><span style="font-family: 宋体;">就能出活。</span></strong></span></p>
+<p><span style="color: #ff0000;"><strong>Canvas<span style="font-family: 宋体;">这里是</span><span style="font-family: Consolas;">HTML5</span><span style="font-family: 宋体;">新标签，直接要了</span><span style="font-family: Consolas;">flash</span><span style="font-family: 宋体;">的命。</span></strong></span></p>
+<p>&nbsp;</p>
+<h2><strong>1.1 Canvas<span style="font-family: 宋体;">简介</span></strong></h2>
+<p>MDN<span style="font-family: 宋体;">的</span><span style="font-family: Consolas;">Canvas</span><span style="font-family: 宋体;">在线手册：</span></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API"><span style="text-decoration: underline;">https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API</span></a></p>
+<p><img src="./images/前端笔记之Canvas0.png" alt="" /></p>
+<p><strong>了解：</strong></p>
+<p><a title="HTML/Canvas" href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/canvas">&lt;canvas&gt;</a><span style="font-family: 'Open Sans';">是一个可以使用脚本</span>(<span style="font-family: 'Open Sans';">通常为</span><a title="zh-CN/docs/JavaScript" href="https://developer.mozilla.org/zh-CN/docs/JavaScript">JavaScript</a>)<span style="font-family: 'Open Sans';">来绘制图形的</span><span style="font-family: Consolas;">&nbsp;</span><a title="zh-CN/docs/HTML" href="https://developer.mozilla.org/zh-CN/docs/HTML">HTML</a>&nbsp;<span style="font-family: 'Open Sans';">元素</span><span style="font-family: Consolas;">.</span><span style="font-family: 'Open Sans';">它可以用于绘制图表、制作图片构图或者制作简单的</span><span style="font-family: Consolas;">(</span><span style="font-family: 'Open Sans';">以及</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/A_basic_ray-caster"><span style="font-family: 'Open Sans';">不那么简单的</span></a>)<span style="font-family: 'Open Sans';">动画</span><span style="font-family: Consolas;">. </span><span style="font-family: 'Open Sans';">右边的图片展示了一些</span><span style="font-family: Consolas;">&nbsp;</span>&lt;canvas&gt;&nbsp;<span style="font-family: 'Open Sans';">的实现示例</span><span style="font-family: 宋体;">。</span></p>
+<p><span style="font-family: 宋体;">历史：</span></p>
+<p>&lt;canvas&gt;&nbsp;<span style="font-family: 'Open Sans';">最早由</span><span style="font-family: Consolas;">Apple</span><span style="font-family: 'Open Sans';">引入</span><span style="font-family: Consolas;">WebKit</span><span style="font-family: 'Open Sans';">，用于</span><span style="font-family: Consolas;">Mac OS X </span><span style="font-family: 'Open Sans';">的 </span><span style="font-family: Consolas;">Dashboard</span><span style="font-family: 'Open Sans';">，随后被各个浏览器实现。如今，所有主流的浏览器都支持它。</span></p>
+<p>Mozilla <span style="font-family: 'Open Sans';">程序从 </span><span style="font-family: Consolas;">Gecko 1.8 (</span><a title="Firefox_1.5_for_developers" href="https://developer.mozilla.org/zh-CN/docs/Firefox_1.5_for_developers">Firefox 1.5</a>) <span style="font-family: 'Open Sans';">开始支持</span><span style="font-family: Consolas;">&nbsp;</span>&lt;canvas&gt;<span style="font-family: 'Open Sans';">。它首先是由</span> Apple <span style="font-family: 'Open Sans';">引入的，用于 </span><span style="font-family: Consolas;">OS X&nbsp;</span><a href="http://www.apple.com/macosx/features/dashboard/">Dashboard</a>&nbsp;<span style="font-family: 'Open Sans';">和 </span><span style="font-family: Consolas;">Safari</span><span style="font-family: 'Open Sans';">。</span><span style="font-family: Consolas;">Internet Explorer </span><span style="font-family: 'Open Sans';">从</span><span style="font-family: Consolas;">IE9</span><span style="font-family: 'Open Sans';">开始支持</span>&lt;canvas&gt;&nbsp;<span style="font-family: 'Open Sans';">，更旧版本的</span><span style="font-family: Consolas;">IE</span><span style="font-family: 'Open Sans';">可以引入 </span><span style="font-family: Consolas;">Google </span><span style="font-family: 'Open Sans';">的</span><span style="font-family: Consolas;">&nbsp;</span><a href="https://github.com/arv/explorercanvas">Explorer Canvas</a>&nbsp;<span style="font-family: 'Open Sans';">项目中的脚本来获得</span>&lt;canvas&gt;<span style="font-family: 'Open Sans';">支持。</span>Chrome<span style="font-family: 'Open Sans';">和</span><span style="font-family: Consolas;">Opera 9+ </span><span style="font-family: 'Open Sans';">也支持</span><span style="font-family: Consolas;">&nbsp;</span>&lt;canvas&gt;<span style="font-family: 'Open Sans';">。</span></p>
+<p><strong>C</strong><strong>anvas<span style="font-family: 宋体;">兼容到</span><span style="font-family: Consolas;">IE9</span><span style="font-family: 宋体;">。</span></strong></p>
+<hr />
+<h2><strong>1.2 Canvas<span style="font-family: 宋体;">入门</span></strong></h2>
+<p>canvas<span style="font-family: 宋体;">是</span><span style="font-family: Consolas;">HTML5</span><span style="font-family: 宋体;">中比较特殊的双标签，可以在</span><span style="font-family: Consolas;">body</span><span style="font-family: 宋体;">中放：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span> <span style="color: #0000ff;">/&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/css"</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        canvas</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">1px solid #000</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="600"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="400"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/前端笔记之Canvas1.png" alt="" /></p>
+<p><span style="color: #ff0000;"><strong>不能将</strong><strong>width<span style="font-family: 宋体;">、</span><span style="font-family: Consolas;">height</span><span style="font-family: 宋体;">在</span><span style="font-family: Consolas;">CSS</span><span style="font-family: 宋体;">中设置，否则画布的像素的会被缩放，画面质量粗糙了。</span></strong></span></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas2.png" alt="" /></p>
+<p>&lt;canvas&gt;<span style="font-family: 'Open Sans';">元素可以像任何一个普通的图像一样（有</span><a title="margin属性为给定元素设置所有四个（上下左右）方向的外边距属性。这是四个外边距属性设置的简写。四个外边距属性设置分别是：&nbsp;margin-top， margin-right， margin-bottom 和 margin-left 。指定的外边距允许为负数。" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/margin">margin</a><span style="font-family: 'Open Sans';">，</span><a title="CSS的border属性是一个用于设置各种单独的边界属性的简写属性。border可以用于设置一个或多个以下属性的值： border-width, border-style, border-color。" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/border">border</a><span style="font-family: 'Open Sans';">，</span><a title="background 是CSS简写属性，用来集中设置各种背景属性。background 可以用来设置一个或多个属性:background-color, background-image, background-position, background-repeat, background-size, background-attachment。" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/background">background</a><span style="font-family: 'Open Sans';">等等属性）被设计。然而，这些样式不会影响在</span>canvas<span style="font-family: 'Open Sans';">中的实际图像。</span></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas3.png" alt="" /></p>
+<p><span style="font-family: 宋体;">画布没什么用，所有操作都要在</span>&ldquo;上下文&rdquo;中进行，这里的上下文是环境的意思，不是面向对象中的<span style="font-family: Consolas;">this</span><span style="font-family: 宋体;">。</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;script type="text/javascript"&gt;
+     <span style="color: #008000;">//</span><span style="color: #008000;">得到画布标签</span>
+     <span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">使用上下文，得到一个2D的画布</span>
+     <span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">画画</span>
+     ctx.fillRect(100, 100, 300, 100<span style="color: #000000;">);
+</span>&lt;/script&gt;</pre>
+</div>
+<p><span style="color: #ff0000;"><strong>Canvas<span style="font-family: 宋体;">的本质就是用</span><span style="font-family: Consolas;">js</span><span style="font-family: 宋体;">来画画，所有的绘画函数，都是</span><span style="font-family: Consolas;">ctx</span><span style="font-family: 宋体;">的方法。</span></strong></span></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong>canvas<span style="font-family: 宋体;">马上开始面对一堆</span><span style="font-family: Consolas;">API</span><span style="font-family: 宋体;">：</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;script type="text/javascript"&gt;
+     <span style="color: #008000;">//</span><span style="color: #008000;">得到画布标签</span>
+     <span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">使用上下文，得到一个2D的画布</span>
+     <span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制矩形</span>
+     ctx.fillStyle = "orange"; <span style="color: #008000;">//</span><span style="color: #008000;">先提供一个颜色的笔</span>
+     ctx.fillRect(100, 100, 300, 100); <span style="color: #008000;">//</span><span style="color: #008000;">在根据以上颜色填充</span>
+<span style="color: #000000;">
+     ctx.fillStyle </span>= "green"; <span style="color: #008000;">//</span><span style="color: #008000;">先提供一个颜色的笔</span>
+     ctx.fillRect(100, 200, 300, 200); <span style="color: #008000;">//</span><span style="color: #008000;">在根据以上颜色填充</span>
+&lt;/script&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #ff0000;"><strong>C</strong><strong>anvas<span style="font-family: 宋体;">的坐标系和绝对定位的坐标系是一样的。</span></strong></span></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas5.png" alt="" /><img src="./images/前端笔记之Canvas6.png" alt="" /></p>
+<p><img src="./images/前端笔记之Canvas7.png" alt="" /></p>
+<hr />
+<h1>二、<strong>Canvas</strong><strong>绘制形状</strong></h1>
+<h2><strong>2.1<span style="font-family: 宋体;">绘制形状路径</span></strong></h2>
+<p><span style="font-family: 宋体;">在</span>Canvas<span style="font-family: 宋体;">中有两种东西：</span></p>
+<p>l&nbsp;stroke<span style="font-family: 宋体;">路径【笔触】，也叫描边，就是形状的轮廓</span></p>
+<p>l&nbsp;fill<span style="font-family: 宋体;">填充，就是里面的颜色</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">得到画布标签</span>
+<span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">使用上下文，得到一个2D画布</span>
+<span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">画画</span>
+ctx.beginPath();     <span style="color: #008000;">//</span><span style="color: #008000;">声明要开始绘制路径</span>
+ctx.moveTo(100,100); <span style="color: #008000;">//</span><span style="color: #008000;">移动到绘制点，将&ldquo;画笔&rdquo;移动到100,100的位置</span>
+ctx.lineTo(250,250); <span style="color: #008000;">//</span><span style="color: #008000;">划线</span>
+ctx.lineTo(500,250); <span style="color: #008000;">//</span><span style="color: #008000;">划线</span>
+ctx.lineWidth = 10;  <span style="color: #008000;">//</span><span style="color: #008000;">线的粗细</span>
+ctx.strokeStyle = "red"; <span style="color: #008000;">//</span><span style="color: #008000;">线的颜色</span>
+ctx.fillStyle = "blue"; <span style="color: #008000;">//</span><span style="color: #008000;">准备填充的颜色</span>
+ctx.closePath();     <span style="color: #008000;">//</span><span style="color: #008000;">闭合路径（自动补全）</span>
+ctx.stroke();        <span style="color: #008000;">//</span><span style="color: #008000;">显示线（绘制线），可以绘制的路径显示出来</span>
+ctx.fill();          <span style="color: #008000;">//</span><span style="color: #008000;">填充颜色</span></pre>
+</div>
+<p>只有矩形有快捷方法，比如想绘制多边形，都要用以上这些组合。</p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas8.png" alt="" /></p>
+<hr />
+<h2><strong>2.2<span style="font-family: 宋体;">绘制矩形</span></strong></h2>
+<div class="cnblogs_code">
+<pre><code>ctx.fillRect(x,y,w,h);    <span style="color: #008000;">//</span><span style="color: #008000;">绘制填充矩形</span>
+ctx.strokeRect(x,y,w,h);   <span style="color: #008000;">//</span><span style="color: #008000;">绘制路径矩形</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>绘制调色板：</strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0;i &lt; 6;i++<span style="color: #000000;">){
+   </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> j = 0;j &lt; 6;j++<span style="color: #000000;">){
+       ctx.fillStyle </span>= 'rgba('+ Math.floor(255-42.5 * i) +','+ Math.floor(255-42.5 * j) +', 200)'<span style="color: #000000;">;
+       ctx.fillRect(i </span>* 25, j * 25, 25, 25<span style="color: #000000;">);
+   }
+}</span></pre>
+</div>
+<p><span style="color: #ff0000;"><strong>记住一句话：</strong><strong>Canvas<span style="font-family: 宋体;">是不可逆，绘制的元素一旦上了屏幕，是无法针对它再次操作。</span></strong></span></p>
+<hr />
+<h2><strong>2.3<span style="font-family: 宋体;">绘制弧度</span></strong></h2>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">ctx.arc(圆心x, 圆心y, 半径, 开始的弧度, 结束的弧度, 是否逆时针);
+
+ctx.beginPath();  </span><span style="color: #008000;">//</span><span style="color: #008000;">开始绘制路径</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> ctx.arc(100, 100, 60, 0, 6.28, false);</span>
+ctx.arc(100, 100, 60, 0, Math.PI * 2, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+ctx.stroke(); </span><span style="color: #008000;">//</span><span style="color: #008000;">显示路径线</span></pre>
+</div>
+<p class="MsoNormal"><span style="mso-spacerun: 'yes'; font-family: 宋体; mso-ascii-font-family: Consolas; mso-hansi-font-family: Consolas; mso-bidi-font-family: 'Times New Roman'; font-size: 10.5000pt; mso-font-kerning: 1.0000pt;"><span style="font-family: 宋体;">切一个圆，让切下来的弧边长等于圆的半径，此时弧对应的角度是</span>57.3<span style="font-family: 宋体;">度左右，此时角度是固定的。</span></span></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas9.png" alt="" /><img src="./images/前端笔记之Canvas10.png" alt="" /><img src="./images/前端笔记之Canvas11.png" alt="" /></p>
+<p>正方向是正右方</p>
+<p><span style="font-family: 宋体;">在</span>canvas<span style="font-family: 宋体;">中所有涉及角度的坐标系有两点注意的：</span></p>
+<p>l&nbsp;0<span style="font-family: 宋体;">弧度的方向是正右方向。</span></p>
+<p>&nbsp;</p>
+<p>弧度的顺时针和逆时针：</p>
+<div class="cnblogs_code">
+<pre><code>ctx.arc(100,100,60, 0, 3, <span style="color: #0000ff;">false</span>); <span style="color: #008000;">//</span><span style="color: #008000;">绘制圆弧</span></pre>
+</div>
+<p><img src="./images/前端笔记之Canvas12.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>ctx.arc(100,100,60, 0, 1, <span style="color: #ff0000;">true</span>); <span style="color: #008000;">//</span><span style="color: #008000;">绘制圆弧</span></pre>
+</div>
+<p><img src="./images/前端笔记之Canvas13.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><strong>绘制圆形：</strong></p>
+<div class="cnblogs_code">
+<pre><code>ctx.arc(100,100,60, 0, <span style="color: #ff0000;">Math.PI * 2</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+ctx.arc(</span>100,100,60, 0,<span style="color: #ff0000;"> 6.28</span>, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+ctx.arc(</span>100, 100, 60, 0, -6.28, <span style="color: #0000ff;">true</span>);</pre>
+</div>
+<p><img src="./images/前端笔记之Canvas14.png" alt="" /></p>
+<p><span style="color: #ff0000;"><strong>注意：</strong><strong>x<span style="font-family: 宋体;">和</span><span style="font-family: Consolas;">y</span><span style="font-family: 宋体;">坐标是到圆心的位置，而且圆的大小是半径，后面绘制的形状会覆盖前面的形状。</span></strong></span></p>
+<p><span style="color: #ff0000;">&nbsp;</span></p>
+<p><span style="color: #ff0000;"><strong>绘制笑脸</strong></span></p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ec4d25dc-8b07-4f35-b001-51be2006c7ee')"><img id="code_img_closed_ec4d25dc-8b07-4f35-b001-51be2006c7ee" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_ec4d25dc-8b07-4f35-b001-51be2006c7ee" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('ec4d25dc-8b07-4f35-b001-51be2006c7ee',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_ec4d25dc-8b07-4f35-b001-51be2006c7ee" class="cnblogs_code_hide">
+<pre><code>&lt;script type="text/javascript"&gt;
+     <span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+     </span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制大脸</span>
+     ctx.beginPath(); <span style="color: #008000;">//</span><span style="color: #008000;">开始绘制路径</span>
+     ctx.arc(300,200, 160, 0, 6.28, <span style="color: #0000ff;">false</span>); <span style="color: #008000;">//</span><span style="color: #008000;">绘制圆弧</span>
+     ctx.stroke(); <span style="color: #008000;">//</span><span style="color: #008000;">显示路径线</span>
+     ctx.fillStyle = "brown"<span style="color: #000000;">;
+     ctx.fill();
+
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制左眼睛</span>
+<span style="color: #000000;">     ctx.beginPath();
+     ctx.arc(</span>230,150, 30, 0, 6.28, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+     ctx.stroke();
+     ctx.fillStyle </span>= "orange"<span style="color: #000000;">;
+     ctx.fill();
+
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制右眼睛</span>
+<span style="color: #000000;">     ctx.beginPath();
+     ctx.arc(</span>370,150, 30, 0, 6.28, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+     ctx.stroke();
+     ctx.fillStyle </span>= "blue"<span style="color: #000000;">;
+     ctx.fill();
+
+     </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制嘴巴</span>
+<span style="color: #000000;">     ctx.beginPath();
+     ctx.arc(</span>300,160, 120, 0.5, 2.6, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+     ctx.lineWidth </span>= 10<span style="color: #000000;">;
+     ctx.stroke();
+</span>&lt;/script&gt;</pre>
+</div>
+<span class="cnblogs_code_collapse">绘制笑脸</span></div>
+<p><img src="./images/前端笔记之Canvas17.png" alt="" /></p>
+<hr />
+<h1>三、<strong>使用图片</strong></h1>
+<h2><strong>3.1<span style="font-family: 宋体;">图片基本使用</span></strong></h2>
+<p>canvas<span style="font-family: 宋体;">中不可能所有形状都自己画，一定是设计师给我们素材，然后使用。</span></p>
+<p>canvas<span style="font-family: 宋体;">中使用图片的方法：</span><span style="color: #ff0000;"><strong><span style="font-family: 宋体;">注意，必须等</span>img<span style="font-family: 宋体;">完全加载后才能呈递图片。</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">ctx.drawImage();
+
+</span><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建一个img标签</span>
+<span style="color: #0000ff;">var</span> image = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image()
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置图片的路径</span>
+image.src = "images/baby1.jpg"<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">当图片成功加载，就画图（上屏幕）</span>
+image.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">显示图片的API</span>
+   ctx.drawImage(image, 100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">表示x和y坐标</span>
+}</pre>
+</div>
+<hr />
+<h2><strong>3.2<span style="font-family: 宋体;">使用切片</span></strong></h2>
+<p><span style="font-family: 宋体;">如果</span>2<span style="font-family: 宋体;">个数字参数，此时表示左上角位置的</span><span style="font-family: Consolas;">x</span><span style="font-family: 宋体;">和</span><span style="font-family: Consolas;">y</span><span style="font-family: 宋体;">坐标：</span></p>
+<div class="cnblogs_code">
+<pre><code>ctx.drawImage(img,100,100<span style="color: #000000;">);
+ctx.drawImage(img图片对象,画布X,画布Y);</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">如果4个数字参数，此时表示x、y、w、h：
+ctx.drawImage(img图片对象, 画布X,画布Y,图片W,图片H);</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">如果8个数字参数，此时表示：
+ctx.drawImage(img,切片X,切片Y,切片W,切片H,画布X,画布Y,图片W,图片H);</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">创建一个img标签</span>
+<span style="color: #0000ff;">var</span> image = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image()
+</span><span style="color: #008000;">//</span><span style="color: #008000;">设置图片的路径</span>
+image.src = "images/baby1.jpg"<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">当图片成功加载，就画图（上屏幕）</span>
+image.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">显示图片的API</span>
+   <span style="color: #008000;">//</span><span style="color: #008000;"> ctx.drawImage(image, 100, 100); //表示x和y坐标</span>
+   <span style="color: #008000;">//</span><span style="color: #008000;"> ctx.drawImage(image, 100, 100, 150, 150); //表示x和y坐标</span>
+   <span style="color: #008000;">//</span><span style="color: #008000;"> ctx.drawImage(img,切片X,切片Y,切片W,切片H,画布X,画布Y,图片W,图片H);</span>
+   ctx.drawImage(image, 108, 200, 145, 120, 100, 100, 145, 120<span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>图片API<span style="font-family: 宋体;">：</span><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Using_images"><span>https://developer.mozilla.org/zh-CN/docs/Web/API/Canvas_API/Tutorial/Using_images</span></a></p>
+<p>&nbsp;<img src="./images/前端笔记之Canvas18.png" alt="" /></p>
+<hr />
+<h2><strong>3.3<span style="font-family: 宋体;">简易的图片加载器</span></strong></h2>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> R =<span style="color: #000000;"> {
+   </span>"0":"images/d1.jpg"<span style="color: #000000;">,
+   </span>"1":"images/d2.jpg"<span style="color: #000000;">,
+   </span>"2":"images/d3.jpg"<span style="color: #000000;">
+}
+</span><span style="color: #0000ff;">var</span> arr =<span style="color: #000000;"> [];
+</span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> k <span style="color: #0000ff;">in</span><span style="color: #000000;"> R){
+   arr[k] </span>= <span style="color: #0000ff;">new</span> Image(); <span style="color: #008000;">//</span><span style="color: #008000;">创建img对象</span>
+   arr[k].src = R[k];    <span style="color: #008000;">//</span><span style="color: #008000;">设置图片地址</span>
+   <span style="color: #008000;">//</span><span style="color: #008000;"> 当图片成功加载，就画图（上屏幕）</span>
+   arr[k].onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+       ctx.drawImage(arr[k], </span>50, 50<span style="color: #000000;">)
+   }
+}</span></pre>
+</div>
+<hr />
+<h2><strong>3.4<span style="font-family: 宋体;">显示</span><span style="font-family: 华文中宋;">GIF</span><span style="font-family: 宋体;">动态图</span></strong></h2>
+<p>&nbsp;HTML代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="testImg"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="xxx.gif"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="224"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="126"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="testBtn"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="停止"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('82467b76-1d12-4334-b731-43c8da62190a')"><img id="code_img_closed_82467b76-1d12-4334-b731-43c8da62190a" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_82467b76-1d12-4334-b731-43c8da62190a" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('82467b76-1d12-4334-b731-43c8da62190a',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_82467b76-1d12-4334-b731-43c8da62190a" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">if</span> ('getContext' <span style="color: #0000ff;">in</span> document.createElement('canvas'<span style="color: #000000;">)) {
+    HTMLImageElement.prototype.play </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.storeCanvas) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 移除存储的canvas</span>
+            <span style="color: #0000ff;">this</span>.storeCanvas.parentElement.removeChild(<span style="color: #0000ff;">this</span><span style="color: #000000;">.storeCanvas);
+            </span><span style="color: #0000ff;">this</span>.storeCanvas = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 透明度还原</span>
+            image.style.opacity = ''<span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.storeUrl) {
+            </span><span style="color: #0000ff;">this</span>.src = <span style="color: #0000ff;">this</span><span style="color: #000000;">.storeUrl;    
+        }
+    };
+    HTMLImageElement.prototype.stop </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">var</span> canvas = document.createElement('canvas'<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 尺寸</span>
+        <span style="color: #0000ff;">var</span> width = <span style="color: #0000ff;">this</span>.width, height = <span style="color: #0000ff;">this</span><span style="color: #000000;">.height;
+        </span><span style="color: #0000ff;">if</span> (width &amp;&amp;<span style="color: #000000;"> height) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 存储之前的地址</span>
+            <span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.storeUrl) {
+                </span><span style="color: #0000ff;">this</span>.storeUrl = <span style="color: #0000ff;">this</span><span style="color: #000000;">.src;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> canvas大小</span>
+            canvas.width =<span style="color: #000000;"> width;
+            canvas.height </span>=<span style="color: #000000;"> height;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 绘制图片帧（第一帧）</span>
+            canvas.getContext('2d').drawImage(<span style="color: #0000ff;">this</span>, 0, 0<span style="color: #000000;">, width, height);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 重置当前图片</span>
+            <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                </span><span style="color: #0000ff;">this</span>.src = canvas.toDataURL("image/gif"<span style="color: #000000;">);
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;">(e) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 跨域</span>
+                <span style="color: #0000ff;">this</span>.removeAttribute('src'<span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 载入canvas元素</span>
+                canvas.style.position = 'absolute'<span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 前面插入图片</span>
+                <span style="color: #0000ff;">this</span>.parentElement.insertBefore(canvas, <span style="color: #0000ff;">this</span><span style="color: #000000;">);
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 隐藏原图</span>
+                <span style="color: #0000ff;">this</span>.style.opacity = '0'<span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 存储canvas</span>
+                <span style="color: #0000ff;">this</span>.storeCanvas =<span style="color: #000000;"> canvas;
+            }
+        }
+    };
+}
+
+</span><span style="color: #0000ff;">var</span> image = document.getElementById("testImg"<span style="color: #000000;">), 
+    button </span>= document.getElementById("testBtn"<span style="color: #000000;">);
+    
+</span><span style="color: #0000ff;">if</span> (image &amp;&amp;<span style="color: #000000;"> button) {
+    button.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.value == '停止'<span style="color: #000000;">) {
+            image.stop();
+            </span><span style="color: #0000ff;">this</span>.value = '播放'<span style="color: #000000;">;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            image.play();
+            </span><span style="color: #0000ff;">this</span>.value = '停止'<span style="color: #000000;">;
+        }
+    };
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">JavaScript代码</span></div>
+<hr />
+<h2><strong>3.5<span style="font-family: 宋体;">游戏图片资源加载器</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3d4b023d-d5aa-4689-8c22-a6f947a47fc9')"><img id="code_img_closed_3d4b023d-d5aa-4689-8c22-a6f947a47fc9" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_3d4b023d-d5aa-4689-8c22-a6f947a47fc9" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('3d4b023d-d5aa-4689-8c22-a6f947a47fc9',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_3d4b023d-d5aa-4689-8c22-a6f947a47fc9" class="cnblogs_code_hide">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">得到画布</span>
+<span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 使用上下文，得到一个2D的画布</span>
+<span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #008000;">//</span><span style="color: #008000;">资源文件</span>
+<span style="color: #0000ff;">var</span> R =<span style="color: #000000;"> {
+   </span>"d1" : "images/d1.jpg"<span style="color: #000000;">,
+   </span>"d2" : "images/d2.jpg"<span style="color: #000000;">,
+   </span>"d3" : "images/d3.jpg"<span style="color: #000000;">
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">遍历这个对象，将他们的地址变为真实图片地址</span>
+<span style="color: #0000ff;">var</span> count = 0; <span style="color: #008000;">//</span><span style="color: #008000;">已成功加载的图片个数</span>
+<span style="color: #0000ff;">var</span> length = Object.keys(R).length; <span style="color: #008000;">//</span><span style="color: #008000;">所有图片的总数</span>
+<span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> k <span style="color: #0000ff;">in</span><span style="color: #000000;"> R){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">创建image对象</span>
+   <span style="color: #0000ff;">var</span> image = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">设置src图片路径</span>
+   image.src =<span style="color: #000000;"> R[k];
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">将R里面的资源文件，变为真正的图片对象</span>
+   R[k] =<span style="color: #000000;"> image;
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">当image加载成功后，显示图片在画布上</span>
+   image.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+       count</span>++; <span style="color: #008000;">//</span><span style="color: #008000;">当某张图片加载成功，给计数器+1</span>
+       ctx.clearRect(0,0,600,600<span style="color: #000000;">)
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制文本，提升用户体验，提示加载的进度</span>
+       <span style="color: #008000;">//</span><span style="color: #008000;">填充文字API</span>
+       ctx.textAlign = "center"<span style="color: #000000;">;
+       ctx.font </span>= "30px 微软雅黑"<span style="color: #000000;">;
+       ctx.fillText(</span>"正在加载图片：" + count + "/" + length, canvas.width / 2,50<span style="color: #000000;">)
+       </span><span style="color: #008000;">//</span><span style="color: #008000;">当加载完毕，开始游戏</span>
+       <span style="color: #0000ff;">if</span>(count ==<span style="color: #000000;"> length){
+           </span><span style="color: #008000;">//</span><span style="color: #008000;">开始游戏的回调函数</span>
+           ctx.clearRect(0,0,600,600<span style="color: #000000;">)
+           start();
+       }
+   }
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 开始游戏的函数</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> start(){
+   ctx.drawImage(R[</span>"d1"],100,100<span style="color: #000000;">);
+   ctx.drawImage(R[</span>"d2"],0,100<span style="color: #000000;">);
+   ctx.drawImage(R[</span>"d3"],300,200<span style="color: #000000;">);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">游戏图片加载器</span></div>
+<hr />
+<h1><strong>四、画布的变形</strong></h1>
+<h1><span style="font-size: 18px;"><strong>4.1 translate<span style="font-family: 宋体;">移动变形</span></strong></span></h1>
+<p>translate()<span style="font-family: 宋体;">移动画布，</span><span style="font-family: Consolas;">rotate()</span><span style="font-family: 宋体;">旋转画布。</span></p>
+<p>canvas<span style="font-family: 宋体;">中不能只移动某一个对象，移动的都是整个画布。</span></p>
+<p>canvas<span style="font-family: 宋体;">中不能只旋转某一个对象，旋转的都是整个画布。</span></p>
+<p><span style="font-family: 宋体;">但是可以用</span>save()<span style="font-family: 宋体;">、</span><span style="font-family: Consolas;">restore()</span><span style="font-family: 宋体;">来巧妙设置，实现让某一个元素进行移动和旋转。</span></p>
+<h1><strong><span style="font-family: 宋体;"><img src="./images/前端笔记之Canvas23.png" alt="" /></span></strong></h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+ctx.translate(</span>100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">将画布移动，坐标系就发生变化了</span>
+ctx.fillRect(100, 100, 100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">相对于移动后的坐标系开始画画</span></pre>
+</div>
+<p class="MsoNormal">&nbsp;</p>
+<p class="MsoNormal"><span style="mso-spacerun: 'yes'; font-family: 宋体; mso-ascii-font-family: Consolas; mso-hansi-font-family: Consolas; mso-bidi-font-family: 'Times New Roman'; font-size: 10.5000pt; mso-font-kerning: 1.0000pt;">移动变形、移动的是整个画布、而不是某个元素，在</span><span style="mso-spacerun: 'yes'; font-family: 宋体; mso-ascii-font-family: Consolas; mso-hansi-font-family: Consolas; mso-bidi-font-family: 'Times New Roman'; font-size: 10.5000pt; mso-font-kerning: 1.0000pt;">ctx.translate()<span style="font-family: 宋体;">之后绘制的语句都将被影响。</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+ctx.translate(</span>100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">将画布移动，坐标系就发生变化了</span>
+ctx.fillRect(100, 100, 100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">相对于移动后的坐标系开始画画</span>
+<span style="color: #000000;">ctx.beginPath();
+ctx.arc(</span>100,100, 100, 0, 6.28, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+ctx.fillStyle </span>= 'skyblue'<span style="color: #000000;">;
+ctx.fill();</span></pre>
+</div>
+<p><img src="./images/前端笔记之Canvas24.png" alt="" /></p>
+<hr />
+<h2><strong>4.2 save()<span style="font-family: 宋体;">保存和</span><span style="font-family: 华文中宋;">restore()</span><span style="font-family: 宋体;">恢复</span></strong></h2>
+<p>ctx.save()<span style="font-family: 宋体;">表示保存上下文的物理性质，</span><span style="font-family: Consolas;">ctx.restore()</span><span style="font-family: 宋体;">表示恢复最近一次的保存。</span></p>
+<p>save<span style="font-family: 宋体;">表示保存</span><span style="font-family: Consolas;">sava</span><span style="font-family: 宋体;">函数之前的状态，</span><span style="font-family: Consolas;">restore</span><span style="font-family: 宋体;">表示获取</span><span style="font-family: Consolas;">save</span><span style="font-family: 宋体;">保存的状态。</span></p>
+<p>移动了的元素，会影响不需要移动圆点坐标的元素，所以可以使用以上两个方法保存起来，可以解决让某一个元素移动变形不受影响。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector('canvas'<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+
+<span style="color: #ff0000;">ctx.save();</span>
+ctx.translate(</span>100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">将画布移动，坐标系就发生变化了</span>
+ctx.fillRect(100, 100, 100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">相对于移动后的坐标系开始画画</span>
+<span style="color: #000000;"><span style="color: #ff0000;">ctx.restore();</span>
+
+ctx.beginPath();
+ctx.arc(</span>100,100, 100, 0, 6.28, <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+ctx.fillStyle </span>= 'skyblue'<span style="color: #000000;">;
+ctx.fill();</span></pre>
+</div>
+<p><img src="./images/前端笔记之Canvas25.png" alt="" /></p>
+<hr />
+<h2><strong>4.3 rotate()<span style="font-family: 宋体;">旋转变形</span></strong></h2>
+<p><span style="font-family: 宋体;">旋转的是整个坐标系，坐标系以</span>0,0<span style="font-family: 宋体;">点为中心点进行旋转。</span></p>
+<p>rotate(1)<span style="font-family: 宋体;">的参数，是弧度，旋转的也不是矩形，而是画布。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+ctx.rotate(</span>1); <span style="color: #008000;">//</span><span style="color: #008000;">1表示57.3度（1弧度）</span>
+ctx.fillRect(100, 100, 100, 100); <span style="color: #008000;">//</span><span style="color: #008000;">相对于旋转后的坐标系开始画画</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>如果想旋转某一个元素，必须将坐标轴原点，放到要旋转的元素身上，然后再旋转。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">ctx.save();
+<span style="color: #ff0000;">ctx.translate(</span></span><span style="color: #ff0000;">150,150)
+ctx.rotate(1); //1表示57.3度（1弧度）
+ctx.fillRect(-50, -50, 100, 100); //相对于旋转后的坐标系开始画画</span>
+ctx.restore();</pre>
+</div>
+<p><img src="./images/前端笔记之Canvas26.png" alt="" /></p>
+<p><span style="font-family: 宋体;">坐标系移动到物体的中心点，物体以负半宽、半高、为</span>x<span style="font-family: 宋体;">，</span><span style="font-family: Consolas;">y</span><span style="font-family: 宋体;">绘制。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> Box(){
+    </span><span style="color: #0000ff;">this</span>.x = 150<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.y = 150<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.w = 100<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.h = 100<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">this</span>.deg = 0<span style="color: #000000;">;
+}
+Box.prototype.render </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    ctx.save()
+    ctx.translate(</span><span style="color: #0000ff;">this</span>.x,<span style="color: #0000ff;">this</span><span style="color: #000000;">.y)
+    ctx.rotate(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.deg); 
+    ctx.fillRect(</span>-<span style="color: #0000ff;">this</span>.w / 2,-<span style="color: #0000ff;">this</span>.h / 2,<span style="color: #0000ff;">this</span>.w,<span style="color: #0000ff;">this</span><span style="color: #000000;">.h);
+    ctx.restore()
+}
+Box.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">this</span>.deg += 0.2<span style="color: #000000;">;
+}
+</span><span style="color: #0000ff;">var</span> b = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Box();
+b.render();
+setInterval(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    ctx.clearRect(</span>0,0,600,400<span style="color: #000000;">)
+    b.update();
+    b.render();
+},</span>20);</pre>
+</div>
+<hr />
+<h1><strong>globalCompositeOperation</strong></h1>
+<p><span style="font-family: 宋体;">用来设置新图像和老图形如何</span>&ldquo;融合&rdquo;、&ldquo;裁剪&rdquo;。</p>
+<p>值有以下这些：</p>
+<p><span style="font-family: 宋体;">新图形是：</span>source<span style="font-family: 宋体;">，老图形是</span><span style="font-family: Consolas;">destination</span></p>
+<p><img src="./images/前端笔记之Canvas27.png" alt="" /></p>
+<div class="cnblogs_code">
+<pre><code>ctx.globalCompositeOperation="destination-over";</pre>
+</div>
+<p><img src="./images/前端笔记之Canvas28.png" alt="" /></p>
+<p><img src="./images/前端笔记之Canvas29.png" alt="" /></p>
+<hr />
+<h1><strong><span style="font-family: 宋体;">五、</span>FlappyBird<span style="font-family: 宋体;">游戏</span></strong></h1>
+<h2><strong>5.1<span style="font-family: 宋体;">游戏结构</span></strong></h2>
+<p><span style="font-family: 宋体;">游戏采用中介者模式开发，</span>Game<span style="font-family: 宋体;">类统领全局，负责读取资源、设置定时器、维护各种演员的实例，也就是说所有的演员都是</span><span style="font-family: Consolas;">Game</span><span style="font-family: 宋体;">类</span><span style="font-family: Consolas;">new</span><span style="font-family: 宋体;">出来，当做一个子属性。</span></p>
+<p>也就是，游戏项目外部就一条语句：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> game = <span style="color: #0000ff;">new</span> Game();</pre>
+</div>
+<p><span style="font-family: 宋体;">其他的所有语句都写在</span>Game<span style="font-family: 宋体;">类里面。</span></p>
+<p>&nbsp;</p>
+<p>需要的类：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">Game类：         中介者，读取资源、设置定时器、维护各种演员的实例
+Bird类：         小鸟类，这个类是单例的，实例化一次
+Pipe类：         管子类
+Land类：         大地类
+background类：   背景类</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="414"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="650"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/lib/underscore-min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/Game.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/Bird.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/Land.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/Pipe.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="js/Background.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<hr />
+<h2><strong>5.2<span style="font-family: 宋体;">创建</span><span style="font-family: 华文中宋;">Game</span><span style="font-family: 宋体;">类：开始界面、加载资源</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2ecbf799-8b3e-4ff4-9c31-83df79411a8b')"><img id="code_img_closed_2ecbf799-8b3e-4ff4-9c31-83df79411a8b" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_2ecbf799-8b3e-4ff4-9c31-83df79411a8b" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('2ecbf799-8b3e-4ff4-9c31-83df79411a8b',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_2ecbf799-8b3e-4ff4-9c31-83df79411a8b" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    window.Game </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">this</span>.f = 0; <span style="color: #008000;">//</span><span style="color: #008000;">帧编号</span>
+        <span style="color: #0000ff;">this</span>.init();<span style="color: #008000;">//</span><span style="color: #008000;">初始化DOM</span>
+<span style="color: #000000;">    }
+
+    Game.prototype.init </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">this</span>.canvas = document.getElementById("canvas"<span style="color: #000000;">);
+        </span><span style="color: #0000ff;">this</span>.ctx = <span style="color: #0000ff;">this</span>.canvas.getContext("2d"<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">R对象表示资源文件，图片总数</span>
+        <span style="color: #0000ff;">this</span>.R =<span style="color: #000000;"> {
+            </span>"bg_day": "images/bg_day.png"<span style="color: #000000;">,
+            </span>"land": "images/land.png"<span style="color: #000000;">,
+            </span>"pipe_down": "images/pipe_down.png"<span style="color: #000000;">,
+            </span>"pipe_up": "images/pipe_up.png"<span style="color: #000000;">,
+            </span>"bird0_0": "images/bird0_0.png"<span style="color: #000000;">,
+            </span>"bird0_1": "images/bird0_1.png"<span style="color: #000000;">,
+            </span>"bird0_2": "images/bird0_2.png"<span style="color: #000000;">,
+        }
+
+        </span><span style="color: #0000ff;">var</span> self = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">遍历对象用for in语句</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">遍历这个对象，将它们变为真的图片地址</span>
+        <span style="color: #0000ff;">var</span> count = 0; <span style="color: #008000;">//</span><span style="color: #008000;">计算加载好的图片总数（成功加载一张就+1）</span>
+        <span style="color: #0000ff;">var</span> length = Object.keys(<span style="color: #0000ff;">this</span>.R).length; <span style="color: #008000;">//</span><span style="color: #008000;">得到图片的总数</span>
+        <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> k <span style="color: #0000ff;">in</span> <span style="color: #0000ff;">this</span><span style="color: #000000;">.R) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">创建一个img标签，发出图片的请求，目前img对象是孤儿节点</span>
+            <span style="color: #0000ff;">var</span> img = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Image();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">将这个R[k]对象赋值给src设置图片的路径</span>
+            img.src = <span style="color: #0000ff;">this</span><span style="color: #000000;">.R[k];
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">将R里面的资源文件，改为img真的图片对象</span>
+            <span style="color: #0000ff;">this</span>.R[k] =<span style="color: #000000;"> img;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">当图片加载完毕，就画图上画布（图片必须load才能上画布）</span>
+            img.onload = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                count</span>++; <span style="color: #008000;">//</span><span style="color: #008000;">当某张图片加载完毕，给计数器+1</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;">清屏</span>
+<span style="color: #000000;">                self.clear()
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">绘制文本，提升用户加载到什么程度了</span>
+
+                <span style="color: #008000;">//</span><span style="color: #008000;">save和restore方法配合使用，防止污染其他样式</span>
+                self.ctx.save(); <span style="color: #008000;">//</span><span style="color: #008000;">保存状态</span>
+                self.ctx.textAlign = "center"<span style="color: #000000;">;
+                self.ctx.font </span>= "18px 微软雅黑"<span style="color: #000000;">;
+                self.ctx.fillStyle </span>= "blue"<span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">填充文字</span>
+                self.ctx.fillText(`加载中 ${count} / ${length}`, self.canvas.width / 2, 100<span style="color: #000000;">);
+                self.ctx.restore(); </span><span style="color: #008000;">//</span><span style="color: #008000;">恢复保存的状态</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;">当加载完毕的图片总数==图片总数时，此时就开始加载图片并开始游戏</span>
+                <span style="color: #0000ff;">if</span> (count ==<span style="color: #000000;"> length) {
+                    self.start(); </span><span style="color: #008000;">//</span><span style="color: #008000;">开始游戏的回调函数</span>
+<span style="color: #000000;">                }
+            }
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">清屏</span>
+    Game.prototype.clear = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #0000ff;">this</span>.ctx.clearRect(0, 0, <span style="color: #0000ff;">this</span>.canvas.width, <span style="color: #0000ff;">this</span><span style="color: #000000;">.canvas.height)
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 游戏主循环</span>
+    Game.prototype.start = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">var</span> self = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.timer = setInterval(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+            self.f</span>++<span style="color: #000000;">;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 清屏</span>
+<span style="color: #000000;">            self.clear();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">显示帧率</span>
+            self.ctx.font = "16px 微软雅黑"<span style="color: #000000;">;
+            self.ctx.fillText(self.f,</span>10,20<span style="color: #000000;">);
+        },</span>20<span style="color: #000000;">);
+    }
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">开始界面&amp;加载资源</span></div>
+<hr />
+<h2><strong>5.3<span style="font-family: 宋体;">创建</span><span style="font-family: 华文中宋;">background.js</span><span style="font-family: 宋体;">背景类</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('e11d4391-6b83-42a1-84a3-fd9fce0da0d3')"><img id="code_img_closed_e11d4391-6b83-42a1-84a3-fd9fce0da0d3" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_e11d4391-6b83-42a1-84a3-fd9fce0da0d3" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('e11d4391-6b83-42a1-84a3-fd9fce0da0d3',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_e11d4391-6b83-42a1-84a3-fd9fce0da0d3" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    window.Background </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+       </span><span style="color: #0000ff;">this</span>.image = game.R["bg_day"]; <span style="color: #008000;">//</span><span style="color: #008000;">图片</span>
+       <span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">; 
+    }
+    Background.prototype.render </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 画一个矩形，补充一下天空的颜色</span>
+<span style="color: #000000;">        game.ctx.save()
+        game.ctx.fillStyle </span>= "#4ec0ca"<span style="color: #000000;">;
+        game.ctx.fillRect(</span>0,0,game.canvas.width,game.canvas.height - 512<span style="color: #000000;">);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">第一步：为了不穿帮绘制背景连续放3张图片让背景无缝滚动             game.ctx.drawImage(this.image,this.x,game.canvas.height - 512);</span>
+        game.ctx.drawImage(<span style="color: #0000ff;">this</span>.image,<span style="color: #0000ff;">this</span>.x + 288 ,game.canvas.height - 512<span style="color: #000000;">);
+        game.ctx.drawImage(</span><span style="color: #0000ff;">this</span>.image,<span style="color: #0000ff;">this</span>.x + 288 * 2 ,game.canvas.height - 512<span style="color: #000000;">);
+        game.ctx.restore();
+    }
+    Background.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">this</span>.x--<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.x &lt; -288<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">;
+        }
+    }
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">背景类</span></div>
+<div class="cnblogs_code">
+<pre><code>Game.prototype.start = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 游戏开始主 循环</span>
+    <span style="color: #0000ff;">var</span> self = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #ff0000;">this.background = new Background();</span><span style="color: #008000;">//</span><span style="color: #008000;"> new 背景类</span>
+   <span style="color: #008000;"> this.land = new Land();</span> <span style="color: #008000;">//</span><span style="color: #008000;">new实例化大地类</span>
+    <span style="color: #0000ff;">this</span>.timer = setInterval(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+        self.f</span>++<span style="color: #000000;">;
+        self.clear();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新 背景类</span>
+<span style="color: #ff0000;">        self.background.render();
+        self.background.update();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 每隔100帧，实例化一根管子类</span>
+        <span style="color: #0000ff;">self.f % 100 == 0 &amp;&amp; new Pipe();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新 大地类</span>
+<span style="color: #008000;">        self.land.render();
+        self.land.update();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新所有管子类</span>
+        for (var i = 0; i &lt; self.pipeArr.length; i++<span style="color: #000000;">) {
+            self.pipeArr[i].render()
+            self.pipeArr[i].update()
+        }
+        self.ctx.font </span>= "16px 微软雅黑"<span style="color: #000000;">;
+        self.ctx.fillText(self.f,</span>10,20<span style="color: #000000;">);
+    }, </span>20<span style="color: #000000;">)
+}</span></pre>
+</div>
+<hr />
+<h2><strong>5.4<span style="font-family: 宋体;">创建</span><span style="font-family: 华文中宋;">Land.js</span><span style="font-family: 宋体;">大地类</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('c4524304-d49b-48b9-97c8-cacb5ddf2080')"><img id="code_img_closed_c4524304-d49b-48b9-97c8-cacb5ddf2080" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_c4524304-d49b-48b9-97c8-cacb5ddf2080" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('c4524304-d49b-48b9-97c8-cacb5ddf2080',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_c4524304-d49b-48b9-97c8-cacb5ddf2080" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    window.Land </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">this</span>.image = game.R["land"]; <span style="color: #008000;">//</span><span style="color: #008000;">图片</span>
+        <span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">;
+    }
+    Land.prototype.render </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        game.ctx.drawImage(</span><span style="color: #0000ff;">this</span>.image, <span style="color: #0000ff;">this</span>.x, game.canvas.height - 112<span style="color: #000000;">);
+        game.ctx.drawImage(</span><span style="color: #0000ff;">this</span>.image, <span style="color: #0000ff;">this</span>.x + 336, game.canvas.height - 112<span style="color: #000000;">);
+        game.ctx.drawImage(</span><span style="color: #0000ff;">this</span>.image, <span style="color: #0000ff;">this</span>.x + 336 * 2, game.canvas.height - 112<span style="color: #000000;">);
+    }
+    Land.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">this</span>.x--<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.x &lt; -336<span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">this</span>.x = 0<span style="color: #000000;">;
+        }
+    }
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">大地类</span></div>
+<hr />
+<h2><strong>5.5<span style="font-family: 宋体;">创建</span><span style="font-family: 华文中宋;">Pipe.js</span><span style="font-family: 宋体;">管子类：</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('ab068d5c-aa8a-4a5d-8f2a-31ba7040f954')"><img id="code_img_closed_ab068d5c-aa8a-4a5d-8f2a-31ba7040f954" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_ab068d5c-aa8a-4a5d-8f2a-31ba7040f954" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('ab068d5c-aa8a-4a5d-8f2a-31ba7040f954',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_ab068d5c-aa8a-4a5d-8f2a-31ba7040f954" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    window.Pipe </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">this</span>.pipeDown = game.R["pipe_down"]; <span style="color: #008000;">//</span><span style="color: #008000;">上管子</span>
+        <span style="color: #0000ff;">this</span>.pipeUp = game.R["pipe_up"]; <span style="color: #008000;">//</span><span style="color: #008000;">下管子</span>
+
+        <span style="color: #0000ff;">this</span>.pipeDownH = _.random(50,300); <span style="color: #008000;">//</span><span style="color: #008000;">随机一个上面管子的高度（因）</span>
+        <span style="color: #0000ff;">this</span>.space = 120; <span style="color: #008000;">//</span><span style="color: #008000;">上下管子之间的空隙（因）</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">下面管子的高度随之而定了（果），高度-大地高-上管子高-空隙</span>
+        <span style="color: #0000ff;">this</span>.pipeUpH = game.canvas.height - 112 - <span style="color: #0000ff;">this</span>.pipeDownH - <span style="color: #0000ff;">this</span><span style="color: #000000;">.space; 
+        </span><span style="color: #0000ff;">this</span>.x = game.canvas.width; <span style="color: #008000;">//</span><span style="color: #008000;">让管子在屏幕右侧外面就绪</span>
+        game.pipeArr.push(<span style="color: #0000ff;">this</span>); <span style="color: #008000;">//</span><span style="color: #008000;">将自己存进数组</span>
+<span style="color: #000000;">
+    }
+    Pipe.prototype.render </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">两根管子在画布的位置(image对象, 切片X, 切片Y, 切片W,切片H,画布X,画布Y,图片W,图片H)</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;">渲染上面的管子</span>
+        game.ctx.drawImage(<span style="color: #0000ff;">this</span>.pipeDown, 0, 400 - <span style="color: #0000ff;">this</span>.pipeDownH, 52, <span style="color: #0000ff;">this</span>.pipeDownH, <span style="color: #0000ff;">this</span>.x, 0, 52, <span style="color: #0000ff;">this</span><span style="color: #000000;">.pipeDownH);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">下面的管子</span>
+        game.ctx.drawImage(<span style="color: #0000ff;">this</span>.pipeUp, 0, 0, 52, <span style="color: #0000ff;">this</span>.pipeUpH, <span style="color: #0000ff;">this</span>.x, <span style="color: #0000ff;">this</span>.pipeDownH + <span style="color: #0000ff;">this</span>.space, 52, <span style="color: #0000ff;">this</span><span style="color: #000000;">.pipeUpH);
+    }
+    Pipe.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+       </span><span style="color: #0000ff;">this</span>.x -= 2;<span style="color: #008000;">//</span><span style="color: #008000;">更新管子（让管子移动）</span>
+       <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.x &lt; -52<span style="color: #000000;">){
+           </span><span style="color: #0000ff;">this</span>.goDie(); <span style="color: #008000;">//</span><span style="color: #008000;">超过屏幕左侧-52的位置（删除管子）</span>
+<span style="color: #000000;">       }
+    }
+    Pipe.prototype.goDie </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i = game.pipeArr.length - 1; i &gt;= 0; i--<span style="color: #000000;">){
+             </span><span style="color: #0000ff;">if</span> (game.pipeArr[i] == <span style="color: #0000ff;">this</span><span style="color: #000000;">){
+                 game.pipeArr.splice(i,</span>1<span style="color: #000000;">);
+             }
+        }
+    }
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">管子类</span></div>
+<hr />
+<h2><strong>5.6<span style="font-family: 宋体;">创建</span><span style="font-family: 华文中宋;">Bird.js</span><span style="font-family: 宋体;">小鸟类</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('7ff2ff3b-cebc-451d-ad66-8a1ebdbe594c')"><img id="code_img_closed_7ff2ff3b-cebc-451d-ad66-8a1ebdbe594c" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_7ff2ff3b-cebc-451d-ad66-8a1ebdbe594c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('7ff2ff3b-cebc-451d-ad66-8a1ebdbe594c',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_7ff2ff3b-cebc-451d-ad66-8a1ebdbe594c" class="cnblogs_code_hide">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    window.Bird </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #0000ff;">this</span>.img = [game.R["bird0_0"], game.R["bird0_1"], game.R["bird0_2"]]; <span style="color: #008000;">//</span><span style="color: #008000;">小鸟</span>
+        <span style="color: #0000ff;">this</span>.x = 100<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.y = 100<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">位置，这里的x，y不是小鸟的左上角位置，而是小鸟的中心点</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> this.x = game.width / 2 * 0.618;</span>
+        <span style="color: #0000ff;">this</span>.dy = 0.2; <span style="color: #008000;">//</span><span style="color: #008000;">下降的增量，每帧的恒定变</span>
+        <span style="color: #0000ff;">this</span>.deg = 0; <span style="color: #008000;">//</span><span style="color: #008000;">旋转</span>
+        <span style="color: #0000ff;">this</span>.wing = 0; <span style="color: #008000;">//</span><span style="color: #008000;">拍打翅膀的编号</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染小鸟</span>
+    Bird.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        game.ctx.save();
+        game.ctx.translate(</span><span style="color: #0000ff;">this</span>.x,<span style="color: #0000ff;">this</span><span style="color: #000000;">.y);
+        game.ctx.rotate(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">.deg);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">减去24是因为x、y是中心点位置（减去宽度和高度的一半）</span>
+        game.ctx.drawImage(<span style="color: #0000ff;">this</span>.img[<span style="color: #0000ff;">this</span>.wing],-24,-24<span style="color: #000000;">);
+        game.ctx.restore()
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">更新小鸟</span>
+    Bird.prototype.update = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 下降的增量0.88，变化的量也在变，这就是自由落体</span>
+        <span style="color: #0000ff;">this</span>.dy += 0.88<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">旋转角度的增量</span>
+        <span style="color: #0000ff;">this</span>.deg += 0.08<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.y += <span style="color: #0000ff;">this</span><span style="color: #000000;">.dy;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">每2帧拍打一次翅膀</span>
+        game.f % 2 &amp;&amp; <span style="color: #0000ff;">this</span>.wing++<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.wing &gt; 2<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">this</span>.wing = 0<span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">小鸟飞</span>
+    Bird.prototype.fly = <span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">小鸟只要有一个负的dy此时就会向上飞，因为this.y += 一个数</span>
+        <span style="color: #0000ff;">this</span>.dy = -10<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">this</span>.deg = -1<span style="color: #000000;">;
+    }
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">小鸟类</span></div>
+<hr />
+<h2><strong>5.7<span style="font-family: 宋体;">碰撞检测</span></strong></h2>
+<p><span style="font-family: 宋体;">小鸟的碰撞检测，使用</span>AABB<span style="font-family: 宋体;">盒方法，就是把小鸟看作是一个矩形，去判断有没有碰撞。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">碰撞公式：
+鸟的X2 </span>&gt;管子的X1 &amp;&amp; (鸟的Y1 &lt; 管子的Y1 || 鸟的Y2 &gt; 管子的Y2) &amp;&amp; 鸟的X1 &lt; 管子的X2</pre>
+</div>
+<p><img src="./images/前端笔记之Canvas40.png" alt="" /></p>
+<p>AABB<span style="font-family: 宋体;">盒，轴对齐包围盒也称为矩形盒，要自己会调试，将关键的数据</span><span style="font-family: Consolas;">fillText()</span><span style="font-family: 宋体;">渲染到界面上。</span></p>
+<p><span style="font-family: 宋体;">碰撞检测写在管子身上，因为管子很多，只需要检测有没有碰撞到那唯一的小鸟即可，没有</span>for<span style="font-family: 宋体;">循环。</span></p>
+<p><span style="font-family: 宋体;">如果写在鸟身上，要用</span>for<span style="font-family: 宋体;">循环遍历所有管子，一一检测。</span></p>
+<hr />
+<h1><strong>六、场景管理器</strong></h1>
+<p>游戏是有各种场景的：</p>
+<p>①　欢迎界面</p>
+<p>②　教学界面</p>
+<p>③　游戏界面</p>
+<p>④　GameOver<span style="font-family: 宋体;">界面</span></p>
+<p>&nbsp;</p>
+<p>l&nbsp;<span style="font-family: 宋体;">场景管理器（</span>SceneManager<span style="font-family: 宋体;">）的好处就是可以管理零碎的东西。</span></p>
+<p>l&nbsp;Game<span style="font-family: 宋体;">类现在不再直接管理</span><span style="font-family: Consolas;">Bird</span><span style="font-family: 宋体;">、</span><span style="font-family: Consolas;">Background</span><span style="font-family: 宋体;">、</span><span style="font-family: Consolas;">Pipe</span><span style="font-family: 宋体;">、</span><span style="font-family: Consolas;">Land</span><span style="font-family: 宋体;">了。而是只管理场景管理器。</span></p>
+<p>l&nbsp;场景管理器负责管理其他类的实例化、更新渲染。</p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体;">删除</span>Game<span style="font-family: 宋体;">类所有的实例化、更新、渲染，然后创建场景管理器，并实例化场景管理器</span></p>
+<p>继续引入图片资源：</p>
+<div class="cnblogs_code" onclick="cnblogs_code_show('57b6c55a-7686-4547-b7c5-a3c4aad39237')"><img id="code_img_closed_57b6c55a-7686-4547-b7c5-a3c4aad39237" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_57b6c55a-7686-4547-b7c5-a3c4aad39237" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('57b6c55a-7686-4547-b7c5-a3c4aad39237',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_57b6c55a-7686-4547-b7c5-a3c4aad39237" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">this</span>.R =<span style="color: #000000;"> {
+   ...
+   </span>"title" : "images/title.png"<span style="color: #000000;">,
+   </span>"button_play" : "images/button_play.png"<span style="color: #000000;">,
+   </span>"text_ready" : "images/text_ready.png"<span style="color: #000000;">,
+   </span>"tutorial" : "images/tutorial.png"<span style="color: #000000;">,
+   </span>"gameoverbg": "images/gameoverbg.png"<span style="color: #000000;">,
+   </span>"b0" : "images/b0.png"<span style="color: #000000;">,
+   </span>"b1" : "images/b1.png"<span style="color: #000000;">,
+   </span>"b2" : "images/b2.png"<span style="color: #000000;">,
+   </span>"b3" : "images/b3.png"<span style="color: #000000;">,
+   </span>"b4" : "images/b4.png"<span style="color: #000000;">,
+   </span>"b5" : "images/b5.png"<span style="color: #000000;">,
+   </span>"b6" : "images/b6.png"<span style="color: #000000;">,
+   </span>"b7" : "images/b7.png"<span style="color: #000000;">,
+   </span>"b8" : "images/b8.png"<span style="color: #000000;">,
+   </span>"b9" : "images/b9.png"<span style="color: #000000;">,
+   </span>"b10" : "images/b10.png"<span style="color: #000000;">,
+   </span>"b11" : "images/b11.png"<span style="color: #000000;">
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">图片资源</span></div>
+<hr />
+<h2>&nbsp;</h2>
+<h2><strong>3<span style="font-family: 宋体;">号场景：</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('029e6bae-4bc3-4caa-bcbd-4e6739253391')"><img id="code_img_closed_029e6bae-4bc3-4caa-bcbd-4e6739253391" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_029e6bae-4bc3-4caa-bcbd-4e6739253391" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('029e6bae-4bc3-4caa-bcbd-4e6739253391',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_029e6bae-4bc3-4caa-bcbd-4e6739253391" class="cnblogs_code_hide">
+<pre><code>window.SceneManager = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">当前场景的编号</span>
+    <span style="color: #0000ff;">this</span>.smNumber = 1<span style="color: #000000;">;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 初始化场景编号的方法</span>
+    <span style="color: #0000ff;">this</span>.init(1<span style="color: #000000;">);
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.bindEvent();
+}
+
+
+(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {    
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">场景初始化方法</span>
+    SceneManager.prototype.init = <span style="color: #0000ff;">function</span><span style="color: #000000;">(number) {
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;">(number){
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1号场景</span>
+                <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2号场景</span>
+                <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3号场景：游戏的主场景</span>
+                <span style="color: #0000ff;">this</span>.background = <span style="color: #0000ff;">new</span> Background(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化背景类</span>
+                <span style="color: #0000ff;">this</span>.land = <span style="color: #0000ff;">new</span> Land(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化大地类</span>
+                <span style="color: #0000ff;">this</span>.bird = <span style="color: #0000ff;">new</span> Bird(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化小鸟类</span>
+                <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">场景渲染方法</span>
+    SceneManager.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">这里才是真正的渲染方法，可以写动画，因为game类里面render此方法了</span>
+        <span style="color: #0000ff;">switch</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.smNumber) {
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新背景</span>
+                <span style="color: #0000ff;">this</span><span style="color: #000000;">.background.render();
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.background.update();
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 每间隔100帧，实例化一根管子</span>
+                game.f % 100 == 0 &amp;&amp; <span style="color: #0000ff;">new</span> Pipe(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化管子类</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;"> 循环遍历管子数组，更新和渲染管子类</span>
+                <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i = 0; i &lt; game.pipeArr.length;i++<span style="color: #000000;">){
+                    game.pipeArr[i].render();
+                    game.pipeArr[i].update();
+                }
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新大地类</span>
+                <span style="color: #0000ff;">this</span><span style="color: #000000;">.land.render();
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.land.update();
+
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新小鸟类</span>
+                <span style="color: #0000ff;">this</span><span style="color: #000000;">.bird.render();
+                </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.bird.update();
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+    
+})();</span></pre>
+</div>
+<span class="cnblogs_code_collapse">三号场景</span></div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">修改碰撞检测：
+</span><span style="color: #0000ff;">if</span>(game.sm.bird.x2 &gt; <span style="color: #0000ff;">this</span>.x1 &amp;&amp; ( game.sm.bird.y1 &lt; <span style="color: #0000ff;">this</span>.y1 || game.sm.bird.y2 &gt; <span style="color: #0000ff;">this</span>.y2 ) &amp;&amp; game.sm.bird.x1 &lt; <span style="color: #0000ff;">this</span>.x2) { }</pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>3<span style="font-family: 宋体;">号场景事件：</span></strong></p>
+<div class="cnblogs_code">
+<pre><code>SceneManager.prototype.bindEvent = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">var</span> self = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    game.canvas.onmousedown </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">添加事件监听，要根据当前场景是几号，触发对应的场景事件</span>
+        <span style="color: #0000ff;">switch</span><span style="color: #000000;">(self.smNumber){
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                self.bird.fly();
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<p><span style="font-family: 宋体;">以上是全是</span>3<span style="font-family: 宋体;">号场景业务，都已经完成。</span></p>
+<hr />
+<h2><strong>1<span style="font-family: 宋体;">号场景：</span></strong></h2>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">场景初始化方法</span><span style="color: #008000;">
+//</span><span style="color: #008000;">不管什么时候来到这个场景，此时都有一个默认就位状态</span><span style="color: #008000;">
+//</span><span style="color: #008000;">我们动画是可以重复的，但是这个函数不是每帧执行。</span>
+SceneManager.prototype.<span style="color: #ff0000;">init</span> = <span style="color: #0000ff;">function</span><span style="color: #000000;">(number) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">init中只有一个初始化参数，不要涉及到运动</span>
+    <span style="color: #0000ff;">switch</span><span style="color: #000000;">(number){
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1号场景：游戏封面和开始按钮场景的初始化</span>
+           <span style="color: #ff0000;"> this.background = new Background(); //实例化背景类
+            this.land = new Land();     //实例化大地类
+            this.titleY = -48;         //初始化title位置
+            this.titleYTarget = 120; //title停留的位置
+            this.buttonY = game.canvas.height; //初始化按钮的位置
+            this.buttonYTarget = 360;          //按钮停留的位置
+            
+            this.birdY = 180;         //初始化小鸟的位置
+            this.birdD = "down";     //小鸟的运动方向</span>
+            <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2号场景</span>
+            <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 3号场景：游戏的主场景</span>
+            <span style="color: #0000ff;">this</span>.background = <span style="color: #0000ff;">new</span> Background(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化背景类</span>
+            <span style="color: #0000ff;">this</span>.land = <span style="color: #0000ff;">new</span> Land(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化大地类</span>
+            <span style="color: #0000ff;">this</span>.bird = <span style="color: #0000ff;">new</span> Bird(); <span style="color: #008000;">//</span><span style="color: #008000;">实例化小鸟类</span>
+            <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">场景渲染方法</span>
+SceneManager.prototype.<span style="color: #ff0000;">render</span> = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">这里才是真正的渲染方法，可以写动画，因为game类里面render此方法了</span>
+    <span style="color: #0000ff;">switch</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.smNumber) {
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 1号场景：游戏封面和开始按钮场景的更新和渲染</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新背景</span>
+            <span style="color: #ff0000;">this.background.render();
+            this.background.update();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新大地类</span>
+            <span style="color: #ff0000;">this.land.render();
+            this.land.update();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染title图片</span>
+           <span style="color: #ff0000;">game.ctx.drawImage(game.R["title"],(game.canvas.width-178)/2,this.titleY);
+               
+game.ctx.drawImage(game.R["button_play"],(game.canvas.width-116)/2,this.buttonY);
+            game.ctx.drawImage(game.R["bird1_2"], (game.canvas.width - 48) / 2, this.birdY);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">title下降运动到目标位置</span>
+            <span style="color: #ff0000;">this.titleY += 2;
+            if(this.titleY &gt; this.titleYTarget){
+                this.titleY = this.titleYTarget;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">按钮上升运动到目标位置</span>
+           <span style="color: #ff0000;"> this.buttonY -= 5;
+            if (this.buttonY &lt; this.buttonYTarget) {
+                this.buttonY = this.buttonYTarget;
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">小鸟不停的上下运动</span>
+            <span style="color: #ff0000;">if(this.birdD == "down") {
+                this.birdY += 2;
+                if (this.birdY &gt; 260){
+                    this.birdD = "up";
+                }
+            } else if (this.birdD == "up"){
+                this.birdY -= 2;
+                if (this.birdY &lt; 170) {
+                    this.birdD = "down";
+                }
+            }
+         </span>   <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">事件监听方法</span>
+SceneManager.prototype.bindEvent = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">根据当前场景触发事件</span>
+    <span style="color: #ff0000;">var self = this</span><span style="color: #000000;"><span style="color: #ff0000;">;</span>
+    game.canvas.onmousedown </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">鼠标点击的坐标位置</span>
+       <span style="color: #ff0000;"> var x = e.offsetX;
+        var y = e.offsetY;
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (self.smNumber) {
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">1号场景：游戏封面和开始按钮场景的初始化</span>
+                <span style="color: #008000;">//</span><span style="color: #008000;">得到按钮的上下左右包围盒</span>
+                <span style="color: #ff0000;">var left  = (game.canvas.width - 116) / 2
+                var right = (game.canvas.width - 116) / 2 + 116;
+                var up    = self.buttonYTarget;
+                var down  = self.buttonYTarget + 60;
+                if(x &gt;= left &amp;&amp; x &lt;= right &amp;&amp; y &lt;= down &amp;&amp; y &gt;= up){
+                    //点击进去2号场景
+                    self.smNumber = 2;
+                    self.init(2);
+                }
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+    }
+}</span></pre>
+</div>
+<p><span style="font-family: 宋体;">以上，</span>1<span style="font-family: 宋体;">号场景完成。</span></p>
+<hr />
+<h2><strong>2<span style="font-family: 宋体;">号场景：</span></strong></h2>
+<p><strong>2<span style="font-family: 宋体;">号场景</span><span style="font-family: Consolas;">init</span><span style="font-family: 宋体;">初始化：</span></strong></p>
+<div class="cnblogs_code">
+<pre><code>SceneManganer.prototype.init = <span style="color: #0000ff;">function</span><span style="color: #000000;">(number) {
+    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (number) {
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 教学 场景</span>
+           <span style="color: #ff0000;"> this.background = new Background();
+            this.land = new Land();
+            this.readyY = -62;</span> <span style="color: #008000;">//</span><span style="color: #008000;">2号场景的ready图片</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;"> 修改 tutorial 的透明度</span>
+            <span style="color: #ff0000;">this.tutorial = 1
+            this.tutorialD = "A"</span>
+            <span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+};
+
+2号场景render渲染方法：
+</span><span style="color: #008000;">//</span><span style="color: #008000;">场景渲染方法</span>
+SceneManager.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">这里才是真正的渲染方法，可以写动画，因为game类里面render此方法了</span>
+    <span style="color: #0000ff;">switch</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.smNumber) {
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 2号场景：教学场景</span>
+            <span style="color: #0000ff;">this</span><span style="color: #000000;">.background.render();
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.background.update();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 渲染 和 更新大地类</span>
+            <span style="color: #0000ff;">this</span><span style="color: #000000;">.land.render();
+            </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.land.update();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染title图片</span>
+           game.ctx.drawImage(game.R["text_ready"],(game.canvas.width-196)/2,this.readyY)
+           game.ctx.drawImage(game.R["bird0_1"],100,180<span style="color: #000000;">);
+            
+            </span><span style="color: #0000ff;">this</span>.readyY += 2<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.readyY &gt; <span style="color: #0000ff;">this</span><span style="color: #000000;">.readyYTarget) {
+                </span><span style="color: #0000ff;">this</span>.readyY = <span style="color: #0000ff;">this</span><span style="color: #000000;">.readyYTarget;
+            }
+            game.ctx.save();
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">让一个物体闪烁</span>
+            <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.tutorialD == "A"<span style="color: #000000;">){
+                </span><span style="color: #0000ff;">this</span>.tutorial -= 0.04<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.tutorial &lt; 0.1<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.tutorialD = "B"<span style="color: #000000;">
+                }
+             }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.tutorialD == "B"<span style="color: #000000;">){
+                </span><span style="color: #0000ff;">this</span>.tutorial += 0.04<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.tutorial &gt; 1<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.tutorialD = "A"<span style="color: #000000;">
+                }
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> ctx.globalAlpha改变透明度的API</span>
+            game.ctx.globalAlpha = <span style="color: #0000ff;">this</span><span style="color: #000000;">.tutorialOpacity;
+            game.ctx.drawImage(game.R[</span>"tutorial"], (game.canvas.width - 114) / 2, 250<span style="color: #000000;">);
+            game.ctx.restore();
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+           ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+           ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+}
+
+2号场景bindEvent监听事件方法：
+</span><span style="color: #008000;">//</span><span style="color: #008000;">事件监听方法</span>
+SceneManager.prototype.bindEvent = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">根据当前场景触发事件</span>
+    <span style="color: #0000ff;">var</span> self = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    game.canvas.onmousedown </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">鼠标点击的坐标位置</span>
+        <span style="color: #0000ff;">var</span> x =<span style="color: #000000;"> e.offsetX;
+        </span><span style="color: #0000ff;">var</span> y =<span style="color: #000000;"> e.offsetY;
+        </span><span style="color: #0000ff;">switch</span><span style="color: #000000;"> (self.smNumber) {
+            </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+          
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">2号场景</span>
+               <span style="color: #ff0000;"> var left = (game.canvas.width - 114) / 2
+                var right = (game.canvas.width - 114) / 2 + 114;
+                var up = 250;
+                var down = 350;
+                if (x &gt;= left &amp;&amp; x &lt;= right &amp;&amp; y &lt;= down &amp;&amp; y &gt;= up) {
+                    //点击进去2号场景
+                    self.smNumber = 3;
+                    self.init(3);
+                }
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+            </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">3号场景：游戏的主场景</span>
+<span style="color: #000000;"><span style="color: #ff0000;">                self.bird.fly();</span> 
+                </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        }
+}
+}</span></pre>
+</div>
+<hr />
+<h2><strong>4<span style="font-family: 宋体;">号场景：</span></strong></h2>
+<p>4<span style="font-family: 宋体;">号场景</span><span style="font-family: Consolas;">init</span><span style="font-family: 宋体;">方法</span></p>
+<div class="cnblogs_code">
+<pre><code>SceneManager.prototype.init = <span style="color: #0000ff;">function</span><span style="color: #000000;">(number) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">init中只有一个初始化参数，不要涉及到运动</span>
+    <span style="color: #0000ff;">switch</span><span style="color: #000000;">(number){
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">4号场景：死亡场景</span>
+            <span style="color: #008000;">//</span><span style="color: #008000;">红色边框图片的透明度</span>
+            <span style="color: #ff0000;">this.GameOverBg = 1;
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">小鸟落地死亡的爆炸动画初始化图片编号</span>
+            <span style="color: #ff0000;">this.boom = 0;
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">碰撞检测死亡，进入4号场景：
+</span><span style="color: #008000;">//</span><span style="color: #008000;">碰撞检测</span>
+<span style="color: #0000ff;">if</span> (game.sm.bird.x1 &lt; <span style="color: #0000ff;">this</span>.x2 &amp;&amp; game.sm.bird.x2 &gt; <span style="color: #0000ff;">this</span>.x1 &amp;&amp; (game.sm.bird.y1 &lt; <span style="color: #0000ff;">this</span>.y1 || game.sm.bird.y2 &gt; <span style="color: #0000ff;">this</span><span style="color: #000000;">.y2)){
+    </span><span style="color: #008000;">//</span><span style="color: #008000;">死亡之后，进入4号场景（小鸟下坠）</span>
+    document.getElementById("die"<span style="color: #000000;">).play();
+   <span style="color: #ff0000;"> game.sm.smNumber </span></span><span style="color: #ff0000;">= 4;
+    game.sm.init(4);
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+}</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #ff0000;">!this.isScore &amp;&amp; game.sm.bird.x1 &gt; this</span><span style="color: #000000;"><span style="color: #ff0000;">.x2</span>){
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 这里是记分，条件就是把是否加分的true或false给管子身上</span>
+    <span style="color: #0000ff;">this</span>.isScore = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    game.sm.score</span>++<span style="color: #000000;">;
+    document.getElementById(</span>"score"<span style="color: #000000;">).play();
+}</span></pre>
+</div>
+<div class="cnblogs_code" onclick="cnblogs_code_show('3c3a5a58-262d-4d9b-8572-af6154804f87')"><img id="code_img_closed_3c3a5a58-262d-4d9b-8572-af6154804f87" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_3c3a5a58-262d-4d9b-8572-af6154804f87" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('3c3a5a58-262d-4d9b-8572-af6154804f87',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_3c3a5a58-262d-4d9b-8572-af6154804f87" class="cnblogs_code_hide">
+<pre><code><span style="color: #000000;">4号场景render渲染方法：
+</span><span style="color: #008000;">//</span><span style="color: #008000;">场景渲染方法</span>
+SceneManager.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span><span style="color: #0000ff;">switch</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.smNumber) {
+        </span><span style="color: #0000ff;">case</span> 1<span style="color: #000000;">:
+            ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 2<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+           ...
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">case</span> 4<span style="color: #000000;">:
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 让所有的物体静止，只渲染，不更新（update不用调用了）</span>
+        <span style="color: #0000ff;">this</span><span style="color: #000000;">.background.render();
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.land.render();
+        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; game.pipeArr.length; i++<span style="color: #000000;">) {
+            game.pipeArr[i].render();
+        }
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.bird.render();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 让鸟急速下降</span>
+        <span style="color: #0000ff;">this</span>.bird.y += 10<span style="color: #000000;">;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">播放声音</span>
+        document.getElementById("down"<span style="color: #000000;">).play();
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> 保证鸟头朝下掉</span>
+        <span style="color: #0000ff;">this</span>.bird.deg += 0.5<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.bird.deg &gt; 1.57<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">this</span>.bird.deg = 1.57<span style="color: #000000;">;
+        }
+        
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">撞击地面产生爆炸动画，并且小鸟飞升</span>
+        <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.bird.y &gt; game.canvas.height - 112 - 17<span style="color: #000000;">){
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">小鸟撞地停留在原位</span>
+            <span style="color: #0000ff;">this</span>.bird.y = game.canvas.height - 112 - 17<span style="color: #000000;">;
+            game.f </span>% 2 == 0 &amp;&amp; <span style="color: #0000ff;">this</span>.boom++<span style="color: #000000;">;
+            </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.boom &gt;= 11<span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">清空管子数组和分数，为下一回合准备</span>
+                game.pipeArr =<span style="color: #000000;"> [];
+                </span><span style="color: #0000ff;">this</span>.score = 0<span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">回到1号场景</span>
+                <span style="color: #0000ff;">this</span>.smNumber = 1<span style="color: #000000;">;
+                </span><span style="color: #0000ff;">this</span>.init(1<span style="color: #000000;">);
+                </span><span style="color: #0000ff;">this</span>.boom = 5<span style="color: #000000;">;
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> clearInterval(game.timer); //停止游戏主循环</span>
+<span style="color: #000000;">            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染爆炸动画</span>
+            game.ctx.drawImage(game.R["b" + <span style="color: #0000ff;">this</span>.boom], <span style="color: #0000ff;">this</span>.bird.x - 50, <span style="color: #0000ff;">this</span>.bird.y - 100<span style="color: #000000;">);
+            
+        }
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染红色边框</span>
+        <span style="color: #0000ff;">this</span>.GameOverBg -= 0.03<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.GameOverBg &lt; 0<span style="color: #000000;">){
+            </span><span style="color: #0000ff;">this</span>.GameOverBg = 0<span style="color: #000000;">;
+        }
+        game.ctx.save()
+        game.ctx.globalAlpha </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.GameOverBg;
+        game.ctx.drawImage(game.R[</span>"gameoverbg"],0,0<span style="color: #000000;">,game.canvas.width,game.canvas.height)
+        game.ctx.restore();
+        </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+      }    
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">4号场景render渲染方法</span></div>
+<div class="cnblogs_code">
+<pre><code>Bird.prototype.update = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">this</span>.y += <span style="color: #0000ff;">this</span>.dy; <span style="color: #008000;">//</span><span style="color: #008000;">下降的速度</span>
+    <span style="color: #0000ff;">this</span>.deg += 0.08<span style="color: #000000;">;
+    </span><span style="color: #ff0000;">if(this.deg &gt; 1.57){
+        this.deg = 1.57;
+}
+//掉地死亡
+    if(this.y &gt; game.canvas.height - 112){
+        document.getElementById('die').play();
+        game.sm.smNumber = 4;
+        game.sm.init(4</span><span style="color: #000000;"><span style="color: #ff0000;">);
+}</span>
+}</span></pre>
+</div>
+<hr />
+<h2><strong>添加键盘事件和声音、分数：</strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('00b629ef-9af1-4f9a-bd99-4a2e3dd6b85f')"><img id="code_img_closed_00b629ef-9af1-4f9a-bd99-4a2e3dd6b85f" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_00b629ef-9af1-4f9a-bd99-4a2e3dd6b85f" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('00b629ef-9af1-4f9a-bd99-4a2e3dd6b85f',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_00b629ef-9af1-4f9a-bd99-4a2e3dd6b85f" class="cnblogs_code_hide">
+<pre><code>&lt;audio src="music/die.ogg" id="die"&gt;&lt;/audio&gt;   
+&lt;audio src="music/down.ogg" id="down"&gt;&lt;/audio&gt;   
+&lt;audio src="music/fly.ogg" id="fly"&gt;&lt;/audio&gt;   
+&lt;audio src="music/score.ogg" id="score"&gt;&lt;/audio&gt;   
+&lt;canvas id="canvas" width="414" height="650" tabindex="1"&gt;&lt;/canvas&gt;</pre>
+</div>
+<span class="cnblogs_code_collapse">时间和声音</span></div>
+<hr />
+<p>写在bindEvent<span style="font-family: 宋体;">里：</span></p>
+<div class="cnblogs_code">
+<pre><code>ame.canvas.onkeydown = <span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+    </span><span style="color: #0000ff;">switch</span><span style="color: #000000;">(self.smNumber){
+        </span><span style="color: #0000ff;">case</span> 3<span style="color: #000000;">:
+            </span><span style="color: #0000ff;">if</span>(e.keyCode == 32<span style="color: #000000;">){
+                self.bird.fly();
+            }
+            </span><span style="color: #0000ff;">break</span><span style="color: #000000;">;
+    }
+}
+game.canvas.focus();</span></pre>
+</div>
+<hr />
+<h1><strong><span style="font-family: 宋体;">七、</span>Canvas<span style="font-family: 宋体;">动画</span></strong></h1>
+<p><span style="font-family: 宋体;">让元素在</span>canvas<span style="font-family: 宋体;">上运动，需要使用定时器。</span></p>
+<p>canvas<span style="font-family: 宋体;">使用了一个特殊的模式，上画布的元素，立刻被像素化。也就是说，上画布的元素，你将得不到这个&ldquo;对象&rdquo;的引用。比如，一个圆形画到了画布上面，此时就是一堆的像素点，不是一个整体的对象了，你没有任何变量能够得到这个对象，改变这个对象的属性。也就是说，这种改变的思路在</span><span style="font-family: Consolas;">canvas</span><span style="font-family: 宋体;">中是行不通的。</span></p>
+<p>要实现动画，必须：<span style="color: #ff0000;"><strong>每帧重新画一个。</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体;">所以，</span>canvas<span style="font-family: 宋体;">的画图原理是：</span></p>
+<p><span style="font-family: 宋体;">清屏</span> &rarr; 重绘 &rarr;清屏 &rarr; 重绘 &rarr;清屏 &rarr; 重绘 &rarr;清屏 &rarr; 重绘 &rarr;清屏 &rarr; 重绘 &rarr;清屏 &rarr; 重绘 &rarr;</p>
+<p><span style="font-family: 宋体;">清屏</span> &rarr; 重绘 &rarr;<span style="font-family: Consolas;">...</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体;">注意：千万不要将得到的</span>Canvas<span style="font-family: 宋体;">和</span><span style="font-family: Consolas;">ctx</span><span style="font-family: 宋体;">放到</span><span style="font-family: Consolas;">init</span><span style="font-family: 宋体;">中，因为</span><span style="font-family: Consolas;">new</span><span style="font-family: 宋体;">一个球，来一个定时器得到一个</span><span style="font-family: Consolas;">Canvas</span><span style="font-family: 宋体;">画布。</span></p>
+<hr />
+<p>&nbsp;</p>
+<h2><strong>7.1<span style="font-family: 宋体;">小球反弹</span></strong></h2>
+<div class="cnblogs_code" onclick="cnblogs_code_show('2d14a7b9-ed04-4855-b638-da1fb54a285c')"><img id="code_img_closed_2d14a7b9-ed04-4855-b638-da1fb54a285c" class="code_img_closed" src="./images/前端笔记之Canvas15.png" alt="" /><img id="code_img_opened_2d14a7b9-ed04-4855-b638-da1fb54a285c" class="code_img_opened" style="display: none;" onclick="cnblogs_code_hide('2d14a7b9-ed04-4855-b638-da1fb54a285c',event)" src="./images/前端笔记之Canvas16.png" alt="" />
+<div id="cnblogs_code_open_2d14a7b9-ed04-4855-b638-da1fb54a285c" class="cnblogs_code_hide">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> Ball(x,y,r){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">传入小球的属性，x和y表示小球left和top的位置</span>
+   <span style="color: #0000ff;">this</span>.x =<span style="color: #000000;"> x;
+   </span><span style="color: #0000ff;">this</span>.y =<span style="color: #000000;"> y;
+   </span><span style="color: #0000ff;">this</span>.r =<span style="color: #000000;"> r;
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">当增量的dx、dy都为0的时候再随机一次</span>
+   <span style="color: #0000ff;">do</span><span style="color: #000000;">{
+       </span><span style="color: #0000ff;">this</span>.dx = parseInt(Math.random() * 18) - 9<span style="color: #000000;">;
+       </span><span style="color: #0000ff;">this</span>.dy = parseInt(Math.random() * 18) - 9<span style="color: #000000;">;
+   }</span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">this</span>.dx == 0 || <span style="color: #0000ff;">this</span>.dy == 0<span style="color: #000000;">);
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">随机颜色</span>
+   <span style="color: #0000ff;">var</span> colors = ['#f90','#ff0','#09c','#c06','#F99','#9c3','#6cc','#9cc'<span style="color: #000000;">];
+   </span><span style="color: #0000ff;">this</span>.color = colors[parseInt(Math.random() *<span style="color: #000000;"> colors.length)]
+   arr.push(</span><span style="color: #0000ff;">this</span>); <span style="color: #008000;">//</span><span style="color: #008000;">将小球的实例放进数组</span>
+<span style="color: #000000;">}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">渲染方法，画一个小球</span>
+Ball.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   ctx.beginPath();
+   ctx.arc(</span><span style="color: #0000ff;">this</span>.x, <span style="color: #0000ff;">this</span>.y, <span style="color: #0000ff;">this</span>.r, 0,Math.PI * 2 ,<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+   ctx.fillStyle </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.color;
+   ctx.fill();
+}
+Ball.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   </span><span style="color: #0000ff;">this</span>.x += <span style="color: #0000ff;">this</span><span style="color: #000000;">.dx;
+   </span><span style="color: #0000ff;">this</span>.y += <span style="color: #0000ff;">this</span><span style="color: #000000;">.dy;
+   </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.x &gt;= canvas.width - <span style="color: #0000ff;">this</span>.r || <span style="color: #0000ff;">this</span>.x &lt;= <span style="color: #0000ff;">this</span><span style="color: #000000;">.r){
+       </span><span style="color: #0000ff;">this</span>.dx = -<span style="color: #0000ff;">this</span><span style="color: #000000;">.dx
+   }
+   </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.y &gt;= canvas.height - <span style="color: #0000ff;">this</span>.r || <span style="color: #0000ff;">this</span>.y &lt;= <span style="color: #0000ff;">this</span><span style="color: #000000;">.r){
+       </span><span style="color: #0000ff;">this</span>.dy = -<span style="color: #0000ff;">this</span><span style="color: #000000;">.dy;
+   }
+}
+</span><span style="color: #0000ff;">var</span> arr =<span style="color: #000000;"> [];
+</span><span style="color: #0000ff;">var</span> f = 0<span style="color: #000000;">;
+</span><span style="color: #008000;">//</span><span style="color: #008000;">开始定时器，每一帧清屏、更新、渲染所有小球</span>
+setInterval(<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   f</span>++<span style="color: #000000;">;
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">清屏</span>
+   ctx.clearRect(0, 0<span style="color: #000000;">, canvas.width, canvas.height);
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染</span>
+   <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i = 0;i &lt; arr.length;i++<span style="color: #000000;">){
+       arr[i].render();
+       arr[i].update();
+   }
+   ctx.font </span>= "18px 微软雅黑"<span style="color: #000000;">;
+   ctx.fillStyle </span>= "blue"<span style="color: #000000;">;
+   ctx.fillText(f, </span>10, 20<span style="color: #000000;">)
+},</span>20<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> count = 60<span style="color: #000000;">;
+</span><span style="color: #0000ff;">while</span>(count--<span style="color: #000000;">){
+   </span><span style="color: #0000ff;">new</span> Ball(100,100,20<span style="color: #000000;">);
+}</span></pre>
+</div>
+<span class="cnblogs_code_collapse">反弹球</span></div>
+<p>&nbsp;</p>
+<hr />
+<h2><strong>7.2<span style="font-family: 宋体;">炫彩小球</span></strong></h2>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> canvas = document.querySelector("canvas"<span style="color: #000000;">);
+</span><span style="color: #0000ff;">var</span> ctx = canvas.getContext("2d"<span style="color: #000000;">);
+canvas.width </span>=<span style="color: #000000;"> document.documentElement.clientWidth;
+canvas.height </span>=<span style="color: #000000;"> document.documentElement.clientHeight;
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> Ball(x,y,r){
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">传入小球的属性，x和y表示小球left和top的位置</span>
+   <span style="color: #0000ff;">this</span>.x =<span style="color: #000000;"> x;
+   </span><span style="color: #0000ff;">this</span>.y =<span style="color: #000000;"> y;
+   </span><span style="color: #0000ff;">this</span>.r =<span style="color: #000000;"> r;
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">当增量的dx、dy都为0的时候再随机一次</span>
+   <span style="color: #0000ff;">do</span><span style="color: #000000;">{
+       </span><span style="color: #0000ff;">this</span>.dx = parseInt(Math.random() * 18) - 9<span style="color: #000000;">;
+       </span><span style="color: #0000ff;">this</span>.dy = parseInt(Math.random() * 18) - 9<span style="color: #000000;">;
+   }</span><span style="color: #0000ff;">while</span>(<span style="color: #0000ff;">this</span>.dx == 0 || <span style="color: #0000ff;">this</span>.dy == 0<span style="color: #000000;">);
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">随机颜色</span>
+   <span style="color: #0000ff;">var</span> colors = ['#f90','#ff0','#09c','#c06','#F99','#9c3','#6cc','#9cc'<span style="color: #000000;">];
+   </span><span style="color: #0000ff;">this</span>.color = colors[parseInt(Math.random() *<span style="color: #000000;"> colors.length)]
+   arr.push(</span><span style="color: #0000ff;">this</span>); <span style="color: #008000;">//</span><span style="color: #008000;">将小球的实例放进数组</span>
+<span style="color: #000000;">}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">渲染方法，画一个小球</span>
+Ball.prototype.render = <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   ctx.beginPath();
+   ctx.arc(</span><span style="color: #0000ff;">this</span>.x, <span style="color: #0000ff;">this</span>.y, <span style="color: #0000ff;">this</span>.r, 0,Math.PI * 2 ,<span style="color: #0000ff;">false</span><span style="color: #000000;">);
+   ctx.fillStyle </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">.color;
+   ctx.fill();
+}
+Ball.prototype.update </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   </span><span style="color: #0000ff;">this</span>.x += <span style="color: #0000ff;">this</span><span style="color: #000000;">.dx;
+   </span><span style="color: #0000ff;">this</span>.y += <span style="color: #0000ff;">this</span><span style="color: #000000;">.dy;
+   </span><span style="color: #ff0000;">this.r--;
+   if(this.r &lt;= 0){
+       this.goDie();
+   }
+   </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.x &gt;= canvas.width - <span style="color: #0000ff;">this</span>.r || <span style="color: #0000ff;">this</span>.x &lt;= <span style="color: #0000ff;">this</span><span style="color: #000000;">.r){
+       </span><span style="color: #0000ff;">this</span>.dx = -<span style="color: #0000ff;">this</span><span style="color: #000000;">.dx
+   }
+   </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.y &gt;= canvas.height - <span style="color: #0000ff;">this</span>.r || <span style="color: #0000ff;">this</span>.y &lt;= <span style="color: #0000ff;">this</span><span style="color: #000000;">.r){
+       </span><span style="color: #0000ff;">this</span>.dy = -<span style="color: #0000ff;">this</span><span style="color: #000000;">.dy;
+   }
+}
+<span style="color: #ff0000;">Ball.prototype.goDie </span></span><span style="color: #ff0000;">= function(){
+   for(var i = arr.length-1; i &gt;= 0; i--){
+       if(arr[i] == this){
+           arr.splice(i,1); //从数组第i项，删除一项
+       }
+   }
+}
+</span><span style="color: #0000ff;">var</span> arr =<span style="color: #000000;"> [];
+</span><span style="color: #0000ff;">var</span> f = 0<span style="color: #000000;">;
+setInterval(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+   f</span>++<span style="color: #000000;">;
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">清屏</span>
+   ctx.clearRect(0, 0<span style="color: #000000;">, canvas.width, canvas.height);
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">渲染</span>
+   <span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i = 0;i &lt; arr.length;i++<span style="color: #000000;">){
+       arr[i].render();
+       arr[i].update();
+   }
+   ctx.font </span>= "18px 微软雅黑"<span style="color: #000000;">;
+   ctx.fillStyle </span>= "blue"<span style="color: #000000;">;
+   ctx.fillText(f, </span>10, 20<span style="color: #000000;">)
+},</span>20<span style="color: #000000;">);
+
+<span style="color: #ff0000;">canvas.onmousemove </span></span><span style="color: #ff0000;">= function(e){
+   new Ball(e.offsetX,e.offsetY, 30);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<hr />
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

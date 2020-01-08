@@ -1,0 +1,60 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue中使用element组件时事件想要传递其他参数的问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue中使用element组件时事件想要传递其他参数的问题</center></div><div class='banquan'>原文出处:本文由博客园博主狂奔的蜗牛0828提供。<br/>
+原文连接:https://www.cnblogs.com/ttjm/p/11536788.html</div><br>
+    <p>在使用element的上传组件时在一下几个钩子中传递其他参数</p>
+<p><img src="./images/vue中使用element组件时事件想要传递其他参数的问题0.png" alt="" /></p>
+<p>图中是文件上传时的几个钩子，参数为文件或文件列表或者其他参数，但是现在我想在原有参数上传递其他参数。比如我想在on-success的钩子中传递一个自定义参数i，原本是这样写的：</p>
+<div class="cnblogs_code">
+<pre><code>:on-success=&rdquo;handleSuccess（i）&rdquo; <span style="color: #008000;">//</span><span style="color: #008000;">handleSuccess是一个方法</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>但是发现这样写取不到自身原来的参数，后来在网上找到了一个比较好的方法，如下：</p>
+<div class="cnblogs_code">
+<pre><code>:on-success=&rdquo;(value)=&gt; handleSuccess(i, value)&rdquo;</pre>
+</div>
+<p>1<br />这样就既可以获取到原有的参数又可以获取自定义传递的参数，下面是自己的使用方法：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;el-<span style="color: #000000;">upload
+</span><span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">upload-demo</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:action</span>=<span style="color: #800000;">"</span><span style="color: #800000;">GLOBAL.upFileUrl</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:data</span>=<span style="color: #800000;">"</span><span style="color: #800000;">uploadData</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:before</span>-upload=<span style="color: #800000;">"</span><span style="color: #800000;">fileSizeFiltering</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:on</span>-success=<span style="color: #800000;">"</span><span style="color: #800000;">(response, file, fileList)=&gt;handleUpSuccess(response, file, fileList,i)</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:on</span>-remove=<span style="color: #800000;">"</span><span style="color: #800000;">(file, fileList)=&gt;handleRemoveFile(file, fileList,i)</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:file</span>-list=<span style="color: #800000;">"</span><span style="color: #800000;">item.uploadFileList</span><span style="color: #800000;">"</span><span style="color: #000000;">
+v</span>-model=<span style="color: #800000;">"</span><span style="color: #800000;">item.pushUpFileId</span><span style="color: #800000;">"</span><span style="color: #000000;">
+:limit</span>=<span style="color: #800000;">"</span><span style="color: #800000;">5</span><span style="color: #800000;">"</span><span style="color: #000000;">
+style</span>=<span style="color: #800000;">"</span><span style="color: #800000;">display: inline-block;</span><span style="color: #800000;">"</span>&gt;
+&lt;div <span style="color: #0000ff;">class</span>=<span style="color: #800000;">"</span><span style="color: #800000;">addFile</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;<br />&lt;/el-upload&gt;</pre>
+</div>
+<p>&nbsp;同理默认参数是event的事件要传递其他事件也是这样</p>
+<div class="cnblogs_code">
+<pre><code>&lt;ul&gt;
+        &lt;li v-<span style="color: #0000ff;">for</span>=<span style="color: #800000;">"</span><span style="color: #800000;">item in list</span><span style="color: #800000;">"</span> @contextmenu=<span style="color: #800000;">"</span><span style="color: #800000;">(e)=&gt;showMenu(e,item.cd)</span><span style="color: #800000;">"</span> style=<span style="color: #800000;">"</span><span style="color: #800000;">height:100px;</span><span style="color: #800000;">"</span>&gt;<span style="color: #000000;">
+          {{item.na}}
+        </span>&lt;/li&gt;
+      &lt;/ul&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

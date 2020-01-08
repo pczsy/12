@@ -1,0 +1,259 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css 权重值(层叠性)详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css 权重值(层叠性)详解</center></div><div class='banquan'>原文出处:本文由博客园博主郭楷丰提供。<br/>
+原文连接:https://www.cnblogs.com/guokaifeng/p/11000871.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#css权重值重叠性实例">css权重值(重叠性)实例</a></li>
+        <li><a href="#权重值的计算">权重值的计算</a></li>
+        <li><a href="#important-提升权重值实例">!important 提升权重值实例</a></li>
+        <li><a href="#什么情况下可以使用important">什么情况下可以使用!important ?</a></li>
+        <li><a href="#总结">总结</a></li>
+        </ul>
+    </div>
+</div>
+<h3 id="css权重值重叠性实例">css权重值(重叠性)实例</h3>
+<ul>
+<li>css中有很多选择器,那在多个选择器都作用于同一个元素的情况下会出现什么效果呢? 代码</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+      p{
+        color:red;
+        font-size: 10px;
+      }
+      #wrap{
+        color: deeppink;
+        font-size: 30px;
+      }
+      .box{
+        color:yellow;
+        font-size: 50px;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;p class=&#39;box&#39; id=&quot;wrap&quot;&gt;
+       猜猜我是什么颜色
+    &lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><p>执行可结果<br />
+<img src="./images/css 权重值(层叠性)详解0.png" /></p></li>
+<li><p>小结 : 出现这种效果是因为浏览器是根据权重值来判断使用哪种css样式的，权重值高的它的优先级会越高，就会呈现那种css样式,id选择器的权重值为100&gt;类选择器10&gt;标签选择器1,所以最终结果为id选择器设置的样式</p></li>
+<li><p>示列二 代码</p></li>
+</ul>
+<pre class="css"><code>!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+      *{
+          color: cyan;
+      }
+      div {
+          color: yellow;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+        &lt;p class=&#39;box&#39; id=&quot;wrap&quot;&gt;
+        猜猜我是什么颜色
+        &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>执行结果</li>
+</ul>
+<p><img src="./images/css 权重值(层叠性)详解1.png" /></p>
+<ul>
+<li><p>小结 : 继承元素是没有权重值的,所以最终结果为通用选择器设置的样式</p></li>
+<li><p>实例三 代码</p></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+      p{
+          color: yellow;
+      }
+      *{
+          color: cyan;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+        &lt;p class=&#39;box&#39; id=&quot;wrap&quot;&gt;
+        猜猜我是什么颜色
+        &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><p>执行结果<br />
+<img src="./images/css 权重值(层叠性)详解2.png" /></p></li>
+<li>小结 : 标签选择器的权重值是1,但是仍然大于通用选择器,所以最终结果为标签选择器设置的样式</li>
+<li><p>实例四 代码</p></li>
+</ul>
+<pre class="css"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+      div p{
+          color: yellow;
+      }
+      div&gt;p{
+          color: cyan;
+      }
+      p{
+          color: red;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+        &lt;p class=&#39;box&#39; id=&quot;wrap&quot;&gt;
+        猜猜我是什么颜色
+        &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>执行结果</li>
+</ul>
+<p><img src="./images/css 权重值(层叠性)详解3.png" /></p>
+<ul>
+<li>实例五 代码</li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+      div&gt;p{
+          color: cyan;
+      }
+      div p{
+          color: yellow;
+      }
+      p{
+          color: red;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+        &lt;p class=&#39;box&#39; id=&quot;wrap&quot;&gt;
+        猜猜我是什么颜色
+        &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>执行结果<br />
+<img src="./images/css 权重值(层叠性)详解4.png" /></li>
+</ul>
+<h3 id="权重值的计算">权重值的计算</h3>
+<pre><code><code>&lt;!--有一个这样的结构：--&gt;
+&lt;div class=&#39;wrap1&#39; id=&#39;box1&#39;&gt;
+    &lt;div class=&quot;wrap2&quot; id=&quot;box2&quot;&gt;
+        &lt;p class=&#39;active&#39;&gt;GGG&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;!--举几个例子看看他们的权重值：--&gt;
+p{color:gray;}                          &lt;!--权值为1--&gt;
+div div p{color:yellow;}                  &lt;!--权值为1+1+1=3--&gt;
+.active{color:red;}                       &lt;!--权值10--&gt;
+div .active{color:black;}                &lt;!--权值为11--&gt;
+div div .active{color:blue;}             &lt;!--权值为12--&gt;
+.wrap #box2 .active{color:purple;}        &lt;!--权值为120--&gt;
+#box1 #box2 .active{color:green;}        &lt;!--权值为210--&gt;
+
+&lt;!--由此可以看出，其实对于权重值的计算来说，首先它是不进位的，对于使用的选择器我们无非就是在数数，数选择器的数量(按照顺序来，先是id再是class，再是元素)，比如：--&gt;
+#box1 .wrap2 div{ color:red; } &lt;!--权值为 1  1  1--&gt;
+
+注意：继承来的属性也有权重值，不过它的权值非常低,可以理解为继承的权重值最低。</code></pre>
+<h3 id="important-提升权重值实例">!important 提升权重值实例</h3>
+<pre><code><code>&lt;!--我们在做网页代码时，有些特殊的情况需要为某些样式设置具有最高权重值，怎么办？比如我们知道内联样式的权重值是1000，比较大，那么我们可以使用!important来解决。--&gt;   
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;UTF-8&quot;&gt;
+        &lt;title&gt;!important的使用&lt;/title&gt;
+        &lt;style type=&quot;text/css&quot;&gt;
+            div{
+                color:green !important;
+            }
+        &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id=&quot;box&quot; style=&quot;color:red;&quot;&gt;
+            &lt;span&gt;猜猜我是什么颜色&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li>执行结果</li>
+</ul>
+<p><img src="./images/css 权重值(层叠性)详解5.png" /></p>
+<ul>
+<li><h6 id="小结-使用important是一个坏习惯应该尽量避免因为这严重破坏了样式表中固有的权重值比较规则使得在调试bug变得更加困难当两条相互冲突的带有important规则作用与同一个标签那么拥有最大优先级的将会被采用">小结: 使用!important是一个坏习惯，应该尽量避免，因为这严重破坏了样式表中固有的<strong>权重值比较规则</strong>，使得在调试bug变得更加困难。当两条相互冲突的带有!important规则作用与同一个标签，那么拥有最大优先级的将会被采用。</h6></li>
+</ul>
+<h3 id="什么情况下可以使用important">什么情况下可以使用!important ?</h3>
+<ul>
+<li><p>第一种</p>
+<ul>
+<li>你的网站上有一个设计了全站样式的css文件</li>
+<li>同时你或者你的小伙伴写了一些很差的内联样式</li>
+</ul></li>
+<li><p>第二种</p>
+<pre><code><code>box p { color: blue; } p.awesome { color: red; }</code></pre>
+<p>怎样才能使得文本的颜色变为红色？这种情况下，如果不适用!important.第一条规则永远大于第二条的规则。</p></li>
+</ul>
+<h3 id="总结">总结</h3>
+<p><img src="./images/css 权重值(层叠性)详解6.png" /></p>
+<p>欢迎评论点赞交流,转发请添加原博客连接谢谢!</p>
+<div id="MySignature" style="display: block;">
+    <div><b>作    者：</b><a href="https://www.cnblogs.com/guokaifeng/" target="_blank">郭楷丰</a></div>
+    <div><b>出    处：</b><a href="https://www.cnblogs.com/guokaifeng/" target="_blank">https://www.cnblogs.com/guokaifeng/</a></div>
+    <div><b>声援博主：</b>如果您觉得文章对您有帮助，可以点击文章右下角 <strong><span style="color: #ff0000; font-size: 12pt;">【<a id="post-up" onclick="votePost(11221919,'Digg')">推荐</a>】</span></strong>一下。您的鼓励是博主的最大动力！</div>
+    <div><b>自    勉：</b>生活，需要追求；梦想，需要坚持；生命，需要珍惜；但人生的路上，更需要坚强。<b>带着感恩的心启程，学会爱，爱父母，爱自己，爱朋友，爱他人。</b></div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

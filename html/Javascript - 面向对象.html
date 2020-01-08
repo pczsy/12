@@ -1,0 +1,218 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Javascript - 面向对象' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Javascript - 面向对象</center></div><div class='banquan'>原文出处:本文由博客园博主Carlos_Ouyang提供。<br/>
+原文连接:https://www.cnblogs.com/carlosouyang/p/10952094.html</div><br>
+    <h2 id="创建对象">1 创建对象</h2>
+<p>在 JavaScript 中可以通过多种方式创建对象。</p>
+<h3 id="字面量的方式">1.1 字面量的方式</h3>
+<pre><code><code>var student = {
+    name:&quot;某某某&quot;,
+    type:&quot;练习生&quot;,
+    like:&quot;唱跳rap篮球&quot;,
+    rap:function(){
+        console.log(&quot;X你太美&quot;)
+    }
+}
+
+console.log(student)
+student.rap()</code></pre>
+<ul>
+<li>优点：写起来简单方便</li>
+<li>缺点：如果要生成大量的类似的对象，那么将会写一堆重复的代码</li>
+</ul>
+<h3 id="工厂模式">1.2 工厂模式</h3>
+<pre><code><code>function Student(name,type,like){
+    return {
+        name:name,
+        type:type,
+        like:like,
+        rap:function(){
+            console.log(&quot;X你太美&quot;)
+        }
+    }
+}
+
+var s1 = Student(&quot;某某某&quot;,&quot;篮球运动员&quot;,&#39;篮球&#39;)
+console.log(s1)</code></pre>
+<ul>
+<li>优点：可以快速生成批量的对象</li>
+<li>缺点：对象的同样的方法（函数），每创建一个对象，都会生成一个一摸一样的函数，所以会占用很多不必要的内存</li>
+</ul>
+<h3 id="构造函数创建对象">1.3 构造函数创建对象</h3>
+<pre><code><code>function Teacher(name,type){
+    this.name = name;
+    this.type = type;
+    this.rap = function(){
+        console.log(&quot;:)&quot;);
+    }
+}
+
+var t1 = new Teacher(&#39;苍老师&#39;,&#39;演员&#39;);
+t1.rap();</code></pre>
+<blockquote>
+<p>如果不用 new 来调用函数，那么就是一个普通的函数调用,并且 this 的指向是 window 关键字<br />
+如果用了 new，就会创建一个新的对象，并且将对象给到 t1</p>
+</blockquote>
+<p>这种方法还是会生成很多同样的方法，我们可以这样改进：</p>
+<pre><code><code>function Teacher(name,type){
+    this.name = name;
+    this.type = type;
+    /*
+    this.rap = function(){
+        console.log(&quot;:)&quot;);
+    }
+    */
+}
+Teacher.prototype.rap = function () {
+    console.log(&#39;:)&#39;);
+}
+var t1 = new Teacher(&#39;苍老师&#39;,&#39;演员&#39;);
+t1.rap();</code></pre>
+<p>这样就可以让多个 Teacher 的对象共用一个方法，我们可以在控制台中看到，实际上这个方法存在父类（prototype）里面。</p>
+<p><img src="./images/Javascript - 面向对象0.png" /></p>
+<h3 id="es6-的-class-写法">1.4 ES6 的 class 写法</h3>
+<p>前面的方法其实逻辑多少都有点怪异，我们一般采用这种 class 的写法。只是语法变得更人性化，实际上的底层操作方式，还是前面三种方法。</p>
+<pre><code><code>class Student{
+    constructor(name,type){
+        this.name = name;
+        this.type = type;
+    }
+    rap(){
+        console.log(&#39;:(&#39;);
+    }
+}
+var t2 = new Student(&#39;加藤鹰&#39;,&#39;演员&#39;);</code></pre>
+<p>通过控制台可以看到，底层的处理方式是一样的，但是这种写法更易于解读。</p>
+<p><img src="./images/Javascript - 面向对象1.png" /></p>
+<h2 id="继承">2 继承</h2>
+<p>这里直接让 Student 继承 Teacher</p>
+<pre><code><code>function Teacher(name,type){
+    this.name = name;
+    this.type = type;
+    /*
+    this.rap = function(){
+        console.log(&quot;:)&quot;);
+    }
+    */
+}
+Teacher.prototype.rap = function () {
+    console.log(&#39;:)&#39;);
+}
+var t1 = new Teacher(&#39;苍老师&#39;,&#39;演员&#39;);
+t1.rap();
+
+class Student extends Teacher{
+    constructor(name,type){
+        super();
+        this.name = name;
+        this.type = type;
+    }
+    rap(){
+        console.log(&#39;:(&#39;);
+    }
+}
+var t2 = new Student(&#39;加藤鹰&#39;,&#39;演员&#39;);</code></pre>
+<blockquote>
+<p>注意，子类的构造器一定要有 super() 语句，调用父类构造器。</p>
+</blockquote>
+<p>当我们用控制台调用 t2 的 rap 方法，输出是 “:(”，我们要通过 t2._proto_._proto_.rap() 才能访问到父类的同名方法。</p>
+<p><img src="./images/Javascript - 面向对象2.png" /></p>
+<h2 id="dom-对象">3 DOM 对象</h2>
+<p>DOM 对象，就是 HTML 页面的文档对象。整个网页的显示，都由 Document 对象构成。文档对象又由许多的元素对象构成，文档对象就有许多的属性和方法，用来操纵整个页面的显示，以及事件的处理。所有的元素对象最终组成庞大的 DOM 树。</p>
+<h3 id="查找-dom-对象">3.1 查找 DOM 对象</h3>
+<p><strong>在 ES5 以前</strong>，我们可以通过 ID，class，标签名查找元素对象。</p>
+<pre><code><code>//通过ID查找元素对象
+var d1 = document.getElementById(&quot;d1&quot;)
+console.log(d1)
+//通过class查找元素对象
+var abc = document.getElementsByClassName(&#39;abc&#39;)
+console.log(abc)
+//通过标签名称查找元素对象
+var div = document.getElementsByTagName(&quot;div&quot;)
+console.log(div)</code></pre>
+<blockquote>
+<p>通过 class 和 标签名找出来的是元素数组</p>
+</blockquote>
+<p><strong>ES5 后</strong>，可以用我们写 css 时的选择器的方式查找元素对象，更精确，更方便。</p>
+<pre><code><code>//选择单个元素，document.querySelector,选择器的写法，直接使用css选择器的写法,选择器如果能够匹配过个元素，那么只选择第一个元素
+var div1 =  document.querySelector(&quot;div&quot;)
+console.log(div1)
+var id1 = document.querySelector(&quot;#d1&quot;)
+console.log(id1)
+var abc1 = document.querySelector(&#39;body .abc&#39;)
+console.log(abc1)
+
+//选择多个元素,document.querySelectorAll()
+var abc2 = document.querySelectorAll(&quot;#d1&quot;)
+console.log(abc2)</code></pre>
+<h3 id="设置-dom-对象">3.2 设置 DOM 对象</h3>
+<p>找到了我们所需要的元素之后，我们就需要对元素内部的属性进行修改。</p>
+<p>标签间的内容都存储在元素的 innerHTML 属性里面，例如我们想对某个 style 标签的内容进行修改：</p>
+<pre><code><code>s1.innerHTML = &#39;h1{color: red;}&#39;;</code></pre>
+<p>我们也可以在获得元素对象后，直接设置元素的样式：</p>
+<pre><code><code>element.style.background = &quot;skyblue&quot;;
+element.style.Color = &quot;yellow&quot;;</code></pre>
+<p>我们可以在元素（标签）内再插入元素（标签）。步骤是先用 creatElement 方法创建子元素，接着设置好子元素的内容后，用父元素的 appendChild 方法将其插入。</p>
+<pre><code><code>//创建元素
+var s1 = document.createElement(&quot;style&quot;)
+//设置s1的innerHTML的内容
+s1.innerHTML = &#39;h1{color: red;}&#39;;
+//将style元素插入到HTML页面的body里
+document.body.appendChild(s1)</code></pre>
+<p>元素具有的所有属性我们都可以通过控制台查看并对其进行修改，方法和上述方法都大同小异。</p>
+<h2 id="事件">4 事件</h2>
+<p>每一个事件调用的执行函数，都会默认传入一个事件对象，这个对象会包含当次事件的相关信息，例如点击、鼠标的移动、键盘的按键、手指的触屏、聚焦等等。事件根据捕获方式分为“冒泡事件”、“捕获事件”。</p>
+<blockquote>
+<p>冒泡事件：事件由最里面一层一层向上触发，直到HTML元素，那么这种事件模式就是冒泡事件。默认情况下就用冒泡。<br />
+捕获事件：由HTML开始一层一层向下出发，直到最小的子元素，那么这种事件模式就是捕获</p>
+</blockquote>
+<h3 id="on">4.1 on</h3>
+<p>我们可以通过 &quot;on事件名称 = function(){}&quot; 的方法设置时间，这种方法简单方便，但缺点也很明显，一个事件只能调用一个函数，而且只能是“冒泡事件”。</p>
+<pre><code><code>h1.onclick = function(){
+    h1.style.backgroundColor = &quot;deeppink&quot;
+}</code></pre>
+<p>这种写法可以写在 script 标签里，也可以直接在元素的标签内作为属性写入，属性的值为一个方法，例如</p>
+<pre class="html"><code>&lt;h1 onclick=&quot;abc()&quot;&gt;helloworld&lt;/h1&gt;
+&lt;script type=&quot;text/javascript&quot;&gt; 
+    function abc(){
+        h1.style.color = &quot;skyblue&quot;
+    }
+&lt;/script&gt;</code></pre>
+<h3 id="addeventlistener">4.2 addEventListener</h3>
+<p>这种方式是 ES5 之后才有的，同一事件可以通过几个 addEventListener 语句调用多个函数，而且可以手动设置是捕获事件还是冒泡事件。语法：</p>
+<p><code>h1.addEventListener(&quot;事件的名称&quot;,事件调用起的函数()，true/false(捕获/冒泡))</code></p>
+<blockquote>
+<p>最后一个参数省略就是默认 false</p>
+</blockquote>
+<h3 id="事件对象">4.3 事件对象</h3>
+<p>每次事件调用执行函数前，会将对应的事件对象作为参数传入，例如对于点击事件，我们可以通过事件获得点击点的坐标，点击的时间等信息。</p>
+<pre class="html"><code>&lt;h1&gt;helloworld&lt;/h1&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var h1 = document.querySelector(&#39;h1&#39;)
+    h1.onclick = function(event){
+        //事件对象会存放这一次事件的相关信息
+        console.log(event)
+    }
+&lt;/script&gt;</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

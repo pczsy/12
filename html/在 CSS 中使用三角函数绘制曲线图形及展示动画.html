@@ -1,0 +1,325 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修在 CSS 中使用三角函数绘制曲线图形及展示动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>在 CSS 中使用三角函数绘制曲线图形及展示动画</center></div><div class='banquan'>原文出处:本文由博客园博主ChokCoco提供。<br/>
+原文连接:https://www.cnblogs.com/coco1s/p/11910097.html</div><br>
+    <p><span style="font-size: 14px; font-family: verdana, geneva;">最近一直在使用&nbsp;<a href="https://css-doodle.com/" rel="nofollow">css-doodle</a>&nbsp;实现一些 CSS 效果。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">css-doodle 是一个基于 Web-Component 的库。允许我们快速的创建基于 CSS Grid 布局的页面，以实现各种 CSS 效果（或许可以称之为 CSS 艺术）。后续几篇文章可能都会与之有关。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，本文的主角并不是 css-doodle。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">CSS本身一直在快速发展更新，标准也与时俱进，各种新特性层出不穷，为了能够使用 CSS 来创造各种布局实现各种形状，除了合理运用及搭配各个属性之外，去理解压榨每个属性的每个细节点也是非常重要的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">本文将介绍一种在 CSS 中借助三角函数绘制曲线图形的小技巧。</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">理解 box-shadow</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">首先，回顾一下&nbsp;<code>box-shadow</code>&nbsp;这个属性。基本属性用法就是给元素创造一层阴影。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">关于阴影的许多细节，可以先看看这篇文章：<a href="https://github.com/chokcoco/iCSS/issues/39" data-hovercard-type="issue" data-hovercard-url="/chokcoco/iCSS/issues/39/hovercard">你所不知道的 CSS 阴影技巧与细节</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">再简单提一下，本文会用到的关于阴影的第一个技巧：</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">使用阴影复制图像/投影图像</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当 box-shadow 的第三、第四个参数模糊半径和扩张半径都为 0 的时候，我们可以得到一个和元素大小一样的阴影：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    box-shadow: 80px 80px 0 0 #000;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">得到如下结果：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画0.png" rel="noopener noreferrer" target="_blank"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画0.png" alt="image" /></a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">阴影可以是多重的</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">第二个技巧则是，<code>box-shadow</code>&nbsp;是允许多重阴影的，并且他们的坐标是可以完全掌控的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">是的，我们可以像下面这样给一个元素定义多重阴影，并且利用阴影的第一、第二个参数控制它相对于元素的坐标：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #333;
+    box-sizing: border-box;
+    box-shadow: 
+        80px 80px 0 0 #000,
+        70px 70px 0 0 #000,
+        ...
+        60px 60px 0 0 #000;
+}
+</pre>
+</div>
+<p><span style="font-size: 12px;">　　&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">在阴影坐标中运用三角函数</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">继续。接下来，我们尝试在阴影的坐标中引入三角函数。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">为啥是三角函数，不是圆的标准方程或者椭圆的标准方程或者其他图形函数呢？当然也是可以的，只是这里借助三角函数的&nbsp;<code>cos</code>&nbsp;或&nbsp;<code>sin</code>&nbsp;可以实现直接使用 CSS 实现起来很困难的曲线。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">带着疑问，先继续向下，假设我们要实现这样一条曲线：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画1.png" rel="noopener noreferrer" target="_blank"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画1.png" alt="image" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使用 CSS 的话，有什么办法呢？</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">可能的一些办法是&nbsp;<code>clip-path</code>，或者一些奇技淫巧，使用&nbsp;<code>text-decoration</code>&nbsp;里的波浪下划线&nbsp;<code>wavy</code>，或者是使用渐变叠加。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，还有一种办法是本文将提到的使用&nbsp;<code>box-shadow</code>&nbsp;及 三角函数。</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">三角函数</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">咳咳，简单回顾下三角函数里面的 sin、cos 曲线图像变换，还没有全部还给老师。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画2.png" alt="" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果我们有一个 1x1 的 div，它的多重阴影，能够按照像正弦/余弦函数的图像一样进行排布，连起来不就是一条曲线吗？</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">如何在 CSS 中使用三角函数 sin/cos</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">想法不错，但是 CSS 本身并没有提供三角函数。这里，我们需要借助 Sass 来在 CSS 中实现简单的三角函数。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">还好，已经有前人帮忙把这个工作做完了：</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://www.unindented.org/blog/trigonometry-in-sass/" rel="nofollow">trigonometry in sass</a></span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;"><a href="http://jimyuan.github.io/blog/2015/02/12/trigonometry-in-sass.html" rel="nofollow">在Sass中实现三角函数计算</a></span></li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">简单而言，就是借助<a href="https://zh.wikipedia.org/wiki/%E6%B3%B0%E5%8B%92%E7%BA%A7%E6%95%B0" rel="nofollow">三角函数的泰勒展开式</a>，使用 Sass 函数模拟实现三角函数的 sin()、cos()、tan()：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画3.png" alt="" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">由于展开式是无限长的，使用 Sass 函数模拟时，不可能得到一个非常精确的值，但是在日常作图下已经完全够用了，以下是使用 Sass 函数模拟实现三角函数的 sin()、cos()、tan()：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>@function fact($number) {
+    $value: 1;
+    @if $number&gt;0 {
+        @for $i from 1 through $number {
+            $value: $value * $i;
+        }
+    }
+    @return $value;
+}
+
+@function pow($number, $exp) {
+    $value: 1;
+    @if $exp&gt;0 {
+        @for $i from 1 through $exp {
+            $value: $value * $number;
+        }
+    }
+    @else if $exp &lt; 0 {
+        @for $i from 1 through -$exp {
+            $value: $value / $number;
+        }
+    }
+    @return $value;
+}
+
+@function rad($angle) {
+    $unit: unit($angle);
+    $unitless: $angle / ($angle * 0 + 1);
+    @if $unit==deg {
+        $unitless: $unitless / 180 * pi();
+    }
+    @return $unitless;
+}
+
+@function pi() {
+    @return 3.14159265359;
+}
+
+@function sin($angle) {
+    $sin: 0;
+    $angle: rad($angle);
+    // Iterate a bunch of times.
+    @for $i from 0 through 20 {
+        $sin: $sin + pow(-1, $i) * pow($angle, (2 * $i + 1)) / fact(2 * $i + 1);
+    }
+    @return $sin;
+}
+
+@function cos($angle) {
+    $cos: 0;
+    $angle: rad($angle);
+    // Iterate a bunch of times.
+    @for $i from 0 through 20 {
+        $cos: $cos + pow(-1, $i) * pow($angle, 2 * $i) / fact(2 * $i);
+    }
+    @return $cos;
+}
+
+@function tan($angle) {
+    @return sin($angle) / cos($angle);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">由于上面最终计算 sin、cos 泰勒展开的时候，只使用了 20 层循环，所以当传入的值太大的时候，则会产生较大误差。经测试，传入数值在 [-20, 20] 以内，精度还是非常高的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">而以 sin 函数为例，x 取值在 [-&pi;, &pi;] 之间，已经能覆盖所有 sin(x) 的取值范围，所以 [-20, 20] 这个范围是完全够用的，我们只需要尽量让传入的 x 值落在这个区域范围内即不会产生太大误差。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">好，铺垫了那么多，接下来使用上述的 sin 函数试一下，假设我们有这样一个结构：</span></p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;gutter:true;">&lt;div&gt;&lt;/div&gt;</pre>
+</div>
+<div class="highlight highlight-text-html-basic">
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    width: 1px;
+    height: 1px;
+    background: #000;
+    border-radius: 50%;
+}</pre>
+</div>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">我们再借助 Sass 实现一个 50 层的循环，当然其中阴影的 x 坐标使用了 sin 函数：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>@function shadowSet($vx, $vy) {
+    $shadow : 0 0 0 0 #000;
+    
+    @for $i from 0 through 50 { 
+        $x: sin($i / 8) * $vx;
+        $y: $i * $vy;
+        
+        $shadow: $shadow, #{$x} #{$y} 0 0 rgba(0, 0, 0, 1);
+    }
+    
+    @return $shadow;
+}
+
+div {
+    width: 1px;
+    height: 1px;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: shadowSet(4px, 1px);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上面&nbsp;<code>sin($i / 8)</code>，这里除以 8 是为了让整个sin(x) 传入的作用域的取值范围为 [0, 6.25]，当而 sin(x) 的作用域为 [0，2&pi;] 时刚好可以画一条完整的单次曲线。这个 8 是可以根据循环的次数不同而进行调整的。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">实际，我们得到的&nbsp;<code>box-shadow</code>&nbsp;如下：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>{
+    box-shadow: 
+	0 0 0 0 black, 0.4986989335px 1px 0 0 black, 0.989615837px 2px 0 0 black, 
+	1.4650901163px 3px 0 0 black, 1.9177021544px 4px 0 0 black, 2.3403890918px 5px 0 0 black, 
+	2.7265550401px 6px 0 0 black, 3.0701740089px 7px 0 0 black, 3.3658839392px 8px 0 0 black, 
+	3.6090703764px 9px 0 0 black, 3.7959384774px 10px 0 0 black, 3.9235722281px 11px 0 0 black, 
+	3.9899799464px 12px 0 0 black, 3.9941253622px 13px 0 0 black, 3.9359437875px 14px 0 0 black, 
+	3.8163431264px 15px 0 0 black, 3.6371897073px 16px 0 0 black, 3.4012791593px 17px 0 0 black,
+	3.1122927876px 18px 0 0 black, 2.7747401278px 19px 0 0 black, 2.3938885764px 20px 0 0 black,
+	1.9756811944px 21px 0 0 black, 1.5266439682px 22px 0 0 black, 1.0537839735px 23px 0 0 black,
+	0.5644800322px 24px 0 0 black, 0.0663675689px 25px 0 0 black, -0.4327805381px 26px 0 0 black,
+	-0.9251752496px 27px 0 0 black, -1.4031329108px 28px 0 0 black, -1.8591951521px 29px 0 0 black,
+	-2.286245275px 30px 0 0 black, -2.677619305px 31px 0 0 black, -3.0272099812px 32px 0 0 black,
+	-3.3295620582px 33px 0 0 black, -3.5799574329px 34px 0 0 black, -3.7744887692px 35px 0 0 black,
+	-3.9101204707px 36px 0 0 black, -3.9847360499px 37px 0 0 black, -3.9971711559px 38px 0 0 black,
+	-3.9472317429px 39px 0 0 black, -3.8356970987px 40px 0 0 black, -3.6643076841px 41px 0 0 black,
+	-3.4357379737px 42px 0 0 black, -3.1535547213px 43px 0 0 black, -2.8221613023px 44px 0 0 black,
+	-2.446729px 45px 0 0 black, -2.03311631px 46px 0 0 black, -1.58777752px 47px 0 0 black,
+	-1.1176619928px 48px 0 0 black, -0.630105724px 49px 0 0 black, -0.1327168662px 50px 0 0 black;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">实际得到的图像如下：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画4.png" alt="" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/ZEEPbaz" rel="nofollow">CodePen Demo -- sass2sin Line</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">控制颜色及初始方向</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">看看上面 Sass 实现的这个方法&nbsp;<code>@function shadowSet($vx, $vy)</code>&nbsp;，其中&nbsp;<code>$vx</code>，<code>$vy</code>&nbsp;用于控制图像的振幅及松散程度，我们再添加一个控制初始方向的&nbsp;<code>$direction</code>，控制阴影层数的 $count， 控制颜色的 $color:</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>@function shadowSet($vx, $vy, $direction, $count, $color) {
+    $shadow : 0 0 0 0 $color;
+    
+    @for $i from 0 through $count { 
+        $x: sin($i / 8) * $vx * $direction;
+        $y: $i * $vy;
+        
+        $shadow: $shadow, #{$x} #{$y} 0 0 $color;
+    }
+    
+    @return $shadow;
+}
+.line {
+    width: 1px;
+    height: 1px;
+    margin: 10vh auto;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: shadowSet(4px, 1px, 1, 50, #000);
+}
+
+.reverseline {
+    width: 1px;
+    height: 1px;
+    margin: 10vh auto;
+    background: #000;
+    border-radius: 50%;
+    box-shadow: shadowSet(8px, 2px, -1, 100, red);
+}</pre>
+</div>
+<p><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画5.png" alt="" width="242" height="207" /></p>
+<h3><span style="font-size: 14pt; font-family: verdana, geneva;">控制颜色</span></h3>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">再进一步，我们可以借助 Sass 的各种颜色函数，实现颜色的变化：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>@function shadowSetColor($vx, $vy, $direction, $count, $color) {
+    $shadow : 0 0 0 0 $color;
+    
+    @for $i from 0 through $count { 
+        
+        $color: lighten($color, .5);
+        
+        $x: sin($i / 8) * $vx * $direction;
+        $y: $i * $vy;
+        
+        $shadow: $shadow, #{$x} #{$y} 0 0 $color;
+    }
+    
+    @return $shadow;
+}
+
+.colorline {
+    width: 5px;
+    height: 5px;
+    margin: 10vh auto;
+    background: green;
+    border-radius: 50%;
+    box-shadow: shadowSetColor(8px, 2px, -1, 100, green);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">上面，借助了&nbsp;<code>lighten</code>&nbsp;这个函数，通过改变颜色的亮度值，让颜色变亮，创建一个新的颜色。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，Sass 中还有很多其他颜色函数：</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">adjust-hue($color,$degrees)：通过改变一个颜色的色相值，创建一个新的颜色；</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">lighten($color,$amount)：通过改变颜色的亮度值，让颜色变亮，创建一个新的颜色；</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">darken($color,$amount)：通过改变颜色的亮度值，让颜色变暗，创建一个新的颜色；</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">saturate($color,$amount)：通过改变颜色的饱和度值，让颜色更饱和，从而创建一个新的颜色</span></li>
+<li><span style="font-size: 14px; font-family: verdana, geneva;">desaturate($color,$amount)：通过改变颜色的饱和度值，让颜色更少的饱和，从而创建出一个新的颜色；</span></li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">更多 Sass 颜色函数，可以看看这篇文章：<a href="https://www.w3cplus.com/preprocessor/sass-color-function.html" rel="nofollow">Sass基础&mdash;&mdash;颜色函数</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，看看这次的效果：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画6.png" alt="" width="112" height="213" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/ZEEPbaz" rel="nofollow">CodePen Demo -- sass2sin Line</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><iframe title="sass2sin Line" src="https://codepen.io/Chokcoco/embed/ZEEPbaz?height=265&amp;theme-id=default&amp;default-tab=css,result" frameborder="no" scrolling="no" width="320" height="265"></iframe></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">在 css-doodle 中使用</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，前面所有的铺垫都是为了在实际的一些创意想法中去使用它。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">在 css-doodle 中，由于是利用 Web Component 特性。在需要三角函数的时候，可以直接使用 JavaScript 提供的 Math 函数，会更加的方便。</span></p>
+<blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">Web Components 是一套不同的 Web 技术，允许您创建可重用的定制元素（它们的功能封装在您的代码之外）并且在您的web应用中使用它们。</span></p>
+</blockquote>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/yuanchuan/pens/popular?cursor=ZD0xJm89MCZwPTc=" rel="nofollow">袁川</a>老师，也就是 css-doodle 库的作者，在他的 Codepen 首页背景板中，使用的就是使用上述技巧实现的一副纯 CSS 画作：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画7.png" alt="" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/yuanchuan/pen/dBroLP" rel="nofollow">Codepen Demo -- border-radius</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><iframe title="border-radius" src="https://codepen.io/yuanchuan/embed/dBroLP?height=265&amp;theme-id=default&amp;default-tab=html,result" frameborder="no" scrolling="no" width="320" height="300"></iframe></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">我也尝试使用这个技巧，做了一副：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><img src="./images/在 CSS 中使用三角函数绘制曲线图形及展示动画8.png" alt="" width="324" height="312" /></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/WNNLOXV" rel="nofollow">Codepen Demo -- CSS-Doodle fish&nbsp;🐟&nbsp;&amp; seaweed🍀</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;"><iframe title="CSS-Doodle fish 🐟 &amp;   seaweed🍀" src="https://codepen.io/Chokcoco/embed/WNNLOXV?height=265&amp;theme-id=default&amp;default-tab=html,result" frameborder="no" scrolling="no" width="320" height="400"></iframe>&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">最后</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">有几点，有必要提一下的。</span></p>
+<p><strong><span style="font-size: 14px; font-family: verdana, geneva;">1、为什么一定要使用&nbsp;<code>box-shadow</code>，直接堆叠 div 不行么？</span></strong></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">可以，使用多重&nbsp;<code>box-shadow</code>&nbsp;只是因为这样可以更省标签，一个 div 搞定。更甚，愿意折腾，使用多重渐变也是可以的。</span></p>
+<p><strong><span style="font-size: 14px; font-family: verdana, geneva;">2、上述两个 Demo 都是纯 CSS 画出来的吗？</span></strong></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">是的。虽然借助了 css-doodle 库，但是本质都是 CSS 代码，只是这个库封装好了很多拿来即用的函数。<a href="https://css-doodle.com/" rel="nofollow">css-doodle</a></span></p>
+<p><strong><span style="font-size: 14px; font-family: verdana, geneva;">3、有什么用？</span></strong></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">额，有没有用是一个哲学问题。至少我觉得还是挺有意思的。</span></p>
+<hr />
+<p><span style="font-size: 14px; font-family: verdana, geneva;">好了，本文到此结束，希望对你有帮助 :)</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">更多精彩 CSS 技术文章汇总在我的&nbsp;<a href="https://github.com/chokcoco/iCSS">Github -- iCSS</a>&nbsp;，持续更新，欢迎点个 star 订阅收藏。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">如果还有什么疑问或者建议，可以多多交流，原创文章，文笔有限，才疏学浅，文中若有不正之处，万望告知。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,79 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修css之文本两端对齐' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>css之文本两端对齐</center></div><div class='banquan'>原文出处:本文由博客园博主九梨前端编程提供。<br/>
+原文连接:https://www.cnblogs.com/zml1023/p/12083436.html</div><br>
+    <p>说起text-align，大家一定都不觉得陌生，我们常用关键字left、right、center实现行内元素相对父元素左、右、居中对齐，当然我们也使用justify来实现文本两端对齐。</p>
+<p><img class="aligncenter wp-image-6808" src="./images/css之文本两端对齐0.png" alt="" width="529" height="226" data-tag="bdshare" /></p>
+<p>如上图，两端对齐相对于左对齐，视觉上显得整齐有序。但justify对最后一行无效，通常这样的排版对整段文字是极好的，我们并不希望当最后一行只有两个字时也两端对齐，毕竟这是不便于阅读的，那么当我们只有一行文本，但要实现单行文本两端对齐怎么解决（如下图的表单项效果）？</p>
+<p><img class="aligncenter wp-image-6811" src="./images/css之文本两端对齐1.png" alt="" width="354" height="111" data-tag="bdshare" /></p>
+<p>根据justify对最后一行无效，我们可以新增一行，使该行文本不是最后一行，实现如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">//html
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="label"</span> <span style="color: #0000ff;">&gt;</span>{{item.label}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">：
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="value"</span><span style="color: #0000ff;">&gt;</span>{{item.value}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;"><br /></span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">//scss
+.item </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 32px</span>;<span style="color: #ff0000;">
+    line-height</span>:<span style="color: #0000ff;"> 32px</span>;<span style="color: #ff0000;">
+    margin-bottom</span>:<span style="color: #0000ff;"> 8px</span>;<span style="color: #ff0000;">
+    .label {
+        display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+        text-align</span>:<span style="color: #0000ff;"> justify</span>;<span style="color: #ff0000;">
+        vertical-align</span>:<span style="color: #0000ff;"> top</span>;<span style="color: #ff0000;">
+        &amp;</span>:<span style="color: #0000ff;">:after {
+            display: inline-block</span>;<span style="color: #ff0000;">
+            width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+            content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+            height</span>:<span style="color: #0000ff;"> 0</span>;
+        }<span style="color: #800000;">
+    }
+    .value </span>{<span style="color: #ff0000;">
+        padding-right</span>:<span style="color: #0000ff;"> 10px</span>;
+    }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>but以上写法可以说是比较麻烦的，重点来啦，最近新了解到的一个属性text-align-last，该属性定义的是一段文本中最后一行在被强制换行之前的对齐规则。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">//scss
+.item </span>{<span style="color: #ff0000;">
+    margin-bottom</span>:<span style="color: #0000ff;"> 8px</span>;<span style="color: #ff0000;">
+    .label {
+        display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+        min-width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+        text-align</span>:<span style="color: #0000ff;"> justify</span>;<span style="color: #ff0000;">
+        text-align-last</span>:<span style="color: #0000ff;"> justify</span>;
+    }<span style="color: #800000;">
+    .value </span>{<span style="color: #ff0000;">
+        padding-right</span>:<span style="color: #0000ff;"> 10px</span>;
+    }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>相比第一种实现，第二种实现方式就简单了不少，不过该属性有兼容性问题，大家可以根据情况决定实现方式，想了解更多关于text-align-last的说明，参见<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align-last">https://developer.mozilla.org/zh-CN/docs/Web/CSS/text-align-last</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

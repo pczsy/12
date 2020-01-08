@@ -1,0 +1,109 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于清除浮动的n中方式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于清除浮动的n中方式</center></div><div class='banquan'>原文出处:本文由博客园博主qwguo提供。<br/>
+原文连接:https://www.cnblogs.com/qwguo/p/10963534.html</div><br>
+    <p>我们在对页面进行布局的时候经常会用到浮动布局，浮动布局能够很好的实现我们想要的布局效果，同时兼容方面也是很好的，但是当我们在用左右浮动进行页面布局的时候，由于元素浮动脱了了文档流导致浮动元素的父级高度塌陷而导致元素到高度不是我们理想的状态，在这个时候我们就要使用清除浮动的方法来让父元素的高度能够正常按照预期显示；</p>
+<p>我们在清除浮动的时候有很多种实现方法，下面我列举一些常用的清楚浮动的方法：</p>
+<h5>1、给父元素添加overflow:hidden;这是一个最简单最粗暴的清除浮动的方式；</h5>
+<p>　　优点：代码简单只需要一个css属性就能搞定；</p>
+<p>　　缺点：也很明显，由于给父元素设置了多余截取，导致想实现一些效果无法正常工作，比如说添加鼠标经过自定义的提示样式；</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> html部分 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> css部分 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="background-color: #f5f5f5; color: #800000;">.left</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;"> 9</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">10</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #800000;">.right</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> right</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 400px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #800000;">.box</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #ff0000;">    overflow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #800000;">.clear</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #ff0000;">    clear</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> both</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">22</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;&nbsp;</p>
+<h5>2、在父级的最后添加一个空元素，然后给空元素设置clear:both;</h5>
+<p>　　优点：理解简单，同时兼容也不错；</p>
+<p>　　缺点：就是多增加了一个多余的元素，代码成本高；</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> html部分 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="clear"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="background-color: #f5f5f5; color: #800000;">.left</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;"> 9</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">10</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #800000;">.right</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> right</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 400px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #800000;">.clear</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #ff0000;">    clear</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> both</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h5>3、通过父级的伪元素来实现:after或者是::after</h5>
+<p>　　优点：不用额外增加标签元素，同事也解决了方法一种的不足；</p>
+<p>　　缺点：理解起来不容易，兼容方面ie8以上浏览器支持伪元素选择器单冒号形式</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">html</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">css</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 7</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="background-color: #f5f5f5; color: #800000;">.left</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;"> 9</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">10</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #800000;">.right</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #ff0000;">    float</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> right</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 400px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #800000;">.box:after</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #ff0000;">    content</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> ''</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #ff0000;">    clear</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> both</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #ff0000;">    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> table</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">21</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

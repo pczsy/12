@@ -1,0 +1,1760 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修大项目之网上书城（一）——注册页面' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>大项目之网上书城（一）——注册页面</center></div><div class='banquan'>原文出处:本文由博客园博主return_false提供。<br/>
+原文连接:https://www.cnblogs.com/zhangA/p/11027050.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#大项目之网上书城一注册页面">大项目之网上书城（一）——注册页面</a><ul>
+        <li><a href="#head页面">1.head页面</a><ul>
+        <li><a href="#代码">代码</a></li>
+        <li><a href="#效果展示">效果展示</a></li>
+        </ul></li>
+        <li><a href="#foot页面">2.foot页面</a><ul>
+        <li><a href="#代码-1">代码</a></li>
+        <li><a href="#效果展示-1">效果展示</a></li>
+        </ul></li>
+        <li><a href="#empty页面">3.empty页面</a><ul>
+        <li><a href="#代码-2">代码</a></li>
+        <li><a href="#效果展示-2">效果展示</a></li>
+        </ul></li>
+        <li><a href="#register页面">4.register页面</a><ul>
+        <li><a href="#代码-3">代码</a></li>
+        <li><a href="#效果展示-3">效果展示</a></li>
+        </ul></li>
+        <li><a href="#register.js">5.register.js</a><ul>
+        <li><a href="#代码-4">代码</a></li>
+        </ul></li>
+        <li><a href="#imagecode生成验证码">6.imageCode：生成验证码</a><ul>
+        <li><a href="#代码-5">代码</a></li>
+        </ul></li>
+        <li><a href="#checkcode校验验证码">7.CheckCode：校验验证码</a><ul>
+        <li><a href="#代码-6">代码</a></li>
+        </ul></li>
+        <li><a href="#new_words.txt">8.new_words.txt</a></li>
+        </ul></li>
+        </ul>
+    </div>
+</div>
+<h1 id="大项目之网上书城一注册页面">大项目之网上书城（一）——注册页面</h1>
+<h2 id="head页面">1.head页面</h2>
+<h3 id="代码">代码</h3>
+<blockquote>
+<p>先写一个通用的head页面。</p>
+</blockquote>
+<pre><code><code>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;
+    pageEncoding=&quot;utf-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;!-- 这里的href请写自己的bootstrap的css的链接。如果没有下载，可以用这个 --&gt;
+&lt;!-- https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;${pageContext.request.contextPath }/bootstrap-3.3.7-dist/css/bootstrap.min.css&quot;&gt;
+&lt;!-- 其实只用到了里面的一个购物车的小图标啦 --&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+/*这个字体我在这里估计是放不出来了。大家有兴趣的话可以找找看其他好看的字体。*/
+@font-face{
+  font-family: myFont;
+  src: url(&quot;../bootstrap-3.3.7-dist/fonts/Adventure-Normal.ttf&quot;);
+}
+a:link {text-decoration:none;color: black} /* 未访问的链接 */
+a:visited {text-decoration:none;color: black} /* 已访问的链接 */
+a:hover {text-decoration:none;color: #068} /* 鼠标移动到链接上 */
+a:active {text-decoration:none;color: #068} /* 选定的链接，即鼠标按下去的时候不松开显示的状态 */
+a{
+    font-size:18px;
+}
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!-- 头部占了100px高。然后大概把头部用div分为了2个部分，左右各预留了15%宽的留白，左边是一个Bookstrap的文本，右边是导航栏。 --&gt;
+&lt;div style=&quot;height:100px;width:100%;float:left&quot;&gt;
+    &lt;!-- BookStore字样 --&gt;
+    &lt;div style=&quot;line-height:120px;height:100px;width:45%;margin-left:15%;float:left&quot;&gt;
+        &lt;font face=&quot;myFont&quot; color = &quot;black&quot; style=&quot;font-size:60px&quot;&gt;BookStore&lt;/font&gt;
+    &lt;/div&gt;
+    &lt;!-- 导航栏 --&gt;
+    &lt;div style=&quot;height:100px;width:25%;float:left;margin-right:15%&quot;&gt;
+        &lt;div style=&quot;height:100px;width:25%;float:left;padding-top:40px&quot;&gt;
+            &lt;a href=&quot;#&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-shopping-cart&quot;&gt;&lt;/span&gt;购物车&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;height:100px;width:25%;float:left;padding-top:40px&quot;&gt;
+        &lt;a href=&quot;#&quot;&gt;帮助中心&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;height:100px;width:25%;float:left;padding-top:40px&quot;&gt;
+        &lt;a href=&quot;#&quot;&gt;我的账户&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;div style=&quot;height:100px;width:25%;float:left;padding-top:40px&quot;&gt;
+        &lt;a href=&quot;#&quot;&gt;用户注册&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="效果展示">效果展示</h3>
+<p><img src="./images/大项目之网上书城（一）——注册页面0.png" /></p>
+<h2 id="foot页面">2.foot页面</h2>
+<h3 id="代码-1">代码</h3>
+<blockquote>
+<p>再写一个通用的foot页面</p>
+</blockquote>
+<pre><code><code>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;
+    pageEncoding=&quot;utf-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Insert title here&lt;/title&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+a:link {text-decoration:none;color: black} /* 未访问的链接 */
+a:visited {text-decoration:none;color: black} /* 已访问的链接 */
+a:hover {text-decoration:none;color: #068} /* 鼠标移动到链接上 */
+a:active {text-decoration:none;color: #068} /* 选定的链接，即鼠标按下去的时候不松开显示的状态 */
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div style=&quot;width:100%;height:60px;float:left&quot;&gt;
+    &lt;div style=&quot;width:100%;height:15px;float:left;margin-top:10px;text-align:center&quot;&gt;
+        &lt;a href=&quot;#&quot; style=&quot;font-size:14px&quot;&gt;关于书城&lt;/a&gt;&amp;nbsp;&amp;nbsp;
+        &lt;a href=&quot;#&quot; style=&quot;font-size:14px&quot;&gt;About&amp;nbsp;BookStore&lt;/a&gt;&amp;nbsp;&amp;nbsp;
+        &lt;a href=&quot;#&quot; style=&quot;font-size:14px&quot;&gt;书城推广&lt;/a&gt;&amp;nbsp;&amp;nbsp;
+        &lt;a href=&quot;#&quot; style=&quot;font-size:14px&quot;&gt;意见反馈&lt;/a&gt;
+    &lt;/div&gt;
+    &lt;div style=&quot;width:100%;height:15px;float:left;margin-top:12px;text-align:center&quot;&gt;
+        &lt;font style=&quot;color:#233;font-size:14px&quot;&gt;©2019&amp;nbsp;BookStore&amp;nbsp;&amp;nbsp;&lt;/font&gt;
+        &lt;font style=&quot;color:#233;font-size:14px&quot;&gt;京ICP证xxxxxx号&lt;/font&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+        &lt;font style=&quot;color:#233;font-size:14px&quot;&gt;京公网安备xxxxxxxxxxxxxx号 &lt;/font&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="效果展示-1">效果展示</h3>
+<p><img src="./images/大项目之网上书城（一）——注册页面1.png" /></p>
+<h2 id="empty页面">3.empty页面</h2>
+<h3 id="代码-2">代码</h3>
+<blockquote>
+<p>用一个empty页面将head和foot整合起来，顺便中间留空，方便之后添加其他代码。</p>
+</blockquote>
+<pre><code><code>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;
+    pageEncoding=&quot;utf-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;空白&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style=&quot;background-color:#bbb&quot;&gt;
+&lt;!-- 调用头部页面 --&gt;
+&lt;div style=&quot;width:100%;height:100px;float:left&quot;&gt;
+&lt;jsp:include page=&quot;head.jsp&quot;&gt;&lt;/jsp:include&gt;
+&lt;/div&gt;
+&lt;!-- 通用内容体大小 --&gt;
+&lt;div style=&quot;width:100%;height:720px;float:left&quot;&gt;
+
+&lt;/div&gt;
+&lt;!-- 调用底部页面 --&gt;
+&lt;div style=&quot;width:100%;height:60px;float:left&quot;&gt;
+&lt;jsp:include page=&quot;foot.jsp&quot;&gt;&lt;/jsp:include&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="效果展示-2">效果展示</h3>
+<p><img src="./images/大项目之网上书城（一）——注册页面2.png" /></p>
+<h2 id="register页面">4.register页面</h2>
+<h3 id="代码-3">代码</h3>
+<blockquote>
+<p>最终修改后得到注册页面~</p>
+</blockquote>
+<pre><code><code>&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=utf-8&quot;
+    pageEncoding=&quot;utf-8&quot;%&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;注册&lt;/title&gt;
+&lt;!-- 这里的href请写自己的bootstrap的css的链接。如果没有下载，可以用这个 --&gt;
+&lt;!-- https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css --&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;${pageContext.request.contextPath }/bootstrap-3.3.7-dist/css/bootstrap.min.css&quot;&gt;
+&lt;!-- jquery和bootstrap的链接可以用下面的 --&gt;
+&lt;!-- https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js --&gt;
+&lt;!-- https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;${pageContext.request.contextPath}/jquery-3.3.1/jquery-3.3.1.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;${pageContext.request.contextPath}/bootstrap-3.3.7-dist/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+&lt;!-- register.js是我自己写的，里面放了判断输入是否合理，以及验证码的正确与否的。之后放上了。 --&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;${pageContext.request.contextPath}/client/js/register.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body style=&quot;background-color:#bbb&quot;&gt;
+&lt;!-- 调用头部页面 --&gt;
+&lt;div style=&quot;width:100%;height:100px;float:left&quot;&gt;
+&lt;jsp:include page=&quot;head.jsp&quot;&gt;&lt;/jsp:include&gt;
+&lt;/div&gt;
+&lt;!-- 通用内容体大小 --&gt;
+&lt;div style=&quot;width:70%;height:720px;float:left;margin-left:15%;&quot;&gt;
+    &lt;!-- 好看的图 --&gt;
+    &lt;div style=&quot;width:55%;height:100%;float:left;margin-top:5%;&quot;&gt;
+        &lt;img alt=&quot;拿书女孩&quot; src=&quot;img/girl.jpg&quot; style=&quot;width:90%;&quot;&gt;
+    &lt;/div&gt;
+    &lt;!-- 注册界面 --&gt;
+    &lt;div style=&quot;width:45%;height:80%;float:left;margin-top:7%&quot;&gt;
+        &lt;form action=&quot;#&quot; method=&quot;post&quot; class=&quot;form-horizontal&quot; role=&quot;form&quot;&gt;
+            &lt;!-- form表单的每一项都由bootstrap展示效果。 --&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;!-- 名称占3个长度col-sm-3，加大化input-lg --&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;邮箱&lt;/label&gt;
+                &lt;!-- 输入框和提示一共占9个长度col-sm-9，输入框加大化input-lg，提示使用不同颜色的列表（可用警告代替，两者很相似。） --&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;email&quot; id=&quot;email&quot; class=&quot;form-control input-lg&quot;
+                           placeholder=&quot;请输入邮箱&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                    &lt;ul class=&quot;list-group&quot;&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-info&quot; style=&quot;float:left;&quot; id=&quot;text1&quot;&gt;请输入有效的邮箱地址&lt;/li&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-danger&quot; style=&quot;float:left;display:none&quot; id=&quot;emailMsg&quot;&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;!-- 以下如法炮制 --&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;lastname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;昵称&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;username&quot; id=&quot;username&quot; class=&quot;form-control input-lg&quot;
+                           placeholder=&quot;请输入昵称&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                    &lt;ul class=&quot;list-group&quot;&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-info&quot; style=&quot;float:left;&quot; id=&quot;text2&quot;&gt;昵称请设置4~20位字符&lt;/li&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-danger&quot; style=&quot;float:left;display:none&quot; id=&quot;usernameMsg&quot;&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;密码&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;password&quot; id=&quot;password&quot; 
+                    class=&quot;form-control input-lg&quot; placeholder=&quot;请输入密码&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                    &lt;ul class=&quot;list-group&quot;&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-info&quot; style=&quot;float:left;&quot; id=&quot;text3&quot;&gt;密码请设置4~20位字符&lt;/li&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-danger&quot; style=&quot;float:left;display:none&quot; id=&quot;passwordMsg&quot;&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;lastname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;确认密码&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;password&quot; name=&quot;repassword&quot; id=&quot;repassword&quot;
+                    class=&quot;form-control input-lg&quot; placeholder=&quot;请再次输入密码&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                    &lt;ul class=&quot;list-group&quot;&gt;
+                      &lt;li class=&quot;list-group-item list-group-item-danger&quot; style=&quot;float:left;display:none&quot; id=&quot;confirmMsg&quot;&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;手机号&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;text&quot; name=&quot;telephone&quot; 
+                    class=&quot;form-control input-lg&quot; placeholder=&quot;请输入手机号&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;性别&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;label class=&quot;radio-inline input-lg&quot;&gt;
+                        &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;男&quot; checked=&quot;checked&quot;/&gt;男 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
+                    &lt;/label&gt;
+                    &lt;label class=&quot;radio-inline input-lg&quot;&gt;
+                        &lt;input type=&quot;radio&quot; name=&quot;gender&quot; value=&quot;女&quot;/&gt;女
+                    &lt;/label&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-3 control-label input-lg&quot;&gt;验证码&lt;/label&gt;
+                &lt;div class=&quot;col-sm-9&quot;&gt;
+                    &lt;input type=&quot;text&quot; id=&quot;code&quot;
+                    class=&quot;form-control input-lg&quot; placeholder=&quot;请输入验证码&quot; style=&quot;width:45%;float:left&quot;/&gt;
+                    &lt;img src=&quot;${pageContext.request.contextPath}/imageCode&quot;
+                    width=&quot;180&quot;height=&quot;30&quot;class=&quot;textinput&quot;
+                    style=&quot;height:42px;&quot;id=&quot;img&quot;/&gt;
+                    &lt;a href=&quot;javascript:void(0);&quot;id=&quot;a1&quot; &gt;换一张&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;br/&gt;
+            &lt;div class=&quot;form-group&quot;&gt;
+                &lt;label for=&quot;firstname&quot; class=&quot;col-sm-1 control-label input-lg&quot;&gt;&lt;/label&gt;
+                &lt;div class=&quot;col-sm-5&quot;&gt;
+                    &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;提交&quot;
+                    class=&quot;form-control input-lg btn btn-primary&quot;style=&quot;width:100%;float:left&quot;/&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;col-sm-5&quot;&gt;
+                    &lt;input type=&quot;reset&quot; name=&quot;reset&quot; value=&quot;重置&quot; id=&quot;re&quot;
+                    class=&quot;form-control input-lg btn btn-warning&quot;style=&quot;width:100%;float:left&quot;/&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;!-- 调用底部页面 --&gt;
+&lt;div style=&quot;width:100%;height:60px;float:left&quot;&gt;
+&lt;jsp:include page=&quot;foot.jsp&quot;&gt;&lt;/jsp:include&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3 id="效果展示-3">效果展示</h3>
+<p><img src="./images/大项目之网上书城（一）——注册页面3.png" /></p>
+<h2 id="register.js">5.register.js</h2>
+<h3 id="代码-4">代码</h3>
+<pre class="js"><code>function checkEmail() {         // 验证邮箱
+    var regex = /^[\w-]+@([\w-]+\.)+[a-zA-Z]{2,4}$/;
+    var value =$(&quot;#email&quot;).val();
+    var msg = &quot;&quot;;
+    if (!value)
+        msg = &quot;邮箱必须填写：&quot;;
+    else if (!regex.test(value))
+        msg = &quot;邮箱格式不合法：&quot;;
+    $(&quot;#emailMsg&quot;).html(msg);
+    $(&quot;#emailMsg&quot;).css(&quot;display&quot;,&quot;block&quot;);
+    $(&quot;#text1&quot;).css(&quot;display&quot;,&quot;none&quot;);
+    if(msg==&quot;&quot;){
+        $(&quot;#emailMsg&quot;).removeClass(&quot;list-group-item-danger&quot;);
+        var obj = document.getElementById(&quot;emailMsg&quot;);
+        obj.className += &quot; list-group-item-success&quot;;
+        $(&quot;#emailMsg&quot;).html(&quot;通过！&quot;);
+    }
+    return msg == &quot;&quot;;
+}
+
+function checkUsername() {      // 验证用户名
+    var regex = /^[a-zA-Z_]\w{4,20}$/;  // 字母数字下划线1到10位, 不能是数字开头
+    var value = $(&quot;#username&quot;).val();// 获取usernameObj中的文本
+    var msg = &quot;&quot;;                       // 最后的提示消息, 默认为空
+    if (!value)                         // 如果用户名没填, 填了就是一个字符串可以当作true, 没填的话不论null或者&quot;&quot;都是false
+        msg = &quot;用户名必须填写：&quot;;           // 改变提示消息
+    else if (!regex.test(value))        // 如果用户名不能匹配正则表达式规则
+        msg = &quot;用户名不合法：&quot;;            // 改变提示消息
+    $(&quot;#usernameMsg&quot;).html(msg);        // 将提示消息放入SPAN
+    $(&quot;#usernameMsg&quot;).css(&quot;display&quot;,&quot;block&quot;);//让文字显示出来。
+    $(&quot;#text2&quot;).css(&quot;display&quot;,&quot;none&quot;);
+    if(msg==&quot;&quot;){
+        $(&quot;#usernameMsg&quot;).removeClass(&quot;list-group-item-danger&quot;);
+        var obj = document.getElementById(&quot;usernameMsg&quot;);
+        obj.className += &quot; list-group-item-success&quot;;
+        $(&quot;#usernameMsg&quot;).html(&quot;通过！&quot;);
+    }
+    return msg == &quot;&quot;;                   // 如果提示消息为空则代表没出错, 返回true
+}
+
+function checkPassword() {      // 验证密码
+    var regex = /^.{4,20}$/;            // 任意字符, 6到16位
+    var value =$(&quot;#password&quot;).val();
+    var msg = &quot;&quot;;
+    if (!value)
+        msg = &quot;密码必须填写：&quot;;
+    else if (!regex.test(value))
+        msg = &quot;密码不合法：&quot;;
+    $(&quot;#passwordMsg&quot;).html(msg);
+    $(&quot;#passwordMsg&quot;).css(&quot;display&quot;,&quot;block&quot;);//让文字显示出来。
+    $(&quot;#text3&quot;).css(&quot;display&quot;,&quot;none&quot;);
+    if(msg==&quot;&quot;){
+        $(&quot;#passwordMsg&quot;).removeClass(&quot;list-group-item-danger&quot;);
+        var obj = document.getElementById(&quot;passwordMsg&quot;);
+        obj.className += &quot; list-group-item-success&quot;;
+        $(&quot;#passwordMsg&quot;).html(&quot;通过！&quot;);
+    }
+    return msg == &quot;&quot;;
+}
+
+function checkConfirm() {       // 验证确认密码
+    var passwordValue = $(&quot;#password&quot;).val();
+    var confirmValue = $(&quot;#repassword&quot;).val();
+    var msg = &quot;&quot;;
+
+    if(!confirmValue){
+        msg = &quot;确认密码必须填写&quot;;
+    }
+    else    if (passwordValue != confirmValue){
+        msg = &quot;密码必须保持一致&quot;;
+    }
+    $(&quot;#confirmMsg&quot;).html(msg);
+    $(&quot;#confirmMsg&quot;).css(&quot;display&quot;,&quot;block&quot;);//让文字显示出来。
+    if(msg==&quot;&quot;){
+        $(&quot;#confirmMsg&quot;).removeClass(&quot;list-group-item-danger&quot;);
+        var obj = document.getElementById(&quot;confirmMsg&quot;);
+        obj.className += &quot; list-group-item-success&quot;;
+        $(&quot;#confirmMsg&quot;).html(&quot;通过！&quot;);
+    }
+    return msg == &quot;&quot;;
+}
+$(function(){
+    var code;
+    //注意
+    //注意
+    //这里需要注意，因为我之前的所有jsp页面都是在WebContent下新建的client目录下的，所以访问servlet的时候要加../如果你们不是这样的话，把../去掉才能生效。
+    $.post(&quot;../CheckCode&quot;,function(data){
+        code=data;
+    });
+    $(&quot;#a1&quot;).click(function(){
+        $(&quot;#img&quot;).attr(&quot;src&quot;,&quot;../imageCode?time=&quot;+new Date().getTime());
+    });
+    //所以我好像还要把imageCode和CheckCode这两个servlet放上来~
+    //注意
+    //注意
+    //注意
+    $(&quot;#re&quot;).click(function(){
+        $(&quot;#text1&quot;).css(&quot;display&quot;,&quot;block&quot;);
+        $(&quot;#text2&quot;).css(&quot;display&quot;,&quot;block&quot;);
+        $(&quot;#text3&quot;).css(&quot;display&quot;,&quot;block&quot;);
+        $(&quot;#emailMsg&quot;).css(&quot;display&quot;,&quot;none&quot;);
+        $(&quot;#usernameMsg&quot;).css(&quot;display&quot;,&quot;none&quot;);
+        $(&quot;#passwordMsg&quot;).css(&quot;display&quot;,&quot;none&quot;);
+        $(&quot;#confirmMsg&quot;).css(&quot;display&quot;,&quot;none&quot;);
+    });
+    $(&quot;#email&quot;).keyup(function(){
+        checkEmail();
+    });
+    $(&quot;#username&quot;).keyup(function(){
+        checkUsername();
+    });
+    $(&quot;#password&quot;).keyup(function(){
+        checkPassword();
+    });
+    $(&quot;#repassword&quot;).keyup(function(){
+        checkConfirm();
+    });
+    $(&quot;form&quot;).submit(function(){
+        $.post(&quot;../CheckCode&quot;,function(data){
+            code=data;
+        if(code==$(&quot;#code&quot;).val()){
+            return checkEmail()&amp;&amp;checkUsername()&amp;&amp;checkPassword()&amp;&amp;checkConfirm();
+        }
+        else{
+            alert(&quot;验证码错误！&quot;);
+            return false;
+        }
+        });
+    });
+});</code></pre>
+<h2 id="imagecode生成验证码">6.imageCode：生成验证码</h2>
+<h3 id="代码-5">代码</h3>
+<pre class="java"><code>package cn.edu.bdu.mc.utils;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 生成验证码的工具类
+ */
+@SuppressWarnings(&quot;serial&quot;)
+@WebServlet(&quot;/imageCode&quot;)
+public class CheckImageServlet extends HttpServlet {
+
+    // 集合中保存所有成语
+    private List&lt;String&gt; words = new ArrayList&lt;String&gt;();
+
+    @Override
+    public void init() throws ServletException {
+        // 初始化阶段，读取new_words.txt
+        // web工程中读取 文件，必须使用绝对磁盘路径
+         // 成语一会儿也发上来。。
+        String path = getServletContext().getRealPath(&quot;/WEB-INF/new_words.txt&quot;);
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream(path), &quot;utf-8&quot;));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                words.add(line);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // 禁止缓存
+        // response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
+        // response.setHeader(&quot;Pragma&quot;, &quot;no-cache&quot;);
+        // response.setDateHeader(&quot;Expires&quot;, -1);
+
+        int width = 180;
+        int height = 30;
+
+        // 步骤一 绘制一张内存中图片
+        BufferedImage bufferedImage = new BufferedImage(width, height,
+                BufferedImage.TYPE_INT_RGB);
+
+        // 步骤二 图片绘制背景颜色 ---通过绘图对象
+        Graphics graphics = bufferedImage.getGraphics();// 得到画图对象 --- 画笔
+        // 绘制任何图形之前 都必须指定一个颜色
+        graphics.setColor(getRandColor(200, 250));
+        graphics.fillRect(0, 0, width, height);
+
+        // 步骤三 绘制边框
+        graphics.setColor(Color.WHITE);
+        graphics.drawRect(0, 0, width - 1, height - 1);
+
+        // 步骤四 四个随机数字
+        Graphics2D graphics2d = (Graphics2D) graphics;
+        // 设置输出字体
+        graphics2d.setFont(new Font(&quot;宋体&quot;, Font.BOLD, 18));
+
+        Random random = new Random();// 生成随机数
+        int index = random.nextInt(words.size());
+        String word = words.get(index-1);// 获得成语
+        // 定义x坐标
+        int x = 10;
+        for (int i = 0; i &lt; word.length(); i++) {
+            // 随机颜色
+            graphics2d.setColor(new Color(20 + random.nextInt(110), 20 + random
+                    .nextInt(110), 20 + random.nextInt(110)));
+            // 旋转 -30 --- 30度
+            int jiaodu = random.nextInt(60) - 30;
+            // 换算弧度
+            double theta = jiaodu * Math.PI / 180;
+
+            // 获得字母数字
+            char c = word.charAt(i);
+
+            // 将c 输出到图片
+            graphics2d.rotate(theta, x, 20);
+            graphics2d.drawString(String.valueOf(c), x, 20);
+            graphics2d.rotate(-theta, x, 20);
+            x += 40;
+        }
+
+        // 将验证码内容保存session
+        request.getSession().setAttribute(&quot;checkcode_session&quot;, word);
+        // 步骤五 绘制干扰线
+        graphics.setColor(getRandColor(160, 200));
+        int x1;
+        int x2;
+        int y1;
+        int y2;
+        for (int i = 0; i &lt; 30; i++) {
+            x1 = random.nextInt(width);
+            x2 = random.nextInt(12);
+            y1 = random.nextInt(height);
+            y2 = random.nextInt(12);
+            graphics.drawLine(x1, y1, x1 + x2, x2 + y2);
+        }
+
+        // 将上面图片输出到浏览器 ImageIO
+        graphics.dispose();// 释放资源
+        ImageIO.write(bufferedImage, &quot;jpg&quot;, response.getOutputStream());
+
+    }
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+
+    /**
+     * 取其某一范围的color
+     * 
+     * @param fc
+     *            int 范围参数1
+     * @param bc
+     *            int 范围参数2
+     * @return Color
+     */
+    private Color getRandColor(int fc, int bc) {
+        // 取其随机颜色
+        Random random = new Random();
+        if (fc &gt; 255) {
+            fc = 255;
+        }
+        if (bc &gt; 255) {
+            bc = 255;
+        }
+        int r = fc + random.nextInt(bc - fc);
+        int g = fc + random.nextInt(bc - fc);
+        int b = fc + random.nextInt(bc - fc);
+        return new Color(r, g, b);
+    }
+
+}
+</code></pre>
+<h2 id="checkcode校验验证码">7.CheckCode：校验验证码</h2>
+<h3 id="代码-6">代码</h3>
+<pre class="java"><code>package cn.edu.bdu.mc.servlets;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@SuppressWarnings(&quot;serial&quot;)
+@WebServlet(&quot;/CheckCode&quot;)
+public class CheckCodeServlet extends HttpServlet {
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType(&quot;text/html;charset=utf-8&quot;);
+        response.getWriter().print(request.getSession().getAttribute(&quot;checkcode_session&quot;));
+        
+    }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        doGet(request, response);
+    }
+
+}
+</code></pre>
+<h2 id="new_words.txt">8.new_words.txt</h2>
+<pre class="txt"><code>五光十色
+欢声雷动
+欣喜若狂
+载歌载舞
+灯火辉煌
+春暖花开
+春色满园
+春光明媚
+春意盎然
+春回大地
+兴致勃勃
+精卫填海
+愚公移山
+百折不回
+勇往直前
+骨肉之情
+痛痒相关
+人山人海
+情深似海
+恩重如山
+循序渐进
+由浅入深
+日积月累
+温故知新
+漫山遍野
+绿叶成阴
+天长地久
+树大根深
+自由自在
+人无远虑
+必有近忧
+防患未然
+有备无患
+情不自禁
+自言自语
+临危不惧
+多谋善断
+从容不迫
+方寸不乱
+金风送爽
+雁过留声
+秋色宜人
+天朗气清
+日月如梭
+光阴似箭
+寒来暑往
+星移物换
+风吹草动
+雨过天晴
+瓜熟蒂落
+水到渠成
+人外有人
+天外有天
+学无止境
+一往无前
+滴水成冰
+地冻天寒
+鹅毛大雪
+雪兆丰年
+勤能补拙
+笨鸟先飞
+人一已百
+奋起直追
+宁折不弯
+义正辞严
+威武不屈
+大义凛然
+火树银花
+数不胜数
+灯火通明
+观者如堵
+一望无边
+不知不觉
+雪窖冰天
+勤学苦练
+无家可归
+千山万水
+千辛万苦
+三五成群
+无忧无虑
+引吭高歌
+连绵起伏
+满面红光
+张灯结彩
+欢聚一堂
+普天同庆
+喜气洋洋
+百花盛开
+争奇斗艳
+五彩缤纷
+色色俱全
+得意洋洋
+天长日久
+狐假虎威
+半信半疑
+神气活现
+摇头摆尾
+东张西望
+大摇大摆
+跋山涉水
+餐风饮露
+水送山迎
+赏心悦目
+生机勃勃
+心狠手辣
+起早贪黑
+神通广大
+高耸入云
+日思夜想
+重见天日
+舐犊之爱
+乌鸟私情
+天伦之乐
+其乐无穷
+摩拳擦掌
+生龙活虎
+身强力壮
+铜筋铁骨
+专心致志
+聚精会神
+无可奈何
+一本正经
+千家万户
+莘莘学子
+立雪求道
+春风化雨
+孺子可教
+昏头昏脑
+密密麻麻
+闻名中外
+金光灿灿
+色彩斑斓
+五颜六色
+翩翩起舞
+感人肺腑
+可歌可泣
+艰苦卓绝
+惊天动地
+南来北往
+披星戴月
+流星赶月
+众星捧月
+烘云托月
+惊涛拍岸
+意味深长
+根深固本
+浇树浇根
+根深叶茂
+叶落归根
+一碧如洗
+热闹非凡
+层层叠叠
+心旷神怡
+高堂广厦
+玉宇琼楼
+错落有致
+曲径通幽
+千岩竞秀
+万壑争流
+目不暇接
+美不胜收
+生根长叶
+竞相开放
+胡作非为
+兴风作浪
+雏鹰展翅
+老马识途
+鱼贯而入
+倾巢而出
+鸡飞狗跳
+狼奔豕突
+群龙无首
+狡兔三窟
+万般无奈
+转弱为强
+忍辱负重
+以屈求伸
+发奋图强
+救亡图存
+卧薪尝胆
+催人奋进
+羽翼丰满
+报仇雪恨
+举世闻名
+人流如潮
+驰名中外
+红白相间
+大街小巷
+人头攒动
+风驰电掣
+车水马龙
+华灯初上
+流光溢彩
+美轮美奂
+巧夺天工
+气势汹汹
+不由分说
+蛮不讲理
+一拥而上
+无影无踪
+干干净净
+和风细雨
+呼风唤雨
+栉风沐雨
+未风先雨
+见风是雨
+叶公好龙
+凄风苦雨
+暴风骤雨
+渐渐平息
+经久不息
+蜂拥而至
+一无所获
+埋头苦干
+倾盆大雨
+戎马一生
+身经百战
+刮骨疗毒
+传为美谈
+约法三章
+秋毫无犯
+运筹帷幄
+好谋善断
+天各一方
+一年一度
+学海无涯
+书山有路
+九牛一毛
+沧海一粟
+孜孜以求
+全力以赴
+百尺竿头
+更进一步
+水天相连
+星罗棋布
+变幻无常
+腾云驾雾
+千姿百态
+云遮雾罩
+瞬息万变
+一泻千里
+四蹄生风
+黔驴技穷
+流连忘返
+气象万千
+风云变幻
+奇峰异岭
+若隐若现
+飘飘欲仙
+白云苍狗
+恍然大悟
+不以为然
+有利可图
+有机可乘
+有根有底
+有始有终
+有口难言
+有恃无恐
+有求必应
+有志竟成
+平平展展
+尽心尽力
+神勇无比
+运足气力
+胸有成竹
+文思如泉
+风华正茂
+出类拔萃
+才思敏捷
+后生可畏
+手不停挥
+笔下生花
+力透纸背
+精妙绝伦
+炉火纯青
+活灵活现
+栩栩如生
+梦笔生花
+浑然天成
+斗酒百篇
+鬼哭神惊
+喜出望外
+谈笑风生
+沙漠之舟
+自强不息
+忍辱负重
+始终如一
+飞沙走石
+志在千里
+义无反顾
+坚定不移
+七嘴八舌
+成千上万
+坐观成败
+按兵不动
+操之过急
+轻举妄动
+兴风作浪
+蠢蠢欲动
+雷厉风行
+闻风而动
+展翅高飞
+望而生畏
+窃窃私语
+烟波浩渺
+一碧万顷
+游人如织
+一帆风顺
+风平浪静
+鸥水相依
+海波不惊
+揠苗助长
+郑人买履
+振振有词
+争论不休
+充满信心
+杯弓蛇影
+螳螂捕蝉
+鹬蚌相争
+欢天喜地
+古今中外
+情不自禁
+心绪不宁
+各奔东西
+悲欢离合
+手足情深
+蓬蓬勃勃
+井井有条
+羊肠小道
+文思敏捷
+聪明过人
+青出于蓝
+一鸣惊人
+桃李争妍
+后继有人
+十年树木
+百年树人
+遥遥相对
+笑语盈盈
+雄伟壮丽
+格外挺拔
+尽收眼底
+雕梁画栋
+永垂不朽
+花团锦簇
+姹紫嫣红
+水泄不通
+以身许国
+碧血丹心
+年复一年
+疾恶如仇
+敢怒敢言
+忧国忧民
+横眉冷对
+浩气长存
+大义灭亲
+若无其事
+蔚为壮观
+诗情画意
+雪峰插云
+古木参天
+平湖飞瀑
+异兽珍禽
+极目远眺
+辽阔无垠
+默默无闻
+悠然自得
+湖光山色
+人间天堂
+明月清风
+桂子飘香
+水光接天
+相得益彰
+江山如画
+鱼米之乡
+开天辟地
+精疲力竭
+纵横交错
+小心翼翼
+大发雷霆
+不远万里
+悬崖绝壁
+日复一日
+混沌不分
+昏天黑地
+大刀阔斧
+与日俱增
+顶天立地
+变化万端
+改天换地
+远渡重洋
+名列前茅
+滚瓜烂熟
+毫不气馁
+有所作为
+长年累月
+断垣残壁
+若有所悟
+乘风破浪
+浑身无力
+不知不觉
+起死回生
+息息相关
+丰富多彩
+远在天涯
+近在咫尺
+天南地北
+万水千山
+无所不有
+足不出户
+学富五车
+学贯中西
+博古通今
+功成名就
+著作等身
+温文尔雅
+文质彬彬
+不由自主
+浩浩荡荡
+滥杀无辜
+恩将仇报
+千恩万谢
+见利忘义
+背信弃义
+肝胆相照
+开诚相见
+同舟共济
+心照不宣
+志同道合
+荣辱与共
+唇亡齿寒
+亲密无间
+洁白晶莹
+琼枝玉树
+千姿百态
+欣欣向荣
+万紫千红
+开卷有益
+抑扬顿挫
+春满人间
+千帆竞发
+万马奔腾
+六畜兴旺
+五谷丰登
+国泰民安
+人寿年丰
+欢声笑语
+绿色工厂
+春深似海
+风月无边
+世外桃源
+山外有山
+飞瀑流泉
+古木参天
+诗情画意
+蔚为壮观
+循规蹈矩
+鲜为人知
+漫山遍野
+微不足道
+机毁人亡
+轻而易举
+浅尝辄止
+囫囵吞枣
+浮光掠影
+不甚了了
+天道酬勤
+熟能生巧
+寻根问底
+无所不晓
+三顾茅庐
+蜿蜒起伏
+青翠欲滴
+秀丽宜人
+群雄纷争
+茅塞顿开
+一唱一和
+一呼百应
+一干二净
+一举两得
+一落千丈
+一模一样
+一暴十寒
+一日千里
+一五一十
+一心一意
+两面三刀
+三长两短
+三番五次
+三三两两
+三头六臂
+三心二意
+三言两语
+四分五裂
+四面八方
+四通八达
+四平八稳
+五光十色
+五湖四海
+五花八门
+五颜六色
+六神无主
+七颠八倒
+七零八落
+七拼八凑
+七上八下
+七手八脚
+七嘴八舌
+八面玲珑
+九死一生
+十全十美
+百发百中
+百孔千疮
+百战百胜
+百依百顺
+千变万化
+千差万别
+千军万马
+千山万水
+千丝万缕
+千辛万苦
+千言万语
+千真万确
+千锤百炼
+千方百计
+千奇百怪
+千姿百态
+千钧一发
+千虑一得
+千虑一失
+千篇一律
+万水千山
+万无一失
+万众一心
+万紫千红
+万死一生
+推心置腹
+肝胆相照
+情同手足
+志同道合
+风雨同舟
+荣辱与共
+同甘共苦
+关怀备注
+心心相印
+海誓山盟
+拔刀相助
+亲密无间
+万紫千红
+春暖花开
+鸟语花香
+姹紫嫣红
+花红柳绿
+百花争艳
+锦上添花
+火树银花
+昨日黄花
+春花秋月
+过时黄花
+花团锦簇
+花枝招展
+崇山峻岭
+山明水秀
+山穷水尽
+大好山河
+刀山火海
+地动山摇
+高山深涧
+悬崖峭壁
+峰峦雄伟
+漫山遍野
+江山如画
+锦绣山河
+五彩缤纷
+五颜六色
+一碧千里
+万紫千红
+花红柳绿
+翠色欲流
+姹紫嫣红
+五光十色
+青红皂白
+绿水青山
+不可多得
+凤毛麟角
+九牛一毛
+绝无仅有
+空前绝后
+寥寥无几
+寥若晨星
+宁缺毋滥
+前所未有
+屈指可数
+三三两两
+铁树开花
+微乎其微
+一麟半爪
+一丝一毫
+百里挑一
+沧海一粟
+千古绝唱
+摩肩接踵
+车水马龙
+川流不息
+纷至沓来
+花花世界
+举袖为云
+挥汗如雨
+络绎不绝
+门庭若市
+万人空巷
+水泄不通
+人声鼎沸
+人欢马叫
+人山人海
+震耳欲聋
+座无虚席
+包罗万象
+琳琅满目
+美不胜收
+目不暇接
+无奇不有
+无穷无尽
+无所不包
+五花八门
+眼花缭乱
+洋洋大观
+一应俱全
+应有尽有
+应接不暇
+比比皆是
+不可计数
+层出不穷
+绰绰有余
+多多益善
+多如牛毛
+俯拾皆市
+举不胜举
+漫山遍野
+星罗棋布
+丰富多彩
+九霄云外
+腾云驾雾
+壮志凌云
+风云变幻
+风起云涌
+行云流水
+风卷残云
+浮云蔽日
+孤云野鹤
+烘云托月
+过眼云烟
+烟消云散
+大雨倾盆
+血雨腥风
+风雨交加
+风调雨顺
+枪林弹雨
+风雨同舟
+风雨无阻
+和风细雨
+狂风暴雨
+满城风雨
+滂沱大雨
+春风化雨
+风雨飘摇
+斜风细雨
+未雨绸缪
+水流湍急
+水平如镜
+高山流水
+千山万水
+水滴石穿
+水乳交融
+滴水不漏
+杯水车薪
+洪水猛兽
+流水无情
+直言不讳
+无所顾忌
+拐弯抹角
+真心诚意
+故弄玄虚
+侃侃而谈
+滔滔不绝
+虚情假意
+推心置腹
+旁敲侧击
+喋喋不休
+慢条斯理
+含糊其词
+唠唠叨叨
+振振有辞
+肆无忌惮
+大言不惭
+娓娓动听
+绘声绘色
+对答如流
+自圆其说
+闲言碎语
+闭月羞花
+沉鱼落雁
+出水芙蓉
+明眸皓齿
+美如冠玉
+倾国倾城
+国色天香
+鹤发童颜
+眉清目秀
+和蔼可亲
+心慈面善
+张牙舞爪
+愁眉苦脸
+冰清玉洁
+雍容华贵
+文质彬彬
+威风凛凛
+老态龙钟
+虎背熊腰
+如花似玉
+容光焕发
+落落大方
+骨瘦如柴
+大腹便便
+面黄肌瘦
+其貌不扬
+蓬头垢面
+弱不禁风
+口若悬河
+对答如流
+滔滔不绝
+谈笑风生
+高谈阔论
+豪言壮语
+夸夸其谈
+花言巧语
+忐忑不安
+心惊肉跳
+心神不定
+心猿意马
+心慌意乱
+七上八下
+心急如焚
+班门弄斧
+孤芳自赏
+居功自傲
+目中无人
+妄自尊大
+忘乎所以
+惟我独尊
+自高自大
+自鸣得意
+自我陶醉
+自命不凡
+目空一切
+不骄不躁
+功成不居
+戒骄戒躁
+洗耳恭听
+虚怀若谷
+慎言谨行
+学无止境
+学而不厌
+真才实学
+学而不倦
+发奋图强
+废寝忘食
+争分夺秒
+孜孜不倦
+笨鸟先飞
+闻鸡起舞
+自强不息
+只争朝夕
+不甘示弱
+全力以赴
+力争上游
+披荆斩棘
+奋不顾身
+舍己为人
+坚强不屈
+赤胆忠心
+不屈不挠
+忠贞不渝
+誓死不二
+威武不屈
+舍死忘生
+肝胆相照
+克己奉公
+一丝不苟
+两袖清风
+见礼忘义
+永垂不朽
+顶天立地
+豁达大度
+兢兢业业
+卖国求荣
+恬不知耻
+贪生怕死
+厚颜无耻
+神采奕奕
+眉飞色舞
+昂首挺胸
+惊慌失措
+漫不经心
+垂头丧气
+没精打采
+愁眉苦脸
+大惊失色
+炯炯有神
+怒发冲冠
+一目十行
+一日千里
+一字千金
+百发百中
+一日三秋
+不毛之地
+不计其数
+胆大包天
+寸步难行
+一步登天
+千钧一发
+观者如云
+挥金如土
+铁证如山
+爱财如命
+稳如泰山
+门庭若市
+骨瘦如柴
+冷若冰霜
+如雷贯耳
+守口如瓶
+浩如烟海
+高手如林
+阳春三月
+春光明媚
+春回大地
+春暖花开
+春意盎然
+春意正浓
+风和日丽
+春花烂漫
+鸟语花香
+百鸟鸣春
+百花齐放
+莺歌燕舞
+赤日炎炎
+烈日炎炎
+骄阳似火
+挥汗如雨
+大汗淋漓
+鸟语蝉鸣
+万木葱茏
+枝繁叶茂
+莲叶满池
+秋高气爽
+天高云淡
+秋风送爽
+秋菊怒放
+秋菊傲骨
+秋色迷人
+秋色宜人
+金桂飘香
+果实累累
+北雁南飞
+满山红叶
+五谷丰登
+芦花飘扬
+天寒地冻
+北风呼啸
+滴水成冰
+寒冬腊月
+瑞雪纷飞
+冰天雪地
+冰封雪盖
+漫天飞雪
+白雪皑皑
+冰封大地
+冰天雪地
+东方欲晓
+旭日东升
+万物初醒
+空气清醒
+雄鸡报晓
+晨雾弥漫
+晨光绚丽
+烈日当头
+丽日临空
+艳阳高照
+万里无云
+碧空如洗
+日落西山
+夕阳西斜
+残阳如血
+炊烟四起
+百鸟归林
+华灯初上
+夜幕低垂
+日薄西山
+夜深人静
+月明星稀
+夜色柔美
+夜色迷人
+深更半夜
+漫漫长夜
+风光秀丽
+人山人海
+车水马龙
+宁静和谐
+草木苍翠
+竹篱瓦舍
+山幽路辟
+小桥流水
+直指青云
+古色古香
+青砖素瓦
+耸入碧云
+机器轰鸣
+铁流直泻
+热气腾腾
+钢花飞溅
+粉饰一新
+门可罗雀
+冷冷清清
+错落有致
+富丽堂皇
+设施齐全
+气势雄伟
+金碧辉煌
+风景如画
+闻名遐迩
+井然有序
+杂乱无章
+布局巧妙
+错落有致
+宽阔平坦
+崎岖不平
+拥挤不堪
+畅通无阻
+花红柳绿
+花色迷人
+花香醉人
+花枝招展
+百花齐放
+百花盛开
+百花争艳
+绚丽多彩
+五彩缤纷
+姹紫嫣红
+绿草如茵
+一碧千里
+杂草丛生
+生机勃勃
+苍翠挺拔
+郁郁葱葱
+枯木逢春
+秀丽多姿
+青翠欲滴
+林海雪原
+耸入云天
+瓜果蔬菜
+清香鲜嫩
+青翠欲滴
+果园飘香
+果实累累
+果实饱满
+鲜嫩水灵
+象征和平
+乳燕初飞
+婉转悦耳
+莺歌燕舞
+翩然归来
+枝头嬉戏
+灰不溜秋
+叽叽喳喳
+鹦鹉学舌
+婉转悦耳
+笨嘴学舌
+利嘴如铁
+钢爪如钉
+神气活现
+昂首挺胸
+肥大丰满
+自由自在
+引吭高歌
+腾空而起
+狂奔飞驰
+膘肥体壮
+昂首嘶鸣
+瘦骨嶙峋
+行动迟缓
+俯首帖耳
+膘肥体壮
+川流不息
+呼啸而过
+穿梭往来
+缓缓驶离
+一叶扁舟
+扬帆远航
+乘风破浪
+雾海夜航
+追波逐浪
+划破云层
+直冲云霄
+穿云而过
+银鹰展翅
+学习用品
+美观实用
+小巧玲珑
+造型优美
+设计独特
+栩栩如生
+活泼可爱
+惹人喜爱
+爱不释手
+雨后彩虹
+彩桥横空
+若隐若现
+光芒万丈
+大雪纷飞
+大雪封山
+鹅毛大雪
+漫天飞雪
+瑞雪纷飞
+林海雪原
+风雪交加
+雪上加霜
+寒霜袭人
+霜林尽染
+垂露欲滴
+朝露晶莹
+日出露干
+电光石火
+雷电大作
+惊天动地
+春雷滚滚
+电劈石击
+雷电交加
+阴雨连绵
+牛毛细雨
+秋雨连绵
+随风飘洒
+倾盆大雨
+狂风暴雨
+大雨滂沱
+瓢泼大雨
+大雨淋漓
+暴雨如注
+秋风送爽
+金风送爽
+北风呼啸
+微风习习
+寒风刺骨
+风和日丽
+大雾迷途
+云雾茫茫
+雾似轻纱
+风吹雾散
+云消雾散
+彩云满天
+天高云淡
+乌云翻滚
+彤云密布
+彩霞缤纷
+晚霞如火
+朝霞灿烂
+丹霞似锦
+满天星斗
+众星捧月
+群星灿烂
+万点繁星
+月出东墙
+月出东山
+玉兔东升
+月光皎洁
+月色迷人
+月牙初升
+旭日东升
+日上三竿
+一轮红日
+日高三尺
+艳阳高照
+烈日当头
+骄阳似火
+日影西斜
+苦口婆心
+口若悬河
+心平气和
+不慌不忙
+语重心长
+热情洋溢
+恭恭敬敬
+洗耳恭听
+亲密无间
+形影不离
+情同手足
+团结友爱
+朝夕相处
+人山人海
+人声喧哗
+人声嘈杂
+人如潮涌
+摩肩接踵
+倾盆大雨
+狂风暴雨
+大雨滂沱
+瓢泼大雨
+读书学习
+神情专注
+学而不厌
+学无止境
+专心致志
+日积月累
+似懂非懂
+普天同庆
+彩旗飞舞
+欢天喜地
+张灯结彩
+彻夜狂欢
+兴高采烈
+手舞足蹈
+笨手笨脚
+挤眉弄眼</code></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

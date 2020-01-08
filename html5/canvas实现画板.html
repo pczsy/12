@@ -1,0 +1,241 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas实现画板' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas实现画板</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/10784936.html</div><br>
+    <h2 id="canvas实现画板">canvas实现画板</h2>
+<h3 id="主要用到知识点">主要用到知识点：</h3>
+<ul>
+<li>鼠标事件onmousedown() onmousemove() onmouseup() onmouseleave()</li>
+<li>事件委托</li>
+<li><p>canvas的一些方法 如：绘制线条moveTo() lineTo() stroke() 撤销功能getImageData() putImageData()</p>
+<h3 id="实现的功能">实现的功能</h3></li>
+<li>铅笔 橡皮擦 更换颜色 改变线条粗细 清屏 撤销 以及保存功能</li>
+<li><p>直接看效果</p></li>
+</ul>
+<p><img src="./images/canvas实现画板0.png" alt="Alt" /></p>
+<h3 id="html">html：</h3>
+<pre><code><code>   &lt;div class=&quot;wraper&quot;&gt;
+        &lt;canvas class=&quot;canvas&quot; width=&quot;1000&quot; height=&quot;500&quot;&gt;&lt;/canvas&gt;
+        &lt;ul class=&quot;btn-list&quot;&gt;
+            &lt;li&gt;&lt;input type=&quot;color&quot; class=&quot;colorBoard&quot; value=&quot;#000000&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;button&quot; class=&quot;clearBoard&quot; value=&quot;清屏&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;button&quot; class=&quot;pencil&quot; value=&quot;铅笔&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;button&quot; class=&quot;eraser&quot; value=&quot;橡皮擦&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;button&quot; class=&quot;repeal&quot; value=&quot;撤销&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;button&quot; class=&quot;save&quot; value=&quot;保存&quot;&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;input type=&quot;range&quot; class=&quot;rangeBoard&quot; value=&quot;1&quot; min=&quot;1&quot; max=&quot;30&quot;&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+        &lt;span class=&quot;icon pencil-class&quot;&gt;&lt;/span&gt;
+    &lt;/div&gt;</code></pre>
+<h3 id="css">css：</h3>
+<pre class="css"><code>    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        background: url(&#39;../img/bg_board.jpg&#39;) no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .wraper {
+        width: 1200px;
+        position: relative;
+    }
+    .wraper .canvas {
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 10px 10px 12px rgba(0, 0, 0, 0.5);
+    }
+    .wraper .icon {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        display: none;
+        z-index: 9998;
+        pointer-events: none;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+    }
+    .wraper .pencil-class {
+        background-image: url(&#39;../img/pencil.png&#39;);
+    }
+    .wraper .eraser-class {
+        background-image: url(&#39;../img/eraser.png&#39;);
+    }
+    .wraper .btn-list {
+        width: 1000px;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .wraper .btn-list li {
+        display: inline-block;
+        margin: 10px;
+    }
+    .wraper .btn-list li input {
+        padding: 10px 15px;
+        background: yellow;
+        color: #000;
+        border-radius: 10px;
+        font-size: 15px;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        border: 1px solid transparent;
+    }
+    .wraper .btn-list li input.rangeBoard {
+        vertical-align: middle;
+    }
+    .wraper .btn-list li input:hover {
+        border: 1px solid #ccc;
+        box-shadow: 0 10px 12px #ccc;
+    }</code></pre>
+<h3 id="js">js：</h3>
+<pre class="javascript"><code>    var canvasBoard ={
+        canvas:$(&#39;.canvas&#39;),
+        ctx: $(&#39;.canvas&#39;).get()[0].getContext(&quot;2d&quot;),
+        bool:true,
+        color:&#39;#000000&#39;,//颜色
+        weight:&#39;1&#39;,//粗细
+        arr:[],
+        init:function(){
+            this.drawBoard();
+            this.btnList();
+        },
+        drawBoard: function(){
+            let _this =this;
+            let ctx = _this.ctx;
+            let canvas = this.canvas;
+            canvas.mousedown(function(ev){
+                ev = ev || window.event;
+                _this.bool = true;
+                ctx.beginPath();
+                ctx.lineCap = &quot;round&quot;;
+                ctx.lineJoin = &quot;round&quot;;
+                ctx.moveTo(ev.offsetX, ev.offsetY);
+                $(&#39;body&#39;).css(&#39;cursor&#39;,&#39;none&#39;);
+                $(&#39;.icon&#39;).css({
+                    left: ev.offsetX,
+                    top: ev.offsetY - 20,
+                    display:&#39;block&#39;
+                })
+                canvas.mousemove(function(ev){
+                    if(_this.bool){
+                        ev = ev || window.event;
+                        ctx.lineTo(ev.offsetX,ev.offsetY);
+                        ctx.stroke();
+                    }
+                    $(&#39;.icon&#39;).css({
+                        left: ev.offsetX,
+                        top: ev.offsetY - 20,
+                        display: &#39;block&#39;
+                    })
+                    $(&#39;body&#39;).css(&#39;cursor&#39;, &#39;none&#39;);
+                })
+                canvas.mouseup(function(){
+                    _this.bool = false;
+                    ctx.closePath();
+                })
+                canvas.mouseleave(function () {
+                    _this.bool = false;
+                    ctx.closePath();
+                    $(&#39;.icon&#39;).css({
+                        display: &#39;none&#39;
+                    })
+                    $(&#39;body&#39;).css(&#39;cursor&#39;, &#39;auto&#39;);
+                })
+                let imgData = ctx.getImageData(0, 0, canvas.get()[0].width, canvas.get()[0].height)
+                _this.arr.push(imgData);
+            })
+        },
+        btnList(){
+            var _this = this;
+            let ctx = _this.ctx;
+            $(&#39;.btn-list&#39;).on(&#39;click&#39;,function(ev){
+                ev = ev || window.event;
+                let canvasW = _this.canvas.get()[0].width;
+                let canvasH = _this.canvas.get()[0].height;
+                switch (ev.target.className){
+                    case &#39;clearBoard&#39;:
+                        ctx.clearRect(0, 0, canvasW, canvasH);
+                        break; 
+                    case &#39;pencil&#39;:
+                        _this.color = &#39;#000000&#39;;
+                        ctx.strokeStyle = _this.color;
+                        _this.weight = &#39;1&#39;;
+                        ctx.lineWidth = _this.weight;
+                        $(&#39;.colorBoard&#39;).val(_this.color);
+                        $(&#39;.rangeBoard&#39;).val(_this.weight);
+                        $(&#39;.icon&#39;).removeClass(&#39;eraser-class&#39;).addClass(&#39;pencil-class&#39;);
+                        break; 
+                    case &#39;eraser&#39;:
+                        _this.color = &#39;#ffffff&#39;;
+                        ctx.strokeStyle = _this.color;
+                        _this.weight = &#39;15&#39;;
+                        ctx.lineWidth = _this.weight;
+                        $(&#39;.colorBoard&#39;).val(_this.color);
+                        $(&#39;.rangeBoard&#39;).val(_this.weight);
+                        $(&#39;.icon&#39;).removeClass(&#39;pencil-class&#39;).addClass(&#39;eraser-class&#39;);
+                        break;
+                    case &#39;repeal&#39;:
+                        if(_this.arr.length &gt;0){
+                            ctx.putImageData(_this.arr.pop(),0,0);
+                        }
+                        break;
+                    case &#39;save&#39;:
+                        let imgUrl = _this.canvas.get()[0].toDataURL(&quot;image/png&quot;);
+                        let saveA = document.createElement(&quot;a&quot;);
+                        document.body.appendChild(saveA);
+                        saveA.href = imgUrl;
+                        saveA.download = &quot;mypic&quot; + (new Date).getTime();
+                        saveA.target = &quot;_blank&quot;;
+                        saveA.click();
+                        break;    
+                }
+            })
+            $(&#39;.colorBoard&#39;).change(function(){
+                _this.color = $(this).val();
+                _this.ctx.strokeStyle = _this.color;
+                if ($(this).val() != &#39;#ffffff&#39;){
+                    $(&#39;.icon&#39;).removeClass(&#39;eraser-class&#39;).addClass(&#39;pencil-class&#39;);
+                }
+            })
+            $(&#39;.rangeBoard&#39;).change(function () {
+                _this.weight = $(this).val();
+                _this.ctx.lineWidth = _this.weight;
+            })
+        }
+    }
+    canvasBoard.init();</code></pre>
+<p>参考自：腾讯课堂渡一教育</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

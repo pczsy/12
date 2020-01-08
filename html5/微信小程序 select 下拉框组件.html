@@ -1,0 +1,242 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序 select 下拉框组件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序 select 下拉框组件</center></div><div class='banquan'>原文出处:本文由博客园博主similar提供。<br/>
+原文连接:https://www.cnblogs.com/similar/p/11469091.html</div><br>
+    <p><strong>一、源码地址</strong></p>
+<p><a href="https://github.com/imxiaoer/WeChatMiniSelect" target="_blank">https://github.com/imxiaoer/WeChatMiniSelect</a></p>
+<p>&nbsp;</p>
+<p><strong>二、效果图</strong></p>
+<p><img src="./images/微信小程序 select 下拉框组件0.png" alt="" /></p>
+<p>录屏图片质量较差，所以大家会看到残影（捂脸）</p>
+<p>&nbsp;</p>
+<p><strong>三、组件源码</strong></p>
+<p>1. select.wxml</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="select-box"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="select-current"</span><span style="color: #ff0000;"> catchtap</span><span style="color: #0000ff;">="openClose"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="current-name"</span><span style="color: #0000ff;">&gt;</span>{{current.name}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">view</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="option-list"</span><span style="color: #ff0000;"> wx:if</span><span style="color: #0000ff;">="{{isShow}}"</span><span style="color: #ff0000;"> catchtap</span><span style="color: #0000ff;">="optionTap"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="option"</span><span style="color: #ff0000;">
+      data-id</span><span style="color: #0000ff;">="{{defaultOption.id}}"</span><span style="color: #ff0000;">
+      data-name</span><span style="color: #0000ff;">="{{defaultOption.name}}"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">{{defaultOption.name}}
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="option"</span><span style="color: #ff0000;">
+      wx:for</span><span style="color: #0000ff;">="{{result}}"</span><span style="color: #ff0000;">
+      wx:key</span><span style="color: #0000ff;">="{{item.id}}"</span><span style="color: #ff0000;">
+      data-id</span><span style="color: #0000ff;">="{{item.id}}"</span><span style="color: #ff0000;">
+      data-name</span><span style="color: #0000ff;">="{{item.name}}"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">{{item.name}}
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">view</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">view</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>说明：用 catchtap 而不用 bindtap 是为了阻止事件冒泡，为了实现点击页面其他地方关闭 select， 所以在父页面（index.wxml）最外层绑定了 bindtap="close" 方法， 不阻止冒泡的话会执行父组件的 close 方法</p>
+<p>&nbsp;</p>
+<p>2. select.js</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">Component({
+  properties: {
+    options: {
+      type: Array,
+      value: []
+    },
+    defaultOption: {
+      type: Object,
+      value: {
+        id: </span>'000'<span style="color: #000000;">,
+        name: </span>'全部城市'<span style="color: #000000;">
+      }
+    },
+    key: {
+      type: String,
+      value: </span>'id'<span style="color: #000000;">
+    },
+    text: {
+      type: String,
+      value: </span>'name'<span style="color: #000000;">
+    }
+  },
+  data: {
+    result: [],
+    isShow: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+    current: {}
+  },
+  methods: {
+    optionTap(e) {
+      let dataset </span>=<span style="color: #000000;"> e.target.dataset
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+        current: dataset,
+        isShow: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+      });
+
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> 调用父组件方法，并传参</span>
+      <span style="color: #0000ff;">this</span>.triggerEvent("change"<span style="color: #000000;">, { ...dataset })
+    },
+    openClose() {
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+        isShow: </span>!<span style="color: #0000ff;">this</span><span style="color: #000000;">.data.isShow
+      })
+    },
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 此方法供父组件调用</span>
+<span style="color: #000000;">    close() {
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+        isShow: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">
+      })
+    }
+  },
+  lifetimes: {
+    attached() {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> 属性名称转换, 如果不是 { id: '', name:'' } 格式，则转为 { id: '', name:'' } 格式</span>
+      let result =<span style="color: #000000;"> []
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.data.key !== 'id' || <span style="color: #0000ff;">this</span>.data.text !== 'name'<span style="color: #000000;">) {       
+        </span><span style="color: #0000ff;">for</span> (let item of <span style="color: #0000ff;">this</span><span style="color: #000000;">.data.options) {
+          let { [</span><span style="color: #0000ff;">this</span>.data.key]: id, [<span style="color: #0000ff;">this</span>.data.text]: name } =<span style="color: #000000;"> item
+          result.push({ id, name })
+        }
+      }
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.setData({
+        current: Object.assign({}, </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.data.defaultOption),
+        result: result
+      })
+    }
+  }
+})</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>说明：properties中的 key 和 text 是为了做属性名转换。比如我现在的数据结构如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">[{
+      city_id: </span>'001'<span style="color: #000000;">,
+      city_name: </span>'北京'<span style="color: #000000;">
+    }, {
+      city_id: </span>'002'<span style="color: #000000;">,
+      city_name: </span>'上海'<span style="color: #000000;">
+    }, {
+      city_id: </span>'003'<span style="color: #000000;">,
+      city_name: </span>'深圳'<span style="color: #000000;">
+ }]</span></pre>
+</div>
+<p>而 select 组件要求的数据结构是：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">[{
+      id: </span>'001'<span style="color: #000000;">,
+      name: </span>'北京'<span style="color: #000000;">
+    }, {
+      id: </span>'002'<span style="color: #000000;">,
+      name: </span>'上海'<span style="color: #000000;">
+    }, {
+      id: </span>'003'<span style="color: #000000;">,
+      name: </span>'深圳'<span style="color: #000000;">
+}]</span></pre>
+</div>
+<p>因此我们就要将 city_id 转换成 id，city_name 转换成 name。 怎么实现属性名转换呢？ 就是通过 key 和 text 这两个参数。</p>
+<p>&nbsp;</p>
+<p>3. select.json</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">{
+  </span>"component": <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+  </span>"usingComponents"<span style="color: #000000;">: {}
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>4. select.wxss</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.select-box </span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+  font-size</span>:<span style="color: #0000ff;"> 30rpx</span>;
+}<span style="color: #800000;">
+
+.select-current </span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> 0 10rpx</span>;<span style="color: #ff0000;">
+  line-height</span>:<span style="color: #0000ff;"> 70rpx</span>;<span style="color: #ff0000;">
+  border</span>:<span style="color: #0000ff;"> 1rpx solid #ddd</span>;<span style="color: #ff0000;">
+  border-radius</span>:<span style="color: #0000ff;"> 6rpx</span>;<span style="color: #ff0000;">
+  box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;
+}<span style="color: #800000;">
+
+.select-current::after </span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+  right</span>:<span style="color: #0000ff;"> 16rpx</span>;<span style="color: #ff0000;">
+  top</span>:<span style="color: #0000ff;"> 30rpx</span>;<span style="color: #ff0000;">
+  content</span>:<span style="color: #0000ff;"> ''</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+  border</span>:<span style="color: #0000ff;"> 10rpx solid transparent</span>;<span style="color: #ff0000;">
+  border-top</span>:<span style="color: #0000ff;"> 10rpx solid #999</span>;
+}<span style="color: #800000;">
+
+.current-name </span>{<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 85%</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+  word-wrap</span>:<span style="color: #0000ff;"> normal</span>;<span style="color: #ff0000;">
+  overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+
+.option-list </span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+  left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+  top</span>:<span style="color: #0000ff;"> 76rpx</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> 12rpx 20rpx 10rpx 20rpx</span>;<span style="color: #ff0000;">
+  border-radius</span>:<span style="color: #0000ff;"> 6rpx</span>;<span style="color: #ff0000;">
+  box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;<span style="color: #ff0000;">
+  z-index</span>:<span style="color: #0000ff;"> 99</span>;<span style="color: #ff0000;">
+  box-shadow</span>:<span style="color: #0000ff;"> 0rpx 0rpx 1rpx 1rpx rgba(0, 0, 0, 0.2) inset</span>;<span style="color: #ff0000;">
+  background-color</span>:<span style="color: #0000ff;"> #fff</span>;
+}<span style="color: #800000;">
+
+.option </span>{<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100%</span>;<span style="color: #ff0000;">
+  line-height</span>:<span style="color: #0000ff;"> 70rpx</span>;<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> 1rpx solid #eee</span>;
+}<span style="color: #800000;">
+
+.option:last-child </span>{<span style="color: #ff0000;">
+  border-bottom</span>:<span style="color: #0000ff;"> none</span>;<span style="color: #ff0000;">
+  padding-bottom</span>:<span style="color: #0000ff;"> 0</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<strong>四、组件的使用</strong></p>
+<p>index.wxml</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container"</span><span style="color: #ff0000;"> bindtap</span><span style="color: #0000ff;">="close"</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">view </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="select-wrap"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">select </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="select"</span><span style="color: #ff0000;"> options</span><span style="color: #0000ff;">="{{options}}"</span><span style="color: #ff0000;"> key</span><span style="color: #0000ff;">="city_id"</span><span style="color: #ff0000;"> text</span><span style="color: #0000ff;">="city_name"</span><span style="color: #ff0000;"> bind:change</span><span style="color: #0000ff;">="change"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">select</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">view</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">view</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

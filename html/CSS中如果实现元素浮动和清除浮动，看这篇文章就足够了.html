@@ -1,0 +1,1011 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了</center></div><div class='banquan'>原文出处:本文由博客园博主微笑是最初的信仰提供。<br/>
+原文连接:https://www.cnblogs.com/lq0001/p/11967202.html</div><br>
+    <h2 id="浮动基本介绍">浮动基本介绍</h2>
+<ul>
+<li>在标准文档流中元素分为2种，<code>块级元素</code>和<code>行内元素</code>，如果想让一些元素既要有块级元素的特点也同时保留行内元素特点，只能让这些元素脱离标准文档流即可。</li>
+<li>浮动可以让元素脱离标准文档流，可以实现让多个元素排在同一行，并且可以设置宽高度。</li>
+<li>其实浮动是通过<code>float</code>属性来实现的。</li>
+<li><code>float</code>属性值说明表：</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>属性值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>left</td>
+<td>设置元素向左浮动。</td>
+</tr>
+<tr class="even">
+<td>right</td>
+<td>设置元素向右浮动。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="右浮动实践">右浮动实践</h3>
+<ul>
+<li>让我们进入右浮动的实践，实践内容如：将<code>class</code>属性值为<code>.box1</code>元素设置为右浮动。</li>
+<li>在进入有浮动实践之前我们先看看要浮动元素结构是什么。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了0.png" /></p>
+<ul>
+<li>为什么结果图是一条边框线呢？因为在<code>div</code>标签中还没有内容呢，现在我们将子<code>div</code>标签设置宽高度为<code>100px</code>像素并且添加背景颜色。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了1.png" /></p>
+<ul>
+<li>为什么会排列为3行呢，因为3个<code>div</code>标签都是块级元素。</li>
+<li>现在我们将<code>class</code>属性值为<code>.box1</code>的元素设置为右浮动。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float:right;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了2.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：现在我们发现<code>calss</code>属性值为<code>.box</code>元素高度变矮了，这就说明了（浮动元素它已经脱离了标准文档流，不再占用空间了）、并且向右浮动，浮动到自身的父元素的边缘位置就停止了浮动。</p>
+</blockquote></li>
+</ul>
+<h3 id="左浮动实践">左浮动实践</h3>
+<ul>
+<li>让我们进入左浮动的实践，实践内容如：将<code>class</code>属性值为<code>.box1</code>元素设置为左浮动。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float:left;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了3.png" /></p>
+<ul>
+<li>我们先理解浮动的原理之后再解释下<code>class</code>属性值为<code>.box2</code>元素看不见的原因。</li>
+<li>现在笔者给大家看2张实践结果图如：</li>
+<li><blockquote>
+<p>结果图A</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了4.png" /></p>
+<ul>
+<li><blockquote>
+<p>结果图B</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了5.png" /></p>
+<ul>
+<li>通过这2张结果图我们可以把浮动简单的理解为“漂”举例：</li>
+<li>假设<code>class</code>属性值为<code>.box</code>是一个池塘，<code>3</code>个子元素都是能够漂浮在池塘水面上的东西，现在我们将<code>calss</code>属性值为<code>.box1</code>元素浮动起来，漂在池塘水面上，是不是就不再占用池塘内的空间了。</li>
+<li>既然我们理解为“漂”它一定是漂浮在池塘水面之上，但是没有浮动的元素在池塘水面之内，所以<code>class</code>属性值为<code>.box2</code>元素看不见，并不代表它不存在只是被<code>class</code>属性值为<code>.box1</code>元素给遮挡住了，现在我们将<code>class</code>属性值为<code>.box2</code>元素宽度设置为<code>150px</code>像素。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float:left;
+       }
+       .box2{
+         width: 150px;
+         height: 100px;
+         background-color: #0f0;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了6.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：事实证明<code>class</code>属性值为<code>.box2</code>元素是存在的。</p>
+</blockquote></li>
+<li>下面我们将<code>calss</code>属性值为<code>.box2</code>元素设置为左浮动看看有什么不一样的效果</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float:left;
+       }
+       .box2{
+         width: 150px;
+         height: 100px;
+         background-color: #0f0;
+         float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了7.png" /></p>
+<ul>
+<li>但是<code>class</code>属性值为<code>.box2</code>的元素左浮动并没有左浮动到本身父元素的边缘位置，为什么在<code>class</code>属性值为<code>.box1</code>后面呢？因为父元素已经有了浮动的子元素后面的子元素在浮动就浮动到前面浮动的元素之后。</li>
+<li>现在我们将<code>class</code>属性值为<code>.box3</code>的元素设置为左浮动，看看有什么不一样的效果。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float:left;
+       }
+       .box2{
+         width: 150px;
+         height: 100px;
+         background-color: #0f0;
+         float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+         float: left;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了8.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：浮动元素浮动以后，其父元素不再将浮动的子元素包裹在父元素之内，所以结果图出现一条黑色的边框线，若有不明白的看第一个实践内容。</p>
+</blockquote></li>
+</ul>
+<h3 id="将行内元素设置浮动">将行内元素设置浮动</h3>
+<ul>
+<li>如果我们给行内元素设置了浮动，行内元素就拥有了块级元素的特点。</li>
+<li>让我们进入行内元素设置浮动实践，实践内容如：将<code>div</code>标签中的<code>span</code>标签设置为左浮动。</li>
+<li>在设置左浮动之前我们先看看给<code>span</code>标签设置宽高度和背景颜色有什么效果。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+       
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+       
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;span class=&quot;box1&quot;&gt;微笑是最初的信仰1&lt;/span&gt;
+    &lt;span class=&quot;box2&quot;&gt;微笑是最初的信仰2&lt;/span&gt;
+    &lt;span class=&quot;box3&quot;&gt;微笑是最初的信仰3&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了9.png" /></p>
+<ul>
+<li>现在发现我们给<code>span</code>标签设置了宽高度为<code>100px</code>像素并没有生效，因为现在<code>span</code>标签还是行内元素。</li>
+<li>现在我们给<code>span</code>标签设置左浮动，然后我们在看看效果如何。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float: left;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+        float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+        float: left;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;span class=&quot;box1&quot;&gt;微笑是最初的信仰1&lt;/span&gt;
+    &lt;span class=&quot;box2&quot;&gt;微笑是最初的信仰2&lt;/span&gt;
+    &lt;span class=&quot;box3&quot;&gt;微笑是最初的信仰&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了10.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：行内元素设置为浮动之后就拥有了块级元素的特点。</p>
+</blockquote></li>
+</ul>
+<hr />
+<h2 id="设置浮动总结">设置浮动总结</h2>
+<ul>
+<li>浮动的特点如：</li>
+<li>浮动元素脱离了标准的文档流，不再占用父元素的任何空间。</li>
+<li>浮动元素比标准文档流的元素层级要高，会将标准文档流的元素遮挡住。</li>
+<li>浮动元素会向左浮动或向右浮动。</li>
+<li>浮动元素会遇到父元素的边缘就停止了浮动。</li>
+<li>浮动元素会遇到已经有了浮动的元素，后者会浮动到前者之后就停止了浮动。</li>
+<li>浮动元素浮动之后就脱离了父元素，并且父元素不再包裹浮动的元素。</li>
+<li>行内元素设置为浮动，就拥有了块级元素的特点。</li>
+</ul>
+<hr />
+<h2 id="为什么要清除浮动呢">为什么要清除浮动呢？</h2>
+<ul>
+<li>因为浮动的元素会影响到下面元素，具体看实践结果图大家就明白了。</li>
+<li><code>class</code>属性值为<code>.box</code>元素的子类元素没有浮动前的效果实践。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;清除浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+        
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+        
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+         
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;h1&gt;清除浮动&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了11.png" /></p>
+<ul>
+<li><code>class</code>属性值为<code>.box</code>元素的子元素左浮动之后影响到下面的元素排版布局实践。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float: left;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+         float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+          float: left;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;h1&gt;清除浮动&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了12.png" /></p>
+<ul>
+<li><blockquote>
+<p>现在大家应该明白了为什么要清除浮动了，有浮动就必须清除浮动，因为上面的元素设置了浮动就会影响到下面元素排版布局。</p>
+</blockquote></li>
+</ul>
+<h3 id="清除浮动有3种方式">清除浮动有3种方式</h3>
+<h4 id="第一种方式">第一种方式</h4>
+<ul>
+<li>给浮动的元素父元素设置一个固定的高度，从视觉上看到浮动的元素在父元素包裹之内。</li>
+<li>我们给浮动元素的父元素设置一个固定<code>600px</code>像素的高度，一起来看看效果如何。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;清除浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         height: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float: left;
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+         float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+          float: left;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;h1&gt;清除浮动&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了13.png" /></p>
+<ul>
+<li><blockquote>
+<p>这样是解决了下面元素排版布局问题，但是笔者不推荐这么做，因为高度是由子元素的内容撑起来的高度，而不是我们给的固定高度。</p>
+</blockquote></li>
+</ul>
+<h4 id="第二种方式">第二种方式</h4>
+<ul>
+<li>其实在<code>CSS</code>中也有清除浮动的属性，清除浮动属性名为<code>clear</code>。</li>
+<li><code>clear</code>属性值说明表</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>属性值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>left</td>
+<td>清除左侧浮动元素。</td>
+</tr>
+<tr class="even">
+<td>right</td>
+<td>清除右侧浮动元素。</td>
+</tr>
+<tr class="odd">
+<td>both</td>
+<td>清除左右侧浮动元素。</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>要使用这个<code>clear</code>属性必须创建一个新的div元素，创建新的<code>div</code>元素不能放置任何内容，它只能做一个件事情，那就是清除浮动并且将这个新创建的<code>div</code>元素放在最后一个浮动元素的后面才会生效。</li>
+<li>左右清除浮动的属性值笔者在这里就不一一实践了，一般我们就用<code>both</code>属性值就可以了，左右清除浮动，干嘛还要计较它是左浮动或右浮动呢，直接清除左右浮动就<code>ok</code>了。</li>
+<li>具体的看我们实践的结果图。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;清除浮动&lt;/title&gt;
+    &lt;style&gt;
+       .box{
+         width: 600px;
+         border: 1px solid #000;
+       }
+       .box1{
+         width: 100px;
+         height: 100px;
+         background-color: #f00;
+         float: left;
+         
+       }
+       .box2{
+         width: 100px;
+         height: 100px;
+         background-color: #0f0;
+         float: left;
+       }
+       .box3{
+         width: 100px;
+         height: 100px;
+         background-color: #00f;
+          float: left;
+       }
+       .clear{
+         clear: both;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+  
+&lt;body&gt;
+  &lt;div class=&quot;box&quot;&gt;
+    &lt;div class=&quot;box1&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box2&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;box3&quot;&gt;&lt;/div&gt;
+    &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  &lt;h1&gt;清除浮动&lt;/h1&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了14.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：这才是我们真正想要的结果，并且从视觉上来看浮动的元素包裹在父元素之内的效果。</p>
+</blockquote></li>
+</ul>
+<h4 id="第三种方式">第三种方式</h4>
+<ul>
+<li>使用属性为<code>overflow</code>并且属性值为<code>hidden</code>来清除浮动，必须将这个属性设置在浮动元素的父元素身上。</li>
+<li><p>给大家普及下属性为<code>overflow</code>并且属性值为<code>hidden</code>，它原意是用来将溢出的部分内容进行隐藏，但是它还可以清除浮动。</p></li>
+<li>笔者先将内容溢出然后在隐藏溢出的内容，那我们一起来看看呗。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;溢出内容进行隐藏&lt;/title&gt;
+    &lt;style&gt;
+        div{
+            width: 100px;
+            height: 50px;
+            border: 1px solid #000;
+            
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div&gt;
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了15.png" /></p>
+<ul>
+<li>下面笔者将溢出的内容进行隐藏。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;溢出内容进行隐藏&lt;/title&gt;
+    &lt;style&gt;
+        div{
+            width: 100px;
+            height: 50px;
+            border: 1px solid #000;
+            overflow: hidden;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div&gt;
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        微笑是最初的信仰,微笑是最初的信仰,微笑是最初的信仰。
+        
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了16.png" /></p>
+<ul>
+<li>使用属性为<code>overflow</code>并且属性值为<code>hidden</code>来清除浮动。</li>
+<li>清除浮动之前我们先看看结构是如何的。</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;清除浮动&lt;/title&gt;
+    &lt;style&gt;
+       ul{
+           list-style: none;
+          
+       }
+       ul li{
+           float: left;
+           border: 1px solid red;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;ul&gt;
+        &lt;li&gt;微笑是最初的信仰1&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰2&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰3&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰4&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰5&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰6&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰7&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰8&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了17.png" /></p>
+<ul>
+<li><blockquote>
+<p>注意：在这里笔者还没有给浮动元素清除浮动呢，大家可以明显的看到<code>ul</code>标签高度为<code>0</code>。</p>
+</blockquote></li>
+<li>清除浮动实践</li>
+<li><blockquote>
+<p>代码块</p>
+</blockquote></li>
+</ul>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;ie=edge&quot;&gt;
+    &lt;title&gt;清除浮动&lt;/title&gt;
+    &lt;style&gt;
+       ul{
+           list-style: none;
+           overflow: hidden;
+       }
+       ul li{
+           float: left;
+           border: 1px solid red;
+       }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;ul&gt;
+        &lt;li&gt;微笑是最初的信仰1&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰2&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰3&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰4&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰5&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰6&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰7&lt;/li&gt;
+        &lt;li&gt;微笑是最初的信仰8&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<ul>
+<li><blockquote>
+<p>结果图</p>
+</blockquote></li>
+</ul>
+<p><img src="./images/CSS中如果实现元素浮动和清除浮动，看这篇文章就足够了18.png" /></p>
+<ul>
+<li><blockquote>
+<p>现在我们很清楚的看到<code>ul</code>标签高度为<code>23px</code>像素，为什么要使用：属性为<code>overflow</code>并且属性值为<code>hidden</code>来清除浮动，因为<code>ul</code>标签中只能使用<code>li</code>标签元素不能使用其它元素，所以属性为<code>overflow</code>并且属性值为<code>hidden</code>来清除浮动是最好不过啦。</p>
+</blockquote></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,617 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修如何使用Vue.js来搭建一个后台管理系统' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>如何使用Vue.js来搭建一个后台管理系统</center></div><div class='banquan'>原文出处:本文由博客园博主随风行云提供。<br/>
+原文连接:https://www.cnblogs.com/progor/p/11102099.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#使用的技术">使用的技术</a></li>
+        <li><a href="#基础但不好版">基础但不好版</a><ul>
+        <li><a href="#初始化项目">1.初始化项目</a></li>
+        <li><a href="#实现初始页内容自定义">2.实现初始页内容自定义</a></li>
+        <li><a href="#使用路由">3.使用路由</a><ul>
+        <li><a href="#原始代码">原始代码</a></li>
+        <li><a href="#自建页面">自建页面</a></li>
+        <li><a href="#修改路由">修改路由</a></li>
+        </ul></li>
+        <li><a href="#测试路由跳转">4.测试路由跳转</a></li>
+        <li><a href="#补充">补充</a></li>
+        </ul></li>
+        <li><a href="#子路由版">子路由版</a><ul>
+        <li><a href="#嵌套router-view">嵌套router-view</a></li>
+        <li><a href="#定义子路由">定义子路由</a></li>
+        <li><a href="#修改菜单">修改菜单</a></li>
+        <li><a href="#修改component">修改component</a></li>
+        <li><a href="#补充-1">补充</a></li>
+        </ul></li>
+        <li><a href="#带请求版">带请求版</a><ul>
+        <li><a href="#统一配置axios实例">统一配置axios实例</a></li>
+        <li><a href="#定义api调用信息">定义API调用信息</a></li>
+        <li><a href="#调用api">调用API</a></li>
+        <li><a href="#使用mock">使用mock</a></li>
+        </ul></li>
+        <li><a href="#代码">代码</a></li>
+        <li><a href="#未涉及问题">未涉及问题</a></li>
+        </ul>
+    </div>
+</div>
+<p>首发日期：2019-06-27<br />
+修改：2019-07-05：修改一条代码，在页面布局的时候，使用了element UI的el-container，但由于标签包裹错误而导致中间的内容一直处于左侧菜单栏之下：<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统0.png" /></p>
+<p>旧的代码：</p>
+<pre><code><code>    &lt;el-container&gt;
+      &lt;el-main&gt;
+        &lt;!-- 下面内容是中间空白区域的内容，你可以自定义 --&gt;
+        这是后台管理首页的内容
+      &lt;/el-main&gt;
+    &lt;/el-container&gt;</code></pre>
+<p>新的代码：</p>
+<pre><code><code>&lt;el-container&gt;
+&lt;!-- 把el-main之前的el-container移到el-side前面 --&gt;
+    &lt;!-- 页面左侧菜单 --&gt;
+    &lt;el-aside width=&quot;200px&quot;
+              style=&quot;background-color: rgb(238, 241, 246)&quot;&gt;
+      &lt;el-menu router=&#39;true&#39;&gt;
+        &lt;!-- 开启菜单中的router=true之后，点击菜单会把index作为路由跳转路径 --&gt;
+        &lt;el-menu-item index=&quot;product&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;产品管理
+        &lt;/el-menu-item&gt;
+        &lt;el-menu-item index=&quot;client&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;客户管理
+        &lt;/el-menu-item&gt;
+      &lt;/el-menu&gt;
+    &lt;/el-aside&gt;
+    
+      &lt;el-main&gt;
+        &lt;!-- 下面内容是中间空白区域的内容，你可以自定义 --&gt;
+        这是后台管理首页的内容
+      &lt;/el-main&gt;
+    &lt;/el-container&gt;
+  &lt;/el-container&gt;</code></pre>
+<p>2019-07-15修改：末尾增加最终项目构建的提醒。</p>
+<hr />
+<h1 id="使用的技术">使用的技术</h1>
+<p><br><br />
+vue.js+element UI+mock.js<br />
+<br></p>
+<ul>
+<li>vue.js是核心</li>
+<li>element UI是一个支持vue.js的UI组件库</li>
+<li>mock.js：由于没有后端接口，所以需要使用本地数据来假装成后端的数据。</li>
+</ul>
+<p><br></p>
+<hr />
+<p>温馨提示：如果以下内容超出了你的知识面，可以考虑参考我写的关于Vue的基础学习的博客来补充知识<br />
+<a href="https://www.cnblogs.com/progor/p/10331531.html">后端开发者的Vue学习之路（四）</a><br />
+<a href="https://www.cnblogs.com/progor/p/10335048.html">后端开发者的Vue学习之路（五）</a>。</p>
+<hr />
+<h1 id="基础但不好版">基础但不好版</h1>
+<p><br></p>
+<h2 id="初始化项目">1.初始化项目</h2>
+<p>1.1 首先使用vue-cli初始化一个项目结构【如果你还没有安装vue-cli，那么需要<code>npm install -g vue-cli</code>】<br />
+命令：<code>vue init webpack 项目名</code><br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统1.png" /></p>
+<p><br></p>
+<p>1.2 注意一下这个项目的初始化结构：<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统2.png" /><br />
+这里不介绍项目结构，如果有需要可以参考一篇博客中的一个小节：<a href="https://www.cnblogs.com/progor/p/10331531.html">项目结构分析</a></p>
+<p><br></p>
+<p>1.3 留心文件index.html,里面有个<code>&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;</code>,这里面的app将对应最基础的component。可以说index.html就是初始页了。<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统3.png" /></p>
+<p><br></p>
+<p>1.4 留心文件src/App.vue：在src/main.js中声明了index.html的app对应的组件将使用App组件，而App组件定义在App.vue中。【也就是说如果我们修改App.vue，将会对应修改初始页的内容】<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统4.png" alt="main.js" /></p>
+<p><br></p>
+<p>App.vue的初始代码如下：</p>
+<pre><code><code>&lt;template&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;img src=&quot;./assets/logo.png&quot;&gt;
+    &lt;router-view/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  name: &#39;App&#39;
+}
+&lt;/script&gt;
+
+&lt;style&gt;
+#app {
+  font-family: &#39;Avenir&#39;, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px; 
+}
+&lt;/style&gt;</code></pre>
+<p><br></p>
+<h2 id="实现初始页内容自定义">2.实现初始页内容自定义</h2>
+<p>初始化项目后，可以在项目目录执行<code>npm start</code>命令，这样可以把项目部署起来。访问<code>localhost:8080</code>可以得到以下界面：<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统5.png" /><br />
+原始的App.vue代码是:</p>
+<pre><code><code>&lt;template&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;img src=&quot;./assets/logo.png&quot;&gt;
+    &lt;router-view/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+<p>我们可以尝试删除<code>&lt;img src=&quot;./assets/logo.png&quot;&gt;</code>，来测试是否可以通过修改App.vue来达到修改初始页的效果。</p>
+<p><br></p>
+<h2 id="使用路由">3.使用路由</h2>
+<p>在App.vue中有一个<code>&lt;router-view/&gt;</code>，如果你已经学过路由了，那么你应该会想到<strong>通过进入不同的路由来修改初始页的内容</strong>了吧。<br />
+<br></p>
+<h3 id="原始代码">原始代码</h3>
+<p>src/router/index.js的原始代码如下，代码说明了路由<code>/</code>渲染的初始页中图片下面的文字内容对应哪个Component,它从'@/components/HelloWorld'中导入HelloWorld再定义到路由中的。</p>
+<p><br></p>
+<pre><code><code>import Vue from &#39;vue&#39;
+import Router from &#39;vue-router&#39;
+import HelloWorld from &#39;@/components/HelloWorld&#39;
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: &#39;/&#39;,
+      name: &#39;HelloWorld&#39;,
+      component: HelloWorld
+    }
+  ]
+})</code></pre>
+<p><br></p>
+<h3 id="自建页面">自建页面</h3>
+<p><br></p>
+<p>由于路由跳转的是面向component的，如果我们要进行路由跳转，那么首先需要定义几个component。<br />
+下面在src/components中定义以下几个component:</p>
+<ul>
+<li>Login.vue：与路由<code>/</code>对应，默认访问项目首页是会渲染出登录页(Login.vue)</li>
+<li>AdminIndex.vue：与路由<code>/admin</code>对应，登录成功后，会进入后台管理的首页</li>
+<li>ProductManage.vue：与路由<code>/product</code>对应，点击产品管理菜单将进入产品菜单页面</li>
+<li>ClientManage.vue：与路由<code>/client</code>对应，点击客户管理菜单将进入客户菜单页面</li>
+</ul>
+<p><br></p>
+<p>在设计这几个component时，我们使用Element UI作为我们的UI库，首先我们对其进行导入。<br />
+执行命令：<code>npm install element-ui --save</code><br />
+然后在main.js中添加下列代码，这样就可以在所有的组件中使用elmenent UI中的所有组件了：</p>
+<pre><code><code>import ElementUI from &#39;element-ui&#39;
+import &#39;element-ui/lib/theme-chalk/index.css&#39;
+Vue.use(ElementUI)</code></pre>
+<p><br></p>
+<p>设计component的时候注意修改App.vue中style的一个margin-top，不然你可能会发现界面的顶部有一片空白。</p>
+<p><br></p>
+<p>创建Login.vue:</p>
+<pre><code><code>&lt;template&gt;
+  &lt;div&gt;
+    &lt;h3&gt;这是登录页面，由于功能尚未完善，&lt;br&gt;
+      所以此处忽略登录功能，直接通过点击进入后台管理首页&lt;/h3&gt;
+    &lt;router-link to=&quot;/admin&quot;&gt;进入后台管理首页&lt;/router-link&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+  name: &#39;Login&#39;
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<p>修改后台管理首页AdminIndex.vue：</p>
+<pre><code><code>&lt;template&gt;
+  &lt;el-container&gt;
+    &lt;!-- 页面顶部 --&gt;
+    &lt;el-header&gt;
+      LOGO
+    &lt;/el-header&gt;
+&lt;el-container&gt;
+    &lt;!-- 页面左侧菜单 --&gt;
+    &lt;el-aside width=&quot;200px&quot;
+              style=&quot;background-color: rgb(238, 241, 246)&quot;&gt;
+      &lt;el-menu router=&#39;true&#39;&gt;
+        &lt;!-- 开启菜单中的router=true之后，点击菜单会把index作为路由跳转路径 --&gt;
+        &lt;el-menu-item index=&quot;product&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;产品管理
+        &lt;/el-menu-item&gt;
+        &lt;el-menu-item index=&quot;client&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;客户管理
+        &lt;/el-menu-item&gt;
+      &lt;/el-menu&gt;
+    &lt;/el-aside&gt;
+    
+      &lt;el-main&gt;
+        &lt;!-- 下面内容是中间空白区域的内容，你可以自定义 --&gt;
+        这是后台管理首页的内容
+      &lt;/el-main&gt;
+    &lt;/el-container&gt;
+  &lt;/el-container&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+.el-header {
+  background-color: #c1cbd8;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+&lt;/style&gt;
+
+&lt;script&gt;
+export default {
+  name: &#39;AdminIndex&#39;
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<p>修改客户管理页面ClientManage.vue：</p>
+<pre><code><code>&lt;template&gt;
+  &lt;el-container&gt;
+    &lt;el-header&gt;
+      LOGO
+    &lt;/el-header&gt;
+    &lt;el-container&gt;
+    &lt;el-aside width=&quot;200px&quot;
+              style=&quot;background-color: rgb(238, 241, 246)&quot;&gt;
+      &lt;el-menu router=&#39;true&#39;&gt;
+        &lt;!-- 开启菜单中的router=true之后，点击菜单会把index作为路由跳转路径 --&gt;
+        &lt;el-menu-item index=&quot;product&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;产品管理
+        &lt;/el-menu-item&gt;
+        &lt;el-menu-item index=&quot;client&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;客户管理
+        &lt;/el-menu-item&gt;
+      &lt;/el-menu&gt;
+    &lt;/el-aside&gt;
+
+    
+      &lt;el-main&gt;
+        这是客户管理页
+      &lt;/el-main&gt;
+    &lt;/el-container&gt;
+  &lt;/el-container&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+.el-header {
+  background-color: #c1cbd8;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+&lt;/style&gt;
+
+&lt;script&gt;
+export default {
+  name: &#39;ClientManage&#39;
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<p>修改产品管理页面ProductManage.vue：</p>
+<pre><code><code>&lt;template&gt;
+  &lt;el-container&gt;
+    &lt;el-header&gt;
+      LOGO
+    &lt;/el-header&gt;
+&lt;el-container&gt;
+    &lt;el-aside width=&quot;200px&quot;
+              style=&quot;background-color: rgb(238, 241, 246)&quot;&gt;
+      &lt;el-menu router=&#39;true&#39;&gt;
+        &lt;!-- 开启菜单中的router=true之后，点击菜单会把index作为路由跳转路径 --&gt;
+        &lt;el-menu-item index=&quot;product&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;产品管理
+        &lt;/el-menu-item&gt;
+        &lt;el-menu-item index=&quot;client&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;客户管理
+        &lt;/el-menu-item&gt;
+      &lt;/el-menu&gt;
+    &lt;/el-aside&gt;
+    
+      &lt;el-main&gt;
+        这是产品管理页
+      &lt;/el-main&gt;
+    &lt;/el-container&gt;
+  &lt;/el-container&gt;
+&lt;/template&gt;
+
+&lt;style&gt;
+.el-header {
+  background-color: #c1cbd8;
+  color: #333;
+  line-height: 60px;
+}
+
+.el-aside {
+  color: #333;
+}
+&lt;/style&gt;
+
+&lt;script&gt;
+export default {
+  name: &#39;ProductManage&#39;
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<h3 id="修改路由">修改路由</h3>
+<p><br></p>
+<pre class="javascript"><code>import Vue from &#39;vue&#39;
+import Router from &#39;vue-router&#39;
+import Login from &#39;@/components/Login&#39;
+import AdminIndex from &#39;@/components/AdminIndex&#39;
+import ProductManage from &#39;@/components/ProductManage&#39;
+import ClientManage from &#39;@/components/ClientManage&#39;
+
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    {
+      path: &#39;/&#39;,
+      name: &#39;Login&#39;,
+      component: Login
+    },
+    {
+      path: &#39;/admin&#39;,
+      name: &#39;AdminIndex&#39;,
+      component: AdminIndex
+    },
+    {
+      path: &#39;/product&#39;,
+      name: &#39;ProductManage&#39;,
+      component: ProductManage
+    },
+    {
+      path: &#39;/client&#39;,
+      name: &#39;ClientManage&#39;,
+      component: ClientManage
+    }
+  ]
+})</code></pre>
+<p><br></p>
+<h2 id="测试路由跳转">4.测试路由跳转</h2>
+<p>一个普通的通过路由跳转来渲染页面的功能到此就基本完成了。<br />
+如下gif所示，如果想要自己完善这个后台管理系统的具体界面，那只需要在每一个component中自定义内容并添加自定义路由就可以逐渐完善这个后台管理系统了。<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统6.png" /></p>
+<p><br></p>
+<h2 id="补充">补充</h2>
+<p>但上面的页面有一个严重的问题，你可能也留意到了，Component的代码有些重复了几次。有些人可能会想到在component引入其他component来进行“组件复用”，但其实可以通过“子路由”来解决，下面将演示如何解决这个问题。</p>
+<p><br></p>
+<hr />
+<h1 id="子路由版">子路由版</h1>
+<p><br></p>
+<p>在上面的界面中，我们重复地写了很多左侧菜单栏的代码。<br />
+实际上，点击菜单时，我们可能只需要修改中间的内容区域的内容而已。<br />
+这个功能可以通过子路由来实现。</p>
+<p><br></p>
+<h2 id="嵌套router-view">嵌套router-view</h2>
+<p>首先，我们在AdminIndex.vue中修改中间区域的代码，保留左侧菜单的代码不变：</p>
+<pre><code><code>      &lt;el-main&gt;
+        &lt;!-- 仅仅修改中间区域的代码，其他与之前不变 --&gt;
+        &lt;router-view /&gt;
+      &lt;/el-main&gt;</code></pre>
+<p>你看到了我使用了一个<code>&lt;router-view /&gt;</code>，没错的，可以通过嵌套路由来嵌套显示一些内容，而渲染子内容的时候不会影响父路由的已经渲染的内容【这不就解决了上面的问题了吗？】。</p>
+<p><br></p>
+<h2 id="定义子路由">定义子路由</h2>
+<p>定义子路由使用children：</p>
+<pre class="javascript"><code>export default new Router({
+  routes: [
+    {
+      path: &#39;/&#39;,
+      name: &#39;Login&#39;,
+      component: Login
+    },
+    {
+      path: &#39;/admin&#39;,
+      name: &#39;AdminIndex&#39;,
+      component: AdminIndex,
+      children: [
+        // { // 这里可以写直接访问父路由时渲染哪个component
+        //   path: &#39;&#39;,
+        //   component: Statictis
+        // },
+        {
+          path: &#39;product&#39;,
+          name: &#39;ProductManage&#39;,
+          component: ProductManage
+        },
+        {
+          path: &#39;client&#39;,
+          name: &#39;ClientManage&#39;,
+          component: ClientManage
+        }
+      ]
+    }
+  ]
+})</code></pre>
+<p><br></p>
+<h2 id="修改菜单">修改菜单</h2>
+<p>将左侧菜单栏中的菜单对应的路由修改成新的路由。</p>
+<pre><code><code>    &lt;!-- 页面左侧菜单 --&gt;
+    &lt;el-aside width=&quot;200px&quot;
+              style=&quot;background-color: rgb(238, 241, 246)&quot;&gt;
+      &lt;el-menu router=&#39;true&#39;&gt;
+        &lt;!-- 开启菜单中的router=true之后，点击菜单会把index作为路由跳转路径 --&gt;
+        &lt;el-menu-item index=&quot;/admin/product&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;产品管理
+        &lt;/el-menu-item&gt;
+        &lt;el-menu-item index=&quot;/admin/client&quot;&gt;
+          &lt;i class=&quot;el-icon-setting&quot;&gt;&lt;/i&gt;客户管理
+        &lt;/el-menu-item&gt;
+      &lt;/el-menu&gt;
+    &lt;/el-aside&gt;</code></pre>
+<p><br></p>
+<h2 id="修改component">修改component</h2>
+<p>此时其他的component不再需要重复写左侧菜单栏的代码了，所以需要修改component的代码：<br />
+大概如下，把重复的代码去除，只保留中间内容区域的代码</p>
+<pre><code><code>&lt;template&gt;
+  &lt;div&gt;
+    这是客户管理页
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  name: &#39;ClientManage&#39;
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<h2 id="补充-1">补充</h2>
+<ul>
+<li>上面的版本就减少了使用重复的代码。基本完成了基础的页面跳转问题。</li>
+</ul>
+<hr />
+<h1 id="带请求版">带请求版</h1>
+<p><br></p>
+<p>在学习这里时，我假设你已经了解axios了，如果没有，那么可以参考<a href="https://www.cnblogs.com/progor/p/10335048.html">后端开发者的Vue学习之路（五）</a></p>
+<p>首先，安装axios:<code>npm install --save axios</code></p>
+<p><br></p>
+<h2 id="统一配置axios实例">统一配置axios实例</h2>
+<ul>
+<li>在给axios实例传入一个与请求相关的对象的时候，可以发起请求。</li>
+<li>由于我们访问后端接口一般都是固定的url前缀的，我们可以预创建一个axios实例，<br />
+<br><br />
+下面的代码创建在src/plugin/axios/index.js中：</li>
+</ul>
+<pre class="javascript"><code>import axios from &#39;axios&#39;
+// 可以配置一些基本参数，由于这里使用mock假装获取数据，所以请不要配置baseURL
+const instance = axios.create({
+  // baseURL: &#39;http://localhost:8080&#39;
+})
+
+export default instance // 记得导出</code></pre>
+<p><br></p>
+<h2 id="定义api调用信息">定义API调用信息</h2>
+<p>下面的代码创建在src/api/product.js中：</p>
+<pre class="javascript"><code>// 导入axios实例
+import instance from &#39;@/plugin/axios&#39;
+
+export function getproducts () {
+  // instance()中传入确切的url信息时，将发起请求
+  // （当然，首先是这个方法要被调用，此处只是声明）
+  return instance({
+    url: &#39;/api/products&#39;, // 这里访问本地数据来假装获取后端接口数据
+    method: &#39;get&#39;
+  })
+}
+
+// 其他示例代码：
+// export function login (data) {
+//   return request({
+//     url: &#39;/login.action&#39;,
+//     method: &#39;post&#39;,
+//     data: data
+//   })
+// }</code></pre>
+<p>上面的代码可能有时候还需要涉及传参等问题，如果不了解可以考虑参考我的博客<a href="https://www.cnblogs.com/progor/p/10335048.html">后端开发者的Vue学习之路（五）</a>。<br />
+<br></p>
+<h2 id="调用api">调用API</h2>
+<p>在component中引入方法，然后调用API：</p>
+<pre><code><code>&lt;template&gt;
+  &lt;div&gt;
+    这是产品管理页
+    &lt;!-- 输出值 --&gt;
+    {{ this.content }}
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+// 导入api
+import { getproducts } from &#39;@/api/product&#39;
+export default {
+  name: &#39;ProductManage&#39;,
+  data () {
+    return {
+      content: &#39;&#39;
+    }
+  },
+  created () {
+    this.getProductsApi()
+  },
+  methods: {
+    getProductsApi () {
+      // 调用API
+      getproducts().then(response =&gt; {
+        // 这里应该有一步是关于返回的数据是否可被直接渲染的判断
+        // 赋值给本地变量，然后渲染。
+        this.content = response.data
+      }).catch(error =&gt; {
+        // 当请求错误时，提示错误信息
+        this.$message(error)
+      })
+    }
+  }
+}
+&lt;/script&gt;</code></pre>
+<p><br></p>
+<h2 id="使用mock">使用mock</h2>
+<p><br><br />
+由于这里要获取后端的数据来渲染，我们使用mock.js来假装获取后端的数据，也就是使用我们定义的数据来进行返回。<br />
+<br><br />
+1.首先，安装mock.js:<code>npm install mockjs --save-dev</code><br />
+2.在main.js中引入mock.js：</p>
+<pre class="javascript"><code>import &#39;@/mock.js&#39;//引入</code></pre>
+<p>3.在src目录下创建mock.js：</p>
+<pre class="javascript"><code>import Mock from &#39;mockjs&#39;
+
+const redata = function () {
+  return {
+    code: 1,
+    data: [
+      {
+        name: &#39;bao bao jinshui&#39;,
+        cost: 18
+      },
+      {
+        name: &#39;wangzai niunai&#39;,
+        cost: 12
+      }
+    ]
+  }
+}
+
+// 格式： Mock.mock( url, post/get , 返回的数据)；
+Mock.mock(&#39;/api/products&#39;, &#39;get&#39;, redata)
+export default Mock</code></pre>
+<p><br></p>
+<p>最终效果如图所示：<br />
+<img src="./images/如何使用Vue.js来搭建一个后台管理系统7.png" /></p>
+<p>上面的代码演示了如何调用API，其中值得注意的是，经常会给axios实例配置一些具体的参数，例如baseURL。</p>
+<p><br></p>
+<hr />
+<h1 id="代码">代码</h1>
+<p>代码已经推送到github上了，<a href="https://github.com/alprogor/vue-simple-manage">vue-simple-manage</a>，具体如图下：</p>
+<p><img src="./images/如何使用Vue.js来搭建一个后台管理系统8.png" /></p>
+<hr />
+<h1 id="未涉及问题">未涉及问题</h1>
+<p><br></p>
+<p>1.路由传参问题。（常见场景：点击一个按钮，跳转到一个界面，携带一些参数渲染页面。）<br />
+2.静态资源问题。（常见场景：页面使用静态资源，如图片）<br />
+3.数据存储问题。（常见场景：由于前后端分离了，所以前端可能需要存储一些数据来帮助渲染（如当前用户名和用户级别等，这些数据不应该时常从后端获取，一般都存储到store中），而浏览器刷新的时候，会清除store中存储的数据，所以需要将数据存储到localStorge中）<br />
+4.其他。。。</p>
+<hr />
+<p>上面给的代码是原始的vue代码，并没有<code>npm run build</code>过，对于想要得到最终的index.html，可以自己npm run build。注意要修改一下config/index.js</p>
+<hr />
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

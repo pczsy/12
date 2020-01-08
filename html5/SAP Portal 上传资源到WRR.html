@@ -1,0 +1,71 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修SAP Portal 上传资源到WRR' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>SAP Portal 上传资源到WRR</center></div><div class='banquan'>原文出处:本文由博客园博主宁海峰提供。<br/>
+原文连接:https://www.cnblogs.com/robinNing/p/10880028.html</div><br>
+    <p align="center">Uploading Resources to the Web Resource Repository</p>
+<h2>Prerequisites</h2>
+<p class="p">You have been assigned the Content Administrator role.</p>
+<h2>Context</h2>
+<p class="p">You can upload Web resources to the Web Resource Repository, so that they can be used by different portal components and applications. When you upload resources, they are saved as objects in the Portal Content Directory (PCD) and are also copied to the file system of the portal server (in the same folder hierarchy, and synchronized with any changes that you make). This allows the consumption of resources at runtime using relative paths. For example, a .css file that is saved in the Web Resource Repository can use a resource that is also saved in the Web Resource Repository, by specifying the following in one of its classes:&nbsp;<kbd>background: url('../images/logo.png')</kbd>&nbsp;.</p>
+<p class="p">Following are some guidelines for selecting resource files to upload:</p>
+<ul>
+<li>All resource file names that you want to upload must contain only legal characters (&nbsp;<kbd>A-Z</kbd>&nbsp;,&nbsp;<kbd>0-9</kbd>&nbsp;,&nbsp;<kbd>.</kbd>&nbsp;,&nbsp;<kbd>_</kbd>&nbsp;,&nbsp;<kbd>%</kbd>&nbsp;,&nbsp;<kbd>~</kbd>&nbsp;,&nbsp;<kbd>-</kbd>&nbsp;,&nbsp;<kbd>(</kbd>&nbsp;, and&nbsp;<kbd>)</kbd>&nbsp;)</li>
+<li>Maximum file name length is 100 characters</li>
+<li>To render, in Microsoft Internet Explorer, icons with an&nbsp;<samp>.ico</samp>&nbsp;extension that are saved in the Web Resource Repository, you need to enable support for&nbsp;<samp>.ico</samp>&nbsp;images in&nbsp;SAP NetWeaver&nbsp;Administrator.</li>
+</ul>
+<p class="p">In&nbsp;SAP NetWeaver&nbsp;Administrator, navigate to&nbsp;<strong>Configuration</strong>&nbsp;&nbsp;<strong>Infrastructure</strong>&nbsp;&nbsp;<strong>Java System Properties</strong>&nbsp;&nbsp;<strong>Services</strong>&nbsp;&nbsp;<strong>HTTP Provider</strong>. To the&nbsp;<strong>Mime</strong>&nbsp;property, add the following value:&nbsp;<kbd>\{.ico,image/x-icon\}</kbd>&nbsp;.</p>
+<ul>
+<li>Keep the folder hierarchy depth minimal, because the maximum file path for resource file storage is 120 characters (assuming that the root Web Resources folder is located here:C:\usr\sap\ROM\J00\j2ee\cluster\apps\sap.com\com.sap.portal.resourcerepository\servlet_jsp\com.sap.portal.resourcerepository\root\repo)</li>
+</ul>
+<p>Note</p>
+<p class="p">To upload multiple resources simultaneously, add them to a compressed (.zip) file and then upload the compressed file.</p>
+<p class="p">If you have configured the Virus Scan Interface on your AS Java, all resource files are automatically scanned during the upload process.</p>
+<h2>Procedure</h2>
+<ol>
+<li>Choose&nbsp;<strong>Content Administration</strong>&nbsp;&nbsp;<strong>Web Resource Repository</strong>.</li>
+<li>In the Portal Catalog, expand the&nbsp;<strong>Web Resources</strong>&nbsp;node and navigate to the folder into which you want to upload resources.</li>
+<li>From the context menu of the selected folder, choose&nbsp;<strong>Upload Resources</strong>&nbsp;. The first page of the Upload Resources wizard appears.</li>
+<li>In the&nbsp;<strong>Resource File</strong>&nbsp;field, choose the&nbsp;<strong>Browse</strong>&nbsp;button and select the file to upload from the file system. Choose&nbsp;<strong>Open</strong>&nbsp;.</li>
+<li>Choose&nbsp;<strong>Add to Upload Table</strong>&nbsp;. The selected file is added to the list of files to be uploaded. If you selected a compressed (.zip) file in the previous step, the contents of the file are extracted and added to the table, each file or folder in a single row.</li>
+</ol>
+<p class="p">In the list of files to be uploaded, each file has a status that indicates whether it can be uploaded. If a file cannot be uploaded, the reason is given (for example, a file may contain invalid characters or it may exceed the maximum file size allowed). For information about changing the maximum file size, see&nbsp;<a href="https://help.sap.com/viewer/f2f3f4b4543a4803b9023e8c31f1e72a/7.4.19/en-US/3bb6dddb3ef449ac96045f8e5cf889d9.html">Modifying the Uploadable File Size</a>&nbsp;. Use the&nbsp;<strong>Filter by Status</strong>&nbsp;field to more easily see the problematic files. A summary of the number of files with each status is displayed at the top of the table.</p>
+<p>Note</p>
+<p class="p">To remove a resource or folder from the list of files to be uploaded, select it in the upload table and choose&nbsp;<strong>Remove</strong>&nbsp;. If you select a folder, all resources and folders located below that folder are removed from the list.</p>
+<ol>
+<li>By default, new files with duplicate names in the same folder in the Web Resource Repository are not uploaded during the upload process. To upload files with duplicate names and overwrite the existing files in the Web Resource Repository, choose the&nbsp;<strong>Overwrite existing resources</strong>&nbsp;checkbox.</li>
+</ol>
+<p>Note</p>
+<p class="p">This option applies to all the duplicate files in the upload table.</p>
+<p class="p">Checks for duplicate resource names are not case-sensitive, meaning that&nbsp;My.png&nbsp;and&nbsp;my.png&nbsp;are treated as duplicate files.</p>
+<ol>
+<li>Choose&nbsp;<strong>Start Upload</strong>&nbsp;. The upload process starts, and the files with the valid (green) status are uploaded.</li>
+</ol>
+<p class="p">When the upload process is complete, the second page of the Upload Resources wizard appears. This page shows a list of all the files that were uploaded, and those that were not uploaded. A summary of the number of files that were and were not uploaded is displayed at the top of the table. If a file was not uploaded, the reason is given. Use the&nbsp;<strong>Filter by Status</strong>&nbsp;field to more easily see the files that were not uploaded.</p>
+<p class="p">You can now see the added resource files in the Portal Catalog, in the folder to which you uploaded them.</p>
+<ol>
+<li>To upload additional files, choose&nbsp;<strong>Restart Wizard</strong>&nbsp;; otherwise choose&nbsp;<strong>Close</strong>&nbsp;.</li>
+</ol>
+<p>&nbsp;<img src="./images/SAP Portal 上传资源到WRR0.png" alt="" /></p>
+<p><img src="./images/SAP Portal 上传资源到WRR1.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

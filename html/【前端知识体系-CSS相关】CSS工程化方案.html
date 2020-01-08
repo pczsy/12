@@ -1,0 +1,135 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【前端知识体系-CSS相关】CSS工程化方案' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【前端知识体系-CSS相关】CSS工程化方案</center></div><div class='banquan'>原文出处:本文由博客园博主Web前端社区提供。<br/>
+原文连接:https://www.cnblogs.com/fecommunity/p/11901411.html</div><br>
+    <h2 id="如何解决css的模块化问题">1.如何解决CSS的模块化问题？</h2>
+<ol>
+<li>使用Less，Sass等CSS预处理器</li>
+<li>使用PostCSS插件（postcss-import/precss）</li>
+<li>使用webpack处理CSS（css-loader + style-loader）</li>
+</ol>
+<h2 id="postcss是什么">2.PostCSS是什么？</h2>
+<ol>
+<li>PostCSS是一个平台，具体要取决于这个平台上面的插件可以做什么</li>
+<li>常用的插件如下</li>
+</ol>
+<pre><code><code>        //  1. 可以添加属性前缀，适应所有的浏览器
+        const autoprefixer = require(&#39;autoprefixer&#39;);
+        // 2. 将所有的import 导入进来的模块全部合并为一个文件
+         const atImport = require(&#39;postcss-import&#39;);
+        // 3.  实现代码的压缩优化
+         const cssnano = require(&#39;postcss-cssnano&#39;);
+        // 4. cssnext提前使用CSS的高级语法
+         const cssnext = require(&#39;postcss-cssnext&#39;);
+        // 5. precss 类似于sass的语法处理
+         const precss = require(&#39;precss&#39;)</code></pre>
+<p>3.import实现模块的合并（模块分开，提前合并）<br />
+4.CSS语法检查，兼容性检查<br />
+5.压缩文件</p>
+<h2 id="css-modules是什么如何使用">3.CSS modules是什么？如何使用?</h2>
+<ol>
+<li>解决类名冲突的问题</li>
+<li>使用PostCSS或者Webpack等构建工具进行编译</li>
+<li>在HTML模板中使用编译过程产生的类名（对象.类名的方式来获取）</li>
+</ol>
+<h2 id="为什么使用js来引用加载css">4.为什么使用JS来引用，加载CSS？</h2>
+<ol>
+<li>JS作为入口，管理资源具有天然优势（HTML，CSS本身是无法管理模块和资源的）</li>
+<li>将组件的结果、样式、行为封装到一起，增强组件内聚（减少代码耦合）</li>
+<li>可以做更多的处理（webpack，使用CSS Modules 解决了命名的冲突问题）</li>
+</ol>
+<h2 id="postcss的实现原理说一下">5. PostCSS的实现原理说一下？</h2>
+<blockquote>
+<p>[!NOTE]<br />
+PostCSS是一个通过JS插件转换样式表的工具，它本身并不是一门新的CSS语言，而是一个平台或者是生态心态，提供插件扩展服务即JS API，开发者可以根据这些接口，定制开发插件，<br />
+目前比较流行的插件工具如：Autoprefixer 、Stylelint 、CSSnano。</p>
+</blockquote>
+<h3 id="解析步骤">5.1 解析步骤</h3>
+<ol>
+<li>将CSS解析成抽象语法树(AST树)</li>
+<li>将AST树”传递”给任意数量的插件处理</li>
+<li>将处理完毕的AST树重新转换成字符串</li>
+</ol>
+<h3 id="处理机制">5.2 处理机制</h3>
+<p>Source string → Tokenizer → Parser → AST → Processor → Stringifier</p>
+<h4 id="tokenizer">5.2.1 Tokenizer</h4>
+<blockquote>
+<p>[!NOTE]<br />
+将源css字符串进行分词</p>
+</blockquote>
+<p>举个例子：<br />
+.className { color: #FFF; }<br />
+通过Tokenizer后结果如下：</p>
+<pre><code><code>[
+    [&quot;word&quot;, &quot;.className&quot;, 1, 1, 1, 10]
+    [&quot;space&quot;, &quot; &quot;]
+    [&quot;{&quot;, &quot;{&quot;, 1, 12]
+    [&quot;space&quot;, &quot; &quot;]
+    [&quot;word&quot;, &quot;color&quot;, 1, 14, 1, 18]
+    [&quot;:&quot;, &quot;:&quot;, 1, 19]
+    [&quot;space&quot;, &quot; &quot;]
+    [&quot;word&quot;, &quot;#FFF&quot; , 1, 21, 1, 23]
+    [&quot;;&quot;, &quot;;&quot;, 1, 24]
+    [&quot;space&quot;, &quot; &quot;]
+    [&quot;}&quot;, &quot;}&quot;, 1, 26]
+]</code></pre>
+<p>以word类型为例，参数如下：</p>
+<pre><code><code>const token = [
+     // token 的类型，如word、space、comment
+    &#39;word&#39;,
+ 
+    // 匹配到的词名称
+    &#39;.className&#39;,
+ 
+    // 代表该词开始位置的row以及column，但像 type为`space`的属性没有该值
+    1, 1,
+ 
+    // 代表该词结束位置的row以及column，
+    1, 10
+]</code></pre>
+<h4 id="parser">5.2.2 Parser</h4>
+<blockquote>
+<p>[!NOTE]<br />
+经过Tokenizer之后，需要Parser将结果初始化为AST</p>
+</blockquote>
+<pre><code><code>this.root = {
+    type: &#39;root&#39;,
+    source: { input: {css: &quot;.className { color: #FFF; }&quot;, hasBOM: false, id: &quot;&lt;input css 1&gt;&quot;},
+                   start: { line: 1, column: 1 } ,
+                  end: { line: 1, column: 27 }
+    },
+   raws:{after: &quot;&quot;, semicolon: false}
+   nodes // 子元素
+}</code></pre>
+<h4 id="processor">5.2.3 Processor</h4>
+<p>经过AST之后，PostCSS提供了大量JS API给插件用</p>
+<h4 id="stringifier">5.2.4 Stringifier</h4>
+<p>插件处理后，比如加浏览器前缀，会被重新Stringifier.stringify为一般CSS。</p>
+<h2 id="谈一下你对前端工程化的理解">6.谈一下你对前端工程化的理解？</h2>
+<p>参考博客：</p>
+<ul>
+<li><a href="https://www.cnblogs.com/fsyz/p/8274727.html" class="uri">https://www.cnblogs.com/fsyz/p/8274727.html</a></li>
+<li><a href="https://www.cnblogs.com/onebox/p/9570518.html" class="uri">https://www.cnblogs.com/onebox/p/9570518.html</a></li>
+</ul>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

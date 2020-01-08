@@ -1,0 +1,277 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(七) 基础篇 侦听器 watch属性详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(七) 基础篇 侦听器 watch属性详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11050163.html</div><br>
+    <p>先来看看官网的介绍:</p>
+<p><img src="./images/Vue.js 源码分析(七) 基础篇 侦听器 watch属性详解0.png" alt="" /></p>
+<p>官网介绍的很好理解了，也就是监听一个数据的变化，当该数据变化时执行我们的watch方法,watch选项是一个对象，键为需要观察的数据名，值为一个表达式(函数),还可以是一个对象，如果时对象可以包含如下几个属性:</p>
+<p>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; handler&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;　　;对应的函数 &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;　　　　 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ;可以带两个参数，分别是新的值和旧的值，上下文为当前Vue实例<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;immediate&nbsp;&nbsp; &nbsp;　　;侦听开始之后是否立即调用 　　　　;默认为false<br />&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;sync&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;　　　;波尔值，是否同步执行，默认false&nbsp;&nbsp; &nbsp; ;如果设置了这个属性，当数据有变化时就会立即执行了，否则放到下一个tick中排队执行</p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.bootcss.com/vue/2.5.16/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{message}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test"</span><span style="color: #0000ff;">&gt;</span>测试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span> 
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data:{message:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">hello world!</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">},
+            watch:{
+                message:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(newval,val){
+                    console.log(newval,val)
+                }
+            },
+            methods:{
+                test:()</span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;">app.message</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue!</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>DOM渲染如下:</p>
+<p><img src="./images/Vue.js 源码分析(七) 基础篇 侦听器 watch属性详解1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>点击测试按钮后DOM变成了:</p>
+<p><img src="./images/Vue.js 源码分析(七) 基础篇 侦听器 watch属性详解2.png" alt="" /></p>
+<p>同时控制台输出:Hello Vue! hello world!</p>
+<p>&nbsp;</p>
+<p><strong><span style="color: #000000;">&nbsp;<span style="font-size: 18pt;">源码分析</span></span></strong></p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<hr />
+<p>&nbsp;<span style="color: #000000;"><span style="color: #000000;"> Vue实例后会先执行_init()进行初始化(4579行)时，会执行initState()进行初始化,如下:</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initState (vm) {     <span style="color: #008000;">//</span><span style="color: #008000;">第3303行</span>
+  vm._watchers =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">var</span> opts =<span style="color: #000000;"> vm.$options;
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.props) { initProps(vm, opts.props); }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.methods) { initMethods(vm, opts.methods); }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.data) {
+    initData(vm);
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    observe(vm._data </span>= {}, <span style="color: #0000ff;">true</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> asRootData </span><span style="color: #008000;">*/</span><span style="color: #000000;">);
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (opts.computed) { initComputed(vm, opts.computed); }
+  </span><span style="color: #0000ff;">if</span> (opts.watch &amp;&amp; opts.watch !== nativeWatch) {            <span style="color: #008000;">//</span><span style="color: #008000;">如果传入了watch 且 watch不等于nativeWatch(细节处理，在Firefox浏览器下Object的原型上含有一个watch函数)</span>
+    initWatch(vm, opts.watch);                                  <span style="color: #008000;">//</span><span style="color: #008000;">调用initWatch()函数初始化watch</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> initWatch (vm, watch) {    <span style="color: #008000;">//</span><span style="color: #008000;">第3541行</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> watch) {                        <span style="color: #008000;">//</span><span style="color: #008000;">遍历watch里的每个元素</span>
+    <span style="color: #0000ff;">var</span> handler =<span style="color: #000000;"> watch[key];
+    </span><span style="color: #0000ff;">if</span> (Array.isArray(handler)) {                    
+      <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; handler.length; i++<span style="color: #000000;">) {
+        createWatcher(vm, key, handler[i]);
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      createWatcher(vm, key, handler);                </span><span style="color: #008000;">//</span><span style="color: #008000;">调用createWatcher</span>
+<span style="color: #000000;">    }
+  }
+}
+
+</span><span style="color: #0000ff;">function</span> createWatcher (                          <span style="color: #008000;">//</span><span style="color: #008000;">创建用户watcher</span>
+<span style="color: #000000;">  vm,
+  expOrFn,
+  handler,
+  options
+) {
+  </span><span style="color: #0000ff;">if</span> (isPlainObject(handler)) {                    <span style="color: #ff0000;"> //如果handler是个对象，则将该对象的hanler属性保存到handler里面 　　　　;这里对应watch的值为对象的情况</span>
+    options =<span style="color: #000000;"> handler;
+    handler </span>= handler.handler;                    
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> handler === 'string') {                
+    handler =<span style="color: #000000;"> vm[handler];
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> vm.$watch(expOrFn, handler, options) 　　　 <span style="color: #008000;">//<span style="color: #008000;">最后创建一个用户watch</span></span>
+}</span></pre>
+</div>
+<p>Vue原型上的$watch构造函数如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.prototype.$watch = <span style="color: #0000ff;">function</span> (     <span style="color: #008000;">//</span><span style="color: #008000;">第3596行</span>
+<span style="color: #000000;">    expOrFn, 　　　　　　　　　　　　　　　　　　<span style="color: #339966;">//监听的属性，例如例子里的message</span>
+    cb, 　　　　　　　　　　　　　　　　　　　　  <span style="color: #339966;">//对应的函数</span>
+    options 　　　　　　　　　　　　　　　　　　  <span style="color: #339966;">//选项</span>
+  ) {
+    </span><span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isPlainObject(cb)) {
+      </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> createWatcher(vm, expOrFn, cb, options)
+    }
+    options </span>= options ||<span style="color: #000000;"> {};
+    options.user </span>= <span style="color: #0000ff;">true</span>;                                      <span style="color: #008000;">//</span><span style="color: #008000;">设置options.user为true,表示这是一个用户watch</span>
+    <span style="color: #0000ff;">var</span> watcher = <span style="color: #0000ff;">new</span> Watcher(vm, expOrFn, cb, options);      <span style="color: #008000;">//</span><span style="color: #008000;">创建一个Watcher对象</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (options.immediate) { 　　　　　　　　　　　　　　　　　　　<span style="color: #ff0000;">//如果有immediate选项，则直接运行 　　　　;这里对应<span style="color: #ff0000;">watch的值为对象且含有immediate属性的情况</span></span>
+      cb.call(vm, watcher.value);
+    }
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> unwatchFn () {
+      watcher.teardown();
+    }
+  };
+}</span></pre>
+</div>
+<p>侦听器对应的用户watch的user选项是true的，全局Watcher如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> Watcher = <span style="color: #0000ff;">function</span><span style="color: #000000;"> Watcher ( <span style="color: #339966;">//第3082行</span>
+  vm,
+  expOrFn,                              </span><span style="color: #008000;">//</span><span style="color: #008000;">侦听的属性:message</span>
+  cb,                                   <span style="color: #008000;">//</span><span style="color: #008000;">对应的函数</span>
+<span style="color: #000000;">  options,
+  isRenderWatcher
+) {
+  </span><span style="color: #0000ff;">this</span>.vm =<span style="color: #000000;"> vm;
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isRenderWatcher) {
+    vm._watcher </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+  }
+  vm._watchers.push(</span><span style="color: #0000ff;">this</span><span style="color: #000000;">);
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> options</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (options) {
+    </span><span style="color: #0000ff;">this</span>.deep = !!<span style="color: #000000;">options.deep;
+    </span><span style="color: #0000ff;">this</span>.user = !!options.user;                             <span style="color: #008000;">//</span><span style="color: #008000;">用户watch这里的user属性为true</span>
+    <span style="color: #0000ff;">this</span>.lazy = !!<span style="color: #000000;">options.lazy;
+    </span><span style="color: #0000ff;">this</span>.sync = !!<span style="color: #000000;">options.sync;
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">this</span>.deep = <span style="color: #0000ff;">this</span>.user = <span style="color: #0000ff;">this</span>.lazy = <span style="color: #0000ff;">this</span>.sync = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">this</span>.cb =<span style="color: #000000;"> cb;
+  </span><span style="color: #0000ff;">this</span>.id = ++uid$1; <span style="color: #008000;">//</span><span style="color: #008000;"> uid for batching</span>
+  <span style="color: #0000ff;">this</span>.active = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">this</span>.dirty = <span style="color: #0000ff;">this</span>.lazy; <span style="color: #008000;">//</span><span style="color: #008000;"> for lazy watchers</span>
+  <span style="color: #0000ff;">this</span>.deps =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">this</span>.newDeps =<span style="color: #000000;"> [];
+  </span><span style="color: #0000ff;">this</span>.depIds = <span style="color: #0000ff;">new</span><span style="color: #000000;"> _Set();
+  </span><span style="color: #0000ff;">this</span>.newDepIds = <span style="color: #0000ff;">new</span><span style="color: #000000;"> _Set();
+  </span><span style="color: #0000ff;">this</span>.expression =<span style="color: #000000;"> expOrFn.toString();
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> parse expression for getter</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> expOrFn === 'function'<span style="color: #000000;">) {                  
+    </span><span style="color: #0000ff;">this</span>.getter =<span style="color: #000000;"> expOrFn;  
+  } </span><span style="color: #0000ff;">else</span> {                                                  <span style="color: #008000;">//</span><span style="color: #008000;">侦听器执行到这里，</span>
+    <span style="color: #0000ff;">this</span>.getter = parsePath(expOrFn);                       <span style="color: #008000;">//</span><span style="color: #008000;">get对应的是parsePath()返回的匿名函数</span>
+    <span style="color: #0000ff;">if</span> (!<span style="color: #0000ff;">this</span><span style="color: #000000;">.getter) {
+      </span><span style="color: #0000ff;">this</span>.getter = <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {};
+      </span>"development" !== 'production' &amp;&amp;<span style="color: #000000;"> warn(
+        </span>"Failed watching path: \"" + expOrFn + "\" " +
+        'Watcher only accepts simple dot-delimited paths. ' +
+        'For full control, use a function instead.'<span style="color: #000000;">,
+        vm
+      );
+    }
+  }
+  </span><span style="color: #0000ff;">this</span>.value = <span style="color: #0000ff;">this</span><span style="color: #000000;">.lazy
+    </span>?<span style="color: #000000;"> undefined
+    : </span><span style="color: #0000ff;">this</span>.get();                                           <span style="color: #008000;">//</span><span style="color: #008000;">最后会执行get()方法</span>
+<span style="color: #000000;">}; 
+
+
+</span><span style="color: #0000ff;">function</span> parsePath (path) {             <span style="color: #008000;">//</span><span style="color: #008000;">解析路劲</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (bailRE.test(path)) { 
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> segments = path.split('.'<span style="color: #000000;">);
+  </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span> (obj) {               <span style="color: #008000;">//</span><span style="color: #008000;">返回一个函数，参数是一个对象</span>
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; segments.length; i++<span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">if</span> (!obj) { <span style="color: #0000ff;">return</span><span style="color: #000000;"> }
+      obj </span>=<span style="color: #000000;"> obj[segments[i]];
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> obj
+  }
+}</span></pre>
+</div>
+<p>执行Watcher的get()方法时就将监听的元素也就是例子里的message对应的deps将当前watcher(用户watcher)作为订阅者，如下:</p>
+<div class="cnblogs_code">
+<pre><code>Watcher.prototype.get = <span style="color: #0000ff;">function</span> get () {     <span style="color: #008000;">//</span><span style="color: #008000;">第3135行</span>
+  pushTarget(<span style="color: #0000ff;">this</span>);                                 <span style="color: #008000;">//</span><span style="color: #008000;">将当前用户watch保存到Dep.target总=中</span>
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> value;
+  </span><span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">.vm;
+  </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+    value </span>= <span style="color: #0000ff;">this</span>.getter.call(vm, vm);               <span style="color: #008000;">//</span><span style="color: #008000;">执行用户wathcer的getter()方法，此方法会将当前用户watcher作为订阅者订阅起来</span>
+  } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.user) {
+      handleError(e, vm, (</span>"getter for watcher \"" + (<span style="color: #0000ff;">this</span>.expression) + "\""<span style="color: #000000;">));
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #0000ff;">throw</span><span style="color: #000000;"> e
+    }
+  } </span><span style="color: #0000ff;">finally</span><span style="color: #000000;"> {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> "touch" every property so they are all tracked as</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> dependencies for deep watching</span>
+    <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.deep) {
+      traverse(value);
+    }
+    popTarget();                                    </span><span style="color: #008000;">//</span><span style="color: #008000;">恢复之前的watcher</span>
+    <span style="color: #0000ff;">this</span><span style="color: #000000;">.cleanupDeps();
+  }
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> value
+};</span></pre>
+</div>
+<p>当我们点击按钮了修改了app.message时就会执行app.message对应的访问控制器的set()方法，就会执行这个用户watcher的update()方法，如下:</p>
+<div class="cnblogs_code">
+<pre><code>Watcher.prototype.update = <span style="color: #0000ff;">function</span> update () {   <span style="color: #008000;">//</span><span style="color: #008000;">第3200行 更新Watcher</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore else </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.lazy) {
+    </span><span style="color: #0000ff;">this</span>.dirty = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.sync) {                           <span style="color: #ff0000;">//如果$this.sync为true，</span><span style="color: #ff0000;">则直接运行this.run获取结果 　　　　;<span style="color: #000000;"><span style="color: #ff0000;">这里对应<span style="color: #ff0000;">watch的值为对象且含有sync属性的情况</span></span></span></span>
+    <span style="color: #0000ff;">this</span>.run();                                     
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    queueWatcher(</span><span style="color: #0000ff;">this</span>);                             <span style="color: #008000;">//</span><span style="color: #008000;">否则调用queueWatcher()函数把所有要执行update()的watch push到队列中</span>
+<span style="color: #000000;">  }
+};</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code>Watcher.prototype.run = <span style="color: #0000ff;">function</span> run () {     <span style="color: #008000;">//</span><span style="color: #008000;">第3215行 执行，会调用get()获取对应的值  </span>
+  <span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span><span style="color: #000000;">.active) {        
+    </span><span style="color: #0000ff;">var</span> value = <span style="color: #0000ff;">this</span><span style="color: #000000;">.get();
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+      value </span>!== <span style="color: #0000ff;">this</span>.value ||
+      <span style="color: #008000;">//</span><span style="color: #008000;"> Deep watchers and watchers on Object/Arrays should fire even</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> when the value is the same, because the value may</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> have mutated.</span>
+      isObject(value) ||
+      <span style="color: #0000ff;">this</span><span style="color: #000000;">.deep
+    ) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> set new value</span>
+      <span style="color: #0000ff;">var</span> oldValue = <span style="color: #0000ff;">this</span><span style="color: #000000;">.value;
+      </span><span style="color: #0000ff;">this</span>.value =<span style="color: #000000;"> value;
+      </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">this</span>.user) {                        <span style="color: #008000;">//</span><span style="color: #008000;">如果是个用户 watcher</span>
+        <span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+          </span><span style="color: #0000ff;">this</span>.cb.call(<span style="color: #0000ff;">this</span>.vm, value, oldValue);       <span style="color: #008000;">//</span><span style="color: #008000;">执行这个回调函数 vm作为上下文 参数1为新值 参数2为旧值 　　　　<span style="color: #ff0000;">也就是最后我们自己定义的function(newval,val){ console.log(newval,val) }函数</span></span>
+        } <span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) { 
+          handleError(e, </span><span style="color: #0000ff;">this</span>.vm, ("callback for watcher \"" + (<span style="color: #0000ff;">this</span>.expression) + "\""<span style="color: #000000;">));
+        }
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">this</span>.cb.call(<span style="color: #0000ff;">this</span><span style="color: #000000;">.vm, value, oldValue);
+      }
+    }
+  }
+};</span></pre>
+</div>
+<p>对于侦听器来说，Vue内部的流程就是这样子</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

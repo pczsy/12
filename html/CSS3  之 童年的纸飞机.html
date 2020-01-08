@@ -1,0 +1,461 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS3  之 童年的纸飞机' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS3  之 童年的纸飞机</center></div><div class='banquan'>原文出处:本文由博客园博主初心，你好吗提供。<br/>
+原文连接:https://www.cnblogs.com/LHLVS/p/10762589.html</div><br>
+    <p>今天我们来折纸飞机（可以飞出去的那种哦）</p>
+<p>基本全用css来实现，只有一小部分的js</p>
+<p>首先看一下飞机的构造</p>
+<p><img src="./images/CSS3  之 童年的纸飞机0.png" alt="" width="262" height="209" /></p>
+<p>灰色区域为可折叠区域</p>
+<p>白色区域为机身</p>
+<p>三角形由border画出来的再经过各种平移翻转变成上图</p>
+<p>写之前再补充个知识点：</p>
+<p>我们颜色的设置不用rgba，</p>
+<p>用hsl()&nbsp; &nbsp;h: 色调 0- 360&nbsp; &nbsp;0(或360)表示红色，120表示绿色，240表示蓝色</p>
+<p>　　　s ： 饱和度 0% -100%</p>
+<p>　　　l :&nbsp; 亮度 0% - 100%</p>
+<p>&nbsp;先看效果才有动力：</p>
+<p><img src="./images/CSS3  之 童年的纸飞机1.png" alt="" width="363" height="211" /></p>
+<p>HTML:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!--童年的纸飞机--&gt;
+&lt;div class="airplane"&gt;
+    &lt;div class="front-end show-front"&gt;
+        &lt;!--宽高自适应的文本框--&gt;
+        &lt;div class="text-input" contenteditable = <span style="color: #0000ff;">true</span>&gt;&lt;/div&gt;
+        &lt;div class="fly"&gt;<span style="color: #000000;">
+            fly
+        </span>&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="backup-end show-backup"&gt;
+        &lt;div class="left-plane"&gt;
+            &lt;!--左上角折叠区域--&gt;
+            &lt;div class="left-top fold"&gt;&lt;/div&gt;
+            &lt;!--左下角折叠区域--&gt;
+            &lt;div class="left-bottom fold"&gt;&lt;/div&gt;
+            &lt;!--机身--&gt;
+            &lt;div class="wing wing1"&gt;&lt;/div&gt;
+            &lt;div class="wing wing2"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="right-plane"&gt;
+            &lt;!--右上角折叠区域--&gt;
+            &lt;div class="right-top fold"&gt;&lt;/div&gt;
+            &lt;!--右下角折叠区域--&gt;
+            &lt;div class="right-bottom fold"&gt;&lt;/div&gt;
+            &lt;!--机身--&gt;
+            &lt;div class="wing wing3"&gt;&lt;/div&gt;
+            &lt;div class="wing wing4"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+</div>
+<p>css:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">body{
+    width: </span>100%<span style="color: #000000;">;
+    height: 680px;
+    background</span>-color: #000<span style="color: #000000;">;
+    background</span>-repeat: no-<span style="color: #000000;">repeat;
+    overflow: hidden;
+    transition: all 2s linear;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">景深加在父级上</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.airplane{
+    width: </span>100%<span style="color: #000000;">;
+    height: </span>100%<span style="color: #000000;">;
+    </span>-webkit-<span style="color: #000000;">perspective: 800px;
+    </span>-webkit-perspective-origin: 50% 50%<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">纸飞机前面</span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">/*</span><span style="color: #008000;">一开始不旋转</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.front</span>-end.show-<span style="color: #000000;">front{
+    transform: rotateY(0deg);
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">点击后旋转</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.front</span>-<span style="color: #000000;">end{
+    background: rgba(</span>255, 255, 255, 0.15<span style="color: #000000;">);
+    </span>*background: hsl(0, 0%, 88%<span style="color: #000000;">);
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">绕Y轴旋转-180度</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    transform: rotateY(</span>-<span style="color: #000000;">180deg);
+    position: relative;
+    box</span>-sizing: border-<span style="color: #000000;">box;
+    padding: 20px;
+    text</span>-<span style="color: #000000;">align: center;
+    backface</span>-<span style="color: #000000;">visibility: hidden;
+    width: 400px;
+    height: 260px;
+    top: 240px;
+    transition: all </span>0.8s ease-<span style="color: #0000ff;">in</span>-<span style="color: #000000;">out;
+    margin: auto;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">文本框</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.text</span>-<span style="color: #000000;">input{
+    width: </span>100%<span style="color: #000000;">;
+    max</span>-<span style="color: #000000;">width:360px;
+    min</span>-<span style="color: #000000;">height:100px;
+    padding: 10px;
+    box</span>-sizing: border-<span style="color: #000000;">box;
+    height: 140px;
+    background</span>-<span style="color: #000000;">color: #ffffff;
+    font</span>-smoothing: subpixel-<span style="color: #000000;">antialiased;
+    font</span>-<span style="color: #000000;">size: 18px;
+    text</span>-<span style="color: #000000;">align: left;
+    font</span>-family: "Microsoft YaHei"<span style="color: #000000;">,Helvetica, Arial, Verdana;
+    line</span>-<span style="color: #000000;">height: 20px;
+}
+.fly{
+    transition: all </span>0.3s ease-<span style="color: #0000ff;">in</span>-<span style="color: #000000;">out;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">hsl是色调/饱和度/亮度/</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    border: 2px solid hsl(</span>194, 100%, 72%<span style="color: #000000;">);
+    margin: 15px </span>0<span style="color: #000000;">;
+    padding: 10px;
+    outline: none;
+    font</span>-<span style="color: #000000;">size: 18px;
+    cursor: pointer;
+    font</span>-family: "Microsoft YaHei"<span style="color: #000000;">;
+    background</span>-color: hsl(0, 0%, 94%<span style="color: #000000;">);
+    border</span>-<span style="color: #000000;">radius:4px;
+    user</span>-<span style="color: #000000;">select: none;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">点击按钮时缩小动画</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.fly:active{
+    transform: scale(</span>0.85<span style="color: #000000;">);
+    transition: all 10ms ease</span>-<span style="color: #0000ff;">in</span>-<span style="color: #000000;">out;
+    background</span>-color: hsl(0, 0%, 85%<span style="color: #000000;">);
+    border: 2px solid hsl(</span>194, 30%, 55%<span style="color: #000000;">);
+}
+.backup</span>-<span style="color: #000000;">end{
+    perspective: 600px;
+    perspective</span>-<span style="color: #000000;">origin: 200px 131px;
+    transform</span>-style: preserve-<span style="color: #000000;">3d;
+    transition: all </span>0.8s ease-<span style="color: #0000ff;">in</span>-<span style="color: #000000;">out;
+    backface</span>-<span style="color: #000000;">visibility: hidden;
+    position: relative;
+    width: 400px;
+    height: 260px;
+    margin: auto;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">一开始不显示飞机</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-end.show-<span style="color: #000000;">backup{
+    transform: rotateY(180deg);
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">飞机的左右两边公共样式</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.left</span>-plane, .right-<span style="color: #000000;">plane{
+    transform</span>-style: preserve-<span style="color: #000000;">3d;
+    width: 200px;
+    height: 260px;
+    display: block;
+    position: absolute;
+    top: 0px;
+    transition: all 1s ease</span>-<span style="color: #0000ff;">in</span>-<span style="color: #000000;">out;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">左边</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.left</span>-<span style="color: #000000;">plane{
+    transform: rotateZ(0deg);
+    transform</span>-origin: 100% 50% 0<span style="color: #000000;">;
+    left: </span>0<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">右边</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.right</span>-<span style="color: #000000;">plane{
+    transform: rotateZ(0deg);
+    transform</span>-origin: 0% 50%<span style="color: #000000;">;
+    left: 199px;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">左右机身的公共样式</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.wing{
+    position: absolute;
+    transform</span>-origin: 0 0 0<span style="color: #000000;">;
+    perspective: 1px;
+    perspective</span>-origin: 50% 50%<span style="color: #000000;">;
+    backface</span>-<span style="color: #000000;">visibility: hidden;
+    transition: all </span>1<span style="color: #000000;">.3s linear;
+    box</span>-sizing: border-<span style="color: #000000;">box;
+    margin: </span>0<span style="color: #000000;">;
+    padding: </span>0<span style="color: #000000;">;
+    background: none;
+    border: none;
+    border</span>-top: 240px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-bottom: 0px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-right: 100px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    width: </span>0<span style="color: #000000;">;
+    height: </span>0<span style="color: #000000;">;
+    bottom: </span>0<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">绘制  飞机2d 雏形</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.wing1 {
+    transform</span>-origin: 100% 100%<span style="color: #000000;">;
+    transform: translateY(</span>-38px) translateX(8px) rotateZ(22.62deg) skewY(-22.62deg);<span style="color: #008000;">/*</span><span style="color: #008000;">2D图像的偏移 旋转</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+}
+
+.wing2 {
+    transform: rotateZ(</span>22<span style="color: #000000;">.62deg);
+    transform</span>-origin: 100% 100%<span style="color: #000000;">;
+    border</span>-left: 100px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    border</span>-<span style="color: #000000;">right: none;
+    left: 100px;
+}
+
+.wing3 {
+    transform: rotateZ(</span>-22<span style="color: #000000;">.62deg);
+    transform</span>-origin: 0% 100%<span style="color: #000000;">;
+    border</span>-right: 100px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+}
+
+.wing4 {
+    transform: translateY(</span>-38px) translateX(-8px) rotateZ(-22.62deg) skewY(22<span style="color: #000000;">.62deg);
+    transform</span>-origin: 0% 100%<span style="color: #000000;">;
+    border</span>-<span style="color: #000000;">right: none;
+    border</span>-left: 100px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    left: 100px;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">绘制可折叠区域</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.left</span>-<span style="color: #000000;">top.fold{
+    position: absolute;
+    transform</span>-<span style="color: #000000;">origin: 100px 112px;
+    transition</span>-<span style="color: #000000;">delay: 1300ms;
+    width: </span>0<span style="color: #000000;">;
+    height: </span>0<span style="color: #000000;">;
+    top: </span>0<span style="color: #000000;">;
+    border</span>-right: 202px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-bottom: 202px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-top: 222px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+}
+.right</span>-<span style="color: #000000;">top.fold{
+    position: absolute;
+    right: </span>0<span style="color: #000000;">;
+    border</span>-left: 202px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-bottom: 202px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-top: 222px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    transform</span>-<span style="color: #000000;">origin: 96px 112px;
+    transition</span>-<span style="color: #000000;">delay: 1650ms;
+}
+.left</span>-<span style="color: #000000;">bottom.fold{
+    position: absolute;
+    transform</span>-origin: 109px 0<span style="color: #000000;">;
+    transition</span>-<span style="color: #000000;">delay: 2100ms;
+    width: 109px;
+    height: 38px;
+    background: hsl(</span>0, 0%, 88%<span style="color: #000000;">);
+    bottom: </span>0<span style="color: #000000;">;
+    left: </span>0<span style="color: #000000;">;
+}
+.right</span>-<span style="color: #000000;">bottom.fold{
+    position: absolute;
+    transform</span>-origin: 0 0<span style="color: #000000;">;
+    transition</span>-<span style="color: #000000;">delay: 2450ms;
+    width: 109px;
+    height: 38px;
+    background: hsl(</span>0, 0%, 88%<span style="color: #000000;">);
+    bottom: </span>0<span style="color: #000000;">;
+    right: </span>0<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">补全 折叠尾翼 剩余 三角区域</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.left</span>-<span style="color: #000000;">bottom.fold:after {
+    position: absolute;
+    content: </span>""<span style="color: #000000;">;
+    border</span>-right: 92px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-bottom: 39px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    border</span>-top: 37px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    left: 109px;
+    bottom: </span>0<span style="color: #000000;">;
+}
+
+.right</span>-<span style="color: #000000;">bottom.fold:after {
+    position: absolute;
+    content: </span>""<span style="color: #000000;">;
+    border</span>-left: 92px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    border</span>-bottom: 39px solid hsl(0, 0%, 88%<span style="color: #000000;">);
+    border</span>-top: 37px solid hsla(0, 0%, 0%, 0<span style="color: #000000;">);
+    left: </span>-<span style="color: #000000;">92px;
+    bottom: </span>0<span style="color: #000000;">;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">**************************</span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">/*</span><span style="color: #008000;">***此处开始配合js****</span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">/*</span><span style="color: #008000;">折叠效果</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.fold {
+    transition: transform 800ms ease</span>-<span style="color: #000000;">out;
+    backface</span>-<span style="color: #000000;">visibility: hidden;
+    position: absolute;
+    background</span>-<span style="color: #000000;">color: transparent;
+    z</span>-index: 0<span style="color: #000000;">;
+    width: </span>0<span style="color: #000000;">;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 折叠效果（左机翼、左尾翼） </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.left</span>-<span style="color: #000000;">top.fold.curved {
+    transform: rotate3d(</span>1,-1.11,0<span style="color: #000000;">,180deg);
+}
+
+.left</span>-<span style="color: #000000;">bottom.fold.curved {
+    transform: rotate3d(</span>2.4867,1,0,-<span style="color: #000000;">180deg);
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 折叠效果（右机翼、右尾翼）</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.right</span>-<span style="color: #000000;">top.fold.curved {
+    transform: rotate3d(</span>1,1.11,0<span style="color: #000000;">,180deg);
+}
+
+.right</span>-<span style="color: #000000;">bottom.fold.curved {
+    transform: rotate3d(</span>-2.4867,1,0<span style="color: #000000;">,180deg);
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 平放一整个飞机 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.airplane.hover {
+    transform: rotateX(54deg) rotateY(</span>-<span style="color: #000000;">10deg) rotateZ(25deg);
+    transition</span>-delay: 0<span style="color: #000000;">.5s;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">放平之后 左侧整体倾斜 （体现折叠效果）</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-end.hover .left-<span style="color: #000000;">plane {
+    transform: rotateY(60deg);
+}
+
+.backup</span>-end.hover .right-<span style="color: #000000;">plane {
+    transform: rotateY(</span>-<span style="color: #000000;">60deg);
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 3d视觉中放平 左侧机翼</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover .wing1 {
+    transform: translateY(</span>-38px) translateX(8px) rotateZ(22.62deg) rotateY(-60deg) skewY(-22<span style="color: #000000;">.62deg);
+    border</span>-right: 100px solid hsl(0, 0%, 95%<span style="color: #000000;">);
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">左侧 飞机手持部位透明度降低</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover .wing2 {
+    border</span>-left: 100px solid hsl(0, 0%, 85%<span style="color: #000000;">);
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 3d视觉中放平 右侧机翼</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover .wing4 {
+    transform: translateY(</span>-38px) translateX(-8px) rotateZ(-22<span style="color: #000000;">.62deg) rotateY(60deg) skewY(20deg);
+    border</span>-left: 100px solid hsl(0, 0%, 95%<span style="color: #000000;">);
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">右侧 飞机手持部位透明度降低</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover .wing3 {
+    border</span>-right: 100px solid hsl(0, 0%, 71%<span style="color: #000000;">);
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;">机翼 折叠效果（右机翼、右尾翼） 之后 多余部分隐藏掉</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover .curved {
+    display: none;
+}
+
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> #wind_container.hover .wing {
+    backface-visibility: visible;
+} </span><span style="color: #008000;">*/</span>
+
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 飞机后退助跑 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover.fly_away_first {
+    transform: translateX(</span>-100px) translateZ(300px) rotateX(42deg) rotateY(-<span style="color: #000000;">11deg) rotateZ(27deg);
+    transition</span>-<span style="color: #000000;">delay: 0ms;
+    transition</span>-duration: 0<span style="color: #000000;">.4s;
+    transition</span>-timing-<span style="color: #0000ff;">function</span>: ease-<span style="color: #000000;">out;
+}
+</span><span style="color: #008000;">/*</span><span style="color: #008000;"> 飞机向前飞翔至消失 </span><span style="color: #008000;">*/</span><span style="color: #000000;">
+.backup</span>-<span style="color: #000000;">end.hover.fly_away_first.fly_away {
+    transform: translateX(600px) translateY(</span>-400px) translateZ(-5000px) rotateX(66deg) rotateY(-<span style="color: #000000;">12deg) rotateZ(36deg);
+    transition: transform 2s ease</span>-out, opacity 1.5s 0<span style="color: #000000;">.5s linear;
+    opacity: </span>0<span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>js:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 童年的纸飞机</span>
+const fly = document.getElementsByClassName('fly')[0<span style="color: #000000;">];
+const front </span>= document.getElementsByClassName('front-end')[0<span style="color: #000000;">];
+const backup </span>= document.getElementsByClassName('backup-end')[0<span style="color: #000000;">];
+const fold </span>= document.getElementsByClassName('fold'<span style="color: #000000;">);
+
+fly.addEventListener(</span>'click', () =&gt;<span style="color: #000000;"> {
+    first().then(second).then(third).then(fourth).then(fifth).</span><span style="color: #0000ff;">catch</span>((err)=&gt;<span style="color: #000000;"> {
+        console.log(err)
+    });
+}, </span><span style="color: #0000ff;">false</span><span style="color: #000000;">);
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 第一步</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> first() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((suc, err) =&gt;<span style="color: #000000;"> {
+        setTimeout(() </span>=&gt;<span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 隐藏信息面板</span>
+            front.classList.remove('show-front'<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 翻转至正面</span>
+            backup.classList.remove('show-backup'<span style="color: #000000;">);
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 折叠效果（左翼、右翼）</span>
+            <span style="color: #0000ff;">for</span> (let i = 0; i &lt; fold.length; i++<span style="color: #000000;">) {
+                fold[i].classList.add(</span>'curved'<span style="color: #000000;">)
+            }
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 颜色变换</span>
+            document.body.style.backgroundColor = "#54575A"<span style="color: #000000;">;
+            suc(</span>1<span style="color: #000000;">)
+        }, </span>200<span style="color: #000000;">)
+    })
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> second() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((suc, err) =&gt;<span style="color: #000000;"> {
+        setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            backup.classList.add(</span>'hover'<span style="color: #000000;">);
+            document.body.style.backgroundColor </span>= "#AD8BD8"<span style="color: #000000;">;
+            suc(</span>2<span style="color: #000000;">)
+        }, </span>2800<span style="color: #000000;">);
+    })
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">步骤三：飞机后退助跑</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> third() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((suc, err) =&gt;<span style="color: #000000;"> {
+        setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            backup.classList.add(</span>'fly_away_first'<span style="color: #000000;">);
+            document.body.style.backgroundColor </span>= "#6E99C4"<span style="color: #000000;">;
+            suc(</span>3<span style="color: #000000;">)
+        }, </span>2000<span style="color: #000000;">);
+    })
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 步骤四：飞机向前飞翔至消失</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> fourth() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((suc, err) =&gt;<span style="color: #000000;"> {
+        setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            backup.classList.add(</span>'fly_away'<span style="color: #000000;">);
+            document.body.style.backgroundColor </span>= "#3F9BFF"<span style="color: #000000;">;
+            suc(</span>4<span style="color: #000000;">)
+        }, </span>600<span style="color: #000000;">);
+    })
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> fifth() {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise((suc, err) =&gt;<span style="color: #000000;"> {
+        setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+            front.classList.add(</span>'show-front'<span style="color: #000000;">);
+            backup.classList.remove(</span>'fly_away','fly_away_first','hover'<span style="color: #000000;">);
+            backup.classList.add(</span>'show-backup'<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">for</span> (let i = 0; i &lt; fold.length; i++<span style="color: #000000;">) {
+                fold[i].classList.remove(</span>'curved'<span style="color: #000000;">)
+            }
+            document.body.style.backgroundColor </span>= "#000"<span style="color: #000000;">;
+            suc(</span>5<span style="color: #000000;">)
+        }, </span>3000<span style="color: #000000;">);
+    })
+}</span></pre>
+</div>
+<p>参考自：腾讯课堂渡一教育，有兴趣的同学可以去听一听他们的课，讲的蛮不错的， 对初学者很友好。</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

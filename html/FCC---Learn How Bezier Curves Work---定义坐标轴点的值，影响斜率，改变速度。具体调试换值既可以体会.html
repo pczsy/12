@@ -1,0 +1,94 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修FCC---Learn How Bezier Curves Work---定义坐标轴点的值，影响斜率，改变速度。具体调试换值既可以体会' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>FCC---Learn How Bezier Curves Work---定义坐标轴点的值，影响斜率，改变速度。具体调试换值既可以体会</center></div><div class='banquan'>原文出处:本文由博客园博主jane_panyiyun提供。<br/>
+原文连接:https://www.cnblogs.com/jane-panyiyun/p/11757137.html</div><br>
+    <p>The last challenge introduced the&nbsp;<code>animation-timing-function</code>&nbsp;property and a few keywords that change the speed of an animation over its duration.</p>
+<p>CSS offers an option other than keywords that provides even finer control over how the animation plays out, through the use of Bezier curves.</p>
+<p>In CSS animations, Bezier curves are used with the&nbsp;<code>cubic-bezier</code>&nbsp;function.</p>
+<p>The shape of the curve represents how the animation plays out.</p>
+<p>The curve lives on a 1 by 1 coordinate system.</p>
+<p>The X-axis of this coordinate system is the duration of the animation (think of it as a time scale), and the Y-axis is the change in the animation.</p>
+<p>The&nbsp;<code>cubic-bezier</code>&nbsp;function consists of four main points that sit on this 1 by 1 grid:&nbsp;<code>p0</code>,&nbsp;<code>p1</code>,&nbsp;<code>p2</code>, and&nbsp;<code>p3</code>.&nbsp;<code>p0</code>&nbsp;and&nbsp;<code>p3</code>&nbsp;are set for you - they are the beginning and end points which are always located respectively at the origin (0, 0) and (1, 1).</p>
+<p>You set the x and y values for the other two points, and where you place them in the grid dictates the shape of the curve for the animation to follow.</p>
+<p>This is done in CSS by declaring the x and y values of the&nbsp;<code>p1</code>&nbsp;and&nbsp;<code>p2</code>&nbsp;"anchor" points in the form:&nbsp;<code>(x1, y1, x2, y2)</code>.</p>
+<p>Pulling it all together, here's an example of a Bezier curve in CSS code:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">animation-timing-function: cubic-bezier(0.25, 0.25, 0.75, 0.75);</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>In the example above, the x and y values are equivalent for each point (x1 = 0.25 = y1 and x2 = 0.75 = y2), which if you remember from geometry class, results in a line that extends from the origin to point (1, 1). This animation is a linear change of an element during the length of an animation, and is the same as using the&nbsp;<code>linear</code>&nbsp;keyword.</p>
+<p>In other words, it changes at a constant speed.</p>
+<p>练习题目：</p>
+<p>For the element with the id of&nbsp;<code>ball1</code>, change the value of the&nbsp;<code>animation-timing-function</code>&nbsp;property from&nbsp;<code>linear</code>&nbsp;to its equivalent&nbsp;<code>cubic-bezier</code>&nbsp;function value.</p>
+<p>Use the point values given in the example above.</p>
+<p>&nbsp;</p>
+<p>练习代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #800000;">&lt;style&gt;
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> <span style="color: #800000;">  .balls</span>{
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    border-radius</span>:<span style="color: #0000ff;"> 50%</span>;
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    background</span>:<span style="color: #0000ff;"> linear-gradient(
+</span><span style="color: #008080;"> 6</span> <span style="color: #0000ff;">      35deg,
+</span><span style="color: #008080;"> 7</span> <span style="color: #0000ff;">      #ccffff,
+</span><span style="color: #008080;"> 8</span> <span style="color: #0000ff;">      #ffcccc
+</span><span style="color: #008080;"> 9</span> <span style="color: #0000ff;">    )</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> fixed</span>;
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 50px</span>;
+<span style="color: #008080;">12</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 50px</span>;
+<span style="color: #008080;">13</span> <span style="color: #ff0000;">    margin-top</span>:<span style="color: #0000ff;"> 50px</span>;
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">    animation-name</span>:<span style="color: #0000ff;"> bounce</span>;
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    animation-duration</span>:<span style="color: #0000ff;"> 2s</span>;
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">    animation-iteration-count</span>:<span style="color: #0000ff;"> infinite</span>;
+<span style="color: #008080;">17</span>   }
+<span style="color: #008080;">18</span> <span style="color: #800000;">  #ball1 </span>{
+<span style="color: #008080;">19</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> 27%</span>;
+<span style="color: #008080;">20</span> <span style="color: #ff0000;">    animation-timing-function</span>:<span style="color: #0000ff;"> cubic-bezier(0.25, 0.25, 0.75, 0.75)</span>;
+<span style="color: #008080;">21</span>   }
+<span style="color: #008080;">22</span> <span style="color: #800000;">  #ball2 </span>{
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> 56%</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">    animation-timing-function</span>:<span style="color: #0000ff;"> ease-out</span>;
+<span style="color: #008080;">25</span>   }
+<span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span> <span style="color: #800000;">  @keyframes bounce </span>{
+<span style="color: #008080;">28</span> <span style="color: #ff0000;">    0% {
+</span><span style="color: #008080;">29</span> <span style="color: #ff0000;">      top</span>:<span style="color: #0000ff;"> 0px</span>;
+<span style="color: #008080;">30</span>     }
+<span style="color: #008080;">31</span> <span style="color: #800000;">    100% </span>{
+<span style="color: #008080;">32</span> <span style="color: #ff0000;">      top</span>:<span style="color: #0000ff;"> 249px</span>;
+<span style="color: #008080;">33</span>     }
+<span style="color: #008080;">34</span> <span style="color: #800000;">  }
+</span><span style="color: #008080;">35</span> 
+<span style="color: #008080;">36</span> <span style="color: #800000;">&lt;/style&gt;
+</span><span style="color: #008080;">37</span> 
+<span style="color: #008080;">38</span> <span style="color: #800000;">&lt;div class="balls" id="ball1"&gt;&lt;/div&gt;
+</span><span style="color: #008080;">39</span> <span style="color: #800000;">&lt;div class="balls" id="ball2"&gt;&lt;/div&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>效果如下：</p>
+<p>我的理解，也是2个球掉下，相同循环时间，你定义坐标轴2个点的值，再加上原点和（1，1），形成的曲线。</p>
+<p>X轴是循环时间段，Y轴是变化值。例如，X是0.1，Y是0.9，意味在很少的时间内变化很大的值，速度会比较快。</p>
+<p>具体也是调试数值，可以体会效果</p>
+<p><img src="./images/FCC---Learn How Bezier Curves Work---定义坐标轴点的值，影响斜率，改变速度。具体调试换值既可以体会0.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

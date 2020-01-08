@@ -1,0 +1,458 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修jsp+servlet+mysql简单实现用户登陆注册' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>jsp+servlet+mysql简单实现用户登陆注册</center></div><div class='banquan'>原文出处:本文由博客园博主Anxc提供。<br/>
+原文连接:https://www.cnblogs.com/Anxc/p/11404403.html</div><br>
+    <blockquote>
+<p>原码，项目中遇到的错误，解决方法，文章最后有链接可以获取</p>
+</blockquote>
+<h1 id="项目简介">项目简介</h1>
+<blockquote>
+<p>*有的网友说在修改和删除时会触发error,建议各位不要去把用户名命名为中文！</p>
+</blockquote>
+<h2 id="功能描述">功能描述</h2>
+<p>登陆，注册，用户一览表，修改，删除，添加，模糊查询和精确查询<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册0.png" /></p>
+<h2 id="采用的技术及环境">采用的技术及环境</h2>
+<p>JSP：前端的信息展示<br />
+Servlet：业务逻辑功能实现，及调用数据库的实现数据处理和传输<br />
+MySQL：用来实现数据存储<br />
+利用Eclipse来实现，MySQL数据库版本：5.x</p>
+<h2 id="运行效果展示">运行效果展示</h2>
+<h3 id="数据库数据">数据库数据</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册1.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册2.png" /></p>
+<h3 id="项目结构图">项目结构图</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册3.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册4.png" /><br />
+*因屏幕小，截图用了两张图片</p>
+<h3 id="登陆页面">登陆页面</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册5.png" /></p>
+<h3 id="登陆成功用户一览表页面">登陆成功用户一览表页面</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册6.png" /></p>
+<h3 id="注册页面">注册页面</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册7.png" /><br />
+*因我在数据设计表时，性别（sex）设置的大小为2长度，所以我这里输入一个字符，为了避免数据超出范围</p>
+<h3 id="查询可选项">查询可选项</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册8.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册9.png" /></p>
+<h4 id="模糊查询班级中有1的用户实现">模糊查询班级中有“1”的用户实现</h4>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册10.png" /></p>
+<h3 id="修改用户界面">修改用户界面</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册11.png" /></p>
+<h3 id="删除没有界面提示直接删除">删除没有界面提示，直接删除</h3>
+<h1 id="项目创建逻辑理解">项目创建逻辑理解</h1>
+<h2 id="整体理解">整体理解</h2>
+<p>以jsp-业务逻辑代码-数据库为一条中心线<br />
+jsp:负责数据的展示和数据的收集<br />
+web.xml:负责当前页面信息提交给谁，哪个servlet来处理当前页面提交的数据<br />
+servlet:用来进行数据的处理和数据的传输（jsp&lt;==&gt;数据库）</p>
+<h2 id="jsp">jsp</h2>
+<h3 id="前端的页面编写">前端的页面编写</h3>
+<p>只要有一些html基础，会编写几个常见的标签就可以。<br />
+要会用js获取它们的值，这样就可以了</p>
+<pre><code><code> 文本框：&lt;input type=&quot;text&quot; id=&quot;username&quot; /&gt;
+ 密码框：&lt;input type=&quot;password&quot; id=&#39;&quot;password&quot;&gt;
+单选按钮：&lt;input type=&quot;radio&quot; name=&quot;sex&quot; value=&quot;0&quot; /&gt;男&lt;input type=&quot;radio&quot; name=&quot;sex&quot; value=&quot;1&quot;&gt;
+……</code></pre>
+<h3 id="form表单">form表单：</h3>
+<pre><code><code>&lt;form method=&quot;post&quot;  action=&quot;loginServlet&quot; &gt;
+这中间用来编写用户要提交的数据（要用input，button）
+&lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;
+&lt;input type=&quot;reset&quot; value=&quot;重置&quot;&gt;
+&lt;/form&gt;</code></pre>
+<h3 id="el表达式">EL表达式：</h3>
+<p>用来获取servlet传递到页面的数据<br />
+首先要在jsp页面声明文件头，用来告诉jsp页面，可以使用EL表达式<br />
+假如说你从servlet向jsp传递了一个User对象，你要在jsp页面中输出User对象的属性，你要把这个User类在文件头中声明：</p>
+<pre><code><code> &lt;%@page import=&quot;cn.anxcyun.www.po.User&quot; %&gt;</code></pre>
+<p>import=&quot;包名.类名&quot;<br />
+常见：<br />
+获取值${name} name：你在servlet中定义的值（小写字母，如果大写的话，容易出错）<br />
+我在这里使用到了JSTL，JSP标准标签库（JSTL）是一个JSP标签集合，它封装了JSP应用的通用核心功能。（文章最后有链接，一看就懂）</p>
+<h2 id="web.xml相关配置编写">web.xml相关配置编写</h2>
+<p>文件位置：项目/WebContent/WEB-INF/web.xml<br />
+文件在创建时可以自动生成（须打对勾）,如果没有按如下图示：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册12.png" /></p>
+<h3 id="文件截图">文件截图：</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册13.png" /><br />
+文件：</p>
+<pre><code><code>&lt;? xml&gt;
+&lt;web-app   加上文件的规范（自动生成）&gt;
+    &lt;display-name&gt;项目名&lt;/display-name&gt;
+&lt;welcome-file-list&gt;
+   &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;项目运行时的第一个页面（可自己更改）
+&lt;/welcome-file-list&gt;
+&lt;!-- 注册 --&gt;这是注释不用管    ，一个servlet要如下两个标签（servlet和servlet-mappping）
+  &lt;servlet&gt;
+    &lt;servlet-name&gt;register&lt;/servlet-name&gt;       定义一个servlet，jsp的form表单中的action
+    &lt;servlet-class&gt;cn.anxcyun.www.servlet.RegisterServlet&lt;/servlet-class&gt;     你jsp提交数据后要执行的servlet类
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;register&lt;/servlet-name&gt;       两个servlet的name必须相同
+    &lt;url-pattern&gt;/register&lt;/url-pattern&gt;      当你运行成功以后，下一个页面的url栏显示的内容：localhost:8080/项目名/你定义的url-pattern
+  &lt;/servlet-mapping&gt;
+&lt;/web-app&gt;</code></pre>
+<h2 id="servlet的逻辑层编写">servlet的逻辑层编写</h2>
+<h3 id="思想">思想</h3>
+<p>分模块化思想：因为这一层涉及到了对数据的处理和页面跳转到哪个页面，所以说，我利用了几个包来实现它：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册14.png" /><br />
+<strong>servlet</strong>: 获取页面提交的数据，交给下一层处理，根据处理的结果，指定要跳转的页面<br />
+<strong>control</strong>: 目前没有实际的用途，就是servlet和dao层的接口传递<br />
+<strong>dao</strong>: 用来实现与数据库的业务逻辑，包括表的增删改查，（查询：登陆查询，一览表查询）<br />
+<strong>po</strong>: 基类（bean）主要是用来映射数据库中的表，一个类对应一个表（表的列值对应类的变量属性），这样在查询时数据传递时，可以用对象传递</p>
+<h3 id="细化">细化：</h3>
+<p>servlet:</p>
+<pre><code><code>public class myServlet extends HttpServlet{
+    
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO Auto-generated method stub
+        super.service(req, resp);
+    }
+}</code></pre>
+<p>首先要继承于 HttpServlet类</p>
+<pre><code><code>（导入包：import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;）
+Eclipse的快捷键：
+    导入包：ctrl + shift + O  
+    快速生成方法：alt + / 
+</code></pre>
+<p>然后重写默认方法：service + （alt + /）</p>
+<pre><code><code>@Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        // TODO Auto-generated method stub        可以删除
+        super.service(req, resp);                            可以删除
+    }</code></pre>
+<p>获取值：</p>
+<pre><code><code>        String number = new String(req.getParameter(&quot;number&quot;).getBytes(&quot;iso-8859-1&quot;), &quot;utf-8&quot;);
+其实 直接:String number = req.getParameter(&quot;number&quot;);就可以，但是我的值在传递时中文时乱码，所以加上了</code></pre>
+<p>要跳转的页面：</p>
+<pre><code><code>            req.setAttribute(&quot;list&quot;, list); 
+
+把一个数据保存到页面（第一个是你在页面要用的list ，第二个是你在servlet中的数据，可以是集合，对象和基本数据）
+
+        req.getRequestDispatcher(&quot;hello.jsp&quot;).forward(req, resp);      跳转页面</code></pre>
+<h2 id="数据库">数据库：</h2>
+<p>JDBC连接数据库</p>
+<pre><code><code>import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+/**
+ * 
+    * @ClassName: JDBC
+    * @Description: 测试与数据库的连接
+    * @author Anxc
+    * @date 2019年8月7日
+    *
+ */
+public class JDBC {
+    
+//  定义一些基础变量
+    String url = &quot;jdbc:mysql://localhost:3306/数据库名?useUnicode=true&amp;characterEncoding=UTF-8&quot;;
+    String username=&quot;root&quot;;
+    String password=&quot;password&quot;;
+    private static int id=0;
+    
+//  定义私有变量
+    private PreparedStatement prepareStatement;
+    private Connection conn;
+    
+    /**
+     * 
+        * @Title: getConnection
+        * @Description: 数据库连接
+        * @param @return    参数
+        * @return Connection    返回类型
+        * @throws
+     */
+    public Connection getConnection() {
+        
+        try {
+            
+//          加载JDBC驱动
+            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+            
+//          获取连接
+            conn=DriverManager.getConnection(url, username, password);
+            
+            return conn;
+            
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    /**
+     * 
+        * @Title: addUser
+        * @Description: 增加用户到数据库
+        * @param     参数
+        * @return void    返回类型
+        * @throws
+     */
+    public void addUser() {
+        
+        String sql=&quot;insert into UserInfo values(?,?,?)&quot;;
+        
+//      定义添加的用户信息
+        id++;
+        String name = &quot;张三&quot;;
+        String pwd = &quot;12&quot;;
+        
+        Connection conn = getConnection();
+        
+        try {
+            prepareStatement = conn.prepareStatement(sql);
+            prepareStatement.setInt(1, id);
+            prepareStatement.setString(2, name);
+            prepareStatement.setString(3, pwd);
+            
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                prepareStatement.close();
+                conn.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 
+        * @Title: deleteUser
+        * @Description: 删除一个用户信息
+        * @param     参数
+        * @return void    返回类型
+        * @throws
+     */
+    public void deleteUser() {
+        
+//      定义SQL语句
+        String sql=&quot;delete from UserInfo where id =?&quot;;
+        
+        Connection conn = getConnection();
+        
+        try {
+//          执行SQL语句
+            prepareStatement = conn.prepareStatement(sql);
+            
+//          替换占位符？
+            prepareStatement.setInt(1, 1);
+            
+//          获取返回结果集
+            prepareStatement.executeUpdate();
+            
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+//              关闭数据库连接
+                prepareStatement.close();
+                conn.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    /**
+     * 
+        * @Title: insertUser
+        * @Description: 修改User
+        * @param     参数
+        * @return void    返回类型
+        * @throws
+     */
+    public void updateUser() {
+        String sql=&quot;update UserInfo set username=? where id=?&quot;;
+        
+        Connection conn = getConnection();
+        try {
+            
+            prepareStatement = conn.prepareStatement(sql);
+            
+            prepareStatement.setString(1, &quot;lll&quot;);
+            prepareStatement.setInt(2, 1);
+            
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                prepareStatement.close();
+                conn.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * 
+        * @Title: selectUser
+        * @Description: 查询数据
+        * @param     参数
+        * @return void    返回类型
+        * @throws
+     */
+    public void selectUser() {
+        String sql = &quot;select * from UserInfo&quot;;
+        
+        Connection conn = getConnection();
+        try {
+            prepareStatement = conn.prepareStatement(sql);
+            
+            ResultSet res = prepareStatement.executeQuery();
+            
+//          遍历输出
+            while(res.next()) {
+//              int id = res.getInt(1);
+                System.out.println(&quot;id：&quot;+res.getInt(1)+&quot;|name:&quot;+res.getString(2)+&quot;|pwd:&quot;+res.getString(3));
+                
+            }
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                prepareStatement.close();
+                conn.close();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    /**
+     * 
+        * @Title: initTable
+        * @Description: 删除表的所有数据，使系统运行时id从0开始
+        * @param     参数
+        * @return void    返回类型
+        * @throws
+     */
+    public void initTable() {
+        String sql = &quot;truncate userInfo&quot;;
+        System.out.println(&quot;-----------init-----------&quot;);
+        Connection conn = getConnection();
+        try {
+            prepareStatement = conn.prepareStatement(sql);
+            
+            prepareStatement.executeUpdate();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                prepareStatement.close();
+                conn.close();
+                System.out.println(&quot;-----------ok------------&quot;);
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+}</code></pre>
+<p>这是我以前写的一个，可以自己理解一下</p>
+<h1 id="附录">附录</h1>
+<h2 id="导入jar包">导入jar包:</h2>
+<h3 id="jsp文件头报错">jsp文件头报错：</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册15.png" /></p>
+<h3 id="是因为没有配置tomcat">是因为没有配置tomcat:</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册16.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册17.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册18.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册19.png" /></p>
+<h3 id="要导入的jar包">要导入的jar包：</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册20.png" /><br />
+第一个和第三个是JSTL的包（https://www.runoob.com/jsp/jsp-jstl.html 这教程，里面有安装信息）<br />
+第二个是JDBC需要的包（访问数据库） (https://www.runoob.com/java/java-mysql-connect.html 在这里下载jar)<br />
+这几个jar包复制到lib文件夹下，然后：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册21.png" /></p>
+<h3 id="对于用户名是中文的执行修改和删除功能报错的代码可以按照以下进行修改">对于用户名是中文的，执行修改和删除功能报错的代码，可以按照以下进行修改：</h3>
+<p>要修改的文件：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册22.png" /><br />
+修改后的样子:<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册23.png" /></p>
+<h3 id="如果别的也由于中文的问题出错可以把下面这几个文件都按照上面的改了">如果别的也由于中文的问题出错，可以把下面这几个文件都按照上面的改了：</h3>
+<p><img src="./images/jsp+servlet+mysql简单实现用户登陆注册24.png" /></p>
+<blockquote>
+<p>URL传参中需要处理的特殊字符及方法：<br />
+https://blog.csdn.net/loongshawn/article/details/54613310 （还是没解决实际问题）<br />
+url特殊字符转义及解决方法（附有例子）<br />
+https://blog.csdn.net/u013412790/article/details/51441972 （完美解决关于“%”的问题）<br />
+executeQuery返回值如何判断是否有内容：<br />
+https://blog.csdn.net/yw_1207/article/details/80832698<br />
+JSP传递参数给servlet的三种方法<br />
+https://blog.csdn.net/zeephom/article/details/79607173<br />
+EL表达式用法<br />
+https://www.cnblogs.com/xdp-gacl/p/3938361.html</p>
+</blockquote>
+<h2 id="数据库代码">数据库代码：</h2>
+<pre><code><code>DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user`  (
+  `u_username` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `u_class` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `u_number` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `u_sex` varchar(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `u_tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`u_username`) USING BTREE
+) ;</code></pre>
+<h1 id="原码">原码</h1>
+<blockquote>
+<p>Github 原码项目:https://github.com/Anxc520/servletProject.git</p>
+</blockquote>
+<h1 id="项目导入步骤">项目导入步骤：</h1>
+<p>1.1 新建项目<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册25.png" alt="uploading-image-89358.png" /><br />
+转2.0</p>
+<p>1.2 如果没有Dynamic Web project：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册26.png" alt="uploading-image-747158.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册27.png" alt="uploading-image-72266.png" /></p>
+<p>2.0 项目信息<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册28.png" alt="uploading-image-74858.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册29.png" alt="uploading-image-831618.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册30.png" alt="uploading-image-902890.png" /><br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册31.png" alt="uploading-image-215644.png" /></p>
+<p>3.0 复制项目<br />
+解压下载的项目并打开：<br />
+<img src="./images/jsp+servlet+mysql简单实现用户登陆注册32.png" alt="uploading-image-794073.png" /><br />
+复制红框的两个文件夹到我们刚才2.0 最后打开的文件夹下，然后刷新eclipse项目，运行即可，但是数据库的表要自己新建一下。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

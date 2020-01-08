@@ -1,0 +1,149 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修js原生淘宝京东宝贝放大镜效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>js原生淘宝京东宝贝放大镜效果</center></div><div class='banquan'>原文出处:本文由博客园博主des雷锋提供。<br/>
+原文连接:https://www.cnblogs.com/wangqingjiu/p/10932917.html</div><br>
+    <h2 id="js实现商城放大镜效果">js实现商城放大镜效果</h2>
+<p>效果：</p>
+<blockquote>
+<ul>
+<li>鼠标放上去会有半透明遮罩、右边会有大图片局部图。</li>
+<li>鼠标移动时右边的大图片也会局部移动。</li>
+</ul>
+</blockquote>
+<p><code>技术点</code>：</p>
+<p><code>Event</code><br />
+Event 是一个事件对象，当一个事件发生后，和当前事件发生相关的详细信息被临时存储到一个指定的地方，也就是event对象，以方便我们在需要的时候调用。</p>
+<p><code>事件捕获</code>，<code>定位</code></p>
+<p>`难点``：计算。</p>
+<p>**<em>接下来是demo分享：</em></p>
+<p><em>css部分：</em></p>
+<pre><code><code> * {
+        margin: 0;
+        padding: 0;
+    }
+    /* img {
+        vertical-align: top;
+    } */
+    
+    .box {
+        width: 350px;
+        height: 350px;
+        position: relative;
+        border: 1px solid black;
+        margin: 150px 0 0 300px;
+    }
+    
+    .big {
+        width: 450px;
+        height: 450px;
+        position: absolute;
+        border: 1px solid black;
+        left: 400px;
+        top: 0;
+        display: none;
+        overflow: hidden;
+    }
+    
+    .small {
+        position: relative;
+    }
+    
+    .mask {
+        width: 100px;
+        height: 100px;
+        background-color: rgba(255, 255, 0, 0.4);
+        position: absolute;
+        left: 0;
+        top: 0;
+        cursor: move;
+        display: none;
+    }
+    
+    .big img {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }</code></pre>
+<p><em>html结构部分：</em></p>
+<pre class="html"><code> &lt;div class=&quot;box&quot; id=&quot;oBox&quot;&gt;
+        &lt;div class=&quot;small&quot; id=&quot;oSmall&quot;&gt;
+            &lt;img src=&quot;./images/001.jpg&quot; alt=&quot;&quot;&gt;
+            &lt;div class=&quot;mask&quot; id=&quot;oMask&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;big&quot; id=&quot;oBig&quot;&gt;
+            &lt;img src=&quot;./images/0001.jpg&quot; alt=&quot;&quot;&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;</code></pre>
+<pre class="js"><code>   //第一步获取节点
+    let box = document.getElementById(&#39;oBox&#39;);
+    let small = box.children[0]; //获取盒子的第一个子节点samll
+    let big = box.children[1]; //获取盒子的第二个子节点big
+    let mask = small.children[1]; //获取小盒子里的遮罩
+    let bigImg = big.children[0]; //获取大盒子里的图片
+
+
+    //鼠标进入small 遮罩(mask)大盒子(big)display:block
+    small.onmouseover = function() {
+        mask.style.display = &#39;block&#39;;
+        big.style.display = &#39;block&#39;;
+
+    };
+
+    //鼠标离开small 遮罩(mask)大盒子(big)display:none
+    small.onmouseout = function() {
+        mask.style.display = &#39;none&#39;;
+        big.style.display = &#39;none&#39;;
+    };
+
+    let x = 0;
+    let y = 0;
+
+
+    small.onmousemove = function(even) {
+        var even = even || window.event;
+
+        // 获取鼠标在small里的坐标
+        let x = even.clientX - this.offsetParent.offsetLeft - mask.offsetWidth / 2;
+        let y = even.clientY - this.offsetParent.offsetTop - mask.offsetHeight / 2;
+
+
+        // 限制住鼠标的坐标导致遮罩的位置越界
+        if (x &lt; 0) {
+            x = 0;
+        } else if (x &gt; small.offsetWidth - mask.offsetWidth) {
+            x = small.offsetWidth - mask.offsetWidth;
+        }
+
+        if (y &lt; 0) {
+            y = 0;
+        } else if (y &gt; small.offsetHeight - mask.offsetHeight) {
+            y = small.offsetHeight - mask.offsetHeight;
+        }
+        mask.style.left = x + &#39;px&#39;;
+        mask.style.top = y + &#39;px&#39;;
+        //注意大图片的方向
+        bigImg.style.top = -y * big.offsetHeight / small.offsetHeight + &#39;px&#39;;
+        bigImg.style.left = -x * big.offsetWidth / small.offsetWidth + &#39;px&#39;;
+    };</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,157 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Header解析' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Header解析</center></div><div class='banquan'>原文出处:本文由博客园博主栖息之鹰提供。<br/>
+原文连接:https://www.cnblogs.com/roostinghawk/p/10797040.html</div><br>
+    <p>不管是作为后端还是前端开发人员，对于web请求的过程和参数都是需要了解的。</p>
+<p>下面是对一次简单的http请求的header分析，作为自己的一个总结，也希望对大家有所帮助。</p>
+<p>以Chrome为例：</p>
+<p><img src="./images/Header解析0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>我们对header的参数挨个分析</p>
+<hr />
+<p>&nbsp;<strong>General</strong></p>
+<ul>
+<li>Request URL: http://localhost:88/&nbsp; 这里需要了解的是URI的结构，URI和URL详细请参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Basics_of_HTTP/Identifying_resources_on_the_Web" target="_blank">这里<br /></a>
+<div class="cnblogs_code">
+<pre><code>需要注意的地方：锚点（永远不会发到服务器端）<br />URI和URL的区别：URL是URI最常见的一种形式，URL的协议（http/https/ssh/ftp/wss/mailto）</pre>
+</div>
+</li>
+<li>Request Method: GET<br />
+<div class="cnblogs_code">
+<pre><code>请求方法除了常见的GET，POST，PUT，DELETE，还包括如下：<br />HEAD：请求获取由Request-URI所标识的资源的响应消息报头<br />CONNECT：保留<br />OPTIONS：请求查询服务器的性能，或者查询与资源相关的选项和需求<br />TRACE：请求服务器回送收到的请求信息，主要用于测试或诊断</pre>
+</div>
+<p>参考：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods</a></p>
+</li>
+</ul>
+<div class="header-name">
+<ul>
+<li>Status Code:&nbsp;200 OK<br />
+<div class="cnblogs_code">
+<pre><code>状态码需要了解的大致如下：
+1xx：服务器收到信息，等待请求者继续（100：contine，101:协议切换）
+2xx：接受并操作成功（200，201:Created，202:Accepted-可能交给其它进程处理，203 Non-Authoritative Information，204:No Content，
+                  205:Reset Content，206:Partial Content）
+3**：重定向（300 Multiple Choice，301 Moved Permanently，302 Found，303 See Other，304 Not Modified，305 Use Proxy，
+           306 unused，307 Temporary Redirect，308 Permanent Redirect）
+4xx：客户端错误（400 Bad Request-语义有错或参数错误，401 Unauthorized，402 Payment Required-备用，403 Forbidden-类似权限禁止，404 Not Found，
+              405 Method Not Allowed，406 Not Acceptable，407 Proxy Authentication Required，408 Request Timeout，409 Conflict，410 Gone，
+              411 Length Required，412 Precondition Failed，413 Payload Too Large，414 URI Too Long，415 Unsupported Media Type，
+              416 Requested Range Not Satisfiable，417 Expectation Failed，418 I'm a teapot-好玩，421 Misdirected Request，
+              422 Unprocessable Entity (WebDAV)，423 Locked (WebDAV)，424 Failed Dependency (WebDAV)，425 Too Early，
+              426 Upgrade Required，428 Precondition Required，429 Too Many Requests，431 Request Header Fields Too Large，
+              451 Unavailable For Legal Reasons）对于nginx自定义的状态码（499:客户端断开连接，大部分情况是服务器响应超时导致）
+5xx：服务器错误（500 Internal Server Error，501 Not Implemented，<strong>502 Bad Gateway</strong>，503 Service Unavailable，<strong>504 Gateway Timeout</strong>，
+              505 HTTP Version Not Supported，506 Variant Also Negotiates，507 Insufficient Storage，508 Loop Detected (WebDAV)，
+              510 Not Extended，511 Network Authentication Required）</pre>
+</div>
+</li>
+</ul>
+<p>&nbsp; &nbsp; &nbsp; 参考：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status</a></p>
+<ul>
+<li>Remote Address: [::1]:88&nbsp; &nbsp;请求地址（此处的::1是IPv6本机地址，88为端口号）</li>
+<li>Referrer Policy: no-referrer-when-downgrade （用于过滤referrer）<br />
+<div class="cnblogs_code">
+<pre><code>no-referrer
+整个 Referer  首部会被移除。访问来源信息不随着请求一起发送。
+no-referrer-when-downgrade （默认值）
+在没有指定任何策略的情况下用户代理的默认行为。在同等安全级别的情况下，引用页面的地址会被发送(HTTPS-&gt;HTTPS)，但是在降级的情况下不会被发送 (HTTPS-&gt;HTTP)。
+origin
+在任何情况下，仅发送文件的源作为引用地址。例如  https://example.com/page.html 会将 https://example.com/ 作为引用地址。
+origin-when-cross-origin
+对于同源的请求，会发送完整的URL作为引用地址，但是对于非同源请求仅发送文件的源。
+same-origin
+对于同源的请求会发送引用地址，但是对于非同源请求则不发送引用地址信息。
+strict-origin
+在同等安全级别的情况下，发送文件的源作为引用地址(HTTPS-&gt;HTTPS)，但是在降级的情况下不会发送 (HTTPS-&gt;HTTP)。
+strict-origin-when-cross-origin
+对于同源的请求，会发送完整的URL作为引用地址；在同等安全级别的情况下，发送文件的源作为引用地址(HTTPS-&gt;HTTPS)；在降级的情况下不发送此首部 (HTTPS-&gt;HTTP)。
+unsafe-url
+无论是同源请求还是非同源请求，都发送完整的 URL（移除参数信息之后）作为引用地址。</pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li><hr />
+<p>&nbsp;<strong>接下来是Response Header</strong></p>
+</li>
+<li>Accept-Ranges: bytes （主要用于表示接收文件的大小单位，比如为了断点续传）<br />参考：<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Accept-Ranges">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Accept-Ranges</a></li>
+<li><span style="color: #ff0000;">Cache-Control</span>: no-cache （<span style="color: #0000ff;">注意这个缓存控制是分request和response的</span>）<br />
+<div class="cnblogs_code">
+<pre><code>no-cache:强制确认缓存，也就是说向服务器确实是否有缓存（使用服务器端缓存则304）<br />no-store:禁止进行缓存<br />private:私有（同一用户）<br />public:共有<br />max-age:缓存过期机制（秒数）- 如果没有此参数则会检查expires属性，如果expires也没有，则检查last modified<br />must-revalidate：使用陈旧资源时必须向服务器验证（缓存驱逐了解下）<br />* 关于缓存，非常重要，详情可<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Caching_FAQ" target="_blank">参考这里</a></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>Connection: keep-alive<br />
+<div class="cnblogs_code">
+<pre><code>close: HTTP1.0默认
+keep-alive: HTTP1.1默认，持久连接  （对于keep-alive的信息，在服务器设置max和timeout，分别标示最大请求数，超时时间）<br />* 所谓长连接是指TCP连接会保持一定时间不关闭</pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>Content-Length: 147 消息主体大小 （byte）</li>
+<li><strong>Content-Type</strong>: text/html<br />
+<div class="cnblogs_code">
+<pre><code>结构：<strong>type/subtype;parameter=value，</strong>例如：text/plain;charset=UTF-8<br />分为两种：Discrete types和Multipart types<br />比较重要的类型如下：<br />application/octet-stream：默认二进制文件（未知），一般用作下载文件（和Content-Disposition:attachment一起用）<br />text/plain,text/css,text/html,text/javascript<br />multipart/form-data</pre>
+<pre><code><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types" target="_blank">详情参考</a></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+<li>Date: Tue, 30 Apr 2019 08:33:21 GMT&nbsp; （响应时间，也就是报文创建的时间，注意是GMT格林威治时间）</li>
+<li>ETag: "5cc692d4-93" （资源版本号，用于后台校验资源是否变化）</li>
+<li>Expires: Tue, 30 Apr 2019 08:33:20 GMT （过期时间，同样是GMT时间）</li>
+<li>Last-Modified: Mon, 29 Apr 2019 05:59:48 GMT （资源最后更新时间，精确度比ETag低，备用验证资源是否过期的机制）</li>
+<li>Server: nginx/1.14.2 （处理请求的软件及其版本）</li>
+</ul>
+<hr />
+<p>&nbsp;<strong>接下来是Request Header</strong></p>
+<ul>
+<li>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3<br />
+<div class="cnblogs_code">
+<pre><code>告知服务器客户端可以处理的类型<br />&lt;MIME_type&gt;/&lt;MIME_subtype&gt; 单一精确的 MIME 类型, 例如text/html.<br />&lt;MIME_type&gt;/*  一类 MIME 类型, 但是没有指明子类。 image/* 可以用来指代 image/png, image/svg, image/gif 以及任何其他的图片类型。<br /><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">*/* </em></em></em></em></em><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">任意类型的 MIME 类型<br /></em></em></em></em></em></em><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">;q= (q因子权重)<br /></em></em></em></em></em></em></em><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel"><em id="__mceDel">值代表优先顺序，用相对质量价值表示，又称作权重。<br /><span style="color: #0000ff;">对应Response的Content-Type</span></em></em></em></em></em></em></em></em></pre>
+</div>
+</li>
+<li>
+<p>Accept-Encoding: gzip, deflate, br （编码格式，一般是压缩类型，对应Response的Content-Encoding。用identity可以禁止压缩）</p>
+</li>
+<li>Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7&nbsp;<br />
+<div class="cnblogs_code">
+<pre><code>客户端可理解的自然语言和优先选择的区域<br />zh-CN是区域，zh是语言，;q是权重</pre>
+</div>
+</li>
+<li>Cache-Control: no-cache<br />
+<div class="cnblogs_code">
+<pre><code>基本和Response中的Cache-Control对应<br />如下指定可禁止缓存：<br /><em id="__mceDel"><em id="__mceDel"><code>Cache-Control: no-cache, no-store, must-revalidate</code></em></em></pre>
+</div>
+</li>
+<li>Connection: keep-alive</li>
+<li>Host: localhost:88</li>
+<li>Pragma: no-cache （为了兼容HTTP1.0，等同Cache-Control:no-cache）</li>
+<li>Upgrade-Insecure-Requests: 1 (表示客户端优先选择加密及带有身份验证的响应，并且它可以成功处理)</li>
+<li>User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36<br />
+<div class="cnblogs_code">
+<pre><code>用来让网络协议的对端来识别发起请求的用户代理软件的应用类型、操作系统、软件开发商以及版本号<br />web浏览器的格式一般如下：<br /><em id="__mceDel">Mozilla/&lt;version&gt; (&lt;system-information&gt;) &lt;platform&gt; (&lt;platform-details&gt;) &lt;extensions&gt;<br /><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/User-Agent" target="_blank">详情参考</a></em></pre>
+</div>
+<p>&nbsp;</p>
+</li>
+</ul>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

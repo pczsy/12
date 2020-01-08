@@ -1,0 +1,66 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修上传文件时用form.submit提交的时候在低版本的IE中报拒绝访问的错误' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>上传文件时用form.submit提交的时候在低版本的IE中报拒绝访问的错误</center></div><div class='banquan'>原文出处:本文由博客园博主心有玲曦遇奇缘提供。<br/>
+原文连接:https://www.cnblogs.com/mingqi-420/p/10931984.html</div><br>
+    <p>上传文件的时候，在IE7下总是传不了，但FireFox，IE11和Chrome下则可以上传。发现是form.submit();时出错了(&ldquo;拒绝访问&rdquo;)。</p>
+<p>html代码为：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">               &lt;</span><span style="color: #800000;">label  </span><span style="color: #ff0000;">onclick</span><span style="color: #0000ff;">="Upload()"</span><span style="color: #0000ff;">&gt;</span> 上传附件<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>  
+               <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="uploadForm"</span><span style="color: #ff0000;">  enctype</span><span style="color: #0000ff;">="multipart/form-data"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="frameFile"</span><span style="color: #ff0000;">  method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="file"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="a"</span><span style="color: #ff0000;"> onchange</span><span style="color: #0000ff;">="fileUpload()"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="display：none"</span>    <span style="color: #0000ff;">/&gt;</span>         
+               <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>js代码为</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span><span style="color: #000000;"> Upload()
+    {  
+        document.getElementById(</span>"a"<span style="color: #000000;">).click();
+    }
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> fileUpload()
+    {
+        </span><span style="color: #0000ff;">var</span> form = document.getElementById('uploadForm'<span style="color: #000000;">); 
+        form.action</span>="XXX.do?"<span style="color: #000000;">;
+        form.submit();
+    
+    }</span></pre>
+</div>
+<p>原来是因为IE下 file表单控件，不能用js控制打开文件选择器(就是只能点击file本身，不能通过js调用file.click方式)，否则会报 &ldquo;拒绝访问&rdquo;。所以，通过将file设置为透明(position:absolute;top:0px;right:0px;cursor:pointer;&nbsp;opacity:0;filter:alpha(opacity:0);z-index:999;)，用div或者其他的标签盖住file，这样点击显示的div时同样也真实的点击了file。</p>
+<p>代码做一下调整，这个问题就能解决了&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">             &lt;</span><span style="color: #800000;">label</span><span style="color: #ff0000;"> for</span><span style="color: #0000ff;">="a"</span><span style="color: #0000ff;">&gt;</span> 上传附件    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>  
+               <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="uploadForm"</span><span style="color: #ff0000;">  enctype</span><span style="color: #0000ff;">="multipart/form-data"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="frameFile"</span><span style="color: #ff0000;">  method</span><span style="color: #0000ff;">="post"</span><span style="color: #0000ff;">&gt;</span>
+                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="file"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="a"</span><span style="color: #ff0000;"> onchange</span><span style="color: #0000ff;">="fileUpload()"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="position:absolute;top:0px;right:0px;cursor:pointer; opacity:0;filter:alpha(opacity:0);z-index:999;"</span><span style="color: #0000ff;">/&gt;</span>         
+              <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+              </pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> fileUpload()
+    {</span>
+        <span style="color: #0000ff;">var</span> form = document.getElementById('uploadForm'<span style="color: #000000;">); 
+        form.action</span>="XXX.do?"<span style="color: #000000;">;</span>
+<span style="color: #000000;">        form.submit();</span>
+    }</pre>
+</div>
+<p>&nbsp;</p>
+<p><br /><br /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

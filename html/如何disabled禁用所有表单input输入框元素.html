@@ -1,0 +1,87 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修如何disabled禁用所有表单input输入框元素' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>如何disabled禁用所有表单input输入框元素</center></div><div class='banquan'>原文出处:本文由博客园博主苑庆涛提供。<br/>
+原文连接:https://www.cnblogs.com/yuanqt/p/11097937.html</div><br>
+    <h3>转载地址：<a href="https://www.zhangxinxu.com/wordpress/?p=8568">https://www.zhangxinxu.com/wordpress/?p=8568</a></h3>
+<h3>一、pointer-events:none和覆盖层方法的问题</h3>
+<p>经常会遇到需求，需要禁用<code>div</code>中或者<code>form</code>元素中一堆表单控件元素，如<code>&lt;input&gt;</code>，<code>&lt;select&gt;</code>，<code>&lt;textarea&gt;</code>元素。</p>
+<p>很多人用的下面这两种方法实现：</p>
+<ol>
+<li>设置<code>pointer-events:none</code>，该声明不了解可参见&ldquo;<a href="https://www.zhangxinxu.com/wordpress/?p=2091">CSS3 pointer-events:none应用举例及扩展</a>&rdquo;这篇文章。例如：
+<pre><code>form {
+  pointer-events: none;
+}</pre>
+</li>
+<li>使用<code>::before</code>伪元素创建一个浮层该在所有的表单元素上，例如：
+<pre><code>form {
+  position: relative;
+}
+form::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background-color: rgba(0,0,0,.001);
+}</pre>
+</li>
+</ol>
+<p>以上两个方向虽然可以让点击无效，但是并没有阻止键盘访问，也就是Tab键索引，或者回车都能触发表单行为，使用<code>new FormData(form)</code>也能获取表单控件值，并不是真正意义上禁用，问题很大。</p>
+<p>那有没有什么简单方法轻松禁用所有表单元素呢？难道真要遍历所有的控件元素再设置<code>[disabled]</code>属性吗？</p>
+<p>有！</p>
+<h3>二、fieldset元素轻松实现</h3>
+<p>其实，要真正意义上禁用所有的表单元素很简单，嵌套在<code>&lt;fieldset&gt;</code>元素中，然后设置<code>&lt;fieldset&gt;</code>元素<code>disabled</code>就可以了，代码示意如下：</p>
+<pre><code>&lt;form&gt;
+    &lt;fieldset disabled&gt;
+        &lt;legend&gt;表单标题&lt;/legend&gt;
+        &lt;...&gt;
+    &lt;/fieldset&gt;
+&lt;/form&gt;</pre>
+<p>回家吧，结束了！</p>
+<p><img class="alignnone size-medium" src="./images/如何disabled禁用所有表单input输入框元素0.png" alt="结束了，回家吧" width="240" height="135" /></p>
+<p>Let&rsquo;s go home! It&rsquo;s over!</p>
+<p>下图是Chrome浏览器下的效果：</p>
+<p><img class="alignnone size-medium" src="./images/如何disabled禁用所有表单input输入框元素1.png" alt="Chrome下禁用效果截图" width="408" height="530" /></p>
+<p>Firefox浏览器下：</p>
+<p><img class="alignnone size-medium" src="./images/如何disabled禁用所有表单input输入框元素2.png" alt="Firefox下禁用效果截图" width="409" height="547" /></p>
+<p>Edge浏览器下：</p>
+<p><img class="alignnone size-medium" src="./images/如何disabled禁用所有表单input输入框元素3.png" alt="Edge浏览器下禁用效果" width="410" height="522" /></p>
+<h3>三、IE浏览器的瑕疵和解决</h3>
+<p>然后，IE浏览器（包括Edge）下有个瑕疵，那就是UI样式上虽然禁用了，键盘也无法响应，但是，输入框内容居然可以输入，而且表单的提交行为居然也可以点击触发，有些不完美，怎么办呢？</p>
+<p>可以再辅助下面的CSS：</p>
+<pre><code>fieldset[disabled] {
+   -ms-pointer-events: none;
+   pointer-events: none;
+}</pre>
+<p>IE10+浏览器都可以完美禁用。</p>
+<p>有人要问如果我要兼容IE8，IE9浏览器怎么办？</p>
+<p>那使用伪元素创建一个浮层覆盖在所有表单元素上面，就是一开始提到的覆盖方法，具体代码不重复展示。</p>
+<p>于是，双管齐下，表单所有元素禁用就这样完美搞定了。</p>
+<p>您可以狠狠地点击这里：<a href="https://www.zhangxinxu.com/study/201904/disabled-all-form-input-demo.php" target="_blank">一次性禁用所有的表单元素demo</a></p>
+<h3>四、结束语</h3>
+<p>第五届CSS大会上的演讲内容将会分系列和一个汇总依次介绍，等不及的小伙伴可以<a href="https://www.yuque.com/cssconf/5th/rpl1tf" rel="noopener nofollow" target="_blank">访问这里我的分享视频</a>。</p>
+<p>我手上目前还有其他活，预计清明节后陆续更新，稍安&hellip;&hellip;</p>
+<p>最后，关于<code>fieldset</code>元素，推荐阅读我之前写的这篇文章：&ldquo;<a href="https://www.zhangxinxu.com/wordpress/?p=5730">fieldset,legend元素及CSS布局应用</a>&rdquo;，相信会有所收获的。</p>
+<p>好的，就说这么多！</p>
+<p>感谢阅读，欢迎交流，也欢迎朋友圈分享。</p>
+<p><img src="./images/如何disabled禁用所有表单input输入框元素4.png" alt="" width="20" height="20" align="absmiddle" /></p>
+<p class="link">&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

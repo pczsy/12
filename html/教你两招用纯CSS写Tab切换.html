@@ -1,0 +1,181 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修教你两招用纯CSS写Tab切换' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>教你两招用纯CSS写Tab切换</center></div><div class='banquan'>原文出处:本文由博客园博主子钦加油提供。<br/>
+原文连接:https://www.cnblogs.com/zmdComeOn/p/11061438.html</div><br>
+    <div>
+<p>说到Tab切换，你可能首先想到的就是使用jQuery，短短几行代码就可以轻松搞定一个Tab切换。</p>
+<p>而今天所要分享的，是使用 <strong>0</strong> 行JS代码来实现Tab切换！</p>
+<p>具体效果如下：</p>
+<div class="image-package">
+<div class="image-container">
+<div class="image-container-fill">&nbsp;<img src="./images/教你两招用纯CSS写Tab切换0.png" alt="" /></div>
+</div>
+<div class="image-caption">Tab切换</div>
+</div>
+<h2>方法一：模拟单选框原理</h2>
+<p>关于模拟单选框，在我之前文章中有讲到，详情请戳&rarr;<a href="https://www.jianshu.com/p/9f5ec459f893" target="_blank">纯CSS模拟单选框和复选框</a></p>
+<p>该方法大致原理如下：</p>
+<blockquote>
+<p>当用户点击label元素时，该label所绑定的input单选框就会被选中，同时通过使用CSS选择器让被选中的input元素之后的label和.content元素都加上相应的样式。</p>
+</blockquote>
+<p>具体如何实现呢？请耐心往下看...</p>
+<h3>1. HTML结构</h3>
+<pre><code><code><span class="hljs-comment">&lt;!--HTML--&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">input <span class="hljs-attr">id=<span class="hljs-string">"tab1" <span class="hljs-attr">type=<span class="hljs-string">"radio" <span class="hljs-attr">name=<span class="hljs-string">"tab" <span class="hljs-attr">checked&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">label <span class="hljs-attr">for=<span class="hljs-string">"tab1"&gt;选项一<span class="hljs-tag">&lt;/<span class="hljs-name">label&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content"&gt;选项一内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">input <span class="hljs-attr">id=<span class="hljs-string">"tab2" <span class="hljs-attr">type=<span class="hljs-string">"radio" <span class="hljs-attr">name=<span class="hljs-string">"tab"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">label <span class="hljs-attr">for=<span class="hljs-string">"tab2"&gt;选项二<span class="hljs-tag">&lt;/<span class="hljs-name">label&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content"&gt;选项二内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">input <span class="hljs-attr">id=<span class="hljs-string">"tab3" <span class="hljs-attr">type=<span class="hljs-string">"radio" <span class="hljs-attr">name=<span class="hljs-string">"tab"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">label <span class="hljs-attr">for=<span class="hljs-string">"tab3"&gt;选项三<span class="hljs-tag">&lt;/<span class="hljs-name">label&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content"&gt;选项三内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>单选框想必大家都会用吧，type为radio，name属性值相同即可。</p>
+<p>另外需要注意以下两点：</p>
+<blockquote>
+<p>① label需要绑定input，方法就是<strong>label的for属性值与input的id一致</strong>，这样当点击label元素时input单选框就会被选中<br />
+② <strong>input、label和div三者是有顺序的</strong>，不能随意调换顺序（原因后面你就知道了）</p>
+
+
+
+
+
+</blockquote>
+<h3>2. CSS样式</h3>
+<p>没有JS，那么CSS自然就得扮演举足轻重的角色。</p>
+<pre class="hljs css"><code class="css"><span class="hljs-comment">/*CSS*/
+*{ <span class="hljs-attribute">margin: <span class="hljs-number">0; <span class="hljs-attribute">padding: <span class="hljs-number">0;}
+<span class="hljs-selector-tag">ul{ <span class="hljs-attribute">position: relative; <span class="hljs-attribute">width: <span class="hljs-number">300px; <span class="hljs-attribute">margin: <span class="hljs-number">100px auto;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li{ <span class="hljs-attribute">list-style: none;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-tag">input{ <span class="hljs-attribute">display: none;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-tag">label{ <span class="hljs-attribute">float: left; <span class="hljs-attribute">width: <span class="hljs-number">100px; <span class="hljs-attribute">text-align: center; <span class="hljs-attribute">line-height: <span class="hljs-number">30px; <span class="hljs-attribute">border: <span class="hljs-number">1px solid <span class="hljs-number">#000; <span class="hljs-attribute">border-right: <span class="hljs-number">0; <span class="hljs-attribute">box-sizing: border-box; <span class="hljs-attribute">cursor: pointer; <span class="hljs-attribute">transition: all .<span class="hljs-number">3s;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-tag">input<span class="hljs-selector-pseudo">:checked+label{ <span class="hljs-attribute">color: <span class="hljs-number">#fff; <span class="hljs-attribute">background-color: <span class="hljs-number">#000;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:last-child <span class="hljs-selector-tag">label{ <span class="hljs-attribute">border-right: <span class="hljs-number">1px solid <span class="hljs-number">#000;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-class">.content{ <span class="hljs-attribute">opacity: <span class="hljs-number">0; <span class="hljs-attribute">visibility:hidden; <span class="hljs-attribute">position: absolute; <span class="hljs-attribute">left: <span class="hljs-number">0; <span class="hljs-attribute">top: <span class="hljs-number">31px; <span class="hljs-attribute">width: <span class="hljs-number">100%; <span class="hljs-attribute">height: <span class="hljs-number">300px; <span class="hljs-attribute">border: <span class="hljs-number">1px solid <span class="hljs-number">#000; <span class="hljs-attribute">box-sizing: border-box; <span class="hljs-attribute">font-size: <span class="hljs-number">24px; <span class="hljs-attribute">text-align: center; <span class="hljs-attribute">line-height: <span class="hljs-number">300px; <span class="hljs-attribute">color: <span class="hljs-number">#fff; <span class="hljs-attribute">transition: all .<span class="hljs-number">3s;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(1) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#0f0;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(2) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#00f;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(3) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#f0f;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-tag">input<span class="hljs-selector-pseudo">:checked~<span class="hljs-selector-class">.content{ <span class="hljs-attribute">opacity: <span class="hljs-number">1; <span class="hljs-attribute">visibility:visible;}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>这里同样有几个重点需要注意：</p>
+<blockquote>
+<p>① input需要隐藏，因为我们并不需要显示它，但它却是实现Tab切换的核心力量<br />
+② <strong>&ldquo;input:checked+label&rdquo;</strong> 表示被选中的单选框后的 label 元素需要做标记<br />
+③ .content 元素需要先全部隐藏<br />
+③ <strong>&ldquo;input:checked~.content&rdquo;</strong> 表示被选中的单选框后的 .content 元素需要显示</p>
+
+
+
+
+
+</blockquote>
+<p><em>注： + 表示相邻兄弟选择器，也就是选择紧邻其后的元素； ~ 表示兄弟选择器，也就是选择该元素之后的所有同级元素</em></p>
+<h2>方法二：:target伪类</h2>
+<p>关于:target伪类，在我之前文章中有讲到，详情请戳&rarr;<a href="https://www.jianshu.com/p/fcb56082c1d7" target="_blank">纯CSS制作单页Web应用</a></p>
+<p>该方法大致原理如下：</p>
+<blockquote>
+<p>当用户点击a元素时，页面URL后会相应添加当前所点击的锚链接，这时对应此锚连接id的.content元素就会应用:target伪类的样式，而同时也给已应用上:target伪类的.content元素之后的a元素自身应用样式。</p>
+
+
+
+
+
+</blockquote>
+<h3>1. HTML结构</h3>
+<pre><code><code><span class="hljs-comment">&lt;!--HTML--&gt;
+<span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content" <span class="hljs-attr">id=<span class="hljs-string">"content1"&gt;选项一内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">a <span class="hljs-attr">href=<span class="hljs-string">"#content1"&gt;选项一<span class="hljs-tag">&lt;/<span class="hljs-name">a&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content" <span class="hljs-attr">id=<span class="hljs-string">"content2"&gt;选项二内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">a <span class="hljs-attr">href=<span class="hljs-string">"#content2"&gt;选项二<span class="hljs-tag">&lt;/<span class="hljs-name">a&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">class=<span class="hljs-string">"content" <span class="hljs-attr">id=<span class="hljs-string">"content3"&gt;选项三内容<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">a <span class="hljs-attr">href=<span class="hljs-string">"#content3"&gt;选项三<span class="hljs-tag">&lt;/<span class="hljs-name">a&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>这种方式的HTML结构相对比较简单，不需要使用隐藏的单选框作为媒介，而是使用锚链接和:target作为连接&ldquo;选项&rdquo;与&ldquo;选项内容&rdquo;之间的桥梁。</p>
+<p>另外需要注意以下两点：</p>
+<blockquote>
+<p>① 每个a标签的href属性须与其兄弟节点.content元素的id值一致<br />
+② .content元素与a标签的顺序不能更改</p>
+
+
+
+
+
+</blockquote>
+<h3>2. CSS样式</h3>
+<pre class="hljs css"><code class="css"><span class="hljs-comment">/*CSS*/
+*{ <span class="hljs-attribute">margin: <span class="hljs-number">0; <span class="hljs-attribute">padding: <span class="hljs-number">0;}
+<span class="hljs-selector-tag">a{ <span class="hljs-attribute">text-decoration: none; <span class="hljs-attribute">color: <span class="hljs-number">#000;}
+<span class="hljs-selector-tag">ul{ <span class="hljs-attribute">position: relative; <span class="hljs-attribute">width: <span class="hljs-number">300px; <span class="hljs-attribute">margin: <span class="hljs-number">100px auto;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li{ <span class="hljs-attribute">list-style: none;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-tag">a{ <span class="hljs-attribute">float: left; <span class="hljs-attribute">width: <span class="hljs-number">100px; <span class="hljs-attribute">text-align: center; <span class="hljs-attribute">line-height: <span class="hljs-number">30px; <span class="hljs-attribute">border: <span class="hljs-number">1px solid <span class="hljs-number">#000; <span class="hljs-attribute">border-right: <span class="hljs-number">0; <span class="hljs-attribute">box-sizing: border-box; <span class="hljs-attribute">cursor: pointer; <span class="hljs-attribute">transition: all .<span class="hljs-number">3s;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:last-child <span class="hljs-selector-tag">a{ <span class="hljs-attribute">border-right: <span class="hljs-number">1px solid <span class="hljs-number">#000;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-class">.content{ <span class="hljs-attribute">opacity: <span class="hljs-number">0; <span class="hljs-attribute">position: absolute; <span class="hljs-attribute">left: <span class="hljs-number">0; <span class="hljs-attribute">top: <span class="hljs-number">31px; <span class="hljs-attribute">width: <span class="hljs-number">100%; <span class="hljs-attribute">height: <span class="hljs-number">300px; <span class="hljs-attribute">border: <span class="hljs-number">1px solid <span class="hljs-number">#000; <span class="hljs-attribute">box-sizing: border-box; <span class="hljs-attribute">font-size: <span class="hljs-number">24px; <span class="hljs-attribute">text-align: center; <span class="hljs-attribute">line-height: <span class="hljs-number">300px; <span class="hljs-attribute">color: <span class="hljs-number">#fff; <span class="hljs-attribute">transition: all .<span class="hljs-number">3s;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(1) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#0f0;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(2) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#00f;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li<span class="hljs-selector-pseudo">:nth-child(3) <span class="hljs-selector-class">.content{ <span class="hljs-attribute">background-color: <span class="hljs-number">#f0f;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-class">.content<span class="hljs-selector-pseudo">:target{ <span class="hljs-attribute">opacity: <span class="hljs-number">1;}
+<span class="hljs-selector-tag">ul <span class="hljs-selector-tag">li <span class="hljs-selector-class">.content<span class="hljs-selector-pseudo">:target+a{ <span class="hljs-attribute">color: <span class="hljs-number">#fff; <span class="hljs-attribute">background-color: <span class="hljs-number">#000;}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>这里同样有几个重点需要注意：</p>
+<blockquote>
+<p>① <strong>&ldquo;.content:target&rdquo;</strong> 将锚链接指向的当前.content元素应用样式<br />
+② <strong>&ldquo;.content:target+a&rdquo;</strong> 将锚链接指向的当前.content元素后紧邻的a元素应用样式</p>
+
+
+
+
+
+</blockquote>
+<h2>本文重点总结</h2>
+<blockquote>
+<p>无需JS，利用单选框或锚链接，再配合一些CSS样式即可制作简单的Tab切换</p>
+
+
+
+
+</blockquote>
+
+
+
+
+</div>
+<p>
+<br /><br /><br /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

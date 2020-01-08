@@ -1,0 +1,196 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML5播放视频，并使用ffmpeg对视频转编码' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML5播放视频，并使用ffmpeg对视频转编码</center></div><div class='banquan'>原文出处:本文由博客园博主破竹提供。<br/>
+原文连接:https://www.cnblogs.com/pozhu15/p/11833730.html</div><br>
+    <p>网页加入视频可以用h5自带的video标签，这里用一个jQuery封装优化好的video视频组件videojs。</p>
+<p>videojs官方网站：https://docs.videojs.com/index.html</p>
+<p>videojs下载：https://github.com/videojs/video.js/releases</p>
+<p>这里有个问题是h5的video标签根据不同的浏览器兼容情况只支持三种编码的视频格式：</p>
+<table class="dataintable">
+<tbody>
+<tr><th>格式</th><th>IE</th><th>Firefox</th><th>Opera</th><th>Chrome</th><th>Safari</th></tr>
+<tr>
+<td>Ogg</td>
+<td>No</td>
+<td>3.5+</td>
+<td>10.5+</td>
+<td>5.0+</td>
+<td>No</td>
+</tr>
+<tr>
+<td>MPEG 4</td>
+<td>9.0+</td>
+<td>No</td>
+<td>No</td>
+<td>5.0+</td>
+<td>3.0+</td>
+</tr>
+<tr>
+<td>WebM</td>
+<td>No</td>
+<td>4.0+</td>
+<td>10.6+</td>
+<td>6.0+</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p>通常我们使用MP4格式，但是MP4又分为&ldquo;1.MPEG4(DivX)&rdquo;、&ldquo;2.MPEG4(Xvid)&rdquo;、&ldquo;3.AVC(H264)&rdquo;三种类型。要想在h5播放成功，必须转换视频格式为H264才可以，好多做法是用格式工厂来转换，这样工作量大，比较麻烦，这里选择直接用<strong>ffmpeg在代码中进行转码 ：</strong></p>
+<p><strong style="line-height: 1.5;">直接傻瓜命令安装，亲测可行：</strong></p>
+<p> sudo add-apt-repository ppa:mc3man/trusty-media<br /> sudo apt-get update<br /> sudo apt-get install ffmpeg<br /> ffmpeg -version</p>
+<p>这样也是基本安装了FFmpeg完整版：</p>
+<p><img src="./images/HTML5播放视频，并使用ffmpeg对视频转编码0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>安装完成可跳过下面的1中的编译安装步骤，直接到第2步使用FFmpeg命令解码视频</p>
+<p><strong style="line-height: 1.5;">1.安装ffmpeg需要安装下面三个包：</strong></p>
+<ol>
+<li><strong>yasm</strong>：是一个汇编器，用于ffmpeg编译。</li>
+<li>X264：x264是采用GPL授权的视频编码自由软件。x264的主要功能在于进行H.264/MPEG-4 AVC的视频编码，而不是作为解码器（decoder）之用</li>
+<li>ffmpeg主要用于音视频转码，以及增删水印等处理，是一款简单实用且强大的音视频处理工具。</li>
+
+
+
+</ol>
+<p><strong>（1）.安装yasm</strong></p>
+<p>wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz<br />tar -xzvf yasm-1.3.0.tar.gz<br />cd yasm-1.3.0<br />./configure<br />make<br />make install</p>
+<p>&nbsp;</p>
+<p><strong>(2).x264安装</strong></p>
+<p>为了让ffmpeg使用h264编码。</p>
+<p>ffmpeg中自带h264的解码，但是没有包含编码，所以再执行avcodec_find_encoder(CODEC_ID_H264)时返回的结果为NULL，需要额外添加x264支持h264的编码。</p>
+<p>下载到这里：</p>
+<p>https://code.videolan.org/videolan/x264/tree/stable</p>
+<p>选择下载：</p>
+<p>wget&nbsp;https://code.videolan.org/videolan/x264/-/archive/stable/x264-stable.tar.gz</p>
+<p>编译/部署：</p>
+<p>解压压缩包，cd进目录</p>
+<p>./configure &nbsp;--disable-asm</p>
+<p>make</p>
+<p>sudo make install</p>
+<p><strong>（3）、libogg&nbsp;</strong><br />libogg-1.3.1.tar.gz&nbsp;<br />Url：<a href="http://www.xiph.org/downloads/">http://www.xiph.org/downloads/&nbsp;</a><br />安装方法如下：</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code>wget&nbsp;http://downloads.xiph.org/releases/ogg/libogg-1.3.4.tar.gz<br /> ./configure <br />    make  
+     make install  </pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>（4）</strong><span style="line-height: 1.5;">、<strong>libvorbis&nbsp;</strong></span></p>
+<p>libvorbis-1.3.3.tar.gz&nbsp;<br />Url：<a href="http://downloads.xiph.org/releases/vorbis/libvorbis-1.1.2.tar.gz" target="_blank">http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.3.tar.gz</a></p>
+<p>(libvorbis依赖于libogg, 所以libogg必须先于libvorbis安装)<br />安装方法如下：</p>
+<div class="cnblogs_code">
+<pre><code>wget&nbsp;http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.6.tar.xz</pre>
+<pre><code> ./configure<br />     make  
+     make install  </pre>
+</div>
+<p>&nbsp;</p>
+<p>（5）、faad2&nbsp;<br />faad2-2.7.tar.gz&nbsp;<br /><a href="http://www.audiocoding.com/downloads.html" target="_blank">http://www.audiocoding.com/downloads.html</a>&nbsp;<br />安装方法</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code>1     autoreconf -vif  
+2     ./configure  --with-mp4v2 --enable-shared  
+3     make  
+4     make install  </pre>
+</div>
+</div>
+</div>
+</div>
+<p>（6）、faac&nbsp;<br />faac-1.28.tar.gz&nbsp;<br /><a href="http://www.audiocoding.com/downloads.html" target="_blank">http://www.audiocoding.com/downloads.html</a><br />安装方法：</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code>1     tar zxvf faac-1.28.tar.gz  
+2     cd faac-1.28  
+3     ./bootstrap  
+4     ./configure 5     make   
+6     make install  </pre>
+</div>
+</div>
+</div>
+</div>
+<p>（7）、amr-nb&nbsp;<br />amrnb-10.0.0.0.tar.bz2&nbsp;<br /><a href="http://ftp.penguin.cz/pub/users/utx/amr/">http://ftp.penguin.cz/pub/users/utx/amr/</a>&nbsp;( 从此处下载最新版本 )<br />安装方法：</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code>1     ./configure 2     make  
+3     make install  </pre>
+</div>
+</div>
+</div>
+</div>
+<p>（8）、amr-wb&nbsp;<br />amrwb-7.0.0.1.tar.bz2&nbsp;<br /><a href="http://ftp.penguin.cz/pub/users/utx/amr/">http://ftp.penguin.cz/pub/users/utx/amr/</a>&nbsp;( 从此处下载最新版本 )<br />安装方法：</p>
+<div class="cnblogs_code">
+<pre><code>1     ./configure 2     make  
+3     make install  </pre>
+</div>
+<p>&nbsp;</p>
+<p><strong>（9）安装ffmpeg</strong></p>
+<p>官网下载：http://ffmpeg.org/download.html</p>
+<p>wget&nbsp;https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.bz2</p>
+<p>解压：</p>
+<p>bzip2 -d ffmpeg-4.1.3.tar.bz2</p>
+<p>tar -xvf ffmpeg-4.1.3.tar</p>
+<div class="cnblogs_code">
+<pre><code>./configure --prefix=/usr/local/ffmpeg2 --enable-libmp3lame --enable-libvorbis --enable-gpl --enable-version3 --enable-nonfree --enable-pthreads --enable-libfaac --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libx264 --enable-libxvid --enable-postproc --enable-ffserver --enable-<span style="color: #000000;">ffplay
+   make 
+   make install </span></pre>
+</div>
+<p>&nbsp;ffmpeg完整安装请参考：https://www.cnblogs.com/wanghetao/p/3386311.html</p>
+<p>各模块介绍：https://wenku.baidu.com/view/94bfc009581b6bd97f19ea53.html</p>
+<p><strong>2.用ffmpeg将视频转为html5支持的编码：</strong></p>
+<p><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1)转码成ogv&nbsp;(Theora&nbsp;1&nbsp;Vorbis):&nbsp;.<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ffmpeg -i&nbsp;WTE.mp4&nbsp;-b&nbsp;1500k&nbsp;-vcodec&nbsp;libtheora&nbsp;-acodec&nbsp;libvorbis&nbsp;-ab&nbsp;160000&nbsp;-g&nbsp;30 &nbsp; &nbsp;output.ogv<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(2)转码成webm&nbsp;(VP8&nbsp;/&nbsp;Vorbis):<br /><br />&nbsp; &nbsp; &nbsp; ffmpeg&nbsp;-i&nbsp;WTE.mp4&nbsp;-b&nbsp;1500k&nbsp;-vcodec&nbsp;libvpx&nbsp;-acodec&nbsp;libvorbis&nbsp;-ab&nbsp;160000&nbsp;-f&nbsp;webm -g&nbsp;30&nbsp;output.webm<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(3)转码mp4&nbsp;(H.264&nbsp;/&nbsp;ACC):<br /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ffmpeg &nbsp;-i&nbsp;WTE.mp4&nbsp;-b&nbsp;1500k&nbsp;-vcodec&nbsp;libx264&nbsp;-vpre&nbsp;slow&nbsp;-vpre&nbsp;baseline&nbsp;-g&nbsp;30&nbsp;output.mp4　　#有点问题，可用下面的命令代替<br />　　ffmpeg &nbsp;-i WTE.mp4 -b 1500k -vcodec h264 -preset slow -profile:v baseline -g 30 output.mp4</p>
+<p>　　参考自：https://www.doc88.com/p-7088891528596.html</p>
+<p>HTML中一次加入三种格式：</p>
+<div class="cnblogs_code">
+<pre><code> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">video </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="my-video"</span><span style="color: #ff0000;"> loop </span><span style="color: #0000ff;">='true' </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="video-js"</span><span style="color: #ff0000;"> controls preload</span><span style="color: #0000ff;">="auto"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="400"</span><span style="color: #ff0000;">
+          poster</span><span style="color: #0000ff;">="{% static  'images/m.jpg' %}"</span><span style="color: #ff0000;"> data-setup</span><span style="color: #0000ff;">="{}"</span><span style="color: #ff0000;"> autoplay</span><span style="color: #0000ff;">="autoplay"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">source </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="{{ MEDIA_URL }}video/output.mp4"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="video/mp4"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">source </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="{{ MEDIA_URL }}video/output.webm"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="video/webm"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">source </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="{{ MEDIA_URL }}video/output.ogv"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="video/ogg"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="vjs-no-js"</span><span style="color: #0000ff;">&gt;</span> To view this video please enable JavaScript, and consider upgrading to a web browser that <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="http://videojs.com/html5-video-support/"</span><span style="color: #ff0000;"> target</span><span style="color: #0000ff;">="_blank"</span><span style="color: #0000ff;">&gt;</span>supports HTML5 video<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">video</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;这样就可以兼容大部分浏览器，至此就可以在h5中畅通无阻地播放视频了</p>
+<p>&nbsp;</p>
+<p>以下简单总结下ffmpeg命令参数：</p>
+<p>-i 指定要转换视频的源文件<br />-s 视频转换后视频的分辨率<br />-vcodec 视频转换时使用的编解码器（-codecs）<br />-r 视频转换换的桢率(默认25桢每秒)<br />-b 视频转换换的bit率<br />-ab 音频转换后的bit率(默认64k)<br />-acodec 制度音频使用的编码器（-codecs）<br />-ac 制定转换后音频的声道</p>
+<p>-ar 音频转换后的采样率</p>
+<p>-an 禁用音频</p>
+<p>-vn 禁用视频</p>
+<p>-acodec copy 复制音频，不转码</p>
+<p>-vcodec copy 复制视频，不转码</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>3.抛弃转码繁琐直接使用Chimee</strong></p>
+<p>后来意外发现一个兼容性更好的播放插件Chimee，兼容多种视频格式，MP4、M3U8、FLV等多种媒体格式，同时它也帮我们解决了大部分的兼容性、差异化问题，包括全屏、自动播放、内联播放、直播解码等常见媒体播放需求，不用再自己去转码，官网有比较详细的使用文档，可自行去研究：</p>
+<p>http://chimee.org/docs/index.html</p>
+<p>&nbsp;4.在推荐一款不错的视频播放器 flowplayer，官网有demo：</p>
+<p>https://flowplayer.com/</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,81 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修H5 的 sessionStorage和localStorage' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>H5 的 sessionStorage和localStorage</center></div><div class='banquan'>原文出处:本文由博客园博主有编制的小猿提供。<br/>
+原文连接:https://www.cnblogs.com/mahailun/p/mhl-20190909-JSON.html</div><br>
+    <p><span style="font-size: 14pt;">1） H5 新增的 sessionStorage 和 localStorage 的区别</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;">　　<span style="background-color: #ffff00;">sessionStorage</span> 和 java 的 session 差不多，可以短时间存储信息，电脑浏览器常用sessionStorage&nbsp;存储用户登录信息（个人理解）</span></p>
+<p><span style="font-size: 14pt;">　　<span style="background-color: #ffff00;">localStorage<span style="background-color: #ffffff;">&nbsp;可以永久保留用户信息，不用每次都登录，常用于APP</span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">2）sessionStorage 和&nbsp;localStorage 共有的方法：</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　1.setItem &nbsp;存值</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　　　setItem就像是java里的map，但是有泛型&lt;String,String&gt;</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　　　sessionStorage.setItem("user",user);</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　2.getItem &nbsp;取值</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　　　sessionStorage.getItem("user");</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　3.removeItem &nbsp; 删除值</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　　　sessionStorage.removeItem("user");</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　4.clear &nbsp;清除所有值</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　　　sessionStorage.clear();</span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">3）前端转换JSON和String</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　String转成JSON　　JSON.parse();</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　JSON转成String　　JSON.stringify();</span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">以上就是H5新增的 sessionStorage 和 localStorage 的基本用法，结合实例会更明白他们的用法。</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="background-color: #ffff00;"><span style="background-color: #ffffff;">　　代码如下：</span></span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">　　　　　　<span style="font-size: 18px;">//</span></span><span style="font-size: 18px;"><span style="color: #008000;">如果falg为真，也就是验证码正确，向后台发请求</span>
+                <span style="color: #0000ff;">if</span>(flag==<span style="color: #0000ff;">true</span><span style="color: #000000;">){
+                    $.post(</span>"http://localhost:8080/test/admin/login",{username:user,password:pwd},<span style="color: #0000ff;">function</span><span style="color: #000000;"> (data) {
+                        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(data){
+                            </span><span style="color: #008000;">//</span><span style="color: #008000;">setItem就像是java里的map的put，但是有泛型&lt;String,String&gt;</span>
+                            <span style="color: #008000;">//</span><span style="color: #008000;">data是JSON类型的，所以用JSON.stringify(data)转为String</span>
+                            <span style="color: #0000ff;">var</span> s=<span style="color: #000000;">JSON.stringify(data);
+                            sessionStorage.setItem(</span>"admin"<span style="color: #000000;">,s);
+                            window.location.href</span>="index.html"<span style="color: #000000;">;
+                        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                            flag</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+                            </span><span style="color: #008000;">//</span><span style="color: #008000;">把验证码恢复原来的状态</span>
+<span style="color: #000000;">                            re.refresh();
+                            $(</span>"#msg").html("&lt;span style='color: red;'&gt;用户名或密码错误，请重试！！！&lt;/span&gt;"<span style="color: #000000;">);
+                            setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                                $(</span>"#msg").html(""<span style="color: #000000;">);
+                            },</span>2000<span style="color: #000000;">);
+                        }
+                    })
+                }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                    $(</span>"#msg").html("&lt;span style='color: red;'&gt;请滑动验证码！！!&lt;/span&gt;"<span style="color: #000000;">);
+                    setTimeout(</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        $(</span>"#msg").html(""<span style="color: #000000;">);
+                    },</span>2000<span style="color: #000000;">);
+                }</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>&nbsp;2019-09-09&nbsp;10:18:45</strong></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

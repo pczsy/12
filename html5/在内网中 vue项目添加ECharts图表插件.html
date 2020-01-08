@@ -1,0 +1,111 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修在内网中 vue项目添加ECharts图表插件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>在内网中 vue项目添加ECharts图表插件</center></div><div class='banquan'>原文出处:本文由博客园博主___mouM提供。<br/>
+原文连接:https://www.cnblogs.com/aknife/p/11753854.html</div><br>
+    <p>原文地址:https://www.cnblogs.com/aknife/p/11753854.html</p>
+<p>最近项目中要使用到图表</p>
+<p>但是项目在内网中无法直接使用命令安装</p>
+<p>&nbsp;</p>
+<p>然后我在外网中弄个vue的项目(随便什么项目)</p>
+<p>先使用<span style="background-color: #ffff00;"><code>npm install echarts --save</code></span>安装</p>
+<p>然后在项目node_modules下会出现这两个文件<img src="./images/在内网中 vue项目添加ECharts图表插件0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>解压拿到内网项目中,放到相同位置</p>
+<p>然后在main.js中加2行代码</p>
+<p>&nbsp;<span class="cnblogs_code">import echarts <span style="color: #0000ff;">from</span> <span style="color: #800000;">'</span><span style="color: #800000;">echarts</span><span style="color: #800000;">'</span></span></p>
+<p><span class="cnblogs_code"><span style="color: #000000;">Vue.prototype.$echarts </span>= echarts</span>&nbsp;</p>
+<p><img src="./images/在内网中 vue项目添加ECharts图表插件1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>接着在package.json中加&nbsp;<span class="cnblogs_code"> <span style="color: #800000;">"</span><span style="color: #800000;">echarts</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">^4.4.0</span><span style="color: #800000;">"</span>,</span>&nbsp;</p>
+<p><img src="./images/在内网中 vue项目添加ECharts图表插件2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;接着创建一个.vue文件试试,直接粘贴以下代码即可</p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+  &lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">pieReport</span><span style="color: #800000;">"</span><span style="color: #000000;">
+       style</span>=<span style="color: #800000;">"</span><span style="color: #800000;">width: 400px;height: 300px;</span><span style="color: #800000;">"</span>&gt;&lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+  name: </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+  data () {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+      charts: </span><span style="color: #800000;">""</span><span style="color: #000000;">,
+      opinion: [</span><span style="color: #800000;">"</span><span style="color: #800000;">及格人数</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">未及格人数</span><span style="color: #800000;">"</span><span style="color: #000000;">],
+      opinionData: [
+        { value: </span><span style="color: #800080;">12</span>, name: <span style="color: #800000;">"</span><span style="color: #800000;">及格人数</span><span style="color: #800000;">"</span>, itemStyle: <span style="color: #800000;">"</span><span style="color: #800000;">#1ab394</span><span style="color: #800000;">"</span><span style="color: #000000;"> },
+        { value: </span><span style="color: #800080;">18</span>, name: <span style="color: #800000;">"</span><span style="color: #800000;">未及格人数</span><span style="color: #800000;">"</span>, itemStyle: <span style="color: #800000;">"</span><span style="color: #800000;">#79d2c0</span><span style="color: #800000;">"</span><span style="color: #000000;"> }
+      ]
+    };
+  }, mounted () {
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.$nextTick(function () {
+      </span><span style="color: #0000ff;">this</span>.drawPie(<span style="color: #800000;">"</span><span style="color: #800000;">pieReport</span><span style="color: #800000;">"</span><span style="color: #000000;">);
+    });
+  }, methods: {
+    drawPie (id) {
+      </span><span style="color: #0000ff;">this</span>.charts = <span style="color: #0000ff;">this</span><span style="color: #000000;">.$echarts.init(document.getElementById(id));
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.charts.setOption({
+        tooltip: {
+          trigger: </span><span style="color: #800000;">"</span><span style="color: #800000;">item</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          formatter: </span><span style="color: #800000;">"</span><span style="color: #800000;">{a}&lt;br/&gt;{b}:{c} ({d}%)</span><span style="color: #800000;">"</span><span style="color: #000000;">
+        },
+        legend: {
+          bottom: </span><span style="color: #800080;">10</span><span style="color: #000000;">,
+          left: </span><span style="color: #800000;">"</span><span style="color: #800000;">center</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+          data: </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.opinion
+        },
+        series: [
+          {
+            name: </span><span style="color: #800000;">"</span><span style="color: #800000;">状态</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+            type: </span><span style="color: #800000;">"</span><span style="color: #800000;">pie</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+            radius: </span><span style="color: #800000;">"</span><span style="color: #800000;">65%</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+            center: [</span><span style="color: #800000;">"</span><span style="color: #800000;">50%</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">50%</span><span style="color: #800000;">"</span><span style="color: #000000;">],
+            avoidLabelOverlap: </span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+            itemStyle: {
+              emphasis: {
+                shadowBlur: </span><span style="color: #800080;">10</span><span style="color: #000000;">,
+                shadowOffsetX: </span><span style="color: #800080;">0</span><span style="color: #000000;">,
+                shadowColor: </span><span style="color: #800000;">"</span><span style="color: #800000;">rgba(0, 0, 0, 0.5)</span><span style="color: #800000;">"</span><span style="color: #000000;">
+              },
+              color: function (</span><span style="color: #0000ff;">params</span><span style="color: #000000;">) {
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">自定义颜色</span>
+                <span style="color: #0000ff;">var</span> colorList = [<span style="color: #800000;">"</span><span style="color: #800000;">#1ab394</span><span style="color: #800000;">"</span>, <span style="color: #800000;">"</span><span style="color: #800000;">#79d2c0</span><span style="color: #800000;">"</span><span style="color: #000000;">];
+                </span><span style="color: #0000ff;">return</span> colorList[<span style="color: #0000ff;">params</span><span style="color: #000000;">.dataIndex];
+              }
+            },
+            data: </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.opinionData
+          }
+        ]
+      });
+    },
+
+  }
+}
+</span>&lt;/script&gt;</pre>
+</div>
+<p>完美!!</p>
+<p>&nbsp;<img src="./images/在内网中 vue项目添加ECharts图表插件3.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

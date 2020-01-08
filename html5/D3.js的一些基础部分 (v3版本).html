@@ -1,0 +1,407 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修D3.js的一些基础部分 (v3版本)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>D3.js的一些基础部分 (v3版本)</center></div><div class='banquan'>原文出处:本文由博客园博主溢杨年华提供。<br/>
+原文连接:https://www.cnblogs.com/littleSpill/p/10757184.html</div><br>
+    <p><span style="font-size: 18px;">最近公司有需求要做一些可视化的功能。之前一直都是用Echarts做的，但是Echarts难以满足我们的需求，经过多方请教，查找发现D3可以满足我们的需求。第一次接触到D3，发现这些图标的可交互性非常丰富，而且动画流畅简洁。 所以，打算学习D3并且应用到项目中。 原本以为D3也会和其他可视化库类似，只需要找到与自己需要的图表类似的图表进行粘贴，复制。然后简单的修改数据或者参数就可以达到自己使用的目的，结果总是差强人意....</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 16px;">从最基础图形学起 ：<span style="font-size: 18px;"> 一、矩形</span></span></h3>
+<p><span style="font-size: 16px;">矩形又分为直角矩形和圆角矩形</span></p>
+<h4><span style="font-size: 16px;">代码 :&nbsp;&nbsp;</span></h4>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">矩形的参数共6个
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">            x : 矩形左上角的x坐标。
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">            y : 矩形左上角的y坐标。
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">            width : 矩形的宽度。
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">            height : 矩形的高度。
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">            rx : 对于圆角矩形，指定椭圆在x方向的半径。
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">            ry : 对于圆角矩形，指定椭圆在y方向的半径。
+</span><span style="color: #008080;"> 8</span>             fill : 填充色 改变文字<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">的颜色也用这个。
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">            storke ： 轮廓线的颜色。
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">            stroke-width : 轮廓线的宽度。
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">            opacity ： 透明度
+</span><span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 直角矩形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">14</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #ff0000;"> version</span><span style="color: #0000ff;">="1.1"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="200"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span>
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">                style</span><span style="color: #0000ff;">="fill:steelblue;stroke:blue;stroke-width: 4;opacity: 0.4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">17</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span> 
+<span style="color: #008080;">19</span> 
+<span style="color: #008080;">20</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 圆角矩形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">21</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="200"</span><span style="color: #ff0000;"> rx</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> ry</span><span style="color: #0000ff;">="30"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span>
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">                style</span><span style="color: #0000ff;">="fill:yellow;stroke:black;stroke-width:4;opacity:0.5"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">24</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 16px;"><strong>显示的效果&nbsp; :</strong></span></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)0.png" alt="" /></p>
+<h3><span style="font-size: 18px;">&nbsp;二、圆形和椭圆形</span></h3>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;"> 圆形的参数有3个 :
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">        cx : 圆形的x坐标。
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">        cy : 圆形的y坐标。
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">        r : 圆的半径。
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">    椭圆的参数与圆形类似，只是半径分为水平半径和垂直半径 :
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        cx : 圆形的x坐标。
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">        cy : 圆形的y坐标。
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">        rx : 椭圆的水平半径。
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">        ry : 椭圆的垂直半径。
+</span><span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 圆形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">12</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">circle </span><span style="color: #ff0000;">cx</span><span style="color: #0000ff;">="150"</span><span style="color: #ff0000;"> cy</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> r</span><span style="color: #0000ff;">="60"</span> 
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">            style</span><span style="color: #0000ff;">="fill:yellow;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 椭圆形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">17</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ellipse </span><span style="color: #ff0000;">cx</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> cy</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> rx</span><span style="color: #0000ff;">="90"</span><span style="color: #ff0000;"> ry</span><span style="color: #0000ff;">="50"</span> 
+<span style="color: #008080;">19</span> <span style="color: #ff0000;">            style</span><span style="color: #0000ff;">="fill:blue;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">20</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h4><span style="font-size: 16px;">效果 :&nbsp;</span></h4>
+<h4><img src="./images/D3.js的一些基础部分 (v3版本)1.png" alt="" /></h4>
+<h4>&nbsp;</h4>
+<h3><span style="font-size: 18px;">&nbsp;三、线段</span></h3>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;"> 线段的参数是起点坐标和终点坐标 : 
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">        x1 : 起点的x坐标。
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">        y1 : 起点的y坐标。
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">        x2 : 终点的x坐标。
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">        y2 : 终点的y坐标。
+</span><span style="color: #008080;"> 6</span> 
+<span style="color: #008080;"> 7</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 线段 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">line </span><span style="color: #ff0000;">x1</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> y1</span><span style="color: #0000ff;">="20"</span><span style="color: #ff0000;"> x2</span><span style="color: #0000ff;">="170"</span><span style="color: #ff0000;"> y2</span><span style="color: #0000ff;">="120"</span> 
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">            style</span><span style="color: #0000ff;">="stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">11</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">&nbsp;效果 :&nbsp;</span></strong></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)2.png" alt="" /></p>
+<h3><span style="font-size: 18px;">&nbsp;四、多边形和折线</span></h3>
+<p><span style="background-color: #ffff00;"><strong><span style="font-size: 15px;">多边形和折线的参数是一样的，都只有一个points参数，这个参数的值是一系列的点坐标的。不同之处是多边形会将终点和起点连接起来，而折线不连接。</span></strong></span></p>
+<p><strong><span style="font-size: 16px;">代码 :&nbsp;</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 多边形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">polygon </span><span style="color: #ff0000;">points</span><span style="color: #0000ff;">="150,20 80,80 110,160 190,160 220,80"</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">            style</span><span style="color: #0000ff;">="fill:yellow;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     
+<span style="color: #008080;"> 7</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 折线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">polyline </span><span style="color: #ff0000;">points</span><span style="color: #0000ff;">="150,20 80,80 110,160 190,160 220,80"</span> 
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">            style</span><span style="color: #0000ff;">="fill:white;stroke:blue;stroke-width:4"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">11</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)3.png" alt="" /></p>
+<h3><span style="font-size: 18px;">&nbsp;五、路径</span></h3>
+<p><span style="font-size: 18px; background-color: #ffff00;">&lt;path&gt;标签的功能最丰富，前面列举的图形都可以用路径制作出来。与折线类似，也是通过给出一系列点坐标来绘制。其用法是 : 给出一个坐标点，在坐标点前面添加一个英文字母，表示是如何运动到此坐标点的。英文字母按照功能可分为五类 :&nbsp;</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">移动类&nbsp; :</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　M : 等于moveto。将画笔移动到指定坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">直线类 ：</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　L : 等于lineto。 画直线到指定坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　H : 等于horizontal lineto 。 画水平直线到指定坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　V : 等于vertical lineto 。 画垂直直线到指定坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">曲线类 :</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　C : 等于curveto 。 画三次贝塞尔曲线经两个指定控制点到达终点坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　S : 等于shorthand/smooth surveto 。 与前一条三次贝塞尔曲线相连，第一个控制点为前一条曲线第二个控制点的对称点，只需输入第二个控制点和终点，即可绘制&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 一个三次贝塞尔曲线。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　Q : 等于quadratic Bezier curveto 。 画二次贝塞尔曲线经一个指定控制点到达终点坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　T : 等于Shorthand/smooth quadratic Bezier curveto 。 与前一条二次贝塞尔曲线相连，控制点为前一条二次贝塞尔曲线控制点的对称点，只需输入终点，即可绘制&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;一个二次贝塞尔曲线。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">弧线类 :&nbsp;</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　A : 等于elliptical arc 。 画椭圆曲线到指定坐标。</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">闭合类 :&nbsp;</span></p>
+<p><span style="font-size: 18px; background-color: #ffff00;">　　Z : 等于closepath 。 绘制一条直线连接终点和起点，用来封闭图形。</span></p>
+<p><span style="background-color: #ffff00; font-size: 18px;">上述命令都是用大写英文字母表示，表示坐标系中的绝对坐标。也可以用小写英文字母，表示的是相对坐标（相对当前画笔所在点）。&nbsp;&nbsp;</span></p>
+<p><span style="background-color: #ffffff;"><strong>1 、直线&nbsp;</strong></span></p>
+<p><strong><span style="background-color: #ffffff;"><strong>代码 ：&nbsp;</strong></span></strong></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 路径path 绘制直线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M30,10 L270,200 
+</span><span style="color: #008080;">4</span> <span style="color: #0000ff;">                  M30,10 H300
+</span><span style="color: #008080;">5</span> <span style="color: #0000ff;">                  M30,10 V200"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="background-color: #ffffff;"><strong>效果 ：&nbsp;</strong></span></strong></p>
+<p><strong><span style="background-color: #ffffff;"><strong>&nbsp;</strong><br /></span></strong></p>
+<p><span style="background-color: #ffffff; font-size: 16px;"><img src="./images/D3.js的一些基础部分 (v3版本)4.png" alt="" /></span></p>
+<p><strong><span style="font-size: 16px;">2、 三次贝塞尔曲线&nbsp;</span></strong></p>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 路径path 绘制三次贝塞尔曲线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M30,100  
+</span><span style="color: #008080;">4</span> <span style="color: #0000ff;">        C100,20 190,20 270,100  
+</span><span style="color: #008080;">5</span> <span style="color: #0000ff;">        S400,180 450,100"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="fill:white;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>效果 ：&nbsp;</strong></span></p>
+<p><strong><span>&nbsp;<img src="./images/D3.js的一些基础部分 (v3版本)5.png" alt="" /></span></strong></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>3、二次贝塞尔曲线</strong></span></p>
+<p><span style="font-size: 16px;"><strong>代码 ：&nbsp;</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 路径path 绘制二次贝塞尔曲线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M30,100
+</span><span style="color: #008080;">4</span> <span style="color: #0000ff;">                 Q190,20 270,100
+</span><span style="color: #008080;">5</span> <span style="color: #0000ff;">                 T450,100"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="fill:white;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="background-color: #ffffff; font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><strong><span style="background-color: #ffffff; font-size: 16px;"><img src="./images/D3.js的一些基础部分 (v3版本)6.png" alt="" /></span></strong></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">4、弧线</span></strong></p>
+<p><span style="background-color: #ffff00;"><strong><span style="font-size: 16px;">　　</span></strong><span style="font-size: 16px;">弧线是根据椭圆来绘制的，参数较多 ：&nbsp;</span></span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　rx ： 椭圆x方向的半轴大小。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　ry : 椭圆y方向的半轴大小。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　x-axis-rotation : 椭圆的x轴与水平轴顺时针方向的夹角。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　large-arc-flag : 有两个值（1：大角弧度线 。 0 ： 小角弧度线）。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　sweep-flag : 有两个值（1：顺时针至终点。 0 ： 逆时针至终点）。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　x : 终点x坐标。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　y : 终点y坐标。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>代码 ：&nbsp;</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 路径path 绘制弧线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="400"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M100,200
+</span><span style="color: #008080;">4</span> <span style="color: #0000ff;">                a200,150 0 1 , 0 150,-150 z"</span> 
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">                style</span><span style="color: #0000ff;">="fill:yellow;stroke:black;stroke-width:4"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;<br /><br />a用了小写字母，表示相对坐标。  M代表当前位置（100，,20） 所以终点位置（100+150,200-150），即（250,50），<br />包含弧线的x和y方向的半径分别为200和150，椭圆的x轴与水平轴方向夹角0度。采用大角度，逆时针方向走向终点。<br />Z表示闭合回路</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)7.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><span style="font-size: 18px;">六、文字</span></h3>
+<p>　　在svg中可以使用&lt;text&gt;标签绘制文字，其属性有 ：</p>
+<p>　　　　x : 文字位置的x坐标。</p>
+<p>　　　　y&nbsp;: 文字位置的y坐标。</p>
+<p>　　　　dx : 相对于当前位置在x方向上平移的距离（值为正则往右，为负往左）。</p>
+<p>　　　　dy: 相对于当前位置在y方向上平移的距离（值为正则往上，为负往下）。</p>
+<p>　　　　textLength : 文字的显示长度。（不足拉长，足则压缩）。</p>
+<p>　　　　rotate : 旋转角度（顺时针为正，逆时针为负）。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 文字 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="150"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> dx</span><span style="color: #0000ff;">="-5"</span><span style="color: #ff0000;"> dy</span><span style="color: #0000ff;">="5"</span><span style="color: #ff0000;"> rotate</span><span style="color: #0000ff;">=180" </span><span style="color: #ff0000;">textLength</span><span style="color: #0000ff;">="90"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span> <span style="color: #000000;">            I Love Yangyi
+</span><span style="color: #008080;">5</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">&nbsp;</span></strong></p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)8.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px; background-color: #ffff00;">可以为文字中某段进行设置样式，可以使用&lt;tspan&gt;标签</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 文字 添加标签&lt;tspan&gt;&lt;/tspan&gt; </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">text </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="150"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> dx</span><span style="color: #0000ff;">="-5"</span><span style="color: #ff0000;"> dy</span><span style="color: #0000ff;">="5"</span><span style="color: #ff0000;"> rotate</span><span style="color: #0000ff;">=180" </span><span style="color: #ff0000;">textLength</span><span style="color: #0000ff;">="90"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>             I Love <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tspan </span><span style="color: #ff0000;">fill</span><span style="color: #0000ff;">="red"</span><span style="color: #0000ff;">&gt;</span>Yangyi<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tspan</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">text</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;<br /><br /><br /></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">样式 ：&nbsp;</span></strong></p>
+<p><strong><span style="font-size: 16px;"><img src="./images/D3.js的一些基础部分 (v3版本)9.png" alt="" /></span></strong></p>
+<p>&nbsp;</p>
+<h3>七、标记</h3>
+<p><strong><span style="font-size: 16px;">　　</span></strong><span style="font-size: 16px;">标记（marker）是svg中一个重要的概念，能贴附于&lt;path&gt;、&lt;line&gt;、&lt;polyline&gt;、&lt;polygon&gt;元素上。最经典的应用就是给线段添加箭头。</span></p>
+<p><span style="font-size: 16px;">　　标记&lt;marker&gt;写在&lt;defs&gt;&lt;/defs&gt;中，defs用于定义可重复利用的图形元素。来看&lt;marker&gt;的各属性和意义 :</span></p>
+<p><span style="font-size: 16px;">　　　　<span style="background-color: #ffff00;">viewBox : 坐标系的区域。</span></span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　refX,refY : 在viewBox内的基准点，绘制时此点在直线端点上。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　markerUnits : 标记大小的基准有两个值，即storekeWidth(线的宽度)和userSpaceOnUse（线前段的大小）</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　markerWidth,markerHeight : 标识的大小。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　orient ： 绘制方向，可设定为auto（自动确认方向）和角度值。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　id : 标识的id号。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">绘制一条带箭头的直线 ：</span></p>
+<p><strong><span style="font-size: 16px;">代码 :&nbsp;</span></strong></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义一个箭头 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="300"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">marker </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="arrow"</span><span style="color: #ff0000;"> markerUnits</span><span style="color: #0000ff;">="strokeWidth"</span><span style="color: #ff0000;"> 、
+</span><span style="color: #008080;"> 6</span> <span style="color: #ff0000;">                    markerWidth</span><span style="color: #0000ff;">="12"</span><span style="color: #ff0000;"> markerHeight</span><span style="color: #0000ff;">="12"</span> 
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">                    viewBox</span><span style="color: #0000ff;">="0 0 12 12"</span><span style="color: #ff0000;"> refX</span><span style="color: #0000ff;">="6"</span> 
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">                    refY</span><span style="color: #0000ff;">="6"</span><span style="color: #ff0000;"> orient</span><span style="color: #0000ff;">="auto"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>                         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M2,2 L10,6 L2,10 L6,6 L2,2"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="fill:#000000"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">10</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">marker</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 调用，绘制一条带箭头的直线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">line </span><span style="color: #ff0000;">x1</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> y1</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> x2</span><span style="color: #0000ff;">="200"</span><span style="color: #ff0000;"> y2</span><span style="color: #0000ff;">="100"</span> 
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">                stroke</span><span style="color: #0000ff;">="red"</span><span style="color: #ff0000;"> stroke-width</span><span style="color: #0000ff;">="3"</span> 
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">                marker-end</span><span style="color: #0000ff;">="url(#arrow)"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">18</span> 
+<span style="color: #008080;">19</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><strong><span style="font-size: 16px;"><img src="./images/D3.js的一些基础部分 (v3版本)10.png" alt="" /></span></strong></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">绘制一条带箭头的曲线&nbsp;</span></p>
+<p><span style="font-size: 16px;"><strong>代码 ：&nbsp;</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义一个箭头 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="300"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">marker </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="arrow"</span><span style="color: #ff0000;"> markerUnits</span><span style="color: #0000ff;">="strokeWidth"</span> 
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">                    markerWidth</span><span style="color: #0000ff;">="12"</span><span style="color: #ff0000;"> markerHeight</span><span style="color: #0000ff;">="12"</span> 
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">                    viewBox</span><span style="color: #0000ff;">="0 0 12 12"</span><span style="color: #ff0000;"> refX</span><span style="color: #0000ff;">="6"</span>
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">                    refY</span><span style="color: #0000ff;">="6"</span><span style="color: #ff0000;"> orient</span><span style="color: #0000ff;">="auto"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M2,2 L10,6 L2,10 L6,6 L2,2"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="fill:#000000"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">10</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">marker</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 调用，绘制一条带箭头的曲线 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">path </span><span style="color: #ff0000;">d</span><span style="color: #0000ff;">="M20,70 T80,100 T160,80 T200,90"</span> 
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">                style</span><span style="color: #0000ff;">="fill:white;stroke:red;stroke-width:3"</span> 
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">                marker-start</span><span style="color: #0000ff;">="url(#arrow)"</span>
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">                marker-mid</span><span style="color: #0000ff;">="url(#arrow)"</span><span style="color: #ff0000;"> marker-end</span><span style="color: #0000ff;">="url(#arrow)"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">19</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　marker-start : 路径起点处。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　marker-mid : 路径中间端点处。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　marker-end : 路径终点处。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　　　使用marker-mid，箭头将绘制在路径的节点处，所以对直线无效。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><img src="./images/D3.js的一些基础部分 (v3版本)11.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3>八、滤镜</h3>
+<p>　　<span style="font-size: 16px; background-color: #ffff00;">滤镜的标签为&lt;filter&gt;,和标记&lt;marker&gt;一样，也是在&lt;defs&gt;中定义的。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　滤镜的种类很多， 例如 ： feMorphology、feGaussianBlur、feFlood等，还有定义光源的滤镜feDistantLight、fePointLight、feSpotLight，都是以fe开头的，现在例举一个滤镜　　　　&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;feGaussianBlur的用法 ：</span></p>
+<p><strong><span style="font-size: 16px;">代码 ：&nbsp;</span></strong></p>
+<p><strong><span style="font-size: 16px;">　　做了一个不带滤镜的矩形和一个带滤镜的矩形，方便大家学习。</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义一个滤镜 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="500"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="300"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">filter </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="GaussianBlur"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">feGaussianBlur </span><span style="color: #ff0000;">in</span><span style="color: #0000ff;">="SourceGraphic"</span><span style="color: #ff0000;"> stdDeviation</span><span style="color: #0000ff;">="2"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 7</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">filter</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 没有带滤镜的矩形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="150"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> fill</span><span style="color: #0000ff;">="blue"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 带滤镜的矩形 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="300"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="150"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> fill</span><span style="color: #0000ff;">="blue"</span><span style="color: #ff0000;"> filter</span><span style="color: #0000ff;">="url(#GaussianBlur)"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">14</span> 
+<span style="color: #008080;">15</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　<span style="font-size: 16px; background-color: #ffff00;">　&nbsp;feGaussianBlur是一个高斯模糊的滤镜。in是使用滤镜的对象，此处是源图形SourceGraphic。&nbsp; stdDeviation是高斯模糊唯一的参数，数值越大，模糊程度越高。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 16px;">效果 ：&nbsp;</span></strong></p>
+<p><span style="font-size: 18px;"><img src="./images/D3.js的一些基础部分 (v3版本)12.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h3><strong><span style="font-size: 18px;">九、渐变</span></strong></h3>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　渐变表示一种颜色平滑过渡到另一种颜色。svg中有线性渐变&lt;linearGradient&gt;和放射性渐变&lt;radualGraduent&gt;。本demo为线性渐变。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　渐变也是定义在&lt;defs&gt;标签中的。给渐变定义一个id号，在图形元素上指定此id号即可。</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　x1、y1、x2、y2 ：定义渐变的方向(可水平可垂直)</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　offset ：定义渐变开始的位置</span></p>
+<p><span style="font-size: 16px; background-color: #ffff00;">　　stop-color : 定义此位置的颜色</span></p>
+<p>&nbsp;</p>
+<p><strong>代码 ：&nbsp;</strong></p>
+<p><span style="font-size: 18px;">　　此处做了一个水平渐变的矩形和一个垂直渐变的矩形</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>  <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义一个渐变 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">svg </span><span style="color: #ff0000;">width</span><span style="color: #0000ff;">="800"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="200"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义水平线性渐变 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">linearGradient </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="myGradient"</span><span style="color: #ff0000;"> x1</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> y1</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> x2</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> y2</span><span style="color: #0000ff;">="0%"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">stop </span><span style="color: #ff0000;">offset</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> stop-color</span><span style="color: #0000ff;">="blue"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 8</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">stop </span><span style="color: #ff0000;">offset</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> stop-color</span><span style="color: #0000ff;">="#f00"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">linearGradient</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 定义水平垂直线性渐变 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">12</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">linearGradient </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="myGradientCz"</span><span style="color: #ff0000;"> x1</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> y1</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> x2</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> y2</span><span style="color: #0000ff;">="100%"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">stop </span><span style="color: #ff0000;">offset</span><span style="color: #0000ff;">="0%"</span><span style="color: #ff0000;"> stop-color</span><span style="color: #0000ff;">="blue"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">15</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">stop </span><span style="color: #ff0000;">offset</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> stop-color</span><span style="color: #0000ff;">="#f00"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">16</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">linearGradient</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">defs</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 水平线性渐变 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">19</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="10"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="10"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="280"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="180"</span><span style="color: #ff0000;"> fill</span><span style="color: #0000ff;">="url(#myGradient)"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">20</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 垂直线性渐变 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">21</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">rect </span><span style="color: #ff0000;">x</span><span style="color: #0000ff;">="330"</span><span style="color: #ff0000;"> y</span><span style="color: #0000ff;">="10"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="280"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="180"</span><span style="color: #ff0000;"> fill</span><span style="color: #0000ff;">="url(#myGradientCz)"</span> <span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">22</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">svg</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18px;">效果 ：</span></strong></p>
+<p><img src="./images/D3.js的一些基础部分 (v3版本)13.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">以上就是一些基本图形的demo，以后想起来其他的还会继续补充。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">接下来会做一些复杂点的图表， 希望大家支持&nbsp; ~&nbsp; &nbsp; 谢谢。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;">2019-04-23</span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

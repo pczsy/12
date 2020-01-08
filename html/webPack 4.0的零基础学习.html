@@ -1,0 +1,117 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修webPack 4.0的零基础学习' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>webPack 4.0的零基础学习</center></div><div class='banquan'>原文出处:本文由博客园博主沁猿春提供。<br/>
+原文连接:https://www.cnblogs.com/qinyuanchun/p/11815912.html</div><br>
+    <p>webPack 也更新到了4.0阶段，今天看了一下官网，总结一下，零基础的学习路径吧。</p>
+<p>（1）首先需要下载 webPake和webpack cli&nbsp; &nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>npm install  webpack webpack-cli 
+</pre>
+</div>
+<p>（2）下载完之后，则是建立新的文件夹，进行初始化</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">webpack 初始化</span>
+npm init  </pre>
+</div>
+<p>（3）完成之后，则是从零配置webpack&nbsp; 需要在根目录下，建立一个 <strong>webpack.config.js&nbsp;</strong>的文件，里面用来写webpack 的配置</p>
+<p><img src="./images/webPack 4.0的零基础学习0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;（4）配置webpack 因为webpack 是基于node.js 运行的，所以首先需要在文件里配置</p>
+<p><img src="./images/webPack 4.0的零基础学习1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;（5）众所周知，webpack 的工作机制就是把一堆文件打包成 浏览器所认识的html 和js 和 css，那么就需要打包的入口文件和打包之后的出口文件夹啊</p>
+<div class="cnblogs_Highlighter">
+<pre><code>mode: "production", //模式有两种  production development
+    entry: './src/index.js', //入口
+    output: {
+        filename: "build.js", //打包后得文件名  [hash:8]  文件名只显示hash得前8位
+        path: __dirname + '/build', //绝对路径
+ },
+</pre>
+</div>
+<p>　<span style="color: #003300;">这里的注释都相当清楚了，所以就不一一解释了，production 是生产模式（也就是上线的版本）；development 是开发模式</span></p>
+<p><span style="color: #003300;"><span style="color: #000000;">（6）到了这一步，最基础的就完成了，我们就可以做一个测试了，新建一个src文件夹，在里面建立一个index.js ，输入一点东西，然后运行webpack 则会看见他自动打包成buil文件夹，并在里面生成index.js</span><br /></span></p>
+<p><span style="color: #003300;"><span style="color: #000000;"><img src="./images/webPack 4.0的零基础学习2.png" alt="" /></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p style="margin-left: 30px;"><strong>&nbsp;这个意味着打包成功</strong></p>
+<p>&nbsp;<img src="./images/webPack 4.0的零基础学习3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;（7）但是是不是有什么不对呢？哪里不对劲呢？如果我想让他生成index.html文件呢？怎么生成？------那么就需要用到插件了&nbsp;&nbsp;</p>
+<blockquote>
+<div>html-webpack-plugin 这个插件可以在build 文件夹下自动生成index.html&nbsp; (首先我们需要在命令行中下载这个插件 然后再将其配置到webpack.config.js文件中)　　</div>
+
+</blockquote>
+<div class="cnblogs_Highlighter">
+<pre><code>//下载插件
+npm add  html-webpack-plugin</pre>
+</div>
+<p>然后则是在配置文件中进行引用</p>
+<blockquote>
+<p>plugins&nbsp; 这个属性是放置所有用到的插件</p>
+</blockquote>
+<p><img src="./images/webPack 4.0的零基础学习4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;运行成功之后则会自动加载出文件（并且还会主动引入build 文件夹下面的js 文件）</p>
+<p><img src="./images/webPack 4.0的零基础学习5.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>（8）那么如果又css 文件呢？哪有改如何去打包呢？中间又会涉及到那些问题呢？</p>
+<blockquote>
+<p>css 文件，我们就需要用到 loader (他的作用就是将浏览器不认识的文件转换成所认识的js或css文件)&nbsp;</p>
+<p>loader 的工作机制顺序是： 从右向左，从上往下&nbsp;</p>
+<p>css 文件中，我们用到的是 css-loader 和style-loader 所以我们应该先下载下来，然后再进行配置&nbsp;</p>
+</blockquote>
+<p>&nbsp;这里我们需要注意的是，在src 文件中，我们在index.js 中引入css 文件时应该用 require 的方式来引入</p>
+<p>&nbsp;<img src="./images/webPack 4.0的零基础学习6.png" alt="" /></p>
+<p><span style="font-size: 14px;">这样我们可以见已经打包成功了</span></p>
+<p><span style="font-size: 14px;"><img src="./images/webPack 4.0的零基础学习7.png" alt="" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;（9）那么，问题又来了，既然js 都可以单独打包成一个文件，css 是不是也可以呢</p>
+<blockquote>
+<p><span style="color: #333333;">&nbsp;mini-css-extract-plugin&nbsp; 这个插件，则是会主动生成一个css 文件，将其插入在 link 标签里面&nbsp; &nbsp;&nbsp;</span>之后我们需要的就是在配置文件中进行配置就ok了</p>
+</blockquote>
+<p>&nbsp;</p>
+<p><img src="./images/webPack 4.0的零基础学习8.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;（10）仔细的你会发先又有个小小的问题（就是即使在生产模式下，js 文件被压缩成一行了，但是生成的css 却没有呢？这又怎么解决呢）</p>
+<blockquote>
+<p>这时候需要两个插件来解决</p>
+<div class="cnblogs_Highlighter">
+<pre><code>let OptimizeCss = require('optimize-css-assets-webpack-plugin'); //这个插件可以压缩css文件
+let UglifyJs = require('uglifyjs-webpack-plugin') //有了css 压缩必须加上这个js压缩 不然 js 文件不会别压缩</pre>
+</div>
+</blockquote>
+<p><img src="./images/webPack 4.0的零基础学习9.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;（11）这些都弄完了，那么如果是时css 文件中又图片呢？ js 文件中有图片呢？那咋整？咱下次再接着说。。。</p>
+<p>（12）咦~ 插播一个小小的知识点，大家都知道vue 是集合了webpack 的，打包时直接 npm run build&nbsp; 就好了，那你知道咋配置的吗?</p>
+<p><img src="./images/webPack 4.0的零基础学习10.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;OK，这次真拜拜了~~~~</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

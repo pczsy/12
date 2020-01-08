@@ -1,0 +1,48 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修解决滚动条突然出现导致的页面错位问题' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>解决滚动条突然出现导致的页面错位问题</center></div><div class='banquan'>原文出处:本文由博客园博主陌上兮月提供。<br/>
+原文连接:https://www.cnblogs.com/zhangnan35/p/10730617.html</div><br>
+    <p>　　<span style="font-size: 14pt;">有时候在一个宽高固定的容器中，需要加载&ldquo;更多内容&rdquo;，如果设置了overflow:auto，加载更多内容时，子元素的大小超过父容器，就会出现滚动条。而滚动条的突然出现，会让子元素统统&ldquo;<span style="color: #ff00ff;"><strong>向左抖了一下</strong></span>&rdquo;。效果如下：</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题0.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">先来复习一下overflow的几个概念：</span></p>
+<p>　　　&nbsp; <strong>&nbsp;<span style="font-size: 18px; color: #ff6600;">overflow:visible&nbsp;　　 //默认属性，内容超出显示</span></strong></p>
+<p><strong><span style="font-size: 18px;">　　　<span style="color: #008080;">overflow:auto 　　//内容不超出时无滚动条，内容超出时才显示滚动条</span></span></strong></p>
+<p><strong><span style="font-size: 18px;">　　　<span style="color: #cc99ff;">overflow:hidden&nbsp; 　　//内容超出隐藏</span></span></strong></p>
+<p><strong><span style="font-size: 18px;">　　　<span style="color: #666699;">overflow:scroll 　　//不管内容超不超出，滚动条常驻</span></span></strong></p>
+<p>　　<span style="font-size: 18px;">在这里，我的内容定位方式为：margin: 0 auto，这是因为滚动条出现后挤占了一部分位置，此时内容是在除了滚动条的绿色区域居中的，但相对于红色边框的父容器中，是稍稍偏左的。如下：</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题1.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">特别注意一个问题：假如内容的宽度是用百分比来写的，那么计算时是<span style="color: #ff0000; font-size: 14pt;"><strong>不包括父容器的滚动条的</strong></span>。举个栗子，父容器在这里宽度为400px,内容宽度假如为80%，在没有滚动条时，内容宽度是320px。有滚动条时，内容则变成了（400px - 滚动条宽度）* 80%，也就是说，内容宽度此时要稍稍小于320px。</span></p>
+<p>&nbsp;</p>
+<p>　　<span style="font-size: 18pt;">解决方案一：<span style="color: #0000ff;"><strong>滚动条常驻</strong></span>（不完美但也还行）</span></p>
+<p>　　<span style="font-size: 18px;">滚动条常驻，或者滚动条消失，都是为了避免&ldquo;<span style="font-size: 14pt;"><strong><span style="color: #0000ff;">滚动条从无到有</span></strong></span>&rdquo;这个突发过程。当然,一般是不会让滚动条消失的，因为很容易会让用户以为没有&ldquo;更多内容&rdquo;或者&ldquo;内容到此为止了&rdquo;，这个现象是不太合理的。让滚动条常驻呢？不完美，但也可以接受。</span></p>
+<p><span style="font-size: 18px;">　　设置父容器overflow-y:scroll，效果如下：</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题2.png" alt="" /></p>
+<p>　　<span style="font-size: 18pt;">解决方案二：<span style="color: #333399;"><strong>写死容器及子元素的宽高定位</strong></span>（特别注意小屏设备）</span></p>
+<p>　　<span style="font-size: 18px;">既然用百分比来写宽高，用auto来定位都会受到滚动条的影响，那么为了不受其影响，把所有东西都写死不就行了，举个栗子，现在容器400px,内容320px,那么易得左边距为(400px - 320px)/2。</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题3.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">内容部分的css代码如下：</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题4.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">最终效果如下：</span></p>
+<p>　　<img src="./images/解决滚动条突然出现导致的页面错位问题5.png" alt="" /></p>
+<p>　　<span style="font-size: 18px;">可以看到已经是达到要求了，内容本身没有左移。但是注意这里的父容器是写定宽高的，在大屏电脑或者小屏笔记本宽度都是400px，如果父容器宽高又要随着屏幕不同而动态改变，那这个margin-left就没法定位到容器正中间了，除非先写定宽高再做缩放。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

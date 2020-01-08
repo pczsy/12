@@ -1,0 +1,78 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修踩坑ios H5' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>踩坑ios H5</center></div><div class='banquan'>原文出处:本文由博客园博主佟舟提供。<br/>
+原文连接:https://www.cnblogs.com/tongzhou/p/11088011.html</div><br>
+    <h3 id="目录">目录</h3>
+<ol>
+<li><a href="#1">input获取焦点时，页面被放大</a></li>
+<li><a href="#2">ios input输入时白屏</a></li>
+<li><a href="#3">软键盘撑起页面下不来</a></li>
+<li><a href="#4">ios页面滚动不流畅</a></li>
+<li><a href="#5">position:fixed/absolute随屏幕滚动</a></li>
+</ol>
+<h4 id="input获取焦点时页面被放大"><span id='1'>1.input获取焦点时，页面被放大</span></h4>
+<p>设置meta标签</p>
+<pre><code><code>&lt;meta name=&quot;apple-mobile-web-app-capable&quot; content=&quot;yes&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no&quot;&gt;</code></pre>
+<h4 id="ios-input输入时白屏"><span id='2'>2.ios input输入时白屏</span></h4>
+<p>这个问题貌似只有再ios9中才有<br />
+<br/><br />
+解决方法：在input的父元素上添加相对定位就行了，非常神奇，具体因为啥不太清楚。。</p>
+<pre><code><code>style=&quot;postion:relative;&quot;</code></pre>
+<h4 id="软键盘撑起页面下不来"><span id='3'>3.软键盘撑起页面下不来</span></h4>
+<p>目前有2个方法：</p>
+<h5 id="js控制focus-blur">(1) js控制focus blur</h5>
+<pre><code><code>//input输入框弹起软键盘的解决方案。
+var bfscrolltop = document.body.scrollTop;
+$(&quot;input&quot;).focus(function () {
+  document.body.scrollTop = document.body.scrollHeight;
+}).blur(function () {
+  document.body.scrollTop = bfscrolltop;
+});</code></pre>
+<h5 id="待验证0.0">(2) （待验证0.0）</h5>
+<pre><code><code>position: absolute;
+webkit-overflow-scrolling: touch;
+z-index:1;
+
+//js再控制blur //让页面向下滑动500
+document.body.addEventListener(&#39;focusout&#39;, function () {
+    window.scrollTo(0,500);
+})</code></pre>
+<h4 id="ios页面滚动不流畅"><span id='4'>4.ios页面滚动不流畅</span></h4>
+<p>我的解决方法是，让html和body固定100%（或者100vh），然后再在内部放一个height:100%的div，设置overflow-y: auto;和-webkit-overflow-scrolling: touch;</p>
+<pre><code><code>.h100scroll {
+  /* 模态框之类的div不能放在这个容器中 */
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}</code></pre>
+<h4 id="positionfixedabsolute随屏幕滚动"><span id='5'>5.position:fixed/absolute随屏幕滚动</span></h4>
+<p>注：ios里貌似不支持fixed。。。这里主要指absolute<br />
+<br/><br />
+在position:fixed/absolute内加入：</p>
+<pre><code><code>-webkit-transform: translateZ(0);</code></pre>
+<p>抖动情况，则在内容区域，加入 ：</p>
+<pre><code><code>overflow-y: auto;</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

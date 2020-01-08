@@ -1,0 +1,86 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP中的301、302、303、307、308' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP中的301、302、303、307、308</center></div><div class='banquan'>原文出处:本文由博客园博主AmyZYX提供。<br/>
+原文连接:https://www.cnblogs.com/amyzhu/p/11763438.html</div><br>
+    <h2 id="结论">结论</h2>
+<ul>
+<li>3XX开头的HTTP状态码都表示重定向的响应。</li>
+<li>301、308是永久重定向；302、303、307是临时重定向。</li>
+<li>301、302是http 1.0的内容，303、307、308是http1.1的内容。</li>
+<li>301和302本来在规范中是不允许重定向时改变请求method的（将POST改为GET），实际许多浏览器实现的时候允许重定向时改变请求method。</li>
+<li>303的出现是允许重定向时改变请求method。此外303响应禁止被缓存。307、308则不允许重定向时改变请求method。</li>
+</ul>
+<h3 id="rfc-7231规定">RFC 7231规定：</h3>
+<ul>
+<li>301 Moved Permanently，永久重定向</li>
+<li>302 Found</li>
+<li>303 See Other</li>
+<li>307 Temporary Redirect</li>
+</ul>
+<h3 id="rfc-7538规定">RFC 7538规定：</h3>
+<ul>
+<li>308 Permanent Redirect 永久重定向</li>
+</ul>
+<h2 id="搜索引擎处理区别">301、302搜索引擎处理区别</h2>
+<ul>
+<li>301表示搜索引擎在抓去新内容的同时，将旧的网址替换为重定向之后的网址；</li>
+<li>302表示旧地址的资源仍存在，重定向时临时从A地址跳转到B地址，搜索引擎会抓取新的内容，并继续保存旧的网址。</li>
+</ul>
+<h2 id="临时重定向302303与307">临时重定向：302、303与307</h2>
+<h3 id="结论-1">结论</h3>
+<ul>
+<li>302允许各种各样的重定向，一般都实现为GET到GET重定向，但是不能确保POST会重定向为POST。</li>
+<li>303只允许任意请求到GET的重定向。</li>
+<li>307和302一样，但不允许POST到GET的重定向。</li>
+</ul>
+<h3 id="found">302 Found</h3>
+<ul>
+<li>302表示目标资源临时移动到了另一个URI上。由于重定向是临时发生的，所以客户端之后的请求中应该使用原本的URI。</li>
+<li>响应header的Location会带上重定向的URI，浏览器可以使用Location中的URI进行<strong>自动重定向</strong>。</li>
+<li>注意：由于历史原因，用户代理可能会在重定向后的请求中把POST方法改为GET。如果不想这样做，应该响应307（Temporary Redirect）状态码。</li>
+</ul>
+<h3 id="see-other">303 See Other</h3>
+<ul>
+<li>303表示服务器要<strong>将浏览器重定向到另一个资源</strong>，这个资源的URI会写在响应Header的Location字段。事实上，重定向到的资源并不是请求的资源，而是对请求资源的一些描述。</li>
+<li>303 通常用于将POST请求重定向到GET请求。例如上传了一份个人信息，服务器返回303响应，将你导向一个上传成功页面。</li>
+<li>303 不管原请求是什么方法，重定向请求的都是GET（或者HEAD）</li>
+<li>303响应禁止被缓存。</li>
+</ul>
+<h3 id="temporary-redirect">307 Temporary Redirect</h3>
+<ul>
+<li>307的定义实际上和302是一致的，唯一区别在于，307状态码不允许浏览器将原本POST的请求重定向到GET请求上。</li>
+</ul>
+<h2 id="永久重定向301308">永久重定向：301、308</h2>
+<h3 id="moved-permanently">301 Moved Permanently</h3>
+<ul>
+<li>301表明目标资源被永久的移动到了一个新的URI，任何未来对这个资源的引用都应该使用新的URI。</li>
+</ul>
+<h3 id="permanent-redirect">308 Permanent Redirect</h3>
+<ul>
+<li>308与301定义一致，唯一的区别在于，308状态码不允许浏览器将原本为POST的请求重顶到GET请求上。</li>
+</ul>
+<p>参考：</p>
+<p><a href="https://www.cnblogs.com/wuguanglin/p/redirect.html" class="uri">https://www.cnblogs.com/wuguanglin/p/redirect.html</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/60669395" class="uri">https://zhuanlan.zhihu.com/p/60669395</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

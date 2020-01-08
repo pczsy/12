@@ -1,0 +1,171 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修单个视频播放控制&amp;默认横屏播放' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>单个视频播放控制&amp;默认横屏播放</center></div><div class='banquan'>原文出处:本文由博客园博主下落香樟树提供。<br/>
+原文连接:https://www.cnblogs.com/zxk5211/p/web_28.html</div><br>
+    <h2 id="一视频列表中控制只允许一个视频播放">一、视频列表中控制只允许一个视频播放</h2>
+<pre><code><code>// 获取DOM中所有的video标签
+var videoTags = document.querySelectorAll(&#39;video&#39;);
+// 控制播放的视频暂停
+var pauseAll = function () {
+  // 改变this指向
+  var self = this;
+  [].forEach.call(videoTags, function (i) {
+    i !== self &amp;&amp; i.pause();
+  });
+}
+// 改变DOM数组中的数组元素，call() 改变this指向
+[].forEach.call(videoTags, function (i) {
+     i.addEventListener(&#39;play&#39;, pauseAll.bind(i));   
+});</code></pre>
+<p>注：<strong>call()</strong>：调用一个对象的一个方法，用另一个对象替换当前对象，例如：<strong>arrayA.call(A,args1,args2)</strong>，即<strong>A</strong>对象调用<strong>arrayA</strong>对象的方法。</p>
+<h2 id="二视频列表播放时滑动页面抖动">二、视频列表播放时滑动页面抖动</h2>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no&quot; /&gt;
+    &lt;meta content=&quot;black&quot; name=&quot;apple-mobile-web-app-status-bar-style&quot; /&gt;
+    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge,chrome=1&quot; /&gt;
+    &lt;meta content=&quot;yes&quot; name=&quot;apple-mobile-web-app-capable&quot; /&gt;
+    &lt;meta content=&quot;telephone=no&quot; name=&quot;format-detection&quot; /&gt;
+    &lt;title&gt;GST&lt;/title&gt;
+    &lt;!-- CSS样式 --&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            /* 禁止模板复制 */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        html,
+        body {
+            font-size: 16px;
+            background: #fff;
+            font-family: &#39;Franklin Gothic Medium&#39;, &#39;Arial Narrow&#39;, Arial, sans-serif;
+        }
+      
+                /* 主要style代码： */
+        #app {
+            width: 100vw;
+            min-height: 100vh;
+            height: auto;
+            overflow: hidden;
+            overflow-y: scroll;
+            /* 防止iOS卡顿 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        ul.box {
+            width: 100%;
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ul.box li {
+            display: block;
+            margin-top: .12rem;
+        }
+
+        ul.box li&gt;p {
+            box-sizing: border-box;
+            padding: 0 .1rem;
+            line-height: .4rem;
+            font-size: .3rem;
+        }
+
+        ul.box li&gt;video {
+            margin-top: .1rem;
+            width: 100%;
+            height: auto;
+            object-fit: fill;
+            overflow: hidden;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div id=&quot;app&quot;&gt;
+        &lt;ul class=&quot;box&quot; id=&quot;videoBox&quot;&gt;
+            &lt;li&gt;
+                &lt;p&gt;1、挪威理想国&lt;/p&gt;
+                &lt;video controls controlslist=&quot;nodownload&quot; disablePictureInPicture playsinline=&quot;&quot; x5-playsinline=&quot;&quot;
+                    playsinline=&quot;&quot; webkit-playsinline=&quot;&quot;
+                    poster=&quot;https://cs.xinpianchang.com/uploadfile/article/2019/11/05/5dc0e9357cad8.jpeg@960w_540h_1e_1c.jpg&quot;
+                    src=&quot;https://qiniu-xpc10.xpccdn.com/5c54f52f221d1.mp4&quot;&gt;&lt;/video&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+                &lt;p&gt;2、我是阿迪达斯-灰太狼！&lt;/p&gt;
+                &lt;video controls controlslist=&quot;nodownload&quot; disablePictureInPicture playsinline=&quot;&quot; x5-playsinline=&quot;&quot;
+                    playsinline=&quot;&quot; webkit-playsinline=&quot;&quot;
+                    poster=&quot;https://cs.xinpianchang.com/uploadfile/article/2019/11/05/5dc051a64adbc.jpeg@960w_540h_1e_1c.jpg&quot;
+                    src=&quot;http://oldvod2.v.news.cn/1F/FE/1f74d72eedda3dc922b3487f49619c4730b4fbfe.mp4&quot;&gt;&lt;/video&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<p><strong>注</strong>：<strong>#app</strong> 默认最小高度：<strong>min-height：100vh</strong>，高度：<strong>height：auto</strong>，溢出时隐藏：<strong>overflow: hidden</strong>，y轴时滚动：<strong>overflow-y: scroll。</strong></p>
+<h2 id="三video标签相关属性简介">三、video标签相关属性简介</h2>
+<pre class="html"><code>    &lt;video 
+        controls 
+        controlslist=&quot;nodownload&quot; 
+        disablePictureInPicture 
+        x5-video-player-type=&#39;h5&#39;
+        x5-video-player-fullscreen=&#39;true&#39; 
+        playsinline 
+        webkit-playsinline 
+        x-webkit-airplay=&quot;allow&quot; 
+        poster=&quot;&quot;
+        src=&quot;&quot;
+    &gt;&lt;/video&gt;</code></pre>
+<p>注：属性简介</p>
+<ul>
+<li><strong>controls</strong>：向用户显示控件，比如播放按钮；</li>
+<li><strong>autoplay</strong>：视频在就绪后马上播放；</li>
+<li><strong>controlslist=&quot;nodownload&quot;</strong> ：隐藏video标签下载按钮；</li>
+<li><strong>disablePictureInPicture</strong>：隐藏video标签画中画；</li>
+<li><strong>x5-video-player-type='h5'</strong>：启用X5内核的H5播放器；</li>
+<li><strong>x5-video-player-fullscreen='true'</strong>： 全屏设置；</li>
+<li><strong>x5-video-player-orientation=&quot;portraint&quot;</strong>：声明播放器支持的方向，横屏：<strong>landscape</strong>，竖屏：<strong>portraint</strong>，默认竖屏播放，无论是直播还是全屏H5一般都是竖屏播放，但是该属性需要<strong>x5-video-player-type</strong>开启<strong>H5</strong>模式；</li>
+<li><strong>playsinline</strong>：内联播放；</li>
+<li><strong>webkit-playsinline</strong>： 内联播放；</li>
+<li><strong>x-webkit-airplay=&quot;true / allow&quot;</strong>：支持Airplay的设备；</li>
+<li><strong>poster=&quot;&quot;</strong>：规定视频下载时现实的图像，或者在用户点击播放按钮前显示的图像；</li>
+<li><strong>src=&quot;&quot;</strong>：要播放视频的URL；</li>
+<li><strong>loop</strong>：当前媒介文件完成播放之后再次开始播放（循环播放）；</li>
+<li><strong>preload</strong>：视频在页面加载时进行加载，并预备播放；</li>
+<li><strong>width</strong>：设置视频播放器的宽度；</li>
+<li><strong>height</strong>：设置视频播发器的高度；</li>
+<li><strong>muted</strong>：规定视频的音频输出应该被静音；</li>
+<li><strong>style=&quot;object-fit:fill;&quot;</strong> css3样式设置填充整个屏幕video铺满整个屏幕，不按照视频的原始比例</li>
+</ul>
+<p>通过属性的设置和样式的控制让视频全屏显示；</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

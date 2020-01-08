@@ -1,0 +1,229 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修常用到用css3实现的转换，过渡和动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>常用到用css3实现的转换，过渡和动画</center></div><div class='banquan'>原文出处:本文由博客园博主喵小Q提供。<br/>
+原文连接:https://www.cnblogs.com/qiujianmei/p/11653129.html</div><br>
+    <h1 id="cssjs">为什么要用css动画替换js动画</h1>
+<p><strong><span style="font-size: 16px;">导致JavaScript效率低的两大原因：操作DOM和使用页面动画。</span></strong></p>
+<table style="background-color: #f0ffff; height: 81px; width: 1111px;" border="0">
+<tbody>
+<tr>
+<td><span style="font-size: 14px;">通常我们会通过频繁的操作 DOM的CSS来实现视觉上的动画效果，导致js效率低的两个因素都包括在内了在频繁的操作DOM和CSS时，浏览器会不停的执行重排和重绘，在PC版本的浏览器中，因为浏览器可用的内存比较大，用户肉眼几乎看不见页面动画产生的repaint和reflow，所以工程师几乎无需过多的考虑动画带来的性能问题，但在移动设备上可大有不同，移动设备分配给内置浏览器的内存可没有PC版本的浏览器内存可观，目前对CSS3支持最好的莫过于webkit浏览器了，在webkit内核的浏览器，一是safari其次是chrome.</span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 16px;"><strong>用CSS3动画替代JS模拟动画的好处：</strong></span></p>
+<table style="background-color: #e0ffff; height: 82px; width: 1110px;" border="0">
+<tbody>
+<tr>
+<td>
+<table style="width: 1105px; height: 68px; background-color: #f0ffff;" border="0">
+<tbody>
+<tr>
+<td>
+<ul>
+<li><span style="font-size: 14px;">不占用JS主线程；</span></li>
+<li><span style="font-size: 14px;">可以利用硬件加速；</span></li>
+<li><span style="font-size: 14px;">浏览器可对动画做优化（元素不可见时不动画减少对FPS影响）</span></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 14px;">CSS3动画提供了2D和3D以及常规动画属性接口，它可以工作在页面的任何一个元素的任意一个属性，CSS3的动画是利用C语言编写的，它是系统层面的动画。</span></p>
+<p><span style="font-size: 14px;">采用js动画还是css3动画，需要开发者根据不同的需求做出不同的抉择，但应该遵循一个基本的原则是：如果你需要做2D动画，请勿必使用CSS3的transition或animation</span></p>
+<p><span style="font-size: 14px;">CSS3动画与javascript模拟动画有以下区别：</span></p>
+<table style="background-color: #f0ffff;" border="0">
+<tbody>
+<tr>
+<td><ol>
+<li>
+<p><span style="font-size: 14px;">CSS 3D动画在js中无法实现</span><br /><span style="font-size: 14px;">CSS3的3D动画是CSS3中非常强大的功能，因为它的工作原理是在一个三维的空间里，因此js是无法模拟出像CSS3那样的3D动画</span></p>
+
+
+
+
+
+
+
+
+
+
+</li>
+<li>
+<p><span style="font-size: 14px;">CSS 2D矩阵动画效率高于js利用margin和left,top模拟的矩阵动画</span><br /><span style="font-size: 14px;">CSS3的2D动画是指是2D矩阵Transform变化，js当然是不能做变形动画的。就拿坐标动画来说，使用CSS3的transform做translateXY动画比js中的position left，position right快了近700mm!而且视觉上也比js动画流畅很多。</span></p>
+
+
+
+
+
+
+
+
+
+
+</li>
+<li>
+<p><span style="font-size: 14px;">CSS3其它常规动画属性的效率均低于js模拟的动画</span><br /><span style="font-size: 14px;">常规动画属性在这里是指：height，width,opacity,border-width,color</span></p>
+
+
+
+
+
+
+
+
+
+
+</li>
+
+
+
+
+
+
+
+
+
+
+</ol></td>
+
+
+
+
+
+
+
+
+
+</tr>
+
+
+
+
+
+
+
+
+
+</tbody>
+
+
+
+
+
+
+
+
+
+</table>
+<p>&nbsp;</p>
+<h1 id="css3">css3的属性</h1>
+<p><span style="font-size: 16px;"><strong>2D 转换</strong></span><br />CSS3 转换可以可以对元素进行移动、缩放、转动、拉长或拉伸。<br />transform属性，适用于2D或3D转换的元素<br />transform-origin属性，设置转化元素位置</p>
+<p>1.translate()方法，根据左(X轴)和顶部(Y轴)位置给定的参数，从当前元素位置移动。　</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">div </span>{<span style="color: #ff0000;">
+　　transform</span>:<span style="color: #0000ff;"> translate(50px,100px)</span>;<span style="color: #ff0000;">
+　　-webkit-transform</span>:<span style="color: #0000ff;"> translate(50px,100px)</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> Safari and Chrome </span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>2.rotate()方法，在一个给定度数顺时针旋转的元素。负值是允许的，这样是元素逆时针旋转。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">div </span>{<span style="color: #ff0000;">
+　　transform</span>:<span style="color: #0000ff;"> rotate(30deg)</span>;<span style="color: #ff0000;">
+　　-webkit-transform</span>:<span style="color: #0000ff;"> rotate(30deg)</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> Safari and Chrome </span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>3.scale()方法，该元素增加或减少的大小，取决于宽度（X轴）和高度（Y轴）的参数</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">div </span>{<span style="color: #ff0000;">
+    -webkit-transform</span>:<span style="color: #0000ff;"> scale(2,3)</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> Safari /
+    transform: scale(2,3); / 标准语法 </span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>4.skew(&nbsp;[,])包含两个参数值，分别表示X轴和Y轴倾斜的角度，如果第二个参数为空，则默认为0，参数为负表示向相反方向倾斜。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">div </span>{<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> skew(30deg,20deg)</span>;<span style="color: #ff0000;">
+    -ms-transform</span>:<span style="color: #0000ff;"> skew(30deg,20deg)</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> IE 9 /
+    -webkit-transform: skew(30deg,20deg); / Safari and Chrome </span><span style="color: #008000;">*/</span>
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>3D 转换</strong></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">translate3d(x,y,z)    定义 3D 转化。
+translateX(x)    定义 3D 转化，仅使用用于 X 轴的值。
+translateY(y)    定义 3D 转化，仅使用用于 Y 轴的值。
+translateZ(z)    定义 3D 转化，仅使用用于 Z 轴的值。
+
+scale3d(x,y,z)    定义 3D 缩放转换。
+scaleX(x)    定义 3D 缩放转换，通过给定一个 X 轴的值。
+scaleY(y)    定义 3D 缩放转换，通过给定一个 Y 轴的值。
+scaleZ(z)    定义 3D 缩放转换，通过给定一个 Z 轴的值。
+
+rotate3d(x,y,z,angle)    定义 3D 旋转。
+rotateX(angle)    定义沿 X 轴的 3D 旋转。
+rotateY(angle)    定义沿 Y 轴的 3D 旋转。
+rotateZ(angle)    定义沿 Z 轴的 3D 旋转。
+
+perspective(n)    定义 3D 转换元素的透视视图。</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>CSS3 过渡</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">transition    简写属性，用于在一个属性中设置四个过渡属性。
+transition-property    规定应用过渡的 CSS 属性的名称。
+transition-duration    定义过渡效果花费的时间。默认是 0。transition-duration: 5s;
+transition-timing-function    规定过渡效果的时间曲线。默认是 "ease"。
+    linear    规定以相同速度开始至结束的过渡效果（等于 cubic-bezier(0,0,1,1)）。
+    ease    规定慢速开始，然后变快，然后慢速结束的过渡效果（cubic-bezier(0.25,0.1,0.25,1)）。
+    ease-in    规定以慢速开始的过渡效果（等于 cubic-bezier(0.42,0,1,1)）。
+    ease-out    规定以慢速结束的过渡效果（等于 cubic-bezier(0,0,0.58,1)）。
+    ease-in-out    规定以慢速开始和结束的过渡效果（等于 cubic-bezier(0.42,0,0.58,1)）。
+    cubic-bezier(n,n,n,n)　　在 cubic-bezier 函数中定义自己的值。可能的值是 0 至 1 之间的数值。
+transition-delay　　规定过渡效果何时开始。默认是 0。transition-delay: 2s;</span></pre>
+</div>
+<p>&nbsp;</p>
+<pre><code><code><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-number"><span class="hljs-attribute"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-attribute"><span style="color: #ffffff;"><span class="hljs-attribute"><span class="hljs-number"><strong style="font-size: 16px; color: #000000; font-family: 'PingFang SC', 'Helvetica Neue', Helvetica, Arial, sans-serif;">CSS3 动画<br /></strong></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">@keyframes    规定动画。    
+animation    所有动画属性的简写属性，除了 animation-play-state 属性。    
+animation-name    规定 @keyframes 动画的名称。    
+animation-duration    规定动画完成一个周期所花费的秒或毫秒。默认是 0。    
+animation-timing-function    规定动画的速度曲线。默认是 "ease"。    
+animation-fill-mode    规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。    
+animation-delay    　　规定动画何时开始。默认是 0。    
+animation-iteration-count    规定动画被播放的次数。默认是 1。
+animation-direction    规定动画是否在下一周期逆向地播放。默认是 "normal"。
+animation-play-state    规定动画是否正在运行或暂停。默认是 "running"。</span></pre>
+</div>
+<pre><code><code></code></pre>
+<p>&nbsp;</p>
+<pre><code><code><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-attribute"><span class="hljs-number"><span class="hljs-attribute"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-selector-class"><span class="hljs-attribute"><span style="color: #ffffff;"><span class="hljs-attribute"><span class="hljs-number"><br /><br /></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

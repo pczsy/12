@@ -1,0 +1,99 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js+cube-ui（Scroll组件）实现类似头条效果的横向滚动导航条' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js+cube-ui（Scroll组件）实现类似头条效果的横向滚动导航条</center></div><div class='banquan'>原文出处:本文由博客园博主Frank丶HQ提供。<br/>
+原文连接:https://www.cnblogs.com/hq-fighting/p/11074504.html</div><br>
+    <p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">本博主在一次个人移动端项目中，遇到这么一个需求：希望自己的项目中，头部导航条的效果可以像今日头条那样，横向滚动!</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">对于这样的效果，在各大移动端项目中几乎是随处可见，为什么呢？</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">&nbsp; &nbsp; &nbsp; &nbsp;我们都知道，对于移动端也就是手机上，我们页面的宽度并不像PC端那样大，可以显示很长的导航项，但对于我们移动端来说，由于功能的拓展，或者业务的细分，往往导航项也会随之增多，一旦超过移动端在一行的页面显示宽度，那便会出现导航项换行的现象，虽说也有这样布局，但一旦导航项增多到一定程度的时候，我们的页面（首页）将均被导航项霸占，这样不仅影响重点内容的展示同时对用户的体验度也有很大程度的影响！所以，为了解决这相关问题，出现了横向滚动条，主要有几点好处：</span></p>
+<ul>
+<li><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">毫无疑问的一点，用户体验好：用户可以根据自己的需要，滑动导航的方式选择自己的方式</span></span></li>
+<li><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">便于管理与维护</span></span></li>
+<li><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">使得页面变得更为美观</span></span></li>
+<li><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">突出主体业务</span></span></li>
+</ul>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">那么这么一个用户体验好，然后又实用的效果是怎么实现的呢？</span></span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">为了坚持&ldquo;不重复造轮子，在理解研究轮子的基础上进行改革创新&rdquo;的原则，我选择了滴滴团队的开源框架 &mdash;&mdash; cube-ui</span></span></p>
+<p><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">　　cube-ui 框架的官方文档地址：<a href="https://didi.github.io/cube-ui/#/zh-CN/docs/introduction">https://didi.github.io/cube-ui/#/zh-CN/docs/introduction</a></span></span></p>
+<p><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">　　在开始实现之前，本博主也是踩了不少坑啊，吐槽就不说了，说多了都是泪啊！下面进入主题：</span></span></p>
+<p><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">　　cube-ui 所提供的组件中，有个 Scroll 的组件，是一个基于<code>better-scroll</code>进行封装的组件.其实现原理我就不过多赘述了，去看了文档或者平时弄过相关效果的大家都知道.</span></span></p>
+<p><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 15px;">　　大概的一个 HTML 结构就是：一个大的盒子套了两个小盒子，一个是滚动导航，另一个是额外拓展（对本效果不影响，可以忽略）</span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code> 1 &lt;div class="nav-scroll-list-wrap"&gt;
+ 2     &lt;cube-scroll ref="navScroll" direction="horizontal"&gt;
+ 3         &lt;ul class="nav-wrapper"&gt;
+ 4           &lt;li v-for="(item, index) in labels" :key="index" class="nav-item"&gt;{{ item }}&lt;/li&gt;
+ 5         &lt;/ul&gt;
+ 6     &lt;/cube-scroll&gt;
+ 7     &lt;div class="search-icon"&gt;
+ 8         &lt;span class="iconfont icon"&gt;&amp;#xe628;&lt;/span&gt;
+ 9     &lt;/div&gt;
+10 &lt;/div&gt;</pre>
+</div>
+<p>&nbsp;</p>
+<p>　　<span style="font-family: 'Microsoft YaHei'; font-size: 15px;">这里说下 labels 是我传入的导航项数据，是一个本地 mock 数据，共八项</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">　　样式部分：这里是实现的重点！因为对于 Scroll 组件，内容元素<code>.cube-scroll-content</code>在滚动方向上的长度必须大于容器元素，分为纵向滚动和横向滚动，这里实现的是横向滚动，纵向的原理也是大同小异，取决于滚动的方向采取不同的样式.</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">.nav-scroll-list-wrap
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    position relative
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">    padding-right 120px</span><span style="color: #008080;"><br /></span></pre>
+</div>
+<p>　　<span style="font-family: 'Microsoft YaHei'; font-size: 15px;">大盒子部分的样式对于该需求几乎无影响，这里主要是想说下，设置为相对定位，是为了子元素的定位，子绝父相，而内边距是为了腾出一部分位置给采用绝对定位的子元素（搜索图标），同时这也是一个布局技巧和滚动的关键，为什么这么说呢？</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">　　首先，布局技巧：可以腾出一部分位置给拓展功能项用，其次可以解决拓展功能项因为增加 z-index 而将滚动的最后一个导航项遮挡住的问题；</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">　　滚动的关键：假如没有这个内边距，那么我八个导航项根据其占据的宽度将不能大于容器元素，从而出现无法滚动的现象，而这个内边距的出现正好是可以减小容器元素的宽度，那么只要导航项足够且不少的情况下是可以实现内容元素在滚动方向上的长度大于容器元素的，但如果在项目初期，导航项过少，只有四五个的情况下不建议使用这个方法，这种情况一般都是采取传统的解决方法：在传入数组导航的长度基础上乘以一个数值来动态增加内容元素的宽度，具体做法：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">cube-scroll </span><span style="color: #ff0000;">ref</span><span style="color: #0000ff;">="navScroll"</span><span style="color: #ff0000;"> direction</span><span style="color: #0000ff;">="horizontal"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-wrapper"</span><span style="color: #ff0000;"> :style</span><span style="color: #0000ff;">="{width:navWidth+'px'}"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="(item, index) in navTxts"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="index"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="nav-item"</span><span style="color: #0000ff;">&gt;</span>{{ item }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">cube-scroll</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span> <span style="color: #000000;">methods: {
+</span><span style="color: #008080;">2</span> <span style="color: #000000;">    widthComputed() {
+</span><span style="color: #008080;">3</span> <span style="color: #000000;">      this.navWidth=this.navTxts.length*520
+</span><span style="color: #008080;">4</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">  },
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">  created() {
+</span><span style="color: #008080;">7</span> <span style="color: #000000;">    this.widthComputed()
+</span><span style="color: #008080;">8</span>   }</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 15px;">　　其余样式：基本在官方的文档中均有说明，我改动了部分，具体的我就不过多赘述了</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">.cube-scroll-content
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">      display inline-block
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">      .nav-wrapper
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">        display inline-block
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">        white-space nowrap
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">        line-height 80px
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">        .nav-item
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">          display: inline-block
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">          padding: 0 30px
+</span><span style="color: #008080;">10</span>           font-size 40px</pre>
+</div>
+<p>　<span style="font-family: 'Microsoft YaHei'; font-size: 15px;">　这样，一个横向滚动条就实现了，如果有不足或者错误的地方，欢迎大家指出，一起交流解决哈！</span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

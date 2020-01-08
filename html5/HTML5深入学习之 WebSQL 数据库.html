@@ -1,0 +1,157 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML5深入学习之 WebSQL 数据库' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML5深入学习之 WebSQL 数据库</center></div><div class='banquan'>原文出处:本文由博客园博主小方哥&#183;提供。<br/>
+原文连接:https://www.cnblogs.com/duxiu-fang/p/11110083.html</div><br>
+    <h1>概述</h1>
+<p>　　WebSQL 并不是 HTML5规范的一部分，而是一个独立的规范，它可以用来做一些离线应用</p>
+<h1>核心API</h1>
+<ul>
+<li>openDatabase() =&gt; 用来打开或创建数据库（没有时则创建，有则打开）</li>
+<li>transaction()　　=&gt; 这个方法可以控制一个或多个事务，以及基于这种情况提交或者回滚</li>
+<li>executeSql()&nbsp; &nbsp; &nbsp; &nbsp;=&gt;用于执行实际的 SQl 查询</li>
+</ul>
+<h1>判断浏览器是否支持该项功能</h1>
+<p>　　这个功能可以在最新版的 chrome, Safari 和 Opera</p>
+<p>　　</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">if</span><span style="color: #000000;"> (window.openDatabase) {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 操作 web SQL        </span>
+} <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+     alert(</span>'当前浏览器不支持 webSQL !!!'<span style="color: #000000;">);
+}</span></pre>
+</div>
+<h1>打开数据库</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">　　　　　　　/*</span><span style="color: #008000;">*
+             * 打开或创建数据库
+             * @param1  数据库名称
+             * @param2  版本号
+             * @param3  描述
+             * @param4  数据库大小
+             * @param5  回调函数
+            </span><span style="color: #008000;">*/</span>
+            <span style="color: #0000ff;">var</span> database = openDatabase('stu', '1.0', '学生表', 1024*1024, <span style="color: #0000ff;">function</span> () {});</pre>
+</div>
+<h1>开启一个事务</h1>
+<div class="cnblogs_code">
+<pre><code>            <span style="color: #008000;">//</span><span style="color: #008000;"> 开启事务</span>
+            database.transaction(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (sql) {
+               // 在这里操作数据库的增删该查
+            });    </span></pre>
+</div>
+<h1>新建表格</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span>'create table duxiu(id int, name text)'<span style="color: #000000;">,
+                    [],
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'创建成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'创建失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<h1>插入一条数据</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span><span style="color: #008000;">//</span><span style="color: #008000;"> ? =&gt; 占位符</span>
+                    'insert into duxiu (id, name) values (?, ?)'<span style="color: #000000;">,
+                    [</span>2, '张三'<span style="color: #000000;">],
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'插入一条数据成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'插入一条数据失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<h1>修改数据</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span>'update duxiu set name = ?, id = ? where rowid = ?'<span style="color: #000000;">,
+                    [</span>'王五', 3, 3<span style="color: #000000;">],
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'修改成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'修改失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<h1>查找数据</h1>
+<p>　　我这里是将数据查找出来并且显示到了表格中</p>
+<p>　　</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span>'select * from duxiu'<span style="color: #000000;">,
+                    [],
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> (sql, res) {
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.log(res);</span>
+                        <span style="color: #0000ff;">var</span> data =<span style="color: #000000;"> res.rows;
+                        console.log(data);
+                        </span><span style="color: #008000;">//</span><span style="color: #008000;"> console.log(data.length);</span>
+                        <span style="color: #0000ff;">var</span> table = document.createElement('table'<span style="color: #000000;">);
+                        document.querySelector(</span>'div'<span style="color: #000000;">).appendChild(table);
+                        </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; data.length; i++<span style="color: #000000;">) { 
+                            </span><span style="color: #0000ff;">var</span> tr = document.createElement('tr'<span style="color: #000000;">);
+                            table.appendChild(tr);
+                            tr.innerHTML </span>= '&lt;td&gt;' + data[i].id + '&lt;/td&gt;'<span style="color: #000000;">;
+                            tr.innerHTML </span>+= '&lt;td&gt;' + data[i].name + '&lt;/td&gt;'<span style="color: #000000;">;
+                        }
+                        alert(</span>'查找成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'查找失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<h1>删除数据</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span>'delete from duxiu where id = ?'<span style="color: #000000;">,
+                    [</span>1],        <span style="color: #008000;">//</span><span style="color: #008000;"> 参数</span>
+                    <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'删除数据成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'删除数据失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<h1>删除表格</h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">                sql.executeSql(
+                    </span>'drop table duxiu'<span style="color: #000000;">,
+                    [],
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'删除表成功'<span style="color: #000000;">);
+                    },
+                    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+                        alert(</span>'删除表失败'<span style="color: #000000;">);
+                    }
+                );</span></pre>
+</div>
+<p>　　那么，是不是每个人都想过有没有删除数据库的方法呢? 反正我是想了并且去查了，答案是&nbsp; 没有！！！！！！！！</p>
+<p>　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

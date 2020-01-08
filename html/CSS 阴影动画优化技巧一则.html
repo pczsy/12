@@ -1,0 +1,121 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS 阴影动画优化技巧一则' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS 阴影动画优化技巧一则</center></div><div class='banquan'>原文出处:本文由博客园博主ChokCoco提供。<br/>
+原文连接:https://www.cnblogs.com/coco1s/p/11769695.html</div><br>
+    <p><span style="font-size: 14px; font-family: verdana, geneva;">本技巧来自这篇文章 --&nbsp;<a href="https://tobiasahlin.com/blog/how-to-animate-box-shadow/" rel="nofollow">How to animate box-shadow with silky smooth performance</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">本文不是直译，因为觉得这个技巧很有意思很有用，遂起一文。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><code>box-shadow</code>&nbsp;在我们的工作中使用以及越来越多，伴随阴影的动画或多或少都有一点。假设，我们有下面这样一个盒子：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">希望 hover 的时候，盒阴影从&nbsp;<code>box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3)</code>&nbsp;过渡到&nbsp;<code>box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)</code>。</span></p>
+<ul>
+<li><span style="font-size: 14px; font-family: verdana, geneva;"><code>box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3)</code>&nbsp;--&gt;&nbsp;<code>box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)</code></span></li>
+</ul>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">OK，最简单的方法当然是：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div:hover {
+    width: 100px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">因为过渡动画是在两个不同的盒阴影状态在发生，所以在过渡动画的时间内，浏览器会不断的重绘盒阴影。而又由于阴影属于耗性能样式，所以这种动画给人的感觉多少有些卡顿。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">这里有一个小技巧可以优化这种情况下的阴影动画。</span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">使用伪元素及透明度进行优化</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">使用伪元素及透明度进行优化，我们给上述元素添加一个 before 伪元素，大小与父 div 一致，并且提前给这个元素添加好所需要的最终的盒阴影状态，但是元素的透明度为 0。</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+div::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">然后，在 hover 的时候，我们只需要将伪元素的透明度从 0 设置为 1 即可。</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div:hover::before {
+    opacity: 1;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">这样做的好处是，实际在进行的阴影变化，其实只是透明度的变化，而没有对阴影进行不断的重绘，有效的提升了阴影动画的流畅程度，让它看起来更加丝滑。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/CSS 阴影动画优化技巧一则0.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS 阴影动画优化技巧一则0.png" alt="bshadow" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">为什么对透明度&nbsp;<code>opacity</code>&nbsp;进行动画要比对&nbsp;<code>box-shadow</code>&nbsp;进行动画性能更好呢？可以看看这里这张表格，列举了不同属性变换对页面重排、重绘的影响：</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/CSS 阴影动画优化技巧一则1.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS 阴影动画优化技巧一则1.png" alt="image" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://csstriggers.com/" rel="nofollow">very few CSS properties</a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">最后，Demo 可以看看：</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/zYObVRJ" rel="nofollow">CodePen Demo -- 优化box-shadow动画</a></span></p>
+<p><span style="font-size: 12px; font-family: verdana, geneva;">&nbsp;</span></p>
+<h2><span style="font-size: 18pt; font-family: verdana, geneva;">存在的问题，另外一种方案</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">原文中上述这个方案其实并不算太完美，因为最终的效果是两个阴影的叠加效果，可能会在整体的感觉上阴影颜色更深了一点。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">所以需要对最终状态的阴影进行微调一下，削弱一点效果，尽量让两个阴影的叠加效果与单一一个阴影效果相近。</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">当然，我们可以再对上述方案进行优化，我们再使用一个&nbsp;<code>::after</code>&nbsp;伪元素，<code>::after</code>&nbsp;伪元素设置为初始状态且透明度为1，<code>::before</code>&nbsp;伪元素设置为末尾状态且透明度为0：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+div::before {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+}
+
+div::after {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">实际 hover 的时候，对两个伪元素进行一显一隐，这样最终的效果只有一个阴影效果，没有阴影的叠加，与直接对阴影进行过渡变化效果一致：</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>div:hover::before {
+    opacity: 1;
+}
+
+div:hover::after {
+    opacity: 0;
+}</pre>
+</div>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="./images/CSS 阴影动画优化技巧一则2.png" rel="noopener noreferrer" target="_blank"><img src="./images/CSS 阴影动画优化技巧一则2.png" alt="bshadow2" /></a></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><iframe title="优化box-shadow动画 " src="https://codepen.io/Chokcoco/embed/zYObVRJ?height=265&amp;theme-id=0&amp;default-tab=result" frameborder="no" scrolling="no" width="320" height="265"></iframe></span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;"><a href="https://codepen.io/Chokcoco/pen/zYObVRJ" rel="nofollow">CodePen Demo -- 优化box-shadow动画</a></span></p>
+<h2><span style="font-size: 14px; font-family: verdana, geneva;">最后</span></h2>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">好了，本文到此结束，希望对你有帮助 :)</span></p>
+<p><span style="font-size: 14px; font-family: verdana, geneva;">更多精彩 CSS 技术文章汇总在我的&nbsp;<a href="https://github.com/chokcoco/iCSS">Github -- iCSS</a>&nbsp;，持续更新，欢迎点个 star 订阅收藏。</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

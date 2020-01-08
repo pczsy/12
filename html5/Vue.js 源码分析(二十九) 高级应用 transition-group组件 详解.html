@@ -1,0 +1,248 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11275508.html</div><br>
+    <p>对于过度动画如果要同时渲染整个列表时，可以使用transition-group组件。</p>
+<p>transition-group组件的props和transition组件类似,不同点是transition-group组件的props是没有mode属性的，另外多了以下两个props<br />&nbsp;&nbsp; &nbsp;tag &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 标签名<br />&nbsp;&nbsp; &nbsp;moveClass&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 新增/移除元素时的过渡&nbsp;&nbsp; &nbsp;;如果未指定则默认会拼凑出name+"-move"这个格式的，一般很少用到，比较复杂的动画可以该接口实现</p>
+<p><span style="color: #ff0000;">不同于transition组件，transition-group组件它会以一个真实元素呈现,默认为一个&lt;span&gt;,我们也可以通过tag特性更换为其他元素</span>,每个总都需要提供唯一的key属性值。以Vue官网的某例子为例，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        .list-item</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> inline-block</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">margin-right</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 10px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .list-enter-active,.list-leave-active</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> all 1s</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+        .list-enter,.list-leave-to</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> translateY(30px)</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="d"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">v-on:click</span><span style="color: #0000ff;">='add'</span><span style="color: #0000ff;">&gt;</span>add<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">v-on:click</span><span style="color: #0000ff;">='remove'</span><span style="color: #0000ff;">&gt;</span>remove<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition-group </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="p"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="list"</span> <span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="no in Nums"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="no"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="list-item"</span><span style="color: #0000ff;">&gt;</span>{{no}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition-group</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vue.config.productionTip=false;<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Vue.config.devtools=false;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#d</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            methods:{
+                randomIndex:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> Math.floor(Math.random()</span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.Nums.length)},
+                add:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.Nums.splice(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.randomIndex(),</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.nextVal</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">)},
+                remove:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.Nums.splice(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.randomIndex(),</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">)}
+            },
+            data:{Nums:[</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">4</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">5</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">6</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">7</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">8</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">9</span><span style="background-color: #f5f5f5; color: #000000;">],nextVal:</span><span style="background-color: #f5f5f5; color: #000000;">10</span><span style="background-color: #f5f5f5; color: #000000;">}
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染的DOM树如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解0.png" alt="" /></p>
+<p>我们可以看到transition-group渲染为了一个p元素，这是因为我们通过tag特性指定为了p,显示如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解1.png" alt="" /></p>
+<p>当我们点击add或remove时就会新增/删除一个数字，并会触发动画</p>
+<p><span style="color: #ff0000;">动画更新时Vue通过key来作为该元素的唯一标识，保存到内部的一个map变量里，如果没有key是要报错的,:</span>例如我们把模板里的:key="no"去掉，改成&lt;span v-for="no in Nums"&nbsp; class="list-item"&gt;{{no}}&lt;/span&gt;，控制台会报错的，如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>从源码角度来看，对于transition-group来说，它只是新增了一个管理子节点的功能，最终的动画还是和transition组件一样，来通过设置每个子节点的data.transition属性为对应的动画对象来实现的，transition-group组件的结构如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> props = extend({          <span style="color: #008000;">//</span><span style="color: #008000;">第8343行  transition-group组件的props定义</span>
+<span style="color: #000000;">  tag: String,
+  moveClass: String
+}, transitionProps);
+
+</span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> props.mode;
+
+</span><span style="color: #0000ff;">var</span> TransitionGroup = {                 <span style="color: #008000;">//</span><span style="color: #008000;">transition-group组件的定义</span>
+<span style="color: #000000;">  props: props,
+
+  render: </span><span style="color: #0000ff;">function</span> render (h) {         <span style="color: #008000;">//</span><span style="color: #008000;">render函数</span>
+    <span style="color: #008000;">/**/</span><span style="color: #000000;">
+  },
+
+  beforeUpdate: </span><span style="color: #0000ff;">function</span> beforeUpdate () {  <span style="color: #008000;">//</span><span style="color: #008000;">beforeUpdate钩子</span>
+    <span style="color: #008000;">/**/</span><span style="color: #000000;">
+  },
+
+  updated: </span><span style="color: #0000ff;">function</span> updated () {      <span style="color: #008000;">//</span><span style="color: #008000;">updated钩子</span>
+    <span style="color: #008000;">/**/</span><span style="color: #000000;">
+  },
+
+  methods: {
+    hasMove: </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> hasMove (el, moveClass) {
+      </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+    }
+  }
+}</span></pre>
+</div>
+<p><span style="color: #ff0000;">transition-group初始化时只会执行组件里的render函数，更新操作时会执行beforeUpdate和updated钩子函数，hasMove是一个在updated里要用到的方法</span></p>
+<p>初始化时会执行render函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  render: <span style="color: #0000ff;">function</span> render (h) {         <span style="color: #008000;">//</span><span style="color: #008000;">transition的render函数，它也没有template模板   </span>
+    <span style="color: #0000ff;">var</span> tag = <span style="color: #0000ff;">this</span>.tag || <span style="color: #0000ff;">this</span>.$vnode.data.tag || 'span';       <span style="color: #008000;">//</span><span style="color: #008000;">标签名，默认为span</span>
+    <span style="color: #0000ff;">var</span> map = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> prevChildren = <span style="color: #0000ff;">this</span>.prevChildren = <span style="color: #0000ff;">this</span><span style="color: #000000;">.children;       
+    </span><span style="color: #0000ff;">var</span> rawChildren = <span style="color: #0000ff;">this</span>.$slots.<span style="color: #0000ff;">default</span> || [];                <span style="color: #008000;">//</span><span style="color: #008000;">获取调用transition-group时的所有子节点Vnode</span>
+    <span style="color: #0000ff;">var</span> children = <span style="color: #0000ff;">this</span>.children = [];                          <span style="color: #008000;">//</span><span style="color: #008000;">组件实例上新增一个children属性</span>
+    <span style="color: #0000ff;">var</span> transitionData = extractTransitionData(<span style="color: #0000ff;">this</span>);           <span style="color: #008000;">//<span style="color: #ff0000;">调用extractTransitionData()函数</span></span><span style="color: #ff0000;">提取在transition组件上定义的data，和transition组件是一样的</span>
+
+    <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; rawChildren.length; i++) {              <span style="color: #008000;">//</span><span style="color: #008000;">遍历所有子节点</span>
+      <span style="color: #0000ff;">var</span> c =<span style="color: #000000;"> rawChildren[i];
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (c.tag) {
+        </span><span style="color: #0000ff;">if</span> (c.key != <span style="color: #0000ff;">null</span> &amp;&amp; String(c.key).indexOf('__vlist') !== 0) {    <span style="color: #008000;">//</span><span style="color: #008000;">如果c存在key</span>
+          children.push(c);                                                   <span style="color: #008000;">//</span><span style="color: #008000;">保存到children数组里</span>
+          map[c.key] = c                                                      <span style="color: #008000;">//</span><span style="color: #ff0000;">保存到map对象里,key作为键名</span>
+          ;(c.data || (c.data = {})).transition = transitionData;             <span style="color: #008000;">//</span><span style="color: #008000;">给所有子节点VNode.data.transition上增加transitionData</span>
+        } <span style="color: #0000ff;">else</span> {                                                          <span style="color: #ff0000;">//如果子节点c不存在key，则报错,也就是上面说的去掉模板里key后的报错</span>
+          <span style="color: #0000ff;">var</span> opts =<span style="color: #000000;"> c.componentOptions;
+          </span><span style="color: #0000ff;">var</span> name = opts ? (opts.Ctor.options.name || opts.tag || ''<span style="color: #000000;">) : c.tag;
+          warn((</span>"&lt;transition-group&gt; children must be keyed: &lt;" + name + "&gt;"<span style="color: #000000;">));
+        }
+      }
+    }
+
+    </span><span style="color: #0000ff;">if</span> (prevChildren) {                                       <span style="color: #008000;">//</span><span style="color: #008000;">更新时的分支</span>
+      <span style="color: #0000ff;">var</span> kept =<span style="color: #000000;"> [];
+      </span><span style="color: #0000ff;">var</span> removed =<span style="color: #000000;"> [];
+      </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i$1 = 0; i$1 &lt; prevChildren.length; i$1++<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> c$1 = prevChildren[i$1<span style="color: #000000;">];
+        c$</span>1.data.transition =<span style="color: #000000;"> transitionData;
+        c$</span>1.data.pos = c$1<span style="color: #000000;">.elm.getBoundingClientRect();
+        </span><span style="color: #0000ff;">if</span> (map[c$1<span style="color: #000000;">.key]) {
+          kept.push(c$</span>1<span style="color: #000000;">);
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+          removed.push(c$</span>1<span style="color: #000000;">);
+        }
+      }
+      </span><span style="color: #0000ff;">this</span>.kept = h(tag, <span style="color: #0000ff;">null</span><span style="color: #000000;">, kept);
+      </span><span style="color: #0000ff;">this</span>.removed =<span style="color: #000000;"> removed;
+    }
+
+    </span><span style="color: #0000ff;">return</span> h(tag, <span style="color: #0000ff;">null</span>, children)                           <span style="color: #008000;">//</span><span style="color: #008000;">执行h函数，也就是_c函数去创建tag这个VNode</span>
+  },</pre>
+</div>
+<p>初始化就这样子结束了，map里保存了所有的子节点，key作为键名，值为对应的VNode:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解3.png" alt="" /></p>
+<p>这样每个子节点VNode都含有transition属性了，如果设置了初次渲染则页面初始化时就会自动执行动画了，如果新增/移除了元素，动画怎么实现的呢，这个就要靠beforeUpdate钩子来实现了。</p>
+<p>当页面更新，例如我们点击了remove按钮会删除一个元素并触发更新，此时会重新执行render函数，与初始化有点不同，如下:</p>
+<div class="cnblogs_code">
+<pre><code> render: <span style="color: #0000ff;">function</span> render (h) {            <span style="color: #008000;">//</span><span style="color: #008000;">transition的render函数，它也没有template模板   </span>
+    <span style="color: #0000ff;">var</span> tag = <span style="color: #0000ff;">this</span>.tag || <span style="color: #0000ff;">this</span>.$vnode.data.tag || 'span'<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> map = Object.create(<span style="color: #0000ff;">null</span><span style="color: #000000;">);
+    </span><span style="color: #0000ff;">var</span> prevChildren = <span style="color: #0000ff;">this</span>.prevChildren = <span style="color: #0000ff;">this</span>.children;         <span style="color: #008000;">//</span><span style="color: #008000;">获取之前的children信息</span>
+    <span style="color: #0000ff;">var</span> rawChildren = <span style="color: #0000ff;">this</span>.$slots.<span style="color: #0000ff;">default</span> || [];                  <span style="color: #008000;">//</span><span style="color: #008000;">获取当前的所有子节点Vnode</span>
+    <span style="color: #0000ff;">var</span> children = <span style="color: #0000ff;">this</span>.children =<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">var</span> transitionData = extractTransitionData(<span style="color: #0000ff;">this</span><span style="color: #000000;">);
+
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i = 0; i &lt; rawChildren.length; i++<span style="color: #000000;">) {
+      </span><span style="color: #0000ff;">var</span> c =<span style="color: #000000;"> rawChildren[i];
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (c.tag) {
+        </span><span style="color: #0000ff;">if</span> (c.key != <span style="color: #0000ff;">null</span> &amp;&amp; String(c.key).indexOf('__vlist') !== 0<span style="color: #000000;">) {
+          children.push(c);
+          map[c.key] </span>=<span style="color: #000000;"> c
+          ;(c.data </span>|| (c.data = {})).transition =<span style="color: #000000;"> transitionData;
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+          </span><span style="color: #0000ff;">var</span> opts =<span style="color: #000000;"> c.componentOptions;
+          </span><span style="color: #0000ff;">var</span> name = opts ? (opts.Ctor.options.name || opts.tag || ''<span style="color: #000000;">) : c.tag;
+          warn((</span>"&lt;transition-group&gt; children must be keyed: &lt;" + name + "&gt;"<span style="color: #000000;">));
+        }
+      }
+    }
+
+    </span><span style="color: #0000ff;">if</span> (prevChildren) {                                         <span style="color: #008000;">//</span><span style="color: #008000;">如果prevChildren存在</span>
+      <span style="color: #0000ff;">var</span> kept =<span style="color: #000000;"> [];
+      </span><span style="color: #0000ff;">var</span> removed =<span style="color: #000000;"> [];
+      </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> i$1 = 0; i$1 &lt; prevChildren.length; i$1++) {         <span style="color: #008000;">//</span><span style="color: #008000;">遍历prevChildren</span>
+        <span style="color: #0000ff;">var</span> c$1 = prevChildren[i$1];                                  <span style="color: #008000;">//</span><span style="color: #008000;">这是每个之前的children</span>
+        c$1.data.transition =<span style="color: #000000;"> transitionData;                         
+        c$</span>1.data.pos = c$1.elm.getBoundingClientRect();               <span style="color: #008000;">//</span><span style="color: #008000;">获取它的位置属性，比如:{bottom: 68,height: 21,left: 8,right: 17.390625,top: 47,width: 9.390625,x: 8,y: 47}</span>
+        <span style="color: #0000ff;">if</span> (map[c$1.key]) {                                           <span style="color: #008000;">//</span><span style="color: #008000;">如果map中存在C$1</span>
+          kept.push(c$1);                                               <span style="color: #008000;">//</span><span style="color: #008000;">则保存到kept里(本次渲染时保留的)</span>
+        } <span style="color: #0000ff;">else</span> {                                                      <span style="color: #008000;">//</span><span style="color: #008000;">如果map中不存在C$1</span>
+          removed.push(c$1);                                             <span style="color: #008000;">//</span><span style="color: #008000;">则保存到removed里(需要移除的)</span>
+<span style="color: #000000;">        }
+      }
+      </span><span style="color: #0000ff;">this</span>.kept = h(tag, <span style="color: #0000ff;">null</span>, kept);                             <span style="color: #008000;">//</span><span style="color: #008000;">调用h创建一个VNode，保存到this.keps里</span>
+      <span style="color: #0000ff;">this</span>.removed = removed;                                     <span style="color: #008000;">//</span><span style="color: #008000;">需要删除的VNode集合</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">return</span> h(tag, <span style="color: #0000ff;">null</span><span style="color: #000000;">, children)
+  },</span></pre>
+</div>
+<p>this.kept中保存了当前保留的所有子节点，而this.remove则保存了需要移除的子节点，例子里执行到这里this.kept如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解4.png" alt="" /></p>
+<p>this.remove如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十九) 高级应用 transition-group组件 详解5.png" alt="" /></p>
+<p>最后还是调用h返回以最新的children作为子节点的VNode,返回到组件的主线，触发_update函数时如下:</p>
+<div class="cnblogs_code">
+<pre><code>  Vue.prototype._update = <span style="color: #0000ff;">function</span> (vnode, hydrating) { <span style="color: #008000;">//</span><span style="color: #008000;">第2645行 </span>
+    <span style="color: #0000ff;">var</span> vm = <span style="color: #0000ff;">this</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">if</span> (vm._isMounted) {                            <span style="color: #008000;">//</span><span style="color: #008000;">如果已经挂载了</span>
+      callHook(vm, 'beforeUpdate');                   <span style="color: #008000;">//</span><span style="color: #008000;">则执行beforeUpdate生命周期函数</span>
+<span style="color: #000000;">    } 
+    </span><span style="color: #0000ff;">var</span> prevEl =<span style="color: #000000;"> vm.$el;
+    </span><span style="color: #0000ff;">var</span> prevVnode = vm._vnode;                      <span style="color: #008000;">//</span><span style="color: #008000;">先将vm._vnode保存到prevVnode里</span>
+    <span style="color: #0000ff;">var</span> prevActiveInstance =<span style="color: #000000;"> activeInstance;
+    activeInstance </span>=<span style="color: #000000;"> vm;
+    vm._vnode </span>=<span style="color: #000000;"> vnode;
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Vue.prototype.__patch__ is injected in entry points</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> based on the rendering backend used.</span>
+    <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">prevVnode) { 
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> initial render</span>
+      vm.$el =<span style="color: #000000;"> vm.__patch__(
+        vm.$el, vnode, hydrating, </span><span style="color: #0000ff;">false</span> <span style="color: #008000;">/*</span><span style="color: #008000;"> removeOnly </span><span style="color: #008000;">*/</span><span style="color: #000000;">,
+        vm.$options._parentElm,
+        vm.$options._refElm
+      );
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> no need for the ref nodes after initial patch</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> this prevents keeping a detached DOM tree in memory (#5851)</span>
+      vm.$options._parentElm = vm.$options._refElm = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">else</span> {                                        <span style="color: #008000;">//</span><span style="color: #008000;">如果prevVnode不为空，即更新操作时</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> updates</span>
+      vm.$el = vm.__patch__(prevVnode, vnode);          <span style="color: #008000;">//</span><span style="color: #008000;">调用vm.__patch__进行更新操作</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">略</span><span style="color: #008000;">*/</span></pre>
+</div>
+<p>因为当前运行是transition-group组件的过程，所以beforeUpdate就会执行，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  beforeUpdate: <span style="color: #0000ff;">function</span> beforeUpdate () {   <span style="color: #008000;">//</span><span style="color: #008000;">transition-group组件的beforeUpdate钩子函数 </span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> force removing pass</span>
+    <span style="color: #0000ff;">this</span><span style="color: #000000;">.__patch__(
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">._vnode,
+      </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.kept,
+      </span><span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> hydrating</span>
+      <span style="color: #0000ff;">true</span> <span style="color: #008000;">//</span><span style="color: #008000;"> removeOnly (!important, avoids unnecessary moves)</span>
+    );                                            <span style="color: #008000;">//</span><span style="color: #008000;">先执行一遍_patch__，这将删除所有要删除的节点，并触发它们的离开转换过渡,参数4设置为false,避免不必要的移动</span>
+    <span style="color: #0000ff;">this</span>._vnode = <span style="color: #0000ff;">this</span>.kept;                      <span style="color: #008000;">//</span><span style="color: #008000;">再将this.kept赋值给_vnode</span>
+  },</pre>
+</div>
+<p>this.__patch__会执行patchVnode，最后会执行updateChildren对每个子节点做出更新，除了kept之外的子节点VNode都会删除掉。beforeUpdate最后会把this.kept保存到this._vnode。</p>
+<p>最后回到transition-group组件的_update里，该函数会把vm._vnode保存到prevVnode局部变量，最后判断如果prevVnode存在则执行__patch__做更新操作，由于每个子节点Vnode.data.transition都保存着动画信息，所以都会自动执行动画。</p>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>updated钩子函数官网说是为了改变定位用的，是个新特性，捣鼓了一会儿没找到合适的场景，以后用到了再来深入研究一下</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

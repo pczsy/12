@@ -1,0 +1,192 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML-简单动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML-简单动画</center></div><div class='banquan'>原文出处:本文由博客园博主cz11提供。<br/>
+原文连接:https://www.cnblogs.com/czy18227988114/p/11629140.html</div><br>
+    <h1>简单动画</h1>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">（1）简单动画通常称之为&ldquo;<span style="background-color: #ffff00;">过渡transition</span>&rdquo;</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">Transition-property：需要过渡的属性，但是并非所有的属性都支持过渡。</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">Transition-duration：过渡的时间；</span></p>
+<p style="margin-left: 30px;"><span style="background-color: #ffff00; font-family: 'Microsoft YaHei'; font-size: 16px;">简写：transition：all 时间；</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">（2）渐变时间函数</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">Transition-timing-function&mdash;&mdash;CSS属性以何种速度进行渐变</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">贝塞尔曲线的预设值：</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">ease：渐快，匀速，减慢（cubic-bezier(0.25,0.1,0.25,1)）</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">ease-in：渐快，匀速（cubic-bezier(0.42,0,1,1)）</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">ease-out：匀速，减慢（cubic-bezier(0,0,0.58,1)）</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">ease-in-out：和ease类似，相比ease的加速度大（幅度大）（cubic-bezier(0.42,0,0.58,1)）</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei'; font-size: 16px;">linear：全程匀速（cubic-bezier(0,0,1,1)）</span></p>
+<p style="margin-left: 30px;"><span style="font-family: 'Microsoft YaHei';"><span style="font-size: 16px;">以下代码所示，第一部分展示的是一个，当鼠标移动到图片上时，显示另一张（底下）的图片；</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="ie=edge"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>动画和变形练习<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>     <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 第一个部分，设置当鼠标滑动到图片上时，显示底下的图片 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">12</span>     
+<span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #800000;">    .box </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #ff0000;">        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #ff0000;">        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #ff0000;">        position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> relative</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">17</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">18</span>     
+<span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #800000;">    .box img </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #ff0000;">        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #ff0000;">        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #ff0000;">        position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #ff0000;">        left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #ff0000;">        top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">25</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">26</span>     
+<span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #800000;">    .show1 </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #ff0000;">        transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> all 3s</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">29</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">30</span>     
+<span style="color: #008080;">31</span> <span style="background-color: #f5f5f5; color: #800000;">    .show1:hover </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">32</span> <span style="background-color: #f5f5f5; color: #ff0000;">        opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">33</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">34</span> <span style="background-color: #f5f5f5; color: #800000;">&lt;body&gt;
+</span><span style="color: #008080;">35</span> <span style="background-color: #f5f5f5; color: #800000;">    &lt;div class="box"&gt;
+</span><span style="color: #008080;">36</span> <span style="background-color: #f5f5f5; color: #800000;">        &lt;img src="img/2010011712541728.jpg" alt=""&gt;
+</span><span style="color: #008080;">37</span> <span style="background-color: #f5f5f5; color: #800000;">        &lt;img src="img/2010011712541759.jpg" alt="" class="show1"&gt;
+</span><span style="color: #008080;">38</span> <span style="background-color: #f5f5f5; color: #800000;">    &lt;/div&gt;
+</span><span style="color: #008080;">39</span> <span style="background-color: #f5f5f5; color: #800000;">&lt;/body&gt;
+</span><span style="color: #008080;">40</span> 
+<span style="color: #008080;">41</span> <span style="background-color: #f5f5f5; color: #800000;">&lt;/html&gt;</span></pre>
+</div>
+<p>效果如下：</p>
+<p>&nbsp;<img src="./images/HTML-简单动画0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;以下代码展示的是利用简单动画制作出轮播图的效果，当鼠标移动到图片上时，后面的图片推动前面的图片，从而达到轮播的效果；</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="ie=edge"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>动画和变形练习<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 第二个部分 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span><span style="background-color: #f5f5f5; color: #800000;">
+    
+    .content </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 500px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        overflow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> hidden</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+    
+    .imgs img </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 500px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+    
+    .imgs </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1100px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> all 3s</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> flex</span><span style="background-color: #f5f5f5; color: #000000;">;</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        justify-content</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> flex-start</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span><span style="background-color: #f5f5f5; color: #800000;">
+    
+    .imgs:hover </span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+        margin-left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> -500px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+    <span style="background-color: #f5f5f5; color: #000000;">}</span>
+   
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  
+
+    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 第二部分 </span><span style="color: #008000;">--&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="content"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="imgs"</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="img/2010011712541728.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="img/2010011712541759.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">hr</span><span style="color: #0000ff;">&gt;</span>
+   
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>效果如下：</p>
+<p><img src="./images/HTML-简单动画1.png" alt="" /></p>
+<p>以下代码展示的是当鼠标移动到图片上时，四周都散发阴影效果；</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="ie=edge"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>动画和变形练习<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span>     <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 第三个部分 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">13</span>     
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #800000;">    .box3 </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #ff0000;">        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #ff0000;">        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #ff0000;">        transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> all 3s</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #ff0000;">        position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> relative</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">19</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">20</span>     
+<span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #800000;">    .box3 img </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #ff0000;">        width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #ff0000;">        height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 300px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #ff0000;">        position</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> absolute</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #ff0000;">        left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #ff0000;">        top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">27</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">28</span>     
+<span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #800000;">    .box3:hover </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">30</span> <span style="background-color: #f5f5f5; color: #ff0000;">        box-shadow</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0 0 4px 15px rgba(233, 22, 233, 0.5)
+</span><span style="color: #008080;">31</span>     <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">32</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">33</span> 
+<span style="color: #008080;">34</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">35</span>    
+<span style="color: #008080;">36</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 第三部分 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">37</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="box3"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">38</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="img/2010011712541728.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="show3"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">39</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="img/2010011712541759.jpg"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">40</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">41</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">42</span> 
+<span style="color: #008080;">43</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>效果如下：</p>
+<p><img src="./images/HTML-简单动画2.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

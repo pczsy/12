@@ -1,0 +1,76 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修nodeJS实现简易爬虫' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>nodeJS实现简易爬虫</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/11425008.html</div><br>
+    <h2 id="nodejs实现简易爬虫">nodeJS实现简易爬虫</h2>
+<h3 id="需求使用nodejs爬取昵图网某个分类下的图片并存入本地">需求：使用nodeJS爬取昵图网某个分类下的图片并存入本地</h3>
+<ul>
+<li><p>运用nodeJS自带系统模块http、fs</p>
+<h3 id="示例代码">示例代码:</h3></li>
+</ul>
+<pre><code><code>var http =require(&#39;http&#39;);
+var fs =require(&#39;fs&#39;);
+
+var curentPage=1; //当前图片页数
+var maxcurentPage=5;//最大页数
+//获取图片地址
+function getData(){
+    let url = &#39;http://www.nipic.com/photo/xiandai/jiaotong/index.html?page=&#39;+curentPage
+    http.get(url,(res)=&gt;{
+        var data = &#39;&#39;;
+        res.on(&#39;data&#39;,(a)=&gt;{
+            data+=a.toString();
+        })
+        res.on(&#39;end&#39;,()=&gt;{
+            let reg = /&lt;img src=&quot;(.+?)&quot; data-src=&quot;(.*?)&quot;  alt=&quot;(.*?)&quot; \/&gt;/g
+            let arr=[];
+            while (reg.exec(data)){
+                arr.push(reg.exec(data)[2]);
+            }
+            for(i in arr){
+                (function(i){
+                    setTimeout(()=&gt;{
+                        getImg(arr[i])
+                    },500*i)
+                })(i)
+            }
+            if (curentPage &lt; maxcurentPage){
+                curentPage++;
+                arguments.callee();
+            }
+        })
+    })
+}
+//图片写入img文件夹
+function getImg(url){
+    let u = url.replace(/\/pic\//,&#39;/file/&#39;)
+        .replace(/_4.jpg/,&#39;_2.jpg&#39;);
+    http.get(u,(res)=&gt;{
+        let name = new Date().getTime();
+        let stream = fs.createWriteStream(&#39;./img/&#39; + name + &#39;.png&#39;);
+        res.pipe(stream);
+    })
+}
+getData();</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,162 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vuex源码分析(二) state及strict属性 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vuex源码分析(二) state及strict属性 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11423783.html</div><br>
+    <p>state也就是vuex里的值，也即是整个vuex的状态，而strict和state的设置有关，如果设置strict为true，那么不能直接修改state里的值，只能通过mutation来设置</p>
+<p><span style="color: #ff0000;">例1:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://unpkg.com/vuex@3.1.0/dist/vuex.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>count:{{count}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        const store </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vuex.Store({
+            state:{count:</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">}
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+                el:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+                store,
+                computed:{
+                    count(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> store.state.count }
+                }
+            })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染如下:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解0.png" alt="" /></p>
+<p>当我们在控制台修改store.state.coun里的值时页面会自动更新，例如:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解1.png" alt="" /></p>
+<p>此时页面自动更新了，变为了:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解2.png" alt="" /></p>
+<p>我们设置一个strict属性看看:例2:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+    &lt;script src="https://unpkg.com/vuex@3.1.0/dist/vuex.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;
+        &lt;p&gt;count:{{count}}&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        const store </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vuex.Store({
+            state:{count:</span>1<span style="color: #000000;">},
+            strict:</span><span style="color: #0000ff;">true</span>                             <span style="color: #008000;">//</span><span style="color: #ff0000;">新增一个strict属性，值为true</span>
+<span style="color: #000000;">        })
+        </span><span style="color: #0000ff;">var</span> app = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+                el:</span>"#app"<span style="color: #000000;">,
+                store,
+                computed:{
+                    count(){</span><span style="color: #0000ff;">return</span><span style="color: #000000;"> store.state.count }
+                }
+            })
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>此时渲染如下:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解3.png" alt="" /></p>
+<p>当我们在控制台输入store.state.count=2后，如下:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解4.png" alt="" /></p>
+<p>控制台报错了，页面渲染如下:</p>
+<p><img src="./images/vuex源码分析(二) state及strict属性 详解5.png" alt="" /></p>
+<p>可以看到设置strict后，虽然能直接更改vuex里的值，但是会出现一条报错信息，即严格模式下vuex会给出一条提示，提示我们只能通过mutation来修改。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p class="hwi">writer by:大沙漠 QQ:22969969</p>
+<p>我们直接修改state会触发更新以及strict严格模式的控制都是在vuex内部resetStoreVM整个函数内实现的，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> resetStoreVM (store, state, hot) {       <span style="color: #008000;">//</span><span style="color: #008000;">重新存储数据</span>
+    <span style="color: #0000ff;">var</span> oldVm =<span style="color: #000000;"> store._vm;
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> bind store public getters</span>
+    store.getters = {};                                         <span style="color: #008000;">//</span><span style="color: #008000;">给store定义一个getters属性，值为一个对象</span>
+    <span style="color: #0000ff;">var</span> wrappedGetters = store._wrappedGetters;                 <span style="color: #008000;">//</span><span style="color: #008000;">获取store的所有getter数组信息</span>
+    <span style="color: #0000ff;">var</span> computed =<span style="color: #000000;"> {};
+    forEachValue(wrappedGetters, </span><span style="color: #0000ff;">function</span> (fn, key) {           <span style="color: #008000;">//</span><span style="color: #008000;">遍历wrappedGetters</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> use computed to leverage its lazy-caching mechanism</span>
+      computed[key] = <span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span> fn(store); };          <span style="color: #008000;">//</span><span style="color: #008000;">将getter保存到computed里面</span>
+      Object.defineProperty(store.getters, key, {                 <span style="color: #008000;">//</span><span style="color: #008000;">设置store.getters的key的访问器属性</span>
+        get: <span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span><span style="color: #000000;"> store._vm[key]; },
+        enumerable: </span><span style="color: #0000ff;">true</span> <span style="color: #008000;">//</span><span style="color: #008000;"> for local getters</span>
+<span style="color: #000000;">      });
+    });
+
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> use a Vue instance to store the state tree</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> suppress warnings just in case the user has added</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> some funky global mixins</span>
+    <span style="color: #0000ff;">var</span> silent = Vue.config.silent;                             <span style="color: #008000;">//</span><span style="color: #008000;">保存Vue.config.silent的配置</span>
+    Vue.config.silent = <span style="color: #0000ff;">true</span>;                                   <span style="color: #008000;">//</span><span style="color: #008000;">设置Vue.config.silent配置属性为true(先关闭警告)</span>
+    store._vm = <span style="color: #0000ff;">new</span> Vue({                                       <span style="color: #008000;">//</span><span style="color: #ff0000;">创建new Vue()实例把$$state和computed变成响应式的</span>
+<span style="color: #000000;">      data: {
+        $$state: state
+      },
+      computed: computed
+    });
+    Vue.config.silent </span>= silent;                                 <span style="color: #008000;">//</span><span style="color: #008000;">将Vue.config.silent复原回去</span>
+
+    <span style="color: #008000;">//</span><span style="color: #008000;"> enable strict mode for new vm</span>
+    <span style="color: #0000ff;">if</span> (store.strict) {                                         <span style="color: #008000;">//</span><span style="color: #008000;">初始化Strore时，如果给strict传入了true</span>
+      enableStrictMode(store);                                    <span style="color: #008000;">//</span><span style="color: #ff0000;">则调用enableStrictMode()函数</span>
+<span style="color: #000000;">    }
+
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (oldVm) {
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hot) {
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> dispatch changes in all subscribed watchers</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> to force getter re-evaluation for hot reloading.</span>
+        store._withCommit(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+          oldVm._data.$$state </span>= <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+        });
+      }
+      Vue.nextTick(</span><span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span><span style="color: #000000;"> oldVm.$destroy(); });
+    }
+  }</span></pre>
+</div>
+<p>从上面看到vuex内部创建一个vue对象并把state设置为了data对象里，因此有响应式的功能，而如果传入了strict，则调用enableStrictMode函数，该函数实现如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function</span> enableStrictMode (store) {       <span style="color: #008000;">//</span><span style="color: #008000;">严格模式下，观察this._data.$$state的变化</span>
+    store._vm.$watch(<span style="color: #0000ff;">function</span> () { <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>._data.$$state }, <span style="color: #0000ff;">function</span> () {   <span style="color: #008000;">//</span><span style="color: #008000;">如果this._data.$$state发生变化时，store._committing不为true,则报错(不是通过vuex的接口来修改时)</span>
+<span style="color: #000000;">      {
+        assert(store._committing, </span>"do not mutate vuex store state outside mutation handlers."<span style="color: #000000;">);
+      }
+    }, { deep: </span><span style="color: #0000ff;">true</span>, sync: <span style="color: #0000ff;">true</span><span style="color: #000000;"> });
+  }</span></pre>
+</div>
+<p>也就是调用vue.$watch去观察&nbsp;this._data.$$state的变化，也就是vuex里的state的变化，如果有变化且<span style="color: #000000;">store._committing不为true则报错</span></p>
+<p><span style="color: #000000;"><span style="color: #000000;">store._committing</span>是vuex里的一个属性，如果是通过mutation修改state时就会设置<span style="color: #000000;"><span style="color: #000000;">store._committing</span></span>为true,否则<span style="color: #000000;"><span style="color: #000000;">store._committing</span></span>为false</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

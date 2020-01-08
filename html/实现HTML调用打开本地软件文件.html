@@ -1,0 +1,65 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修实现HTML调用打开本地软件文件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>实现HTML调用打开本地软件文件</center></div><div class='banquan'>原文出处:本文由博客园博主zhaotan提供。<br/>
+原文连接:https://www.cnblogs.com/ztsghr/p/11081730.html</div><br>
+    <p>&nbsp;&nbsp; &nbsp; 有时候我们想要实现一个功能，就是在HTML页面点击一个链接就能调用打开本地可执行文件。就像腾讯QQ、迅雷这种。&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>而实现这种功能其实也很简单，就是需要我们添加修改注册表，实现自定义URL Protocol协议。</p>
+<p>&nbsp;</p>
+<p>自定义URL Protocol 协议<br />一些应用软件可以在浏览器中点击一个url后自动启动，并执行操作。</p>
+<p>&nbsp;</p>
+<p>1.&nbsp;&nbsp;win+r打开注册表，输入regedit进入注册表</p>
+<p>&nbsp;<img src="./images/实现HTML调用打开本地软件文件0.png" alt="" /></p>
+<p>2. 在注册表 左边最上面HKEY_CLASSES_ROOT那个树右键新建&mdash;&mdash;项。该项的名称自己命名，其实该名称也是协议的名称，我们调用的时候就是根据该协议调用的，而我这里随便起了一个：ZZO。</p>
+<p><img src="./images/实现HTML调用打开本地软件文件1.png" alt="" /></p>
+<p>3. 然后在该项中右键-&gt;新建-&gt;字符串值，创建一个URL Protocol的值，其中数据默认为空。</p>
+<p><img src="./images/实现HTML调用打开本地软件文件2.png" alt="" /></p>
+<p>4. 然后在ZZO下新建-&gt;项，名字为DefaultIcon</p>
+<p><img src="./images/实现HTML调用打开本地软件文件3.png" alt="" /></p>
+<p>5. 在ZZO下新建-&gt;项，名称为shell。并在shell下新建名为open的项。然后在open下新建名为command的项</p>
+<p><img src="./images/实现HTML调用打开本地软件文件4.png" alt="" /></p>
+<p>6. 然后分别修改DefaultIcon 和 command 的值为要调用的程序完整路径.</p>
+<p>&nbsp; &nbsp; 比如我这里要调用的是QQ，完整路径为：D:\Program Files (x86)\Tencent\QQ\Bin\QQScLauncher.exe</p>
+<p><img src="./images/实现HTML调用打开本地软件文件5.png" alt="" /></p>
+<p>&nbsp;<img src="./images/实现HTML调用打开本地软件文件6.png" alt="" /></p>
+<p>7. 然后我们在html页面添加一个a标签</p>
+<p>&lt;a href="Zzo://"&gt;open&lt;/a&gt;</p>
+<p>&nbsp;<img src="./images/实现HTML调用打开本地软件文件7.png" alt="" /></p>
+<p>8. 点击页面按钮</p>
+<p>&nbsp;<img src="./images/实现HTML调用打开本地软件文件8.png" alt="" /></p>
+<p>&nbsp;<img src="./images/实现HTML调用打开本地软件文件9.png" alt="" /></p>
+<p>通过网站调用可执行程序，主要是修改注册表,注册 URL Protocol 协议。<br />注意上面 command 项的值可以为 C:\Program Files (x86)\Qiaoker\updater.exe "%1" ,这个"%1"是传递给 updater.exe的参数。</p>
+<p>&nbsp;</p>
+<p><br />加了后使用是我们就可以传参数了，</p>
+<p>&nbsp; &lt;a href="Uaiqiy://cid:110&amp;username:mjq"&gt;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>方式二：使用js调起客户端</p>
+<p>&nbsp; &nbsp; 除了上面那种方式，我们还可以通过调用js函数实现客户端exe程序的调用，但是这种方式局限性很大，目前只支持IE浏览器。</p>
+<p>代码如下：</p>
+<p>function execProgram() {<br />        var exepath = "D:\\Program Files (x86)\\Tencent\\QQMusic\\QQMusic.exe"<br />        var ws = new ActiveXObject("WScript.Shell");<br />        ws.Exec(exepath);<br />}<br />&nbsp; &nbsp;&nbsp;</p>
+<p>&nbsp;如果想要调用bat脚本或者vbs程序，可以将ActiveXObject 的 Exec()方法替换成Run() 方法。</p>
+<p>function execProgram() {<br />        var exepath = "C:\\Users\\LeBron\\Desktop\\新建.vbs"<br />        var ws = new ActiveXObject("WScript.Shell");<br />        ws.Run(exepath);<br />}</p>
+<p>--------------------- <br />作者：lebron3v <br />来源：CSDN <br />原文：https://blog.csdn.net/lebron3v/article/details/80736744 <br />版权声明：本文为博主原创文章，转载请附上博文链接！</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,69 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修H5离线缓存(基础)学习指南' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>H5离线缓存(基础)学习指南</center></div><div class='banquan'>原文出处:本文由博客园博主硅谷之火提供。<br/>
+原文连接:https://www.cnblogs.com/jinfeixiang/p/10912009.html</div><br>
+    <p style="text-align: center;"><span style="font-size: 18px;">离线缓存 application cache</span></p>
+<p><span style="font-size: 18px; background-color: #ffffff; color: #ff0000;">1. 什么是离线缓存：</span></p>
+<p><span style="font-size: 18px;">　　离线缓存可以将站点的一些文件缓存到本地，它是浏览器自己的一种机制，将需要的文件缓存下来，以便后期即使没有连接网络，被缓存的页面也可以展示。</span></p>
+<p><span style="font-size: 18px;">　　例子：比如我们在手机或电脑上访问一个网页，下一次访问即使不连网也可以访问，因为当我们第一次访问时候，浏览器已经把此时页面给保存到本地了。</span></p>
+<p><span style="font-size: 18px;"><span style="color: #ff0000;">2. 离线缓存的优势</span>：</span></p>
+<p><span style="font-size: 18px;">　　1. 在没有网络的时候可以访问到缓存对应的站点页面，包括 html，css，img等文件</span></p>
+<p><span style="font-size: 18px;">　　2.在有网络的时候，浏览器也会优先使用已离线存储的文件，返回一个200(from ache)头。这跟http的缓存使用策略不同的</span></p>
+<p><span style="font-size: 18px;">　　3.资源的缓存可以带来更好的用户体验，当用户使用自己流量上网时，本地缓存不仅可以提高用户访问速度，而且大大节约用户的使用流量。</span></p>
+<p><span style="font-size: 18px; color: #ff0000;">3. 实现离线缓存：</span></p>
+<p><span style="font-size: 18px;">　　1. 在需要缓存的html(网页) 的根节点添加属性 manifest属性 属性值是一个 appcache&nbsp; <span style="color: #ff0000;">appcache 是一个控制缓存文件。demo.appcache要给manifest.html 中属性 manifest=&ldquo;demo.appcache&rdquo; demo要一样</span></span></p>
+<p><img src="./images/H5离线缓存(基础)学习指南0.png" alt="" width="446" height="205" /></p>
+<p>&nbsp;<span style="font-size: 18px;">　　2. 在同目录下创这个 .appcache 文件 并添加配置项</span></p>
+<p><span style="font-size: 18px;">　　 4.appcache文件的内容格式</span></p>
+<p><span style="font-size: 18px;">　　&nbsp; <span style="color: #ff0000;">&nbsp; &nbsp;需要注意：</span>前两个是必写，后两个是可选，在这里面 <span style="color: #ff0000;">#</span> 是注释的意思</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 18px;"><span style="color: #000000;"><span style="color: #ff0000;">CACHE MANIFEST</span>
+# 1.0版本号 添加配置项
+<span style="color: #ff0000;">CACHE:</span>
+#需要缓存的文件
+http://img4.imgtn.bdimg.com/it/u=2990488201,3409844341</span><span style="color: #ff0000;">&amp;fm</span>=26<span style="color: #ff0000;">&amp;gp</span><span style="color: #000000;">=0.jpg
+http://127.0.0.1:8088/yidongduan/lixianhuancun/manifest.css
+<span style="color: #ff0000;">NETWORK:</span>
+#每次向网络请求的文件也是不缓存的文件
+*
+#*代表除了上面的缓存文件其它不缓存
+<span style="color: #ff0000;">FALLBACK</span>
+#无法建立英特网请求 而打开的页面
+404.html</span></span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;<span style="font-size: 18px;">　　5. 在服务端将 .appcache 文件的mime类型配置成</span></p>
+<p><span style="font-size: 18px;">　　&nbsp; &nbsp; &nbsp;text/cache-manifest</span></p>
+<p><span style="font-size: 18px;">　　&nbsp; &nbsp; &nbsp;下面以phpstudy为例：</span></p>
+<p><span style="font-size: 18px;"><img src="./images/H5离线缓存(基础)学习指南1.png" alt="" width="402" height="210" /></span></p>
+<p><span style="font-size: 18px;">　　　　打开mime.types 文件在后面添加</span></p>
+<p><img src="./images/H5离线缓存(基础)学习指南2.png" alt="" width="509" height="75" /></p>
+<p><span style="font-size: 18px;">6.在网页打开 manifest</span></p>
+<p><span style="font-size: 18px;"><img src="./images/H5离线缓存(基础)学习指南3.png" alt="" width="912" height="510" />&nbsp; 现在就可以看到我们缓存的文件有 css，img，html等</span></p>
+<p><span style="font-size: 18px;">　　你可以试着断网是否能访问到这个img，这个图片是网上图片需要网络加载，如果断网看看图片是否还能加载出来。</span></p>
+<p>&nbsp;<span style="font-size: 18px;">作者：晋飞翔</span></p>
+<p><span style="font-size: 18px;">&nbsp;手机号(微信同步)：17812718961</span></p>
+<p>&nbsp;<span style="font-size: 18px;"><br /></span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

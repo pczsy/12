@@ -1,0 +1,154 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修纯css实现星级评分效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>纯css实现星级评分效果</center></div><div class='banquan'>原文出处:本文由博客园博主柏大乖要乖呀提供。<br/>
+原文连接:https://www.cnblogs.com/zuoWendong/p/11526935.html</div><br>
+    <h3>效果</h3>
+<p>效果图如下，纯css实现超酷炫的星级评分动画效果</p>
+<div>
+<p><img src="./images/纯css实现星级评分效果0.png" alt="" />​</p>
+<img title="点击并拖拽以移动" src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="" /></div>
+<h3>实现思路</h3>
+<ol>
+<li>5个类型为radio的input，label标签修改样式背景图为星星</li>
+<li>label标签给每个星星鼠标停留时加注名字</li>
+<li>点击星星有放大旋转的动画</li>
+</ol>
+<h3>dom结构</h3>
+<p>用form实现</p>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="star"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rate5"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="rating"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="5"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="rate5"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="Amazing"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rate4"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="rating"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="4"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="rate4"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="Good"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rate3"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="rating"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="3"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="rate3"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="Average"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rate2"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="rating"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="2"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="rate2"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="Not good"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="radio"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rate1"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="rating"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="1"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">="rate1"</span><span style="color: #ff0000;"> title</span><span style="color: #0000ff;">="Terrible"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">form</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<h3>css样式</h3>
+</div>
+<p>css按步骤来实现，</p>
+<p>1、星星图片样式</p>
+<p>首先是星星图片嘛~</p>
+<div>
+<p><img src="./images/纯css实现星级评分效果2.png" alt="" />​</p>
+<img title="点击并拖拽以移动" src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="" /></div>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.star</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 150px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 60px</span>;<span style="color: #ff0000;">
+    padding</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;"> none</span>;
+}<span style="color: #800000;">
+
+.star &gt; input</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    margin-right</span>:<span style="color: #0000ff;"> -100%</span>;<span style="color: #ff0000;">
+    opacity</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+
+.star &gt; label</span>{<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+    float</span>:<span style="color: #0000ff;"> right</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 30px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 30px</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> transparent</span>;<span style="color: #ff0000;">
+    background-image</span>:<span style="color: #0000ff;"> url("../rotate-star/images/starIcon.png")</span>;<span style="color: #ff0000;">
+    background-repeat</span>:<span style="color: #0000ff;"> no-repeat</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+<img title="点击并拖拽以移动" src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="" /></div>
+<p>2、点击星星的时候，灰星星变黄星星，顺便把input点击的外边框去掉，巨丑</p>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.star &gt; input:focus + label</span>{<span style="color: #ff0000;">
+    outline</span>:<span style="color: #0000ff;"> none</span>;
+}<span style="color: #800000;">
+
+.star &gt; input:checked~label,
+.star &gt; input:focus~label,
+.star &gt; input:hover~label</span>{<span style="color: #ff0000;">
+    background-position</span>:<span style="color: #0000ff;"> 0 -30px</span>; 
+}</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>3、通过before伪元素，新增一个隐藏着的星星，来做旋转放大的动画</p>
+<div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.star &gt; label:before</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> none</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    content</span>:<span style="color: #0000ff;"> " "</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 30px</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 30px</span>;<span style="color: #ff0000;">
+    background-image</span>:<span style="color: #0000ff;"> url("../rotate-star/images/starIcon.png")</span>;<span style="color: #ff0000;">
+    background-repeat</span>:<span style="color: #0000ff;"> no-repeat</span>;<span style="color: #ff0000;">
+    bottom</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+
+.star &gt; input:checked + label:before</span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+    animation-name</span>:<span style="color: #0000ff;"> rotateStar</span>;<span style="color: #ff0000;">
+    animation-duration</span>:<span style="color: #0000ff;"> 1s</span>;<span style="color: #ff0000;">
+    animation-fill-mode</span>:<span style="color: #0000ff;"> forwards</span>;
+}<span style="color: #800000;">
+
+@keyframes rotateStar</span>{<span style="color: #ff0000;">
+    0%{
+        transform</span>:<span style="color: #0000ff;"> scale(1) rotate(0)</span>;
+    }<span style="color: #800000;">
+
+    95%</span>{<span style="color: #ff0000;">
+        transform</span>:<span style="color: #0000ff;"> scale(4) rotate(90deg)</span>;<span style="color: #ff0000;">
+        opacity</span>:<span style="color: #0000ff;"> 0</span>;
+    }<span style="color: #800000;">
+
+    100%</span>{<span style="color: #ff0000;">
+        transform</span>:<span style="color: #0000ff;"> scale(1) rotate(0)</span>;<span style="color: #ff0000;">
+        opacity</span>:<span style="color: #0000ff;"> 0</span>;
+    }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+<img title="点击并拖拽以移动" src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="" /></div>
+<p>OK，按着步骤来，你也可以在你的页面上实现酷炫的星级评分效果咯~</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

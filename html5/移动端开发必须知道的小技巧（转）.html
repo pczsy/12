@@ -1,0 +1,248 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修移动端开发必须知道的小技巧（转）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>移动端开发必须知道的小技巧（转）</center></div><div class='banquan'>原文出处:本文由博客园博主一指流砂~提供。<br/>
+原文连接:https://www.cnblogs.com/xuwendong/p/11440660.html</div><br>
+    <h1 id="前言">前言</h1>
+<p>最近在公司写一个混合 app 项目，页面基本全部都是用 H5 完成，嵌入到原生 webview 下。发现一个问题，在 iPhone 6 下 苹果手机的状态栏会挡住页面，导致页面下移，样式错乱，最后网上查找了些解决办法，加了一条 meta 标签解决了问题。今天特来总结下常用的移动端开发需要注意的meta标签及一些小技巧。</p>
+<ol>
+<li>viewport</li>
+</ol>
+<p><code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"&gt;</code></p>
+<p>这个是移动端页面开发必备的标签，用来调整布局视口同视觉视口一致，禁止页面缩放等。</p>
+<ol>
+<li><code>apple-mobile-web-app-capable</code></li>
+</ol>
+<p><code>apple-mobile-web-app-capable</code>&nbsp;是设置 Web 应用是否以全屏模式运行。</p>
+<p>语法：</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">meta <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">name=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"apple-mobile-web-app-capable" <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">content=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"yes"&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>说明：</p>
+<p>如果 content 设置为yes，Web应用会以全屏模式运行，反之，则不会。content的默认值是no，表示正常显示。如果选择全屏模式运行，则会删除默认的苹果工具栏和菜单栏。</p>
+<p>我开篇遇到的问题就是通过设置该 meta 标签解决的。</p>
+<ol>
+<li>设置顶部状态栏的颜色</li>
+</ol>
+<p><code>&lt;meta name="apple-mobile-web-app-status-bar-style" content="black" /&gt;</code></p>
+<p>说明：</p>
+<p>这个标签起作用的前提是 必须事先开启了全屏模式运行 webapp，即 第二条的 meta 标签必须同步指定，否则这个标签不起作用。</p>
+<p>如果content设置为default，则状态栏正常显示。如果设置为blank，则状态栏会有一个黑色的背景。如果设置为blank-translucent，则状态栏显示为黑色半透明。如果设置为default或blank，则页面显示在状态栏的下方，即状态栏占据上方部分，页面占据下方部分，二者没有遮挡对方或被遮挡。如果设置为blank-translucent，则页面会充满屏幕，其中页面顶部会被状态栏遮盖住（会覆盖页面20px高度，而iphone4和itouch4的Retina屏幕为40px）。默认值是default。</p>
+<ol>
+<li>webapp添加到主屏后的标题（iOS 6 新增）</li>
+</ol>
+<p><code>&lt;meta name="apple-mobile-web-app-title" content="title"&gt;</code></p>
+<ol>
+<li>设置缓存</li>
+</ol>
+<p><code>&lt;meta http-equiv="Cache-Control" content="no-cache" /&gt;</code></p>
+<p>手机页面通常在第一次加载后会进行缓存，然后每次刷新会使用缓存而不是去重新向服务器发送请求。如果不希望使用缓存可以设置no-cache。</p>
+<ol>
+<li>format-detection</li>
+</ol>
+<p>format-detection 启动或禁用自动识别页面中的电话号码。</p>
+<p>语法：</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">meta <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">name=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"format-detection" <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">content=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"telephone=no"&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>说明：</p>
+<p>默认情况下，设备会自动识别任何可能是电话号码的字符串。设置telephone=no可以禁用这项功能。</p>
+<ol>
+<li>html5调用安卓或者ios的拨号功能</li>
+</ol>
+<p>html5提供了自动调用拨号的标签，只要在a标签的href中添加tel:就可以了。</p>
+<p>拨打手机直接如下:</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">href=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"tel:15677776767"&gt;点击拨打15677776767<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>PS：如果遇到这种情况失效，可以在页面头部 添加 上一条meta 标签，content 设置为 yes。</p>
+<ol>
+<li>iphone及ipad下输入框默认出现内阴影。</li>
+</ol>
+<pre class="css"><code class="hljs"><span class="hljs-selector-tag"><span class="hljs-selector-tag">Element{
+  <span class="hljs-attribute"><span class="hljs-attribute">-webkit-appearance: none; 
+}</span></span></span></span></code></pre>
+<ol>
+<li>移动端滑动页面绝对定位元素出现抖动</li>
+</ol>
+<p>这个问题自己网上找了一些解决办法，仅供参考。</p>
+<ul>
+<li>给body设置高度100%</li>
+</ul>
+<pre class="css"><code class="hljs"><span class="hljs-selector-tag"><span class="hljs-selector-tag">body,<span class="hljs-selector-tag"><span class="hljs-selector-tag">html{
+    <span class="hljs-attribute"><span class="hljs-attribute">widht:<span class="hljs-number"><span class="hljs-number">100%;
+    <span class="hljs-attribute"><span class="hljs-attribute">height:<span class="hljs-number"><span class="hljs-number">100%;
+}</span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>如果是项目中已经做好的页面，有其他特效，直接设置这个属性，可能对页面的其他功能造成影响。</p>
+<p>如果使用此法，本地调试效果不好，建议不要使用。</p>
+<ul>
+<li>给固定定位的元素添加transform属性</li>
+</ul>
+<p><code>transform:translateZ(0);</code><br />或者<br /><code>transform:translate3d(0,0,0);</code></p>
+<ul>
+<li>外层嵌套一个盒子</li>
+
+
+</ul>
+<p>多加一层盒子，外层fixed固定定位，内层的设置绝对定位absolute；</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">style=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">'position: fixed;'&gt;
+  <span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">style=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">'position: absolute'&gt;
+    ...
+  <span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div&gt;
+<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ol>
+<li>iphone下 input 框光标过长</li>
+</ol>
+<p>input 输入框在 iPhone 下 光标过长，Android显示正常。</p>
+<p>方法：</p>
+<p>调低 input 标签的 line-height 样式值。</p>
+<ol>
+<li>ios 下 页面滑动卡顿，不流畅</li>
+</ol>
+<p>在内容出现滚动的元素上设置一条css样式，实现惯性滚动和弹性效果。</p>
+<pre class="css"><code class="hljs">{
+  <span class="hljs-attribute"><span class="hljs-attribute">-webkit-overflow-scrolling: touch;
+}</span></span></code></pre>
+<p><code>-webkit-overflow-scrolling</code>&nbsp;属性控制元素在移动设备上是否使用滚动回弹效果，它有两个值：</p>
+<p><code>auto</code>: 使用普通滚动, 当手指从触摸屏上移开，滚动会立即停止。</p>
+<p><code>touch</code>:<br />使用具有回弹效果的滚动, 当手指从触摸屏上移开，内容会继续保持一段时间的滚动效果。继续滚动的速度和持续的时间和滚动手势的强烈程度成正比。同时也会创建一个新的堆栈上下文。</p>
+<ol>
+<li>页面顶部固定定位元素或底部固定定位元素遮挡页面部分内容。</li>
+
+
+</ol>
+<p>方法一：</p>
+<p>给最外层的div加上&nbsp;<code>padding-bottom</code>， 值为 固定定位元素高度；</p>
+<p>方法二：</p>
+<p>利用伪元素，给最外层div添加伪元素 after，设置高度为 固定定位元素高度。</p>
+<pre class="css"><code class="hljs">
+<span class="hljs-selector-class"><span class="hljs-selector-class">.wrapper<span class="hljs-selector-pseudo"><span class="hljs-selector-pseudo">::after{
+  <span class="hljs-attribute"><span class="hljs-attribute">content: <span class="hljs-string"><span class="hljs-string">'';
+  <span class="hljs-attribute"><span class="hljs-attribute">height: <span class="hljs-string"><span class="hljs-string">'固定定位元素高度';
+}</span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ol>
+<li>禁止复制、选中文本</li>
+</ol>
+<pre class="css"><code class="hljs"><span class="hljs-selector-tag"><span class="hljs-selector-tag">Element {
+  <span class="hljs-attribute"><span class="hljs-attribute">-webkit-user-select: none;
+  <span class="hljs-attribute"><span class="hljs-attribute">-moz-user-select: none;
+  <span class="hljs-attribute"><span class="hljs-attribute">-khtml-user-select: none;
+   <span class="hljs-attribute"><span class="hljs-attribute">user-select: none;
+}</span></span></span></span></span></span></span></span></span></span></code></pre>
+<ol>
+<li>IOS中input键盘事件keyup、keydown、keypress支持不是很好</li>
+</ol>
+<p>用input search做模糊搜索的时候，在键盘里面输入关键词，会通过ajax后台查询，然后返回数据，然后再对返回的数据进行关键词标红。用input监听键盘keyup事件，在安卓手机浏览器中是可以的，但是在ios手机浏览器中变红很慢，用输入法输入之后，并未立刻相应keyup事件，只有在通过删除之后才能相应！</p>
+<p>解决办法：</p>
+<p>可以用html5的oninput事件去代替keyup</p>
+<pre class="js"><code class="hljs javascript">&lt;input type=<span class="hljs-string"><span class="hljs-string">"text" id=<span class="hljs-string"><span class="hljs-string">"test"&gt;
+<span class="xml"><span class="hljs-tag"><span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="xml"><span class="hljs-tag"><span class="hljs-name">script <span class="hljs-attr"><span class="xml"><span class="hljs-tag"><span class="hljs-attr">type=<span class="hljs-string"><span class="xml"><span class="hljs-tag"><span class="hljs-string">"text/javascript"&gt;<span class="javascript"><span class="xml"><span class="javascript">
+  <span class="hljs-built_in"><span class="xml"><span class="javascript"><span class="hljs-built_in">document.getElementById(<span class="hljs-string"><span class="xml"><span class="javascript"><span class="hljs-string">'test').addEventListener(<span class="hljs-string"><span class="xml"><span class="javascript"><span class="hljs-string">'input', <span class="hljs-function"><span class="hljs-keyword"><span class="xml"><span class="javascript"><span class="hljs-function"><span class="hljs-keyword">function(<span class="hljs-params"><span class="xml"><span class="javascript"><span class="hljs-function"><span class="hljs-params">e){
+      <span class="hljs-keyword"><span class="xml"><span class="javascript"><span class="hljs-keyword">var value = e.target.value
+      ....
+  })
+<span class="hljs-tag"><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="xml"><span class="hljs-tag"><span class="hljs-name">script&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>然后就达到类似keyup的效果！</p>
+<ol>
+<li>webview 下部分 JavaScript 代码没有执行，比如 alert()等。</li>
+</ol>
+<p>解决办法：</p>
+<p>webview只是一个承载体、各种内容的渲染需要使用webviewChromClient去实现、所以set一个默认的基类WebChromeClient就行。</p>
+<p>PS：这部分需要原生开发协助设置一个 基类 WebChromeClient，代码:</p>
+<p><code>WebView.setWebChromeClient()</code></p>
+<ol>
+<li>移动端点击300ms延迟</li>
+</ol>
+<p>300ms 尚可接受，不过因为300ms产生的问题，我们必须要解决。300ms导致用户体验并不是很好，解决这个问题，我们一般在移动端用 tap 事件来取代click 事件。</p>
+<p>推荐两个 js，一个是&nbsp;<code>fastclick</code>，一个是&nbsp;<code>tap.js</code>。</p>
+<p>关于移动端点击延迟处理方案，详细叙述请看：<a href="https://github.com/pubdreamcc/web-study/blob/master/%E5%B9%B3%E6%97%B6%E8%B8%A9%E5%9D%91%E6%80%BB%E7%BB%93/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E7%82%B9%E5%87%BB%E5%BB%B6%E8%BF%9F%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88.md">移动端点击延迟处理方案</a></p>
+<ol>
+<li>移动端点击穿透问题</li>
+</ol>
+<p>案例如下：</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">id=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"haorooms"&gt;点透事件测试<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">div&gt;
+<span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">href=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"http://www.baidu.com"&gt;百度<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>div是绝对定位的蒙层, 并且z-index高于a。而a标签是页面中的一个链接，我们给div绑定tap事件：</p>
+<pre class="js"><code class="hljs javascript">
+$(<span class="hljs-string"><span class="hljs-string">'#haorooms').on(<span class="hljs-string"><span class="hljs-string">'tap',<span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">function(<span class="hljs-params"><span class="hljs-function"><span class="hljs-params">){
+  $(<span class="hljs-string"><span class="hljs-string">'#haorooms').hide()
+})</span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>我们点击蒙层时 div正常消失，但是当我们在a标签上点击蒙层时，发现a链接被触发，这就是所谓的点透事件。</p>
+<p>原因：</p>
+<p>touchstart 早于 touchend 早于click。 亦即click的触发是有延迟的，这个时间大概在300ms左右，也就是说我们tap触发之后蒙层隐藏， 此时 click还没有触发，300ms之后由于蒙层隐藏，我们的click触发到了下面的a链接上。</p>
+<p>解决办法：</p>
+<ol>
+<li>尽量都使用 touch 事件来替换click事件。例如用touchend事件(推荐)。</li>
+<li>
+<p>用 fastclick，详情看上面 GitHub 仓库。</p>
+</li>
+<li>
+<p>用preventDefault阻止a标签的click。</p>
+</li>
+<li>
+<p>延迟一定的时间(300ms+)来处理事件 （不推荐）。</p>
+</li>
+<li>
+<p>以上一般都能解决，实在不行就换成click事件。</p>
+</li>
+</ol>
+<p>下面介绍一下touchend事件，如下：</p>
+<pre class="js"><code class="hljs javascript">
+$(<span class="hljs-string"><span class="hljs-string">"#haorooms").on(<span class="hljs-string"><span class="hljs-string">"touchend", <span class="hljs-function"><span class="hljs-keyword"><span class="hljs-function"><span class="hljs-keyword">function (<span class="hljs-params"><span class="hljs-function"><span class="hljs-params">event) {
+   event.preventDefault()
+ 
+ })</span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ol>
+<li>iOS中，中文输入法输入英文时，字母之间可能会出现一个六分之一空格</li>
+</ol>
+<p>可以通过正则去掉</p>
+<p><code>this.value = this.value.replace(/\u2006/g, '')</code></p>
+<ol>
+<li>解决 iOS 中 video 标签视频自动全屏播放问题</li>
+</ol>
+<p>给 video 标签添加 属性：</p>
+<pre><code><code class="hljs xml"><span class="hljs-comment"><span class="hljs-comment">&lt;!-- 针对 iOS8，9下生效  --&gt;
+<span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">video <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">webkit-playsinline=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"webkit-playsinline"&gt;<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">video&gt;
+
+<span class="hljs-comment"><span class="hljs-comment">&lt;!-- ios10 及以上 --&gt;
+
+<span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">video <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">playsinline=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"playsinline"&gt;<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">video&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>PS: 如果是内嵌入 webview 下 还需要原生开发的伙伴添加以下支持代码：</p>
+<p><code>webView.allowsInlineMediaPlayback = YES;</code></p>
+<ol>
+<li>移动端点击链接发送邮件</li>
+</ol>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">href=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"mailto:pubdreamcc@qq.com?subject=TestObject"&gt;pubdreamcc@qq.com<span class="hljs-tag"><span class="hljs-tag">&lt;/<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">a&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>点击后直接给 pubdreamcc@qq.com 发邮件，主题为：TestObject 。</p>
+<p>PS: 如果遇到这种情况失效，可以在页面头部 添加 一条meta 标签，content 设置为 yes。</p>
+<pre><code><code class="hljs xml"><span class="hljs-tag"><span class="hljs-tag">&lt;<span class="hljs-name"><span class="hljs-tag"><span class="hljs-name">meta <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">name=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"format-detection" <span class="hljs-attr"><span class="hljs-tag"><span class="hljs-attr">content=<span class="hljs-string"><span class="hljs-tag"><span class="hljs-string">"email=yes"&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ol>
+<li>移动端滚动穿透</li>
+</ol>
+<p>描述：</p>
+<p>　在打开的弹窗或者遮罩层上滚动， 会影响到下层的body元素的滚动。 体验很不好。</p>
+<p>解决办法：</p>
+<p>一般思路是在打开弹框或遮罩层的时候，获取html的scrollTop， 给body改为fixed定位， top值为负的scrollTop值。 关闭弹框的时候，把fixed定位去掉。还原scrollTop值。</p>
+<ol>
+<li>移动端布局方式</li>
+</ol>
+<p>这个基本是我们做移动开发首先需要确定的一个方案，我总结为一句话：</p>
+<p><strong>经典的 REM 布局与新秀 VW 布局</strong></p>
+<p>当然还有常见的比如 弹性盒子（flex） 都可以。</p>
+<p>不过需要说的是，淘宝 flexible.js 布局的作者已经推荐我们选用 vw 布局。</p>
+<p>这部分大家可以自己网上查阅相关资料，我这里就不多做累述了。</p>
+<p>原文地址：<a title="https://www.cnblogs.com/cs96/p/11440142.html" href="https://www.cnblogs.com/cs96/p/11440142.html" target="_blank">https://www.cnblogs.com/cs96/p/11440142.html</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

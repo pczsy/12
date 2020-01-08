@@ -1,0 +1,101 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端性能优化的三大类处理方式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端性能优化的三大类处理方式</center></div><div class='banquan'>原文出处:本文由博客园博主明明里提供。<br/>
+原文连接:https://www.cnblogs.com/zhongjiayi/p/11695594.html</div><br>
+    <h2><span style="font-size: 16px;">1<strong>.&nbsp;减少&nbsp;HTTP&nbsp;的请求次数和传输报文的大小</strong></span></h2>
+<div>-CSS&nbsp;SPRITE（雪碧图、图片精灵）技术</div>
+<div>&nbsp;</div>
+<div>-&nbsp;使用字体图标（ICON&nbsp;FONT）或者&nbsp;SVG&nbsp;等矢量图；</div>
+<div>&nbsp;可以减少&nbsp;HTTP&nbsp;请求次数或者减少请求内容的大小 ，使图片渲染的更快：因为他们是基于代码渲染的，而对于位图（png/jpg/gif）是需要先把图片编码再渲染 ，可以避免图片失真变形 ；</div>
+<div>&nbsp;可以使用&nbsp;webp&nbsp;格式图片，这种格式要小一些（但要保证服务器端支持这种格式的请求处理）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;图片懒加载（延迟加载）技术&nbsp;；</div>
+<div>&nbsp; 第一次加载页面的时候不去请求真实的图片，将默认背景图替代真实图片进行加载，以提高第一次渲染页面的速度；</div>
+<div>&nbsp; 当页面加载完，把出现在用户视野区域中的图片做真实加载，没有出现在用户页面时的资源先不加载（可以节约流量，也能减少对服务器的请求压力）；</div>
+<div>&nbsp; 数据我们也尽可能分批加载（不要一次请求过多的数据，例如分页技术）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;音视频文件取消预加载（preload='none'），这样可以增加第一次渲染页面的速度，当需要播放的时候再加载</div>
+<div>&nbsp;</div>
+<div>-&nbsp;客户端和服务器端的数据传输尽可能基于&nbsp;JSON&nbsp;格式完成，XML&nbsp;格式比&nbsp;JSON&nbsp;格式要大一些（还可以基于二进制编码或者文件流格式，这种格式比文件传输好很多）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;把页面中的&nbsp;CSS/JS/图片等文件进行合并压缩：争取&nbsp;CSS&nbsp;和&nbsp;JS&nbsp;都只导入一个：基于&nbsp;webpack&nbsp;可以压缩、对于图片自己找工具先压缩、还可以使用服务器的&nbsp;GZIP&nbsp;压缩</div>
+<div>&nbsp;</div>
+<div>-&nbsp;图片地图：对于多次调取使用的图片（尤其是背景图），尽可能把它提取成为公共的样式，而不是每一次重新设置</div>
+<div>&nbsp;</div>
+<div>-&nbsp;图片&nbsp;BASE64（用&nbsp;BASE64&nbsp;码代表图片，减少&nbsp;HTTP&nbsp;请求，增加浏览器渲染的速度，所以真实项目中，尤其是移动端，如果图片加载缓慢，可能&nbsp;BASE64&nbsp;一下就好了；但是，BASE64&nbsp;会导致文件中的代码页面混乱，不利于维护和开发，所以尽量少使用；webpack&nbsp;中可以配置图片的&nbsp;BASE64；）</div>
+<p>&nbsp;</p>
+<h2><span style="font-size: 16px;"><strong>2 .&nbsp;设置各种缓存、预处理和长连接机制</strong></span></h2>
+<p>&nbsp;</p>
+<div>-&nbsp;把不经常更改的静态资源做缓存处理（一般做的是&nbsp;304&nbsp;或者&nbsp;ETAG&nbsp;等协商缓存）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;建立&nbsp;Cache-Control&nbsp;和&nbsp;Expires&nbsp;HTTP&nbsp;的强缓存</div>
+<div>&nbsp;</div>
+<div>-&nbsp;DNS&nbsp;缓存或者预处理（DNS&nbsp;PREFETCH），减少&nbsp;DNS&nbsp;的查找</div>
+<div>&nbsp;</div>
+<div>-&nbsp;设置本地的离线存储（manifest）或者把一些不经常更改的数据做本地存储（webstorage、indexdb）等</div>
+<div>&nbsp;</div>
+<div>-&nbsp;有钱就做&nbsp;CDN（地域分布式服务器），还有一个财大气粗的方式：加服务器</div>
+<div>&nbsp;</div>
+<div>-&nbsp;建立&nbsp;Connection:keep-alive&nbsp;TCP&nbsp;长连接</div>
+<div>&nbsp;</div>
+<div>-&nbsp;使用&nbsp;HTTP2&nbsp;版本协议（现在用的一般都是&nbsp;HTTP1.1）&nbsp;+&nbsp;可以多条&nbsp;TCP&nbsp;通道共存&nbsp;=&gt;管道化链接&nbsp;</div>
+<div>&nbsp;</div>
+<div>-&nbsp;一个项目分为不同的域（不同的服务器），例如：资源&nbsp;WEB&nbsp;服务器、数据服务器、图片服务器、视频服务器等，这样合理利用服务器资源，但是导致过多的&nbsp;DNS&nbsp;解析</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>3.&nbsp;代码方面的性能优化</strong></span></p>
+<div>&nbsp;</div>
+<div>-&nbsp;减少对闭包的使用（因为过多使用闭包会产生很多不销毁的内存，处理不好的话，会导致内存溢出&ldquo;栈溢出&rdquo;），减少闭包的嵌套（减少作用域链的查找层级）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;对于动画来说：能用&nbsp;CSS&nbsp;解决的不用&nbsp;JS（能够用&nbsp;transform&nbsp;处理的，不用传统的&nbsp;css&nbsp;样式，因为&nbsp;transform&nbsp;开启硬件加速，不会引发回流，再或者使用定位的元素也会好很多，因为定位的元素脱离文档流，不会对其它元素的位置造成影响）；</div>
+<div>&nbsp; &nbsp;能用&nbsp;requestAnimationFrame&nbsp;解决的不用定时器 ；</div>
+<div>&nbsp; &nbsp;另外， requestAnimationFrame&nbsp;还有一个好处：当页面处于休眠无访问状态，动画会自己暂停，直到恢复访问才开始，而定时器是不论什么状态，只要页面不管，就一直处理</div>
+<div>&nbsp;</div>
+<div>-&nbsp;避免使用&nbsp;iframe（因为&nbsp;iframe&nbsp;会嵌入其它页面，这样父页面渲染的时候，还要同时把子页面也渲染了，渲染进度会变慢）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;减少直接对&nbsp;DOM&nbsp;的操作（以减少&nbsp;DOM&nbsp;的重排和重绘），当代项目基本上都是基于&nbsp;mvvm/mvc&nbsp;数据驱动视图渲染的，对&nbsp;DOM&nbsp;的操作框架本身完成，性能要好很多；（当前主流框架大都避免直接操作DOM）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;低耦合高内聚（基于封装的方式：方法封装、插件、组件、框架、类库等封装，减少页面中的冗余代码，提高代码使用率）</div>
+<div>&nbsp;</div>
+<div>- 使用事件委托</div>
+<div>&nbsp;</div>
+<div>-&nbsp;避免出现死循环或者嵌套循环（嵌套循环会成倍增加循环的次数）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;项目中尽可能使用异步编程来模拟出多线程的效果，避免主线程阻塞（异步操作基于&nbsp;promise设计模式来管理）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;JS&nbsp;中不要使用&nbsp;with</div>
+<div>&nbsp;</div>
+<div>-&nbsp;避免使用&nbsp;CSS&nbsp;表达式</div>
+<div>&nbsp;</div>
+<div>-&nbsp;函数的防抖和节流（处理高并发的其中一种方式）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;减少使用&nbsp;eval（主要原因是防止压缩代码的时候，由于符号书写不合规，导致代码混乱）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;减少&nbsp;filter&nbsp;滤镜的使用</div>
+<div>&nbsp;</div>
+<div>-&nbsp;尽可能减少选择器的层级（选择器是从右向左解析）比如： .box&nbsp;a{}&nbsp;和&nbsp;a{}&nbsp; （使用less插件时默认层级是比较高的）</div>
+<div>&nbsp;</div>
+<div>-&nbsp;尽可能减少&nbsp;table 布局</div>
+<div>&nbsp;</div>
+<div>-&nbsp;手动回收堆栈内存（赋值为&nbsp;null）</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

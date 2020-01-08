@@ -1,0 +1,189 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Extensions for Vue' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Extensions for Vue</center></div><div class='banquan'>原文出处:本文由博客园博主.Net框架学苑提供。<br/>
+原文连接:https://www.cnblogs.com/letyouknowdotnet/p/10964462.html</div><br>
+    <div class="postBody">
+            <div id="cnblogs_post_body" class="blogpost-body "><h1 id="extensions-for-vue">Extensions for Vue</h1>
+<p>Original post url:<a href="https://www.cnblogs.com/markjiang7m2/p/10833790.html" class="uri">https://www.cnblogs.com/markjiang7m2/p/10833790.html</a><br>
+If you are doing vue development, there are some extensions for you to improve the development performance.</p>
+<ul>
+<li>Vetur</li>
+<li>Debugger for Chrome</li>
+<li>Vue Devtools</li>
+</ul>
+<h3 id="vetur">Vetur</h3>
+<p>This is a VS Code extension. It supports <code>Syntax-highlighting</code> and <code>Formatting</code> for vue. After install the extension, you can see the code is highlight and the file is identified as <code>vue</code>.</p>
+<p><img src="./images/Extensions for Vue0.png" alt="vscode_veturlogo"></p>
+<p><img src="./images/Extensions for Vue1.png" alt="vscode_vetur"></p>
+<p>How to use?<br>
+1.Install vetur<br>
+Click <code>Ctrl</code> + <code>P</code>, input <code>ext install vetur</code>, then install the extension.</p>
+<p>2.Add the below in User settings<br>
+Click <code>Ctrl</code> + <code>Shift</code> + <code>P</code>, input <code>Preferences: Open User Settings</code>.<br>
+Add the below in User settings</p>
+<pre><code><code class="hljs javascript"><span class="hljs-string">"emmet.syntaxProfiles"</span>: {
+  <span class="hljs-string">"vue-html"</span>: <span class="hljs-string">"html"</span>,
+  <span class="hljs-string">"vue"</span>: <span class="hljs-string">"html"</span>
+}</code></pre>
+<p>More details see in <a href="https://vuejs.github.io/vetur/" target="_blank">Vetur</a>.</p>
+<h3 id="debugger-for-chrome">Debugger for Chrome</h3>
+<p>This is a VS Code extension. As vue js code will be compiled in browser when we debug the vue application. We could not set a breakpoint in browser. It supports us to debug and set breakpoint in VS Code, like <code>F12</code> function in Chrome.</p>
+<p><img src="./images/Extensions for Vue2.png" alt="vscode_chromelogo"></p>
+<p>How to use?<br>
+1.Install vetur<br>
+Click <code>Ctrl</code> + <code>P</code>, input <code>ext install Debugger for Chrome</code>, then install the extension.</p>
+<p>2.Update Webpack configuration to build up <code>source map</code>.<br>
+Open <code>config/index.js</code> and update <code>devtool</code> property as below.</p>
+<pre><code><code class="hljs javascript">devtool: <span class="hljs-string">'source-map'</span>,</code></pre>
+<p>3.Add Chrome debug configuration.<br>
+Click <code>Debug</code> icon in <code>Activity Bar</code>. Add configuration as below.</p>
+<p><img src="./images/Extensions for Vue3.png" alt="vscode_chromeconfig1"></p>
+<p><img src="./images/Extensions for Vue4.png" alt="vscode_chromeconfig2"></p>
+<pre><code><code class="hljs javascript">{
+    <span class="hljs-string">"version"</span>: <span class="hljs-string">"0.2.0"</span>,
+    <span class="hljs-string">"configurations"</span>: [
+        {
+            <span class="hljs-string">"type"</span>: <span class="hljs-string">"chrome"</span>,
+            <span class="hljs-string">"request"</span>: <span class="hljs-string">"launch"</span>,
+            <span class="hljs-string">"name"</span>: <span class="hljs-string">"Launch Chrome against localhost"</span>,
+            <span class="hljs-string">"url"</span>: <span class="hljs-string">"http://localhost:8090"</span>,
+            <span class="hljs-string">"webRoot"</span>: <span class="hljs-string">"${workspaceFolder}/Vue.Router/src"</span>,
+            <span class="hljs-string">"breakOnLoad"</span>: <span class="hljs-literal">true</span>,
+            <span class="hljs-string">"sourceMapPathOverrides"</span>: {
+              <span class="hljs-string">"webpack:///src/*"</span>: <span class="hljs-string">"${webRoot}/*"</span>
+            }
+        }
+    ]
+}</code></pre>
+<p>Change <code>name</code> as what you like. <code>url</code> should be the same as your vue application root url. <code>webRoot</code> is your vue application <code>src</code> path.</p>
+<p>4.Run the vue application as usual.</p>
+<pre><code><code class="hljs dockerfile">npm <span class="hljs-keyword">run</span><span class="bash"> dev</span></code></pre>
+<p>5.Start Debugging.<br>
+Click <code>Debug</code> icon in <code>Activity Bar</code> and click the green button.</p>
+<p><img src="./images/Extensions for Vue5.png" alt="vscode_chromedebug1"></p>
+<p>Then you can make breakpoint in VS Code.</p>
+<h3 id="vue-devtools">Vue Devtools</h3>
+<p>This is a Chrome extension. It helps us to get more details when we debug the vue application.<br>
+Actually most of the blogs tell me how to install the extension while few of them can show me how to use the tool.</p>
+<p><img src="./images/Extensions for Vue6.png" alt="chrome_vuedevtoolslogo"></p>
+<p>I find a blog is useful for me. Here is the original link:<a href="https://flaviocopes.com/vue-devtools/" target="_blank">https://flaviocopes.com/vue-devtools/</a>.</p>
+<p>How to use?<br>
+1.Install Vue Devtools<br>
+There are 2 ways to install the Vue Dev Tools:</p>
+<ul>
+<li><p>Add on <a href=" https://chrome.google.com/webstore/detail/vuedevtools/nhdogjmejiglipccpnnnanhbledajbpd" target="_blank">Google Chrome Store</a> directly.</p></li>
+<li><p>Manual Installation<br>
+If the Google Chrome Store is not avaible for you, you can try this way.<br>
+Clone the repository from <a href="https://github.com/vuejs/vue-devtools" target="_blank">Github</a> and build it. You can follow the document to install the extension.</p></li>
+</ul>
+<p>2.How to use the Developer Tools?<br>
+After install the extension, you can use it in Chrome.<br>
+Start a vue application in developing mode and access it in Chrome. Click <code>F12</code>. When the Vue DevTools panel is open, we can navigate the components tree. When we choose a component from the list on the left, the right panel shows the props and data it holds:</p>
+<p><img src="./images/Extensions for Vue7.png" alt="chrome_vuetag"></p>
+<p>On the top there are 4 buttons:</p>
+<ul>
+<li><strong>Components</strong> (the current panel), which lists all the component instances running in the current page. Vue can have multiple instances running at the same time, for example it might manage your shopping cart widget and the slideshow, with separate, lightweight apps.</li>
+<li><strong>Vuex</strong> is where you can inspect the state managed through Vuex.</li>
+<li><strong>Events</strong> shows all the events emitted</li>
+<li><strong>Refresh</strong> reloads the devtools panel</li>
+</ul>
+<p>Notice the small <code>= $vm0</code> text beside a component? It’s a handy way to inspect a component using the Console. Pressing the “esc” key shows up the console in the bottom of the devtools, and you can type <code>$vm0</code> to access the Vue component:</p>
+<p><img src="./images/Extensions for Vue8.png" alt="chrome_vuevm"></p>
+<ul>
+<li>Filter components<br>
+Start typing a component name, and the components tree will filter out the ones that don’t match.</li>
+</ul>
+<p><img src="./images/Extensions for Vue9.png" alt="chrome_vuefiltercomponent"></p>
+<ul>
+<li><p>Select component in the page<br>
+Click the <img src="./images/Extensions for Vue10.png" alt="chrome_vuefilterbtn"> button and you can hover any component in the page with the mouse, click it, and it will be opened in the devtools.</p></li>
+<li><p>Filter inspected data<br>
+On the right panel, you can type any word to filter the properties that don’t match it.</p></li>
+<li><p>nspect DOM<br>
+Click the Inspect DOM button to be brought to the DevTools Elements inspector, with the DOM element generated by the component:</p></li>
+</ul>
+<p><img src="./images/Extensions for Vue11.png" alt="chrome_vueinspectdom"></p>
+<p><img src="./images/Extensions for Vue12.png" alt="chrome_vuedomview"></p>
+<blockquote>
+<p>Reference:<br>
+<a href="https://flaviocopes.com/vue-devtools/" target="_blank">https://flaviocopes.com/vue-devtools/</a></p>
+</blockquote>
+</div><div id="MySignature" style="display: block;"><table style="background: rgba(255, 255, 246, 0.64); border-collapse: unset; border: 1px dashed rgb(224, 224, 224); padding: 10px 10px 10px 10px; font-family: 微软雅黑; font-size: 13px">
+    <tbody><tr><td>
+        <b>作者：</b>markjiang7m2 <br>
+        <b>出处：</b><a href="https://www.cnblogs.com/markjiang7m2/" target="_blank">https://www.cnblogs.com/markjiang7m2/</a> <br>
+        本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在文章页面明显位置给出原文连接，否则保留追究法律责任的权利。 <br>
+    </td>
+    <td align="right">
+        <div id="qr_bg"></div>
+    </td>
+</tr>
+<tr><td><div><img src="./images/Extensions for Vue13.png"></div></td>
+    </tr>
+</tbody></table></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="BlogPostCategory">分类: <a href="https://www.cnblogs.com/markjiang7m2/category/1454260.html" target="_blank">vue</a></div>
+<div id="EntryTag"></div>
+<div id="blog_post_info"><div id="green_channel">
+        <a id="green_channel_digg" onclick="DiggIt(10833790,cb_blogId,1);green_channel_success(this,'谢谢推荐！');">好文要顶</a>
+            <a id="green_channel_follow">已关注</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;">收藏该文</a>
+    <a id="green_channel_weibo" title="分享至新浪微博" onclick="ShareToTsina()"><img src="//common.cnblogs.com/images/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" title="分享至微信" onclick="shareOnWechat()"><img src="//common.cnblogs.com/images/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/markjiang7m2/" target="_blank"><img src="//pic.cnblogs.com/face/1674499/20190428143400.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/markjiang7m2/">markjiang7m2</a><br>
+            <a href="https://home.cnblogs.com/u/markjiang7m2/followees">关注 - 0</a><br>
+            <a href="https://home.cnblogs.com/u/markjiang7m2/followers">粉丝 - 6</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                我在关注他 <a onclick="unfollow('e8eae4ab-81de-4c60-e1fd-08d6cab4827b');return false;">取消关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(10833790,'Digg')">
+        <span class="diggnum" id="digg_count">0</span>
+    </div>
+    <div class="buryit" onclick="votePost(10833790,'Bury')">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+</div>
+<div class="clear"></div>
+<div id="post_next_prev"><a href="https://www.cnblogs.com/markjiang7m2/p/10823844.html" class="p_n_p_prefix">« </a> 上一篇：<a href="https://www.cnblogs.com/markjiang7m2/p/10823844.html" title="发布于2019-05-07 10:17">How to download a file with plus symbol(+) filename in IIS?</a><br><a href="https://www.cnblogs.com/markjiang7m2/p/10857688.html" class="p_n_p_prefix">» </a> 下一篇：<a href="https://www.cnblogs.com/markjiang7m2/p/10857688.html" title="发布于2019-05-13 22:39">Ocelot - .Net Core开源网关</a><br></div>
+</div>
+
+
+        </div>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

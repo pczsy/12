@@ -1,0 +1,325 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vuex 源码分析(一)  使用方法和代码结构' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vuex 源码分析(一)  使用方法和代码结构</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11431007.html</div><br>
+    <p>Vuex 是一个专为 Vue.js 应用程序开发的状态管理模式，它采用集中式存储管理应用的所有组件的状态，注意:使用前需要先加载vue文件才可以使用(<span style="color: #ff0000;">在node.js下需要使用Vue.use(Vuex)来安装vuex插件，在浏览器环境下直接加载即可,vuex会自行安装)</span></p>
+<p>vuex的使用方法很简单，首先调用new Vuex.Store(options)创建一个store实例即可，然后在创建vue实例时把这个store实例作为store属性传入即可，调用new Vuex.Store(options)创建一个vuex实例时可以传入如下参数:</p>
+<p>&nbsp;&nbsp;&nbsp; state&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 　　　　存储的数据&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;<br />&nbsp;&nbsp; &nbsp;getters&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; 　　　可以认为是store的计算属性 <br />&nbsp;&nbsp; &nbsp;mutations&nbsp;&nbsp;&nbsp; 　　&nbsp;&nbsp; 这是更改Vuex的store里的数据的唯一方法，只能是同步方法(<span style="color: #ff0000;">官网这样写的，其实不赞同这个说法，具体请看下面</span>)<br />&nbsp;&nbsp; &nbsp;actions&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 可以包含一些异步操作，它提交的是mutation，而不是直接变更状态。 <br />&nbsp;&nbsp; &nbsp;modules&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 为了更方便的管理仓库，我们把一个大的store拆成一些modules(子仓库),整个modules是一个树型结构<br />&nbsp;&nbsp; &nbsp;strict&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 　　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 是否开启严格模式,无论何时发生了状态变更且不是由mutation函数引起的，将会抛出错误，这能保证所有的状态变更都能被调试工具跟踪到。&nbsp;&nbsp; &nbsp;;默认为false<br />后面介绍每个api时单独介绍用法，举个栗子，如下:</p>
+<p class="hwi">&nbsp;writer by:大沙漠 QQ:22969969</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!<span style="color: #ff00ff;">DOCTYPE html<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;<span style="color: #800000;">html <span style="color: #ff0000;">lang<span style="color: #0000ff;">="en"<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;<span style="color: #800000;">head<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">meta <span style="color: #ff0000;">charset<span style="color: #0000ff;">="UTF-8"<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">title<span style="color: #0000ff;">&gt;Document<span style="color: #0000ff;">&lt;/<span style="color: #800000;">title<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">script <span style="color: #ff0000;">src<span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"<span style="color: #0000ff;">&gt;&lt;/<span style="color: #800000;">script<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">script <span style="color: #ff0000;">src<span style="color: #0000ff;">="https://unpkg.com/vuex@3.1.0/dist/vuex.js"<span style="color: #0000ff;">&gt;&lt;/<span style="color: #800000;">script<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;/<span style="color: #800000;">head<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;<span style="color: #800000;">body<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">div <span style="color: #ff0000;">id<span style="color: #0000ff;">="app"<span style="color: #0000ff;">&gt;
+        <span style="color: #0000ff;">&lt;<span style="color: #800000;">p<span style="color: #0000ff;">&gt;{{message}}<span style="color: #0000ff;">&lt;/<span style="color: #800000;">p<span style="color: #0000ff;">&gt;
+        <span style="color: #0000ff;">&lt;<span style="color: #800000;">p<span style="color: #0000ff;">&gt;{{reverseMessage}}<span style="color: #0000ff;">&lt;/<span style="color: #800000;">p<span style="color: #0000ff;">&gt;
+        <span style="color: #0000ff;">&lt;<span style="color: #800000;">p<span style="color: #0000ff;">&gt;{{no}}<span style="color: #0000ff;">&lt;/<span style="color: #800000;">p<span style="color: #0000ff;">&gt;
+        <span style="color: #0000ff;">&lt;<span style="color: #800000;">button <span style="color: #ff0000;">@click<span style="color: #0000ff;">="test1"<span style="color: #0000ff;">&gt;mutation测试<span style="color: #0000ff;">&lt;/<span style="color: #800000;">button<span style="color: #0000ff;">&gt;
+        <span style="color: #0000ff;">&lt;<span style="color: #800000;">button <span style="color: #ff0000;">@click<span style="color: #0000ff;">="test2"<span style="color: #0000ff;">&gt;action测试<span style="color: #0000ff;">&lt;/<span style="color: #800000;">button<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;/<span style="color: #800000;">div<span style="color: #0000ff;">&gt;
+    <span style="color: #0000ff;">&lt;<span style="color: #800000;">script<span style="color: #0000ff;">&gt;<span style="color: #000000;">
+        const store <span style="color: #000000;">= <span style="color: #0000ff;">new<span style="color: #000000;"> Vuex.Store({
+            state:{message:<span style="color: #000000;">'<span style="color: #000000;">Hello World<span style="color: #000000;">'<span style="color: #000000;">,no:<span style="color: #000000;">123<span style="color: #000000;">},                   
+            getters:{                                   <span style="color: #008000;">//<span style="color: #008000;">getters类似于Vue的计算属性
+<span style="color: #000000;">                reverseMessage:state<span style="color: #000000;">=&gt;<span style="color: #000000;">{<span style="color: #0000ff;">return<span style="color: #000000;"> state.message.split(<span style="color: #000000;">''<span style="color: #000000;">).reverse().join(<span style="color: #000000;">''<span style="color: #000000;">)},
+                increment:state<span style="color: #000000;">=&gt;<span style="color: #000000;">{state.no<span style="color: #000000;">++<span style="color: #000000;">}
+            },
+            mutations:{                                 <span style="color: #008000;">//<span style="color: #008000;">mutation包含一些同步操作
+<span style="color: #000000;">                increment(state,payload){state.no<span style="color: #000000;">+=<span style="color: #000000;">payload.no}
+            },
+            actions:{                                   <span style="color: #008000;">//<span style="color: #008000;">actions包含一些异步操作
+<span style="color: #000000;">                increment({commit},info){
+                    setTimeout(<span style="color: #0000ff;">function<span style="color: #000000;">(){
+                        commit(<span style="color: #000000;">'<span style="color: #000000;">increment<span style="color: #000000;">'<span style="color: #000000;">,info)
+                    },<span style="color: #000000;">500<span style="color: #000000;">)
+                }
+            }
+        })
+
+        <span style="color: #0000ff;">var<span style="color: #000000;"> app <span style="color: #000000;">= <span style="color: #0000ff;">new<span style="color: #000000;"> Vue({
+            el:<span style="color: #000000;">"<span style="color: #000000;">#app<span style="color: #000000;">"<span style="color: #000000;">,
+            store,
+            computed:{
+                no:<span style="color: #0000ff;">function<span style="color: #000000;">(){<span style="color: #0000ff;">return <span style="color: #0000ff;">this<span style="color: #000000;">.$store.state.no},
+                message:<span style="color: #0000ff;">function<span style="color: #000000;">(){<span style="color: #0000ff;">return <span style="color: #0000ff;">this<span style="color: #000000;">.$store.state.message},
+                reverseMessage:<span style="color: #0000ff;">function<span style="color: #000000;">(){<span style="color: #0000ff;">return <span style="color: #0000ff;">this<span style="color: #000000;">.$store.getters.reverseMessage}
+            },
+            methods:{
+                test1:<span style="color: #0000ff;">function<span style="color: #000000;">(){<span style="color: #0000ff;">this<span style="color: #000000;">.$store.commit(<span style="color: #000000;">'<span style="color: #000000;">increment<span style="color: #000000;">'<span style="color: #000000;">,{no:<span style="color: #000000;">10<span style="color: #000000;">})},
+                test2:<span style="color: #0000ff;">function<span style="color: #000000;">(){<span style="color: #0000ff;">this<span style="color: #000000;">.$store.dispatch(<span style="color: #000000;">'<span style="color: #000000;">increment<span style="color: #000000;">'<span style="color: #000000;">,{no:<span style="color: #000000;">10<span style="color: #000000;">})}
+            }
+        })
+    <span style="color: #0000ff;">&lt;/<span style="color: #800000;">script<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;/<span style="color: #800000;">body<span style="color: #0000ff;">&gt;
+<span style="color: #0000ff;">&lt;/<span style="color: #800000;">html<span style="color: #0000ff;">&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>渲染如下:</p>
+<p><img src="./images/vuex 源码分析(一)  使用方法和代码结构0.png" alt="" /></p>
+<p>我们点击mutation测试这个按钮123会这个数字会立马递增10，而点击action测试这个按钮，数字会延迟0.5秒，再递增10，<span style="color: #ff0000;">前者是mutation对应的同步操作，而后者是action对应的异步操作</span></p>
+<p>如果只是这样显式数据，感觉vuex没有什么用处，我们在浏览器里输入store.state.message="Hello Vue"来直接修改state里的数据看看怎么样，如下:</p>
+<p><img src="./images/vuex 源码分析(一)  使用方法和代码结构1.png" alt="" /></p>
+<p>修改后页面里的内容立即就变化了，如下:</p>
+<p><img src="./images/vuex 源码分析(一)  使用方法和代码结构2.png" alt="" /></p>
+<p>是不是很神奇，这里只是一个组件引用了vuex，<span style="color: #ff0000;">如果很多的组件都引用了同一个vuex实例，那么只要状态发生变化，对应的组件都会自动更新，这就是vuex的作用。</span></p>
+<p><span style="color: #ff0000;">vuex官网说mutations是更改store里数据的唯一方法，这在逻辑上不严谨的，只有设置了strict为true,那么说mutations是更改store里数据的唯一方法还可以接收，比如我们在控制台里直接修改store里的数据了，也没报错啥的。</span></p>
+<p>vuex内部的实现原理很简单，就是定义一个vue实例，把vuex.store里的state作为data属性(不是根data，而是放到$$state这个属性里，不过由于值是个对象，因此也是响应式的)，getters作为计算属性来实现的</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>我们先看看vuex插件导出了哪些符号，打开vuex的源文件，拉到最底部，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">var index =<span style="color: #000000;"> {
+    Store: Store,                           <span style="color: #008000;">//<span style="color: #008000;">初始化
+    install: install,                       <span style="color: #008000;">//<span style="color: #008000;">安装方法
+    version: '3.1.0',                       <span style="color: #008000;">//<span style="color: #008000;">版本号
+    mapState: mapState,                     <span style="color: #008000;">//<span style="color: #008000;">State辅助函数
+    mapMutations: mapMutations,             <span style="color: #008000;">//<span style="color: #008000;">Mutations辅助函数
+    mapGetters: mapGetters,                 <span style="color: #008000;">//<span style="color: #008000;">Getters辅助函数
+    mapActions: mapActions,                 <span style="color: #008000;">//<span style="color: #008000;">Actions辅助函数
+<span style="color: #000000;">    createNamespacedHelpers: createNamespacedHelpers
+  };</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>可以看到Store就是初始化函数，install是安装用的，version是版本号，其它几个都是辅助函数，最后一个是和辅助函数的上下文绑定(也就是命名空间)相关，一般用不到。</p>
+<p>我们先看看安装流程,如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function install (_Vue) {         <span style="color: #008000;">//<span style="color: #008000;">安装Vuex
+    <span style="color: #0000ff;">if (Vue &amp;&amp; _Vue === Vue) {        <span style="color: #008000;">//<span style="color: #008000;">如果Veue存在且等于参数_Vue，表示已经安装过了,则报错
+<span style="color: #000000;">      {
+        console.error(
+          '[vuex] already installed. Vue.use(Vuex) should be called only once.'<span style="color: #000000;">
+        );
+      }
+      <span style="color: #0000ff;">return<span style="color: #000000;">
+    }
+    Vue = _Vue;                       <span style="color: #008000;">//<span style="color: #008000;">将_Vue保存到局部变量Vue里   
+    applyMixin(Vue);                  <span style="color: #008000;">//<span style="color: #008000;">调用applyMixin()进行初始化
+  }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>安装时最后会执行applyMixin函数，该函数如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function applyMixin (Vue) {                         <span style="color: #008000;">//<span style="color: #008000;">将Vuex混入到Vue里面
+    <span style="color: #0000ff;">var version = Number(Vue.version.split('.')[0]);      <span style="color: #008000;">//<span style="color: #008000;">获取主版本号
+
+    <span style="color: #0000ff;">if (version &gt;= 2) {                                   <span style="color: #008000;">//<span style="color: #008000;">如果是Vue2.0及以上版
+      Vue.mixin({ beforeCreate: vuexInit });                  <span style="color: #008000;">//<span style="color: #008000;">则执行Vue.mixin()方法，植入一个beforeCreate回调函数
+    } <span style="color: #0000ff;">else<span style="color: #000000;"> {
+      <span style="color: #008000;">//<span style="color: #008000;"> override init and inject vuex init procedure
+      <span style="color: #008000;">//<span style="color: #008000;"> for 1.x backwards compatibility.
+      <span style="color: #0000ff;">var _init =<span style="color: #000000;"> Vue.prototype._init;
+      Vue.prototype._init = <span style="color: #0000ff;">function<span style="color: #000000;"> (options) {
+        <span style="color: #0000ff;">if ( options === <span style="color: #0000ff;">void 0 ) options =<span style="color: #000000;"> {};
+
+        options.init =<span style="color: #000000;"> options.init
+          ?<span style="color: #000000;"> [vuexInit].concat(options.init)
+          : vuexInit;
+        _init.call(<span style="color: #0000ff;">this<span style="color: #000000;">, options);
+      };
+    }
+
+    <span style="color: #008000;">/*<span style="color: #008000;">*
+     * Vuex init hook, injected into each instances init hooks list.
+     <span style="color: #008000;">*/
+
+    <span style="color: #0000ff;">function vuexInit () {                                <span style="color: #008000;">//<span style="color: #008000;">Vuex的安装方法  
+      <span style="color: #0000ff;">var options = <span style="color: #0000ff;">this<span style="color: #000000;">.$options;
+      <span style="color: #008000;">//<span style="color: #008000;"> store injection
+      <span style="color: #0000ff;">if (options.store) {                                    <span style="color: #008000;">//<span style="color: #008000;">如果options.store存在，即初始化Vue实例时传入了store实例
+        <span style="color: #0000ff;">this.$store = <span style="color: #0000ff;">typeof options.store === 'function'         <span style="color: #008000;">//<span style="color: #008000;">则将store保存到大Vue的$store属性上,如果store是个函数，则执行该函数
+          ?<span style="color: #000000;"> options.store()
+          : options.store;
+      } <span style="color: #0000ff;">else <span style="color: #0000ff;">if (options.parent &amp;&amp; options.parent.$store) {   <span style="color: #008000;">//<span style="color: #008000;">如果options.store不存在，但是父实例存在$store(组件的情况下)
+        <span style="color: #0000ff;">this.$store = options.parent.$store;                      <span style="color: #008000;">//<span style="color: #008000;">则设置this.$store为父实例的$store
+<span style="color: #000000;">      }
+    }
+  }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>这样不管是根vue实例，还是组件，都可以通过this.$store来获取到对应的$store实例了，安装就是这样子，下面说一下整体流程</p>
+<p>以上面的例子为例，当我们执行new Vuex.Store()创建一个Vuex.Store的实例时会执行到导出符号的Store函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">var Store = <span style="color: #0000ff;">function Store (options) {                  <span style="color: #008000;">//<span style="color: #008000;">构造函数
+    <span style="color: #0000ff;">var <span style="color: #0000ff;">this$1 = <span style="color: #0000ff;">this<span style="color: #000000;">;
+    <span style="color: #0000ff;">if ( options === <span style="color: #0000ff;">void 0 ) options =<span style="color: #000000;"> {};
+
+    <span style="color: #008000;">//<span style="color: #008000;"> Auto install if it is not done yet and `window` has `Vue`.
+    <span style="color: #008000;">//<span style="color: #008000;"> To allow users to avoid auto-installation in some cases,
+    <span style="color: #008000;">//<span style="color: #008000;"> this code should be placed here. See #731
+    <span style="color: #0000ff;">if (!Vue &amp;&amp; <span style="color: #0000ff;">typeof window !== 'undefined' &amp;&amp; window.Vue) {      <span style="color: #008000;">//<span style="color: #008000;">如果局部变量Vue不存在且window.Vue存在，即已经引用了Vue,而且window.Vue不存在(还没安装)
+      install(window.Vue);                                              <span style="color: #008000;">//<span style="color: #008000;">执行install()方法进行安装     ;<span style="color: #ff0000;">从这里看出在浏览器环境下不需要执行Vue.use(vuex),在执行new Vuex.Store()会自己安装
+<span style="color: #000000;">    }
+
+    {
+      assert(Vue, "must call Vue.use(Vuex) before creating a store instance."<span style="color: #000000;">);
+      assert(<span style="color: #0000ff;">typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser."<span style="color: #000000;">);
+      assert(<span style="color: #0000ff;">this <span style="color: #0000ff;">instanceof Store, "store must be called with the new operator."<span style="color: #000000;">);
+    }
+
+    <span style="color: #0000ff;">var plugins = options.plugins; <span style="color: #0000ff;">if ( plugins === <span style="color: #0000ff;">void 0 ) plugins =<span style="color: #000000;"> [];
+    <span style="color: #0000ff;">var strict = options.strict; <span style="color: #0000ff;">if ( strict === <span style="color: #0000ff;">void 0 ) strict = <span style="color: #0000ff;">false<span style="color: #000000;">;
+
+    <span style="color: #008000;">//<span style="color: #008000;"> store internal state
+    <span style="color: #0000ff;">this._committing = <span style="color: #0000ff;">false<span style="color: #000000;">;
+    <span style="color: #0000ff;">this._actions = Object.create(<span style="color: #0000ff;">null<span style="color: #000000;">);
+    <span style="color: #0000ff;">this._actionSubscribers =<span style="color: #000000;"> [];
+    <span style="color: #0000ff;">this._mutations = Object.create(<span style="color: #0000ff;">null<span style="color: #000000;">);
+    <span style="color: #0000ff;">this._wrappedGetters = Object.create(<span style="color: #0000ff;">null<span style="color: #000000;">);
+    <span style="color: #0000ff;">this._modules = <span style="color: #0000ff;">new ModuleCollection(options);                    <span style="color: #008000;">//<span style="color: #ff0000;">初始化modules,ModuleCollection对象是收集所有模块信息的
+    <span style="color: #0000ff;">this._modulesNamespaceMap = Object.create(<span style="color: #0000ff;">null<span style="color: #000000;">);
+    <span style="color: #0000ff;">this._subscribers =<span style="color: #000000;"> [];
+    <span style="color: #0000ff;">this._watcherVM = <span style="color: #0000ff;">new<span style="color: #000000;"> Vue();
+
+    <span style="color: #008000;">//<span style="color: #008000;"> bind commit and dispatch to self
+    <span style="color: #0000ff;">var store = <span style="color: #0000ff;">this<span style="color: #000000;">;
+    <span style="color: #0000ff;">var ref = <span style="color: #0000ff;">this<span style="color: #000000;">;
+    <span style="color: #0000ff;">var dispatch =<span style="color: #000000;"> ref.dispatch;
+    <span style="color: #0000ff;">var commit =<span style="color: #000000;"> ref.commit;
+    <span style="color: #0000ff;">this.dispatch = <span style="color: #0000ff;">function boundDispatch (type, payload) {          <span style="color: #008000;">//<span style="color: #008000;">重写dispatch方法，将上下文设置为当前的this实例
+      <span style="color: #0000ff;">return<span style="color: #000000;"> dispatch.call(store, type, payload)
+    };
+    <span style="color: #0000ff;">this.commit = <span style="color: #0000ff;">function boundCommit (type, payload, options) {     <span style="color: #008000;">//<span style="color: #008000;">重写commit方法，将上下文设置为当前的this实例
+      <span style="color: #0000ff;">return<span style="color: #000000;"> commit.call(store, type, payload, options)
+    };
+
+    <span style="color: #008000;">//<span style="color: #008000;"> strict mode
+    <span style="color: #0000ff;">this.strict =<span style="color: #000000;"> strict;
+  
+    <span style="color: #0000ff;">var state = <span style="color: #0000ff;">this._modules.root.state;                             <span style="color: #008000;">//<span style="color: #008000;">获取根仓库的state信息
+
+    <span style="color: #008000;">//<span style="color: #008000;"> init root module.
+    <span style="color: #008000;">//<span style="color: #008000;"> this also recursively registers all sub-modules
+    <span style="color: #008000;">//<span style="color: #008000;"> and collects all module getters inside this._wrappedGetters
+    installModule(<span style="color: #0000ff;">this, state, [], <span style="color: #0000ff;">this._modules.root);               <span style="color: #008000;">//<span style="color: #008000;">安装根模块，该函数会递归调用的安装子模块，并收集它们的getters到this._wrappendGetters属性上
+
+    <span style="color: #008000;">//<span style="color: #008000;"> initialize the store vm, which is responsible for the reactivity
+    <span style="color: #008000;">//<span style="color: #008000;"> (also registers _wrappedGetters as computed properties)
+    resetStoreVM(<span style="color: #0000ff;">this, state);                                        <span style="color: #008000;">//<span style="color: #008000;">安装vm，也就是这里会创建一个vue实例，并把state、getter作为响应式对象
+
+    <span style="color: #008000;">//<span style="color: #008000;"> apply plugins
+    plugins.forEach(<span style="color: #0000ff;">function (plugin) { <span style="color: #0000ff;">return plugin(<span style="color: #0000ff;">this$1); });    <span style="color: #008000;">//<span style="color: #008000;">安装插件
+
+    <span style="color: #0000ff;">var useDevtools = options.devtools !== undefined ?<span style="color: #000000;"> options.devtools : Vue.config.devtools;
+    <span style="color: #0000ff;">if<span style="color: #000000;"> (useDevtools) {
+      devtoolPlugin(<span style="color: #0000ff;">this<span style="color: #000000;">);
+    }
+  };</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>ModuleCollection模块会收集根模块和子模块的的所有信息，例子里执行到这里时对应的this._modules如下:</p>
+<p><img src="./images/vuex 源码分析(一)  使用方法和代码结构3.png" alt="" /></p>
+<p>然后会调用执行到installModule()会安装每个模块，也就是把每个模块的getters、mutations、actions进行一系列处理,如果还有子模块(module属性)则递归调用installModule依次处理每个子模块，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function installModule (store, rootState, path, module, hot) {      <span style="color: #008000;">//<span style="color: #008000;">安装模块 
+    <span style="color: #0000ff;">var isRoot = !path.length;                                          <span style="color: #008000;">//<span style="color: #008000;">当前是否为根Module
+    <span style="color: #0000ff;">var namespace = store._modules.getNamespace(path);                  <span style="color: #008000;">//<span style="color: #008000;">获取命名空间
+
+    <span style="color: #008000;">//<span style="color: #008000;"> register in namespace map
+    <span style="color: #0000ff;">if<span style="color: #000000;"> (module.namespaced) {
+      store._modulesNamespaceMap[namespace] =<span style="color: #000000;"> module;
+    }
+
+    <span style="color: #008000;">//<span style="color: #008000;"> set state  
+    <span style="color: #0000ff;">if (!isRoot &amp;&amp; !<span style="color: #000000;">hot) {                                             
+      <span style="color: #0000ff;">var parentState = getNestedState(rootState, path.slice(0, -1<span style="color: #000000;">)); 
+      <span style="color: #0000ff;">var moduleName = path[path.length - 1<span style="color: #000000;">];                          
+      store._withCommit(<span style="color: #0000ff;">function<span style="color: #000000;"> () { 
+        Vue.set(parentState, moduleName, module.state);
+      });
+    }
+
+    <span style="color: #0000ff;">var local = module.context =<span style="color: #000000;"> makeLocalContext(store, namespace, path);
+
+    module.forEachMutation(<span style="color: #0000ff;">function (mutation, key) {                     <span style="color: #008000;">//<span style="color: #008000;">遍历module模块的mutations对象
+      <span style="color: #0000ff;">var namespacedType = namespace +<span style="color: #000000;"> key;
+      registerMutation(store, namespacedType, mutation, local);             <span style="color: #008000;">//<span style="color: #008000;">调用registerMutation注册mutation
+<span style="color: #000000;">    });
+
+    module.forEachAction(<span style="color: #0000ff;">function (action, key) {                         <span style="color: #008000;">//<span style="color: #008000;">遍历module模块的actions对象
+      <span style="color: #0000ff;">var type = action.root ? key : namespace +<span style="color: #000000;"> key; 
+      <span style="color: #0000ff;">var handler = action.handler ||<span style="color: #000000;"> action;
+      registerAction(store, type, handler, local);                          <span style="color: #008000;">//<span style="color: #008000;">调用registerAction注册action
+<span style="color: #000000;">    });
+
+    module.forEachGetter(<span style="color: #0000ff;">function (getter, key) {                         <span style="color: #008000;">//<span style="color: #008000;">遍历module模块的getter对象
+      <span style="color: #0000ff;">var namespacedType = namespace +<span style="color: #000000;"> key;
+      registerGetter(store, namespacedType, getter, local);                 <span style="color: #008000;">//<span style="color: #008000;">调用registerGetter注册getter
+<span style="color: #000000;">    });
+
+    module.forEachChild(<span style="color: #0000ff;">function (child, key) {                           <span style="color: #008000;">//<span style="color: #008000;">如果有定义了module(存在子模块的情况)
+      installModule(store, rootState, path.concat(key), child, hot);        <span style="color: #008000;">//<span style="color: #008000;">则递归调用installModule
+<span style="color: #000000;">    });
+  }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>最后会执行resetStoreVM()函数,该函数内部会创建一个vue实例，这样state和getters就是响应式数据了，如下:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">function resetStoreVM (store, state, hot) {         <span style="color: #008000;">//<span style="color: #008000;">重新存储数据
+    <span style="color: #0000ff;">var oldVm =<span style="color: #000000;"> store._vm;
+
+    <span style="color: #008000;">//<span style="color: #008000;"> bind store public getters
+    store.getters =<span style="color: #000000;"> {};
+    <span style="color: #0000ff;">var wrappedGetters = store._wrappedGetters;               <span style="color: #008000;">//<span style="color: #008000;">获取store的所有getter数组信息
+    <span style="color: #0000ff;">var computed =<span style="color: #000000;"> {};
+    forEachValue(wrappedGetters, <span style="color: #0000ff;">function (fn, key) {         <span style="color: #008000;">//<span style="color: #008000;">遍历wrappedGetters
+      <span style="color: #008000;">//<span style="color: #008000;"> use computed to leverage its lazy-caching mechanism
+      computed[key] = <span style="color: #0000ff;">function () { <span style="color: #0000ff;">return fn(store); };        <span style="color: #008000;">//<span style="color: #008000;">将getter保存到computed里面
+<span style="color: #000000;">      Object.defineProperty(store.getters, key, {
+        get: <span style="color: #0000ff;">function () { <span style="color: #0000ff;">return<span style="color: #000000;"> store._vm[key]; },
+        enumerable: <span style="color: #0000ff;">true <span style="color: #008000;">//<span style="color: #008000;"> for local getters
+<span style="color: #000000;">      });
+    });
+
+    <span style="color: #008000;">//<span style="color: #008000;"> use a Vue instance to store the state tree
+    <span style="color: #008000;">//<span style="color: #008000;"> suppress warnings just in case the user has added
+    <span style="color: #008000;">//<span style="color: #008000;"> some funky global mixins
+    <span style="color: #0000ff;">var silent = Vue.config.silent;                           <span style="color: #008000;">//<span style="color: #008000;">保存Vue.config.silent的配置
+    Vue.config.silent = <span style="color: #0000ff;">true;                                 <span style="color: #008000;">//<span style="color: #008000;">设置Vue.config.silent配置属性为true(先关闭警告)
+    store._vm = <span style="color: #0000ff;">new Vue({                                     <span style="color: #008000;">//<span style="color: #008000;">创建new Vue()实例把$$state和computed变成响应式的
+<span style="color: #000000;">      data: {
+        $$state: state
+      },
+      computed: computed
+    });
+    Vue.config.silent = silent;                               <span style="color: #008000;">//<span style="color: #008000;">将Vue.config.silent复原回去
+
+    <span style="color: #008000;">//<span style="color: #008000;"> enable strict mode for new vm
+    <span style="color: #0000ff;">if<span style="color: #000000;"> (store.strict) {
+      enableStrictMode(store);
+    }
+
+    <span style="color: #0000ff;">if<span style="color: #000000;"> (oldVm) {
+      <span style="color: #0000ff;">if<span style="color: #000000;"> (hot) {
+        <span style="color: #008000;">//<span style="color: #008000;"> dispatch changes in all subscribed watchers
+        <span style="color: #008000;">//<span style="color: #008000;"> to force getter re-evaluation for hot reloading.
+        store._withCommit(<span style="color: #0000ff;">function<span style="color: #000000;"> () {
+          oldVm._data.$$state = <span style="color: #0000ff;">null<span style="color: #000000;">;
+        });
+      }
+      Vue.nextTick(<span style="color: #0000ff;">function () { <span style="color: #0000ff;">return<span style="color: #000000;"> oldVm.$destroy(); });
+    }
+  }</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></pre>
+</div>
+<p>这样整个流程就跑完了，就是内部创建一个vue实例，利用vue的响应式做数据动态响应。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

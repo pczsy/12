@@ -1,0 +1,74 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修ArcGIS JS 4加载第三方矢量切片' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>ArcGIS JS 4加载第三方矢量切片</center></div><div class='banquan'>原文出处:本文由博客园博主polong提供。<br/>
+原文连接:https://www.cnblogs.com/polong/p/12004605.html</div><br>
+    <p>    现在矢量切片越来越普及,对于地图渲染能更轻更快。ArcGIS JS 4.13可以实现加载第三方矢量切片,以下为代码示例,最下方是我之前切的建筑物数据。<br><br />
+    当切片大小在1M左右，加载效果还是可以。不过跟mapbox gl相比还是有些逊色，mapbox gl可以加载6M大小的切片，但ArcGIS JS 4却不行。矢量切片还是需要控制好大小，这样才能快速传输和渲染。</p>
+<pre><code><code>var style = {
+  &quot;version&quot;: 8,
+  &quot;sources&quot;: {
+   &quot;osm&quot;: {
+     &quot;tiles&quot;: [&quot;https://osm-lambda.tegola.io/v1/maps/osm/{z}/{x}/{y}.pbf&quot;],
+      &quot;type&quot;: &quot;vector&quot;
+    }
+  },
+  &quot;layers&quot;: [
+   {
+     id: &quot;land&quot;,
+      type: &quot;fill&quot;,
+      source: &quot;osm&quot;,
+      &quot;source-layer&quot;: &quot;land&quot;,
+      minzoom: 0,
+      maxzoom: 24,
+      paint: {
+       &quot;fill-color&quot;: &quot;rgba(150, 150, 150, 1)&quot;
+     }
+   }
+  ],
+  &quot;id&quot;: &quot;test&quot;
+}
+
+require([
+ &quot;esri/Map&quot;,
+ &quot;esri/views/MapView&quot;,
+ &quot;esri/layers/VectorTileLayer&quot;,
+ &quot;dojo/domReady!&quot;
+], function(Map, MapView, VectorTileLayer) {
+ var map = new Map();
+  var view = new MapView({
+   container: &quot;map&quot;,
+    map: map,
+    center: [-98.5795, 39.8283],
+   zoom: 2,
+ });
+  var tileLyr = new VectorTileLayer({
+   style: style
+  });
+  map.add(tileLyr);
+});</code></pre>
+<p><img src="./images/ArcGIS JS 4加载第三方矢量切片0.png" /></p>
+<p><img src="./images/ArcGIS JS 4加载第三方矢量切片1.png" /><br />
+参考资料：<br><br />
+<a href="https://gis.stackexchange.com/questions/300398/is-it-possible-to-add-vector-tile-layer-published-by-geoserver-layer-using-arcgi" class="uri">https://gis.stackexchange.com/questions/300398/is-it-possible-to-add-vector-tile-layer-published-by-geoserver-layer-using-arcgi</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

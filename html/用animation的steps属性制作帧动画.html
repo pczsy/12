@@ -1,0 +1,45 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修用animation的steps属性制作帧动画' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>用animation的steps属性制作帧动画</center></div><div class='banquan'>原文出处:本文由博客园博主陌上兮月提供。<br/>
+原文连接:https://www.cnblogs.com/zhangnan35/p/10724258.html</div><br>
+    <p>　　<span style="font-size: 14pt;">昨天火急火燎地接到一个任务，说是要做一个掷骰子的游戏，关于掷骰子期间的过渡动画，我本来是想用css 3d制作一个立体的骰子，然后叫UI给6张平面图贴上去。再用translate3d来操作。然而UI考虑得十分周到，直接就给了我一个雪碧图，并告诉我在photoshop中可以用帧动画来播放几张图片，达到类似gif的效果，程序上实现也大抵如此吧。</span></p>
+<p><span style="font-size: 14pt;">　　卧槽真是个神奇的UI boy。</span></p>
+<p><span style="font-size: 14pt;">　　<img src="./images/用animation的steps属性制作帧动画0.png" alt="" /></span></p>
+<p><span style="font-size: 14pt;">　&nbsp; 于是我顺着他的思路，用上了animation在timing-function中的steps属性。</span></p>
+<p>　　<span style="font-size: 14pt;">先来看看UI给的图吧，是这样的：（<span style="color: #ff6600;">注：图片宽度1200px</span>）</span></p>
+<p>　　<img src="./images/用animation的steps属性制作帧动画1.png" alt="" /></p>
+<p>　　<span style="font-size: 14pt;">如果要播放这张图片的话，很明显是分为五个帧，然后定义一个动画，background-position从（0,0）到（-图片的宽度,0)。首先要明白<span style="color: #ff00ff;"><strong>background-position的数值指的是背景图的左上角顶点到容器左上角顶点的x,y距离</strong></span>。x,y正数值越大，背景图越向右下角偏移。</span></p>
+<p><span style="font-size: 14pt;">　　所以动画的代码如下：</span></p>
+<p><span style="font-size: 14pt;">　　<img src="./images/用animation的steps属性制作帧动画2.png" alt="" /></span></p>
+<p>　　<span style="font-size: 14pt;">我们先来播放一下看看效果，设置<strong>animation:spinning 2s linear infinite</strong>,效果如下：</span></p>
+<p>　　<img src="./images/用animation的steps属性制作帧动画3.png" alt="" /></p>
+<p>　　<span style="font-size: 14pt;">可以看到是从左到右依次播放：2,3,4,5,6,2,3,4,5,6....。类似跑马灯的效果，既然说到这里就顺便提一下alternate,众所周知infinite linear定义的是0 -&gt; 100 -&gt;0 -&gt; 100 -&gt; 0 -&gt; 100......（始终正向）。而infinite alternate定义的是0 -&gt; 100 -&gt; 100 -&gt;0 -&gt; 0 -&gt; 100......(一下正向一下反向)。修改<strong>animation:spinning 2s alternate infinite</strong>,效果如下：</span></p>
+<p>　　<img src="./images/用animation的steps属性制作帧动画4.png" alt="" /></p>
+<p>　　<span style="font-size: 14pt;">但是这都不是我们需要的效果，因为帧动画的关键在于&ldquo;<strong><span style="color: #ff00ff; font-size: 18pt;">瞬变</span></strong>&rdquo;。在animation的timing-function中，有一个steps(n)属性。表示将动画分为n帧。比如说，这里我们定义animation:spinning 2s steps(5) infinite。它在这个例子中表示的效果如下：</span></p>
+<p>　　<img src="./images/用animation的steps属性制作帧动画5.png" alt="" /></p>
+<p>　　<span style="font-size: 14pt;">在0~400ms时，position：0 0；400ms~800ms,position：-240px 0。800ms~1200ms，position:-480px 0，以此类推。需要注意的是，比如400ms时position为0 0，在401ms时position就突变成-240px 0，即是说position是瞬变的。这个位置变化没有过渡效果，这就是steps的特点：<span style="font-size: 18pt;"><strong><span style="color: #ff00ff;">阶跃性</span></strong></span>。</span></p>
+<p>　　<span style="font-size: 14pt;">此时效果如下：</span></p>
+<p>　　<img src="./images/用animation的steps属性制作帧动画6.png" alt="" /></p>
+<p>　　<span style="font-size: 14pt;">400ms一帧当然太慢了，我们把时间适当压缩一下。比如总动画时长为300ms,那就是60ms一帧，分5帧播放完，这样看起来就会流畅不少。最终效果如下：</span></p>
+<p>　<img src="./images/用animation的steps属性制作帧动画7.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,254 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修小试小程序云开发' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>小试小程序云开发</center></div><div class='banquan'>原文出处:本文由博客园博主Jeff.Zhong提供。<br/>
+原文连接:https://www.cnblogs.com/edwardloveyou/p/10774240.html</div><br>
+    <p>原文地址：<a href="https://edwardzhong.github.io/2019/04/26/weappcloud/">小试小程序云开发</a><br />
+微信小程序刚出没多久时，曾经上手写过demo，但开发体验比较差，所以一直没怎么关注。不过自从诸多适配方案出炉，以及云端的开通，觉得还是有必要上手体验一番的，于是为我的技术博客也写了个小程序版。</p>
+<p>原生开发我是不想再试了，那就选一种适配方案，目前比较知名的有基于vue的 <strong>mpvue</strong>，<strong>umi-app</strong>，基于react 的 <strong>taro</strong>，以及TX团体出的全新框架 <strong>wepy</strong>。个人对 react 的好感 以及 <strong>taro</strong> 框架的走向成熟，促使我选择了 taro。</p>
+<!-- more -->
+<p>云端开发就是将普通小程序的传统后端切换为微信提供的 轻量级云端。而这个云端服务部分的开发其实是针对前端开发的，前端工程师很容易就能全栈开发出一整个小程序。但是这种轻量级解决方案也只是针对业务简单的项目，因为公共平台肯定有各种限制，它的出现只是让我们多了一个选择方案而已。</p>
+<p>接着进入主题，项目大体目录结构如下</p>
+<pre><code><code>client #前端目录
+├── config #配置
+├── dist #输出
+├── src #源目录
+└── index.html #入口文件
+cloud #云目录
+├── dao #数据库操作函数集合
+├── login #登录云函数
+└── ... #其他</code></pre>
+<h2 id="前端">前端</h2>
+<p>小程序的前端部分，想必不用过多讲解，因为这都是前端的基本功。就以首页为样例，使用了<strong>typeScript</strong>，主要功能是分页加载数据，调用微信提供的触发到达底部的api-<strong>onReachBottom</strong>即可。 taro 相关部分的使用请看 <strong><a href="https://www.cnblogs.com/edwardloveyou/p/10775834.html">taro</a></strong></p>
+<pre class="typescript"><code>import Taro, { Component, Config } from &quot;@tarojs/taro&quot;;
+import { View, Text, Navigator } from &quot;@tarojs/components&quot;;
+import &quot;./index.scss&quot;;
+
+interface IState {
+  loading: boolean;
+  size: number;
+  page: number;
+  total: number;
+  list: Array&lt;{ _id: string; summary: object }&gt;;
+  context:object;
+}
+export default class Index extends Component&lt;{}, IState&gt; {
+  state = {
+    loading: false,
+    size: 10,
+    page: 0,
+    total: -1,
+    list: [],
+    context:{}
+  };
+  config: Config = {
+    navigationBarTitleText: &quot;Jeff&#39;s Blog&quot;,
+    onReachBottomDistance: 50
+  };
+
+  componentWillMount() {
+    this.getList();
+    this.getLogin();
+  }
+
+  getDbFn(fn, param) {
+    return Taro.cloud.callFunction({
+      name: &quot;dao&quot;,
+      data: { fn, param }
+    });
+  }
+
+  onReachBottom() {
+    this.getList();
+  }
+  
+  getList() {
+    const { size, page, total, loading } = this.state;
+    if (loading) return;
+    Taro.showLoading({ title: &#39;loading&#39;, });
+    if (total &gt;= 0 &amp;&amp; size * page &gt;= total) return;
+    this.setState({ loading: true });
+    this.getDbFn(&quot;getList&quot;, { size, page: page + 1 }).then(res =&gt; {
+      Taro.hideLoading();
+      const total = res.result.total;
+      const list = this.state.list.concat(res.result.list);
+      this.setState({ loading: false, page: page + 1, total, list });
+    }).catch(err =&gt; {
+      Taro.hideLoading();
+      this.setState({ loading: false });
+    });
+  }
+
+  onShareAppMessage (res) {
+    return {
+      title: &quot;Jeff&#39;s Blog&quot;,
+      path: &#39;/pages/index/index&#39;
+    }
+  }
+  
+  render() {
+    return (
+      &lt;View className=&#39;container&#39;&gt;
+        {this.state.list.map(l =&gt; (
+          &lt;View className=&#39;item&#39; key={l._id}&gt;
+            &lt;Navigator url={&#39;/pages/post/post?id=&#39; + l._id}&gt;
+              &lt;Image className=&#39;banner&#39; mode=&#39;widthFix&#39; src={l.summary.banner} /&gt;
+              &lt;View className=&#39;title&#39;&gt;{l.summary.title}&lt;/View&gt;
+            &lt;/Navigator&gt;
+            &lt;View className=&#39;sub-title&#39;&gt;
+              {l.summary.tags.map(t =&gt; (
+                &lt;Navigator className=&#39;tag&#39; url={&#39;/pages/list/list?tag=&#39; + t}&gt; {t} &lt;/Navigator&gt;
+              ))}
+              &lt;Text className=&#39;time&#39;&gt;{l.summary.date}&lt;/Text&gt;
+            &lt;/View&gt;
+          &lt;/View&gt;
+        ))}
+      &lt;/View&gt;
+    );
+  }
+}
+</code></pre>
+<p>与普通小程序不同的地方就是调用云端，云函数调用如官方样例所示</p>
+<pre class="javascript"><code>getLogin(){
+   Taro.cloud.callFunction({
+      name: &quot;login&quot;,
+      data: {}
+   }).then(res =&gt; {
+      this.setState({ context: res.result });
+   }).catch(err=&gt;{
+   });
+}</code></pre>
+<h2 id="云端">云端</h2>
+<p>云端数据库是个文档型，操作风格与<strong>mongodb</strong>如出一辙，格式自然是json。最有用的还是操作数据库的部分，操作方法都已经 <strong>Promise</strong> 化，调用还是比较方便的。具体内容请查看文档: <strong><a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloud/basis/getting-started.html">小程序云开发</a></strong></p>
+<pre class="javascript"><code>//数据库引用
+const db = wx.cloud.database()
+//获取数据集合
+const todos = db.collection(&#39;todos&#39;)
+
+//获取记录数
+todos.count();
+//条件查找
+todos.where({done: false,progress: 50}).get()
+
+//插入
+todos.add({data: {content:&#39;11&#39;,time:new Date()}},success:(res){});
+
+//更新
+todos.doc(&#39;todo&#39;).update({ data: { done: true}},success:(res){});
+
+//删除
+todos.where({done:true}).remove();
+
+//分页查找
+todos.orderBy(&#39;time&#39;,&#39;desc&#39;)
+    .skip(start)
+    .limit(size)
+    .get();</code></pre>
+<h3 id="云函数">云函数</h3>
+<p>调用云端的方式就要使用云函数，就以下面数据库操作库为例</p>
+<pre class="javascript"><code>// 云函数入口文件
+const cloud = require(&quot;wx-server-sdk&quot;);
+cloud.init();
+
+// 云函数入口函数
+exports.main = async (event, context) =&gt; {
+    const { fn, param } = event;
+    return dao[fn](param);
+};
+// 调用数据库
+const db = cloud.database();
+// 表
+const posts = db.collection(&quot;posts&quot;);
+const tags = db.collection(&quot;tags&quot;);
+const dao = {
+    async getList({ page = 1, size = 10 }) {
+        const start = (page - 1) * size;
+        try {
+            const { total } = await posts.count();
+            const { data } = await posts
+                .field({ summary: true })
+                .orderBy(&#39;num&#39;,&#39;desc&#39;)
+                .skip(start)
+                .limit(size)
+                .get();
+            return {
+                code: 0,
+                list: data,
+                total,
+                message: &quot;sucess&quot;
+            };
+        } catch (err) {
+            return {
+                code: -1,
+                list: [],
+                total: -1,
+                err: err,
+                message: &quot;error&quot;
+            };
+        }
+    },
+    getPost({ id }) {
+        return posts.doc(id).get();
+    },
+    async getTagList({ tag }) {
+        try{
+            const { data } = await tags.where({ name: tag }).get();
+            if(!data.length){ 
+                return {
+                    code:0,
+                    list:[],
+                    message: &quot;success&quot;
+                };
+            } 
+            const list = data[0].list.sort((a,b) =&gt; b.num - a.num);
+            return {
+                code:0,
+                list:list,
+                message: &quot;success&quot;
+            };
+        } catch(err){
+            return {
+                code: -1,
+                list:[],
+                err: err,
+                message: &quot;error&quot;
+            };
+        }
+    }
+}</code></pre>
+<p>将操作数据库的所有云函数合并成一个文件，将云函数入口封装一下，即把函数名字和参数都做为参数</p>
+<pre class="javascript"><code>exports.main = async (event, context) =&gt; {
+    const { fn, param } = event;
+    return dao[fn](param);
+};</code></pre>
+<p>对应前端部分也封装出一个调用数据库的方法</p>
+<pre class="javascript"><code>  getDbFn(fn, param) {
+    return Taro.cloud.callFunction({
+      name: &quot;dao&quot;,
+      data: { fn, param }
+    });
+  }</code></pre>
+<p>云端部分开发完之后，在微信开发者工具里面上传云端代码即可，而其余部分的流程和普通小程序一样，这里也不再介绍。</p>
+<h2 id="后记">后记</h2>
+<p>小程序部分的开发还是比较简单的，我开发的大部分时间其实是用在写 <strong>markdown</strong> 转 <strong>wxml</strong> 解析器上。下一篇讲解<a href="https://edwardzhong.github.io/2019/04/27/mdtowxml/">如何将 markdown 转换为 wxml</a> 。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,134 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修微信小程序前端样式WXSS书写' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>微信小程序前端样式WXSS书写</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11574340.html</div><br>
+    <h1 id="微信小程序前端样式wxss书写">微信小程序前端样式WXSS书写</h1>
+<h2 id="一.-wxss的简单介绍">一. WXSS的简单介绍</h2>
+<p>WXSS(WeiXin Style Sheets)是一套样式语言，用于描述 WXML 的组件样式。</p>
+<p>与 CSS 相比，WXSS 扩展的特性有：</p>
+<ul>
+<li>尺寸单位</li>
+<li>样式导入</li>
+</ul>
+<h2 id="二.-尺寸单位">二. 尺寸单位</h2>
+<ul>
+<li>rpx（responsive pixel）: 可以根据屏幕宽度进行自适应。规定屏幕宽为750rpx。如在 iPhone6 上，屏幕宽度为375px，共有750个物理像素，则750rpx = 375px = 750物理像素，1rpx = 0.5px = 1物理像素。</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>设备</th>
+<th>rpx换算px (屏幕宽度/750)</th>
+<th>px换算rpx (750/屏幕宽度)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>iPhone5</td>
+<td>1rpx = 0.42px</td>
+<td>1px = 2.34rpx</td>
+</tr>
+<tr class="even">
+<td>iPhone6</td>
+<td>1rpx = 0.5px</td>
+<td>1px = 2rpx</td>
+</tr>
+<tr class="odd">
+<td>iPhone6 Plus</td>
+<td>1rpx = 0.552px</td>
+<td>1px = 1.81rpx</td>
+</tr>
+</tbody>
+</table>
+<p><strong>建议：</strong> 开发微信小程序时设计师可以用 iPhone6 作为视觉稿的标准。</p>
+<p><strong>注意：</strong> 在较小的屏幕上不可避免的会有一些毛刺，请在开发时尽量避免这种情况。</p>
+<h2 id="三.-样式导入">三. 样式导入</h2>
+<p>使用<code>@import</code>语句可以导入外联样式表，<code>@import</code>后跟需要导入的外联样式表的相对路径，用<code>;</code>表示语句结束。</p>
+<p><strong>示例代码：</strong></p>
+<pre><code><code>/** common.wxss **/
+.small-p {
+  padding:5px;
+}</code></pre>
+<pre class="scss"><code>/** app.wxss **/
+@import &quot;common.wxss&quot;;
+.middle-p {
+  padding:15px;
+}</code></pre>
+<h2 id="四.-内联样式">四. 内联样式</h2>
+<p>框架组件上支持使用 style、class 属性来控制组件的样式。</p>
+<ul>
+<li>style：静态的样式统一写到 class 中。style 接收动态的样式，在运行时会进行解析，请尽量避免将静态的样式写进 style 中，以免影响渲染速度。</li>
+</ul>
+<pre class="html"><code>&lt;view style=&quot;color:{{color}};&quot; /&gt;
+</code></pre>
+<ul>
+<li>class：用于指定样式规则，其属性值是样式规则中类选择器名(样式类名)的集合，样式类名不需要带上<code>.</code>，样式类名之间用空格分隔。</li>
+</ul>
+<pre class="html"><code>&lt;view class=&quot;normal_view&quot; /&gt;</code></pre>
+<h2 id="五.-选择器">五. 选择器</h2>
+<p>目前支持的选择器有：</p>
+<table>
+<thead>
+<tr class="header">
+<th>选择器</th>
+<th>样例</th>
+<th>样例描述</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>.class</td>
+<td><code>.intro</code></td>
+<td>选择所有拥有 class=&quot;intro&quot; 的组件</td>
+</tr>
+<tr class="even">
+<td>#id</td>
+<td><code>#firstname</code></td>
+<td>选择拥有 id=&quot;firstname&quot; 的组件</td>
+</tr>
+<tr class="odd">
+<td>element</td>
+<td><code>view</code></td>
+<td>选择所有 view 组件</td>
+</tr>
+<tr class="even">
+<td>element, element</td>
+<td><code>view, checkbox</code></td>
+<td>选择所有文档的 view 组件和所有的 checkbox 组件</td>
+</tr>
+<tr class="odd">
+<td>::after</td>
+<td><code>view::after</code></td>
+<td>在 view 组件后边插入内容</td>
+</tr>
+<tr class="even">
+<td>::before</td>
+<td><code>view::before</code></td>
+<td>在 view 组件前边插入内容</td>
+</tr>
+</tbody>
+</table>
+<h2 id="六.-全局样式与局部样式">六. 全局样式与局部样式</h2>
+<p>定义在 app.wxss 中的样式为全局样式，作用于每一个页面。在 page 的 wxss 文件中定义的样式为局部样式，只作用在对应的页面，并会覆盖 app.wxss 中相同的选择器。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

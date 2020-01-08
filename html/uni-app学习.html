@@ -1,0 +1,164 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修uni-app学习' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>uni-app学习</center></div><div class='banquan'>原文出处:本文由博客园博主老梁讲Java提供。<br/>
+原文连接:https://www.cnblogs.com/sky-chen/p/11013447.html</div><br>
+    <h1 id="学习uni-app">1. 学习uni-app</h1>
+<h2 id="概述">1.1. 概述</h2>
+<ol>
+<li>号称一次编写多端运行的前端框架，架构图如下</li>
+</ol>
+<p><img src="./images/uni-app学习0.png" alt="1" /></p>
+<ol>
+<li>对某些不同平台的特殊功能，可以通过条件进行自动编译，也就是写两套代码，不同的环境会选择不同代码编译</li>
+</ol>
+<h2 id="推荐工具">1.2. 推荐工具</h2>
+<ol>
+<li>其本身推荐的开发工具是HBuilderX，<a href="http://www.dcloud.io/hbuilderx.html">官方IDE下载地址</a></li>
+</ol>
+<h2 id="开始趟坑">1.3. 开始趟坑</h2>
+<h3 id="新建页面">1.3.1. 新建页面</h3>
+<ol>
+<li>由于一开始我建错目录，删掉重新建过，不断报这个错</li>
+</ol>
+<pre><code><code>文件查找失败：&#39;./pages/info/info/info.vue&#39; at main.js:3</code></pre>
+<ol>
+<li>原因就是用HBuilderX新建目录的时候会在<code>pages.json中添加路径</code>，它读路径的顺序也是从上到下，然后一直读的是错的那个😓</li>
+<li>解决办法就是去掉原来错误的路径</li>
+</ol>
+<blockquote>
+<p><a href="https://uniapp.dcloud.io/quickstart">uni-app官方地址</a></p>
+</blockquote>
+<h2 id="系统学习">1.4. 系统学习</h2>
+<h3 id="input绑定数据">1.4.1. input绑定数据</h3>
+<ol>
+<li>这个看起来比原来的vue麻烦些，通过下面这种方式绑定，输入input内容，text跟着改变</li>
+</ol>
+<pre><code><code>&lt;view class=&quot;content&quot;&gt;
+    &lt;input type=&quot;text&quot; :value=&quot;title&quot;  @input=&quot;change&quot;/&gt;
+    &lt;text&gt;{{title}}&lt;/text&gt;
+&lt;/view&gt;
+
+methods: {
+    change(e){
+        this.title = e.detail.value;
+    }
+}</code></pre>
+<h3 id="知识点">1.4.2. 知识点</h3>
+<pre><code><code>&lt;block&gt; 横向排列
+unshift 数组头部添加元素</code></pre>
+<h4 id="样式">1.4.2.1. 样式</h4>
+<pre><code><code>/* #ifdef H5 */
+height: auto;
+/* #endif */</code></pre>
+<h4 id="flex布局css样式">1.4.2.2. Flex布局（css样式）</h4>
+<ol>
+<li>flex container：flex容器</li>
+<li>flex item：flex项目（元素）</li>
+<li>flex direction：布局方向
+<ol>
+<li>row 横向顺序</li>
+<li>row-reverse 横向逆序</li>
+<li>column 竖向顺序</li>
+<li>colum-reverse 竖向逆序</li>
+</ol></li>
+<li>元素排序方向：主轴，垂直方向是交叉轴</li>
+<li>flex-wrap：使容器内的元素换行，默认不换行</li>
+<li>justify-content：设置元素再<strong>主轴上的对齐方式</strong>
+<ol>
+<li>flex-start 左对齐</li>
+<li>flex-end 右对齐</li>
+<li>center 居中对齐</li>
+<li>space-between 元素间间距相同</li>
+<li>space-around 两边留有空白，两边空白距离和元素间空白距离1：2的关系</li>
+</ol></li>
+<li>align-items：设置元素在<strong>交叉轴上的对齐方式</strong>
+<ol>
+<li>flex-start 起点对齐</li>
+<li>flex-end 末点对齐</li>
+<li>center 居中对齐</li>
+<li>baseline 保证元素中文字基准线同一条</li>
+<li>stretch 拉伸（默认）</li>
+</ol></li>
+<li>align-content：设置轴线的对齐方式（轴线当做元素）
+<ol>
+<li>flex-start 起点对齐</li>
+<li>flex-end 末点对齐</li>
+<li>space-between</li>
+<li>space-around</li>
+<li>stretch</li>
+</ol></li>
+</ol>
+<h4 id="flex元素属性css样式">1.4.2.3. Flex元素属性（css样式）</h4>
+<ol>
+<li>order：用于设置flex容器内部的每个元素的排列顺序，默认0</li>
+<li>flex-grow：控制元素放大比例，默认0，不变，把剩余空间按比例给相应的组件</li>
+<li>flex-shrink：控制元素缩小比例，默认为1，设置为0表示不进行缩放</li>
+<li>flex-basis：设置元素固定或自动空间的占比，不需要吃掉剩余空间</li>
+<li>align-self：重写align-items父属性，在子元素写这个，特立独行的意思</li>
+</ol>
+<h2 id="网络请求">1.5. 网络请求</h2>
+<ol>
+<li>uni.request类似于ajax</li>
+<li>onLoad 只加载一次 onShow每次显示页面都加载</li>
+</ol>
+<h2 id="样式-1">1.6. 样式</h2>
+<ol>
+<li>white-space: nowrap; 不换行</li>
+<li>flex-wrap: wrap;换行</li>
+<li>justify-content: space-between;元素间留间隙</li>
+</ol>
+<h2 id="页面跳转">1.7. 页面跳转</h2>
+<ol>
+<li>uni.navigateTo 可返回的跳转</li>
+</ol>
+<h2 id="注意点">1.8. 注意点</h2>
+<ol>
+<li>e.currentTarget.dataset.gindex; <strong>这里传参原本是gIndex，取值需要转小写来取</strong></li>
+</ol>
+<h2 id="图片下载">1.9. 图片下载</h2>
+<ol>
+<li>微信小程序的图片下载需要<strong>配置服务器域名，否则不能下载</strong>，配置在小程序管理里找，同事需要配置域名的有request,socket,uploadFile,downloadFile</li>
+</ol>
+<h2 id="知识点-1">1.10. 知识点</h2>
+<ol>
+<li><h1 id="faeff-蓝色头背景比较好看">0faeff 蓝色头背景，比较好看</h1></li>
+</ol>
+<h2 id="常用生命周期">1.11. 常用<a href="https://uniapp.dcloud.io/use?id=%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">生命周期</a></h2>
+<ol>
+<li>onLoad</li>
+<li>onShow</li>
+<li>onReady</li>
+<li>onHide</li>
+<li>onUnload</li>
+<li>onPullDownRefresh</li>
+<li>onShareAppMesage</li>
+<li>onTabItemTap</li>
+</ol>
+<h2 id="class支持语法">1.12. class支持语法</h2>
+<ol>
+<li>:class=&quot;{active:isActive}&quot;，后一个是data中定义的boolean值，表示是否使用active这个class</li>
+<li>[activeIndex==0?'isActive':''] 三元运算</li>
+</ol>
+<p>未完待续</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

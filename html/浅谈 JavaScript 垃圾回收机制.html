@@ -1,0 +1,107 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修浅谈 JavaScript 垃圾回收机制' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>浅谈 JavaScript 垃圾回收机制</center></div><div class='banquan'>原文出处:本文由博客园博主freedom雲提供。<br/>
+原文连接:https://www.cnblogs.com/cmk1018/p/11347571.html</div><br>
+    <h1 id="github-获取更多资源">github 获取更多资源</h1>
+<p><a href="https://github.com/ChenMingK/WebKnowledges-Notes" class="uri">https://github.com/ChenMingK/WebKnowledges-Notes</a><br />
+在线阅读：<a href="https://www.kancloud.cn/chenmk/web-knowledges/1080520" class="uri">https://www.kancloud.cn/chenmk/web-knowledges/1080520</a></p>
+<h1 id="垃圾回收机制">垃圾回收机制</h1>
+<p>对垃圾回收算法而言，其核心思想就是如何判断内存不再使用了<br />
+比较古老的说法是 <strong>引用计数</strong> 和 <strong>标记清除</strong></p>
+<h2 id="引用计数">引用计数</h2>
+<p>引用计数算法定义“内存不再使用”的标准很简单，就是看一个对象是否有指向它的引用。如果没有其他对象指向它了，说明该对象已经不再需了。</p>
+<pre><code><code>// 创建一个对象 person，他有两个指向属性 age 和 name 的引用
+var person = {
+    age: 12,
+    name: &#39;aaaa&#39;
+};
+ 
+person.name = null // 虽然设置为null，但因为 person 对象还有指向 name 的引用，因此name 不会回收
+ 
+var p = person
+person = 1        // 原来的 person 对象被赋值为 1，但因为有新引用 p 指向原 person 对象，因此它不会被回收
+p = null           // 原 person 对象已经没有引用，很快会被回收</code></pre>
+<p>由上面可以看出，引用计数算法是个简单有效的算法。但它却存在一个致命的问题：循环引用。如果两个对象相互引用，尽管他们已不再使用，垃圾回收器不会进行回收，导致内存泄露。比如下面这样</p>
+<pre><code><code>function cycle () {
+    var o1 = {}
+    var o2 = {}
+    o1.a = o2
+    o2.a = o1
+    return &quot;Cycle reference!&quot;
+}
+cycle()</code></pre>
+<h2 id="标记清除">标记清除</h2>
+<p>标记清除算法将“不再使用的对象”定义为“无法达到的对象”。简单来说，就是从根部（在JS中就是全局对象）出发定时扫描内存中的对象。凡是能从根部到达的对象，都是还需要使用的。那些无法由根部出发触及到的对象被标记为不再使用，稍后进行回收。<br />
+从这个概念可以看出，无法触及的对象包含了没有引用的对象这个概念（没有任何引用的对象也是无法触及的对象）。但反之未必成立。</p>
+<h1 id="v8引擎垃圾回收机制">V8引擎垃圾回收机制</h1>
+<p>可以阅读<a href="https://v8.dev/blog/concurrent-marking">这篇文章</a>，最近看 《深入浅出 Node.js》淘到些 V8 垃圾回收机制的介绍。</p>
+<h2 id="v8-的垃圾回收机制与内存限制">V8 的垃圾回收机制与内存限制</h2>
+<p>在一般的后端开发语言中，基本的内存使用上没有什么限制，然而在 Node 中通过 JavaScript 使用内存时会发现只能使用部分内存（64 位系统下约为 1.4 GB,32 位系统下约为 0.7 GB）。在这样的限制下，将会导致 Node 无法直接操作大内存对象，比如无法将一个 2GB 的文件读入内存中进行字符串分析处理。（stream 模块解决了这个问题）</p>
+<p>造成这个问题的主要原因在于 Node 基于 V8 构建，V8 的内存管理机制在浏览器的应用场景下绰绰有余，但在 Node 中却限制了开发者。所以我们有必要知晓 V8 的内存管理策略。</p>
+<h2 id="v8-的对象分配">V8 的对象分配</h2>
+<p>在 V8 中，所有的 JavaScript 对象（object）都是通过堆来进行分配的，Node 提供了 V8 中内存使用量的查看方式，如下：</p>
+<pre><code><code>process.memoryUsage()
+{ rss: 21434368,
+  heapTotal: 7159808,
+  heapUsed: 4455120,
+  external: 8224 }</code></pre>
+<p>其中，heapTotal 和 heapUsed 是 V8 的堆内存使用情况，前者是已申请到的堆内存，后者是当前使用的量。如果已申请的堆空闲内存不够分配新的对象，将继续申请堆内存，直到堆的大小超过 V8 的限制为止。<br />
+至于 V8 为何要限制堆的大小，主要是内存过大会导致垃圾回收引起 JavaScript 线程暂停执行的时间增长，应用的性能和响应会直线下降，这样的情况不仅仅是后端服务无法接受，前端浏览器也无法接受。因此，在当时的考虑下直接限制堆内存是一个好的选择。<br />
+不过 V8 也提供了选项让我们打开这个限制，Node 在启动时可以传递如下的选项：</p>
+<pre class="shell"><code>node --max-old-space-size=1700 test.js // 单位为 MB 设置老生代的内存空间
+node --max-new-space-size=1024 test.js // 单位为 KB 设置新生代的内存空间</code></pre>
+<p>上述参数在 V8 初始化时生效，一旦生效就不能再改变。</p>
+<h2 id="v8-的垃圾回收机制">V8 的垃圾回收机制</h2>
+<p>V8 的垃圾回收策略主要基于分代式垃圾回收机制，在实际应用中，人们发现没有一种垃圾回收算法能够胜任所有的场景，因为对象的生存周期长短不一，不同的算法只能针对特定情况具有最好的效果。因此，现代的垃圾回收算法按对象的存活时间将内存的垃圾回收进行不同的分代，然后分别对不同分代的内存施以更高效的算法。<br />
+在 V8 中，主要将内存分为新生代和老生代。新生代的对象为存活时间较短的对象，老生代的对象为存活时间较长或常驻内存的对象。</p>
+<p><img src="./images/浅谈 JavaScript 垃圾回收机制0.png" alt="在这里插入图片描述" /></p>
+<p><em>Scavenge 算法</em><br />
+在分代的基础上，新生代的对象主要通过 Scavenge 算法进行垃圾回收，在 Scavenge 的具体实现中，主要采用了 Cheney 算法。<br />
+Cheney 算法是一种采用复制的方式实现的垃圾回收算法，它将堆内存一分为二，每一部分空间称为 semispace。在这两个 semispace 空间中，只有一个处于使用中，另一个处于闲置状态。处于使用状态的 semispace 空间称为 From 空间，处于闲置状态的空间称为 To 空间。</p>
+<p><img src="./images/浅谈 JavaScript 垃圾回收机制1.png" alt="在这里插入图片描述" /><br />
+当我们分配对象时，先是在 From 空间中进行分配。当开始进行垃圾回收时，会检查 From 空间的存活对象，这些存活对象将被复制到 To 空间中，而非存活对象占用的空间将被释放。<br />
+完成复制后，From 空间和 To 空间的角色发生对换。</p>
+<ul>
+<li>Scavenge 的缺点是只能使用堆内存中的一半</li>
+<li>Scavenge 是典型的牺牲空间换取时间的算法，适合应用于新生代中，因为新生代中对象的生命周期较短</li>
+<li>当一个对象经过多次复制仍然存活时，它将会被认为是生命周期较长的对象，其随后会被移动到老生代中，这一过程称为<strong>晋升</strong></li>
+</ul>
+<p><em>Mark-Sweep &amp; Mark-Compact</em><br />
+老生代中的对象生命周期较长，存活对象占较大比重，V8 在老生代主要采用 Mark-Sweep 和 Mark-Compact 相结合的方式进行垃圾回收<br />
+Mark-Sweep：标记清除，其分为标记和清除两个阶段。在标记阶段遍历堆中的所有对象，并标记活着的对象，在清除阶段只清除没有被标记的对象。Mark-Sweep 最大的问题在于进行一次标记清除回收后，内存空间会出现不连续的状态，内存碎片会对后续的内存分配造成问题，比如碎片空间不足以分配一个大对象导致提前触发垃圾回收。<br />
+于是就有了 Mark-Compact：标记整理，简单来说就是标记完成后加一个整理阶段，存活对象往一端移动（合并），整理完成后直接清理掉边界外的内存。</p>
+<p><img src="./images/浅谈 JavaScript 垃圾回收机制2.png" alt="在这里插入图片描述" /><br />
+<em>Incremental Marking</em><br />
+为了避免出现 JavaScript 应用逻辑与垃圾回收器看到的不一致的情况，垃圾回收的 3 种基本算法需要将应用逻辑暂停下来，待执行完垃圾回收后再恢复执行应用逻辑，这种行为被称为全停顿（stop-the-world）。<br />
+对于新生代来说，全停顿的影响不大，但是对于老生代就需要改善。<br />
+为了降低全堆垃圾回收带来的停顿时间，V8 采用了增量标记（incremental marking）的技术，大概是将原本一口气停顿完成的动作拆分为许多小“步进”，每做完一“步进”就让 JavaScript 应用逻辑执行一小会儿，垃圾回收与应用逻辑交替执行直到标记阶段完成。</p>
+<p><img src="./images/浅谈 JavaScript 垃圾回收机制3.png" alt="在这里插入图片描述" /><br />
+V8 后续还引入了延迟清理（lazy sweeping）、增量式整理（incremental compaction）、<a href="https://www.oschina.net/translate/v8-javascript-engine">并发标记</a> 等技术，感兴趣的可以自行了解。</p>
+<h2 id="查看垃圾回收日志">查看垃圾回收日志</h2>
+<p>启动时添加 <code>--trace_gc</code> 参数，这样在进行垃圾回收时，将会从标准输出中打印垃圾回收的日志信息。<br />
+下面是一段示例，执行结束后，将会在 gc.log 文件中得到所有垃圾回收信息：</p>
+<pre class="shell"><code>node --trace_gc -e &quot;var a = []; for (var i = 0; i &lt; 1000000; i++) a.push(new Array(100));&quot; &gt; gc.log</code></pre>
+<p>通过在 Node 启动时使用 --prof 参数，可以得到 V8 执行时的性能分析数据：</p>
+<pre class="shell"><code>node --prof test.js</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

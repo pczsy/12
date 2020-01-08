@@ -1,0 +1,412 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修从零开始react实战云书签-1 react环境搭建' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>从零开始react实战云书签-1 react环境搭建</center></div><div class='banquan'>原文出处:本文由博客园博主烦嚣的人提供。<br/>
+原文连接:https://www.cnblogs.com/wuyoucao/p/11273965.html</div><br>
+    <p>总览篇：<a href="https://www.tapme.top/blog/detail/20190625">react 实战之云书签</a></p>
+<p>源码见最下面</p>
+<p>本篇是实战系列的第一篇，主要是搭建 react 开发环境,在<code>create-react-app</code>的基础上加上如下功能：</p>
+<ul>
+<li>antd 组件库按需引入 ，支持主题定制</li>
+<li>支持 less 语法，并使用 css-module</li>
+<li>配置路由</li>
+<li>支持 http 请求</li>
+<li>配置 redux</li>
+</ul>
+<p><strong>注意</strong>:需要 node 版本大于 8.0.</p>
+<h2 id="创建-create-react-app">创建 create-react-app</h2>
+<ol>
+<li>安装</li>
+</ol>
+<pre><code><code>npm install -g create-react-app</code></pre>
+<ol>
+<li>创建 react 应用</li>
+</ol>
+<pre><code><code>create-react-app bookmark-world</code></pre>
+<!-- more -->
+<p>生成的目录结构如下图所示：</p>
+<p><img src="./images/从零开始react实战云书签-1 react环境搭建0.png" alt="目录结构" /></p>
+<h2 id="配置-antdless">配置 antd,less</h2>
+<p>有两种方法能够对其配置进行修改：</p>
+<ul>
+<li>通过<code>npm run eject</code>暴露出配置文件，然后 修改这些配置文件，相比于下面的方法不太优雅，因此不考虑.</li>
+<li>通过<code>react-app-rewired</code>覆盖配置.</li>
+</ul>
+<p>后续需要修改配置的都用第二种--覆盖配置。</p>
+<h3 id="首先安装依赖">首先安装依赖</h3>
+<p>在 2.1.x 版本的 react-app-rewired 需要配合<code>customize-cra</code>来进行配置覆盖。所以需要安装如下依赖：</p>
+<ul>
+<li>react-app-rewired ,配置覆盖</li>
+<li>customize-cra ,配置覆盖</li>
+<li>antd ,ui 库</li>
+<li>babel-plugin-import ,按需引入 antd</li>
+<li>less ,less 支持</li>
+<li>less-loader ,less 支持</li>
+</ul>
+<p>代码如下：</p>
+<pre><code><code>npm install --save react-app-rewired customize-cra antd babel-plugin-import less less-loader</code></pre>
+<h3 id="修改-package.json">修改 package.json</h3>
+<p>用<code>react-app-rewired</code>替换掉原来的<code>react-scripts</code></p>
+<pre class="json"><code>/* package.json */
+&quot;scripts&quot;: {
+-   &quot;start&quot;: &quot;react-scripts start&quot;,
++   &quot;start&quot;: &quot;react-app-rewired start&quot;,
+-   &quot;build&quot;: &quot;react-scripts build&quot;,
++   &quot;build&quot;: &quot;react-app-rewired build&quot;,
+-   &quot;test&quot;: &quot;react-scripts test&quot;,
++   &quot;test&quot;: &quot;react-app-rewired test&quot;,
+}</code></pre>
+<h3 id="创建-config-overrides.js">创建 config-overrides.js</h3>
+<p>在项目根目录,也就是<code>package.json</code>的同级目录创建<code>config-overrides.js</code>文件.内容如下：</p>
+<pre class="javascript"><code>const { override, fixBabelImports, addLessLoader } = require(&quot;customize-cra&quot;);
+
+module.exports = override(
+  fixBabelImports(&quot;import&quot;, {
+    libraryName: &quot;antd&quot;,
+    libraryDirectory: &quot;es&quot;,
+    style: true
+  }),
+  addLessLoader({
+    localIdentName: &quot;[local]--[hash:base64:5]&quot;,
+    javascriptEnabled: true,
+    modifyVars: { &quot;@primary-color&quot;: &quot;#1DA57A&quot; }
+  })
+);</code></pre>
+<h3 id="使用-css-module">使用 css-module</h3>
+<p>要使用 css-module 需要将 css 文件命名为<code>fileName.module.less</code>，然后就能在组件中引入并正常使用了，如下：</p>
+<p><strong>注意默认情况下后缀必须是.module.less 才能用 css-module 的写法</strong></p>
+<pre class="javascript"><code>import React, { Component } from &quot;react&quot;;
+import { Button } from &quot;antd&quot;;
+import styles1 from &quot;./index.module.less&quot;;
+
+class Hello extends Component {
+  render() {
+    return (
+      &lt;div className={styles1.main}&gt;
+        hello
+        &lt;div className={styles1.text}&gt;world&lt;/div&gt;
+        &lt;Button type=&quot;primary&quot;&gt;你好&lt;/Button&gt;
+        &lt;div className=&quot;text1&quot;&gt;heihei&lt;/div&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+
+export default Hello;</code></pre>
+<h2 id="配置路由">配置路由</h2>
+<p>首先修改 src 目录结构。改成如下所示：</p>
+<p><img src="./images/从零开始react实战云书签-1 react环境搭建1.png" alt="目录结构" /></p>
+<p>目录解释：</p>
+<ul>
+<li>assets: 存放图标，小图片等资源文件</li>
+<li>components：存放公共组件</li>
+<li>layout: 存放样式组件，用于嵌套路由和子路由中复用代码</li>
+<li>pages: 存放页面组件</li>
+<li>redux：存放 redux 相关
+<ul>
+<li>action: 存放 action</li>
+<li>reducer: 存放 reducer 操作</li>
+</ul></li>
+<li>util: 工具类</li>
+</ul>
+<p>删除<code>serviceWorker.js</code>文件，并在<code>index.js</code>中删除和它相关的代码。这个是和离线使用相关的。</p>
+<p>然后安装<code>react-router</code>依赖:</p>
+<pre><code><code>cnpm install --save react-router-dom</code></pre>
+<p>从路由开始就能体会到 react 一切都是 js 的精髓，react-router-dom 提供了一些路由组件来进行路由操作。本程序使用<code>history</code>路由。</p>
+<p>首先修改<code>index.js</code>根组件放到<code>&lt;BrowserRouter&gt;</code>下，以开启 history 路由。代码如下：</p>
+<pre class="javascript"><code>// index.js
+import React from &quot;react&quot;;
+import ReactDOM from &quot;react-dom&quot;;
+import &quot;./index.css&quot;;
+import App from &quot;./App&quot;;
+import { BrowserRouter } from &quot;react-router-dom&quot;;
+
+const s = (
+  &lt;BrowserRouter&gt;
+    &lt;App /&gt;
+  &lt;/BrowserRouter&gt;
+);
+
+ReactDOM.render(s, document.getElementById(&quot;root&quot;));</code></pre>
+<p>然后路由的配置方式有很多种，这里采用代码的方式组织路由，并将将 App.jsx 作为路由配置中心。(也可以基于配置文件，然后写一个解析配置文件的代码)</p>
+<p>先加入登录和主页的路由，主要代码如下：</p>
+<pre class="javascript"><code>
+render() {
+  const mainStyle = {
+    fontSize: &quot;0.16rem&quot;
+  };
+  return (
+    &lt;Provider store={store}&gt;
+      &lt;div className=&quot;fullScreen&quot; style={mainStyle}&gt;
+        &lt;Switch&gt;
+          &lt;Route exact path=&quot;/&quot; component={Main} /&gt;
+          &lt;Route exact path=&quot;/public/login&quot; component={Login} /&gt;
+          &lt;Route exact path=&quot;/404&quot; component={NotFound} /&gt;
+          {/* 当前面的路由都匹配不到时就会重定向到/404 */}
+          &lt;Redirect path=&quot;/&quot; to=&quot;/404&quot; /&gt;
+        &lt;/Switch&gt;
+      &lt;/div&gt;
+    &lt;/Provider&gt;
+  );
+}</code></pre>
+<p>名词解释：</p>
+<ul>
+<li>Switch: 该组件表示只匹配一个，匹配到后不再继续往下匹配</li>
+<li>Route：路由组件</li>
+<li>exact：表示完全匹配，如果开启这个，<code>/</code>只匹配<code>/</code>,否则匹配所有的路径</li>
+<li>Redirect：重定向组件，当前面的都不匹配就会匹配这个（因为没有开启<code>exact</code>且 path 为<code>/</code>),然后重定向到<code>/404</code></li>
+</ul>
+<p>后续用到嵌套路由时会更加深入的讲解路由相关。</p>
+<h2 id="配置-http-请求工具">配置 http 请求工具</h2>
+<p>http 请求工具这里选择的是<code>axios</code>。</p>
+<p>首先安装依赖：</p>
+<pre><code><code>cnpm install --save axios</code></pre>
+<p>然后编写工具类<code>util/httpUtil.js</code>,代码如下：</p>
+<pre class="javascript"><code>// httpUtil.js
+
+import { notification } from &quot;antd&quot;;
+import axios from &quot;axios&quot;;
+
+//定义http实例
+const instance = axios.create({
+  //   baseURL: &quot;http://ali.tapme.top:8081/mock/16/chat/api/&quot;,
+  headers: {
+    token: window.token
+  }
+});
+
+//实例添加拦截器
+instance.interceptors.response.use(
+  function(res) {
+    return res.data;
+  },
+  function(error) {
+    console.log(error);
+    let message, description;
+    if (error.response === undefined) {
+      message = &quot;出问题啦&quot;;
+      description = &quot;你的网络有问题&quot;;
+    } else {
+      message = &quot;出问题啦:&quot; + error.response.status;
+      description = JSON.stringify(error.response.data);
+      //401跳转到登录页面
+    }
+    notification.open({
+      message,
+      description,
+      duration: 2
+    });
+    setTimeout(() =&gt; {
+      if (error.response &amp;&amp; error.response.status === 401) {
+        let redirect = encodeURIComponent(window.location.pathname + window.location.search);
+        window.location.replace(&quot;/public/login?redirect=&quot; + redirect);
+      }
+    }, 1000);
+    return Promise.reject(error);
+  }
+);
+
+export default instance;</code></pre>
+<p>主要实现了如下功能：</p>
+<ul>
+<li>自动添加 token，设计前后端通过 jwt 做认证，因此每个请求都要加上 token</li>
+<li>响应预处理，如果有错误，自动弹窗提示。如果响应码为 401，重定向到登录页面。</li>
+</ul>
+<h2 id="配置-redux">配置 redux</h2>
+<p>redux 算是 react 的一大难点。这里我们可以把 redux 理解成一个内存数据库，用一个对象来存储所有的数据.</p>
+<p>对这个数据的修改有着严格的限制，必须通过 reducer 来修改数据，通过 action 定义修改的动作。</p>
+<p>这里以用户登录数据为例。</p>
+<h3 id="定义">定义</h3>
+<ol>
+<li>首先定义 action，创建文件<code>redux/action/loginInfoAction.js</code>,代码如下：</li>
+</ol>
+<pre class="javascript"><code>// 定义登录信息在store中的名字
+export const DATA_NAME = &quot;loginInfo&quot;;
+
+//定义修改loginInfo type
+export const CHANGE_LOGIN_INFO = &quot;changeLoginStatus&quot;;
+
+export const changeLoginInfo = (token, userInfo) =&gt; {
+  return {
+    type: CHANGE_LOGIN_INFO,
+    data: {
+      token,
+      userInfo
+    }
+  };
+};</code></pre>
+<ul>
+<li>CHANGE_LOGIN_INFO :定义操作类别</li>
+<li>changeLoginInfo: 定义一个 action，在组件中调用，传入要修改的数据，在这里加上 type 上传递到 reducer 中处理.</li>
+</ul>
+<ol>
+<li>定义 reducer，创建文件<code>redux/reducer/loginInfo.js</code>,代码如下：</li>
+</ol>
+<pre class="javascript"><code>import * as loginAction from &quot;../action/loginInfoAction&quot;;
+
+function getInitData() {
+  let token, userInfo;
+  try {
+    token = localStorage.getItem(&quot;token&quot;);
+    userInfo = JSON.parse(localStorage.getItem(&quot;userInfo&quot;));
+  } catch (e) {
+    console.error(e);
+    token = null;
+    userInfo = null;
+  }
+  window.token = token;
+  window.userInfo = userInfo;
+  return {
+    token,
+    userInfo
+  };
+}
+
+const LoginStatusReducer = (state = getInitData(), action) =&gt; {
+  switch (action.type) {
+    case loginAction.CHANGE_LOGIN_INFO:
+      return { ...action.data };
+    default:
+      return state;
+  }
+};
+
+export default LoginStatusReducer;</code></pre>
+<ul>
+<li>getInitData 方法用于初始化 userInfo 数据，这里写的比较复杂，会先从 localeStore 中取数据，然后挂载到 window 中，方便<code>httpUtil</code>中获取 token。</li>
+<li>LoginStatusReducer 方法用于处理 action 中的数据，输出处理后的 loginInfo 数据。</li>
+</ul>
+<ol>
+<li>编写 reducer 汇总类(redux/reducer/index.js)，所有 reducer 都要汇总到一个方法中，这样就能生成整个系统的 store 对象。代码如下：</li>
+</ol>
+<pre class="javascript"><code>import { combineReducers } from &quot;redux&quot;;
+import { DATA_NAME } from &quot;../action/loginInfoAction&quot;;
+import loginInfo from &quot;./loginInfo&quot;;
+
+const data = {};
+data[DATA_NAME] = loginInfo;
+
+const reducer = combineReducers(data);
+
+export default reducer;</code></pre>
+<ol>
+<li>编写<code>redux/index.js</code>，这里生成真正的数据对象，代码如下：</li>
+</ol>
+<pre class="javascript"><code>import { createStore } from &quot;redux&quot;;
+import reducer from &quot;./reducer&quot;;
+
+const store = createStore(reducer);
+
+export default store;</code></pre>
+<ol>
+<li>最后将 store 绑定到根节点(App.js)中即可,修改部分如下：</li>
+</ol>
+<p><img src="./images/从零开始react实战云书签-1 react环境搭建2.png" /></p>
+<p><img src="./images/从零开始react实战云书签-1 react环境搭建3.png" /></p>
+<h3 id="使用">使用</h3>
+<p>这里以登录页为例，学习如何获取到 loginInfo 和修改 loginInfo.</p>
+<ol>
+<li>创建登录页组件，<code>pages/public/Login/index.js</code><br />
+登录页代码如下：</li>
+</ol>
+<pre class="javascript"><code>import React, { Component } from &quot;react&quot;;
+import queryString from &quot;query-string&quot;;
+import { Button, Input, message } from &quot;antd&quot;;
+import IconFont from &quot;../../../components/IconFont&quot;;
+import styles from &quot;./index.module.less&quot;;
+import { connect } from &quot;react-redux&quot;;
+import { changeLoginInfo, DATA_NAME } from &quot;../../../redux/action/loginInfoAction&quot;;
+import axios from &quot;../../../util/httpUtil&quot;;
+
+function mapStateToProps(state) {
+  return state[DATA_NAME];
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    updateLoginInfo: (token, userInfo) =&gt; dispatch(changeLoginInfo(token, userInfo))
+  };
+}
+
+class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: &quot;&quot;,
+      password: &quot;&quot;
+    };
+    this.query = queryString.parse(window.location.search);
+  }
+
+  usernameInput = e =&gt; {
+    this.setState({ username: e.target.value });
+  };
+  passwordInput = e =&gt; {
+    this.setState({ password: e.target.value });
+  };
+
+  submit = () =&gt; {
+    axios.post(&quot;/public/login&quot;, this.state).then(res =&gt; {
+      localStorage.setItem(&quot;token&quot;, res.token);
+      localStorage.setItem(&quot;userInfo&quot;, JSON.stringify(res.userInfo));
+      window.token = res.token;
+      window.userInfo = res.userInfo;
+      message.success(&quot;登录成功&quot;);
+      this.props.updateLoginInfo(res.token, res.userInfo);
+      if (this.query.redirect) {
+        this.props.history.replace(decodeURIComponent(this.query.redirect));
+      } else {
+        this.props.history.replace(&quot;/&quot;);
+      }
+    });
+  };
+
+  render() {
+    return (
+      &lt;div className=&quot;fullScreen flex main-center across-center&quot;&gt;
+        // 省略其他部分
+        &lt;Button type=&quot;primary&quot; onClick={this.submit}&gt;
+          登录
+        &lt;/Button&gt;
+        ...
+      &lt;/div&gt;
+    );
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Login);</code></pre>
+<p>其中最关键的是下面三个部分：</p>
+<ul>
+<li>mapStateToProps:本方法从整个 store 中获取需要的数据，传递到 Login 组件的 props 中。</li>
+<li>mapDispatchToProps:本方法用于修改 store 数据，返回的函数对象也会绑定到 Login 组件的 props 中,其中的 dispath 参数，用于调用 reducer 中的处理函数，根据 changeLoginInfo 返回的 action。</li>
+<li>connect 方法用于将上面两个函数和 Login 组件绑定起来，这样就能在 props 中获取到了。<strong>如果还有 withRouter</strong>,应将 withRouter 放在最外层。</li>
+</ul>
+<p>目前登录访问的接口为 yapi 的 mock 数据，真正的后台代码将会在后面编写。</p>
+<h2 id="结尾">结尾</h2>
+<p>作为一个刚开始学习 react 的菜鸟，欢迎各位大牛批评指正。</p>
+<p><strong>源码：</strong><a href="https://github.com/FleyX/ChatRoom">github</a>,切换到 tag:<code>第一篇：环境搭建</code>，便可以看到截止到本篇的源码。</p>
+<p><strong>本文原创发布于：</strong><a href="https://www.tapme.top/blog/detail/20190626">www.tapme.top/blog/detail/20190626</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

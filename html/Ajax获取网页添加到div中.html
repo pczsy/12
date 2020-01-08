@@ -1,0 +1,133 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Ajax获取网页添加到div中' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Ajax获取网页添加到div中</center></div><div class='banquan'>原文出处:本文由博客园博主千机仞雪提供。<br/>
+原文连接:https://www.cnblogs.com/my1227/p/12018017.html</div><br>
+    <p><span style="font-size: 14pt;">1：利用DOM获取该 <span style="color: #ff0000; font-size: 18pt;">div </span>的 ID，然后清空该DIV的内容（如果你需要接着里面的内容添加可不要清空）；需要注意点是清空最好用&ldquo; <span style="font-size: 14pt;"><span style="color: #ff0000;">empty()</span>&nbsp; </span>&rdquo;；</span></p>
+<p><span style="font-size: 14pt;">2: 把&nbsp;<span style="color: #ff0000;"> async设成true ,<span style="color: #000000;">否则又一条警告的错误，这条错误导致你的内容显示不出来；下面就是警告的错误</span></span></span></p>
+<p><span style="font-size: 14pt;"><span style="color: #ff0000;"><span style="color: #000000;"><img src="./images/Ajax获取网页添加到div中0.png" alt="" /></span></span></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><span style="color: #ff0000;"><span style="color: #000000;">3:就是添加HTML了。</span></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;"><span style="color: #ff0000;"><span style="color: #000000;"><span style="font-size: 14pt;"><span style="color: #ff0000;"><span style="color: #000000;">具体代码如下：</span></span></span></span></span></span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+	&lt;meta charset="utf-8"&gt;
+	&lt;title&gt;测试&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id="tset"&gt;
+  	&lt;a href="http://www.baidu.com"&gt;百度&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;button id="btn"&gt;测试&lt;/button&gt;
+&lt;/body&gt;
+&lt;script src="../../Js/jquery-3.4.1.js"&gt;
+
+&lt;/script&gt;&lt;script src="../../Js/layer-v3.1.1/layer/layer.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+	$(function(){
+		$("#btn").click(function(){ 
+			$.ajax({
+				url:'../../Html/JQueryDome/弹框.html',
+				dataType:'html',
+				type:'get',
+				async:true,
+				success:function(data){
+					console.log(data);
+                   $("#tset").html(data)
+				},error:function(){
+
+				}
+			})
+		})
+	})
+&lt;/script&gt;
+&lt;/html&gt;
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;最后总结一下清空DIv的内容的方法 </p>
+<div class="cnblogs_Highlighter">
+<pre><code>empty()  情况选择器里面的内容   
+语法 $(&ldquo;选择器&rdquo;).empty()  
+remove()  删除后再恢复事件不在
+语法 $(&ldquo;选择器&rdquo;).remove()
+detach()   删除后再恢复事件在
+语法 $(&ldquo;选择器&rdquo;).detach()
+</pre>
+</div>
+<p>&nbsp;顺便把其余的也给出来吧：</p>
+<p><span style="font-size: 18pt;">包裹</span></p>
+<div class="cnblogs_Highlighter">
+<pre><code>wrap()      每一个外面都添加一个新的元素 
+语法 $(&ldquo;选择器&rdquo;).wrap(&ldquo;&lt;元素名称&gt;&rdquo;)
+wrapAll()    同一包裹一个元素
+语法 $(&ldquo;选择器&rdquo;).wrap(&ldquo;&lt;元素名称&gt;&rdquo;)
+wrapInner()  在里面添加一个新的元素
+语法 $(&ldquo;选择器&rdquo;).wrap(&ldquo;&lt;元素名称&gt;&rdquo;)
+unwrap()    去掉包裹
+语法 $(&ldquo;选择器&rdquo;).wrap(&ldquo;&lt;元素名称&gt;&rdquo;)
+</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>外部插入
+after()           在后面插      语法：  $(&ldquo;选择器&rdquo;).after(&ldquo;&lt;元素名称&gt;&rdquo;)
+insertAfter()      在后面插      语法：  $(&ldquo;选择器&rdquo;).insertAfter(&ldquo;&lt;元素名称&gt;&rdquo;)
+before           在后面插      语法：  $(&ldquo;选择器&rdquo;).before(&ldquo;&lt;元素名称&gt;&rdquo;)
+insertBefore()     在后面插      语法：  $(&ldquo;选择器&rdquo;).insertBefore(&ldquo;&lt;元素名称&gt;&rdquo;)
+</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>内部插入(在)
+append()         在后面插       语法：  $(&ldquo;选择器&rdquo;).append(&ldquo;&lt;元素名称&gt;&rdquo;)
+appendTo()       在后面插       语法：  $(&ldquo;&lt;元素名称&gt;&rdquo;).appendTo(&ldquo;选择器&rdquo;) 
+prepend()        在前面插       语法：  $(&ldquo;选择器&rdquo;).prepend(&ldquo;&lt;元素名称&gt;&rdquo;)   
+prependTo()      在前面插       语法：  $(&ldquo;&lt;元素名称&gt;&rdquo;).prependTo(&ldquo;选择器&rdquo;) 
+</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>替换
+replaceWith() 语法 $(&ldquo;选择器&rdquo;).replaceWith($(&ldquo;选择器&rdquo;))
+replaceAll    语法 $(&ldquo;&lt;元素名称&gt;&rdquo;).replaceAll    (&ldquo;&ldquo;选择器&rdquo;
+</pre>
+</div>
+<p>&nbsp;</p>
+<div class="cnblogs_Highlighter">
+<pre><code>克隆        
+clone()
+语法：1、$(&ldquo;选择器&rdquo;).clone().append(&ldquo;元素名&rdquo;)
+      2、$(&ldquo;选择器&rdquo;).append($(&ldquo;元素名&rdquo;).clone())
+</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14pt;">&nbsp;&nbsp;对了，还有一点就是（当然我是MVC中遇到的，不确定都有哟），就是在获取的网页中有内部JS，比如&lt;script&gt;这里是一个获取本地的时间函数&lt;/script&gt;，然后当你执行AJAX时，页面不会添加到DIV中，整个页面就是是当前时间（但是地址没有变化）。解决办法：可以把该JS删除，或者该JS换成一个外部JS即可。</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

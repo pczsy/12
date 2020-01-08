@@ -1,0 +1,366 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue内置组件[回顾]' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue内置组件[回顾]</center></div><div class='banquan'>原文出处:本文由博客园博主迷途纸鸢提供。<br/>
+原文连接:https://www.cnblogs.com/Trojan00/p/11310633.html</div><br>
+    <h3><span style="font-family: 'Microsoft YaHei'; color: #0000ff;">1.动态组件</span></h3>
+<p><span style="font-family: 'Microsoft YaHei'; color: #0000ff;"><span style="color: #3366ff;">&nbsp;<span style="font-size: 16px; font-family: 'Microsoft YaHei';">在某些场景，往往需要我们动态切换页面部分区域的视图，这个时候内置组件component就显得尤为重要。</span></span></span></p>
+<p><span style="font-family: 'Microsoft YaHei'; color: #0000ff; font-size: 16px;"><span style="color: #3366ff;">&nbsp;component接收一个名为is的属性，is的值应为父组件中注册过的组件的名称，用法如下：</span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">component </span><span style="color: #ff0000;">:is</span><span style="color: #0000ff;">="view"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">component</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;<span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">示例如下：</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">Example.vue：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="tabs"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="per-tab"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="toggleView('Home')"</span><span style="color: #0000ff;">&gt;</span>Home<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="per-tab"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">="toggleView('About')"</span><span style="color: #0000ff;">&gt;</span>About<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="tab-content"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">component </span><span style="color: #ff0000;">:is</span><span style="color: #0000ff;">="view"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">component</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> 
+<span style="color: #008080;">13</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">  let Home </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {      </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">Home组件</span>
+<span style="color: #008080;">15</span> <span style="background-color: #f5f5f5; color: #000000;">    template: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p style="color: #787878;"&gt;Hello Home!&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">  let About </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {     </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">About组件</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">    template: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;p&gt;Hello About!&lt;/p&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span>
+<span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #000000;">    components: {Home, About}, <span style="color: #339966;">//组件注册
+</span></span><span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #000000;">    data() {
+</span><span style="color: #008080;">24</span>       <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #000000;">        view: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Home</span><span style="background-color: #f5f5f5; color: #000000;">'</span>
+<span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #000000;">    },
+</span><span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #000000;">    methods: {
+</span><span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #000000;">      toggleView(view) {
+</span><span style="color: #008080;">30</span>         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.view </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> view
+</span><span style="color: #008080;">31</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">32</span> <span style="background-color: #f5f5f5; color: #000000;">    }
+</span><span style="color: #008080;">33</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">34</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">35</span> 
+<span style="color: #008080;">36</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">37</span> <span style="background-color: #f5f5f5; color: #800000;">  .tabs</span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">38</span> <span style="background-color: #f5f5f5; color: #ff0000;">    margin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">39</span> <span style="background-color: #f5f5f5; color: #ff0000;">    padding</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">40</span> <span style="background-color: #f5f5f5; color: #ff0000;">    list-style</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> none</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">41</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">42</span> <span style="background-color: #f5f5f5; color: #800000;">  .per-tab </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">43</span> <span style="background-color: #f5f5f5; color: #ff0000;">    display</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> inline-block</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">44</span> <span style="background-color: #f5f5f5; color: #ff0000;">    width</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 120px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">45</span> <span style="background-color: #f5f5f5; color: #ff0000;">    line-height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 32px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">46</span> <span style="background-color: #f5f5f5; color: #ff0000;">    border-left</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px solid #ccc</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">47</span> <span style="background-color: #f5f5f5; color: #ff0000;">    border-top</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px solid #ccc</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">48</span> <span style="background-color: #f5f5f5; color: #ff0000;">    background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> azure</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">49</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">50</span> <span style="background-color: #f5f5f5; color: #800000;">  .per-tab:last-child </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">51</span> <span style="background-color: #f5f5f5; color: #ff0000;">    border-right</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px solid #ccc</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">52</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">53</span> <span style="background-color: #f5f5f5; color: #800000;">  .tab-content </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">54</span> <span style="background-color: #f5f5f5; color: #ff0000;">    background-color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> aqua</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">55</span> <span style="background-color: #f5f5f5; color: #ff0000;">    height</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 240px</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">56</span> <span style="background-color: #f5f5f5; color: #ff0000;">    border</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 1px solid #ccc</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">57</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">58</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px; color: #000000;">效果：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px; color: #999999;">默认显示：&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 当我们点击About标签时：</span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 16px; color: #999999;">&nbsp; &nbsp;&nbsp;<img src="./images/Vue内置组件[回顾]0.png" alt="" width="273" height="278" />&nbsp; &nbsp; &nbsp;<img src="./images/Vue内置组件[回顾]1.png" alt="" width="312" height="278" /></span></p>
+<h3><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">2.插槽：</span></h3>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">示例：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">slot-test</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>使用插槽分发内容<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1 </span><span style="color: #ff0000;">slot</span><span style="color: #0000ff;">="header"</span><span style="color: #0000ff;">&gt;</span>插槽测试!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>在组件中，没有指定插槽名称的元素将被置于默认插槽中<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">slot</span><span style="color: #0000ff;">="none"</span><span style="color: #0000ff;">&gt;</span>指定到不存在的插槽中的内容将不会被显示<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">slot-test</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span> <span style="background-color: #f5f5f5; color: #000000;">  let SlotTest </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #000000;">    template: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span> <span style="background-color: #f5f5f5; color: #000000;">+</span>
+<span style="color: #008080;">13</span>       <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;slot name="header"&gt;相当于占位元素，因此这些文字也不会被渲染&lt;/slot&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span> <span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 具名插槽</span>
+<span style="color: #008080;">14</span>       <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;slot&gt;&lt;/slot&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span> <span style="background-color: #f5f5f5; color: #000000;">+</span> <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 默认插槽</span>
+<span style="color: #008080;">15</span>       <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">&lt;/div&gt;</span><span style="background-color: #f5f5f5; color: #000000;">'</span>
+<span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">    components: {SlotTest}
+</span><span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">21</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span> 
+<span style="color: #008080;">23</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">我们看到由于3和5行没有指定name，所以插槽会使用么人插槽，也就是14行；而如果有name属性但是插槽</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">中没有与此相匹配的，那将会不显示，如第6行。</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #000000;">所以输出的结果就是：</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #000000;"><img src="./images/Vue内置组件[回顾]2.png" alt="" width="378" height="195" /></span></p>
+<p>&nbsp;</p>
+<h3><span style="color: #3366ff;">3.组件的缓冲：</span></h3>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">keep-alive是一个抽象组件，及他既不渲染任何DOM元素，也不会出现在组件结构树中。我们可以使用他缓存</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">一些非动态的组件实例（没有或不需要数据变化），以保留组件状态或减少重新渲染的开销。</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">keep-alive应出现在组件被移除之后需要再次挂在的地方，比如使用动态组件时：</span></span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">component </span><span style="color: #ff0000;">:is</span><span style="color: #0000ff;">="view"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">component</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>       <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">或者使用<span style="color: #000000;">v-if</span>时：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">one </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="isOne"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">one</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">two </span><span style="color: #ff0000;">v-else</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">two</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">keep-alive</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3><span style="color: #3366ff;">4.过渡效果：</span></h3>
+<p><strong><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #000000;"><span style="color: #3366ff;">（1）单节点过渡：</span></span></strong></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Vue提供了标签为transition的内置组件，在下列情形中，我们可以给任何元素和组件添加进入/离开时的</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;过渡动画：</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ①元素或组件初始渲染时；</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ②元素或组件显示/隐藏时（使用v-if或v-show进行条件渲染时）</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ③元素或组件切换时</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp;Vue允许用户使用CSS和JS两种方式来定义过渡动画。</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp;在使用CSS过渡时，我们需要预置符合Vue规则的带样式的类名，这些类名用于定义过渡不同阶段时的样式：</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ①<span style="color: #000000;">v-enter</span>：定义进入过渡的开始状态。在元素被插入前生效，被插入后的下一帧移除；</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ②<span style="color: #000000;">v-enter-active</span>：定义进入过渡生效时的状态。在整个进入过渡阶段中应用，在元素被插入之前生效，</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 在过渡/动画完成之后移除。这个类可以用来定义进入过渡的过程时间、延迟的曲线函</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 数等；</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ③<span style="color: #000000;">v-enter-to</span>：（Vue 2.1.8 及以上版本）定义进入过渡结束时的状态。在元素被插入后的下一帧（此时</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;v-enter被移除），在过渡/动画完成之后移除；</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ④<span style="color: #000000;">v-leave</span>：定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一阵被移除；</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ⑤<span style="color: #000000;">v-leave-active</span>：丁一离开过渡生效时的状态。在整个离开过度的阶段中应用，在离开过渡被触发时立</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过度的过程时间、延迟</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 和曲线函数。</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;⑥<span style="color: #000000;">v-leave-to</span>：（Vue 2.1.8 版及以上版本）定义来开过度的结束状态。在离开过度被触发之后的下一帧生</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;效（此时v-leave被移除），在过渡/动画完成之后移除。</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; <span style="color: #ff0000;">&nbsp;注：</span>当失利中存在多个不同的动画效果时，我们可以使用自定义前缀替换v-，比如使用slide-enter替换v-enter</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;，不</span></span><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">过这需要赋予transition元素name属性</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp; 到此为止，这六个定义是不是听起来很令人摸不到头脑呀？下面给大家个图，助你理解：</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei';"><span style="color: #3366ff;">&nbsp; &nbsp; &nbsp;&nbsp;<img src="./images/Vue内置组件[回顾]3.png" alt="" width="774" height="363" /></span></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp;下面让我们看一个示例：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="isHidden = !isHidden"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span> <span style="color: #000000;">      {{ isHidden ? '显示' : '隐藏' }}
+</span><span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 默认前缀的过渡 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="!isHidden"</span><span style="color: #0000ff;">&gt;</span>使用默认前缀的过渡<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 自定义前缀的过渡，transitionName为变量 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">11</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition </span><span style="color: #ff0000;">:name</span><span style="color: #0000ff;">="transtionName"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="!isHidden"</span><span style="color: #0000ff;">&gt;</span>使用rotate前缀的过渡<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span> 
+<span style="color: #008080;">17</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">    data() {
+</span><span style="color: #008080;">21</span>       <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #000000;">        isHidden: </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #000000;">        transtionName: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">rotate</span><span style="background-color: #f5f5f5; color: #000000;">'</span> <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 如果在运行时，将transitionName改为v会怎样？</span>
+<span style="color: #008080;">24</span> 
+<span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #000000;">    }
+</span><span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">28</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">29</span> 
+<span style="color: #008080;">30</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">31</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-enter,
+</span><span style="color: #008080;">32</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-leave-to </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">33</span> <span style="background-color: #f5f5f5; color: #ff0000;">    opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">34</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">35</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-enter-active,
+</span><span style="color: #008080;">36</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-leave-active </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">37</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition-property</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> opacity</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 过渡属性 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">38</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition-delay</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 100ms</span><span style="background-color: #f5f5f5; color: #000000;">;</span>  <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 延迟 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">39</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition-duration</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 900ms</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 过渡时长 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">40</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition-timing-function</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> linear</span><span style="background-color: #f5f5f5; color: #000000;">;</span> <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 贝塞尔曲线（动画速度曲线） </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">41</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">42</span> <span style="background-color: #f5f5f5; color: #800000;">  .rotate-enter,
+</span><span style="color: #008080;">43</span> <span style="background-color: #f5f5f5; color: #800000;">  .rotate-leave-to </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">44</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> rotateY(90deg)</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">45</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">46</span> <span style="background-color: #f5f5f5; color: #800000;">  .rotate-enter-active,
+</span><span style="color: #008080;">47</span> <span style="background-color: #f5f5f5; color: #800000;">  .rotate-leave-active </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">48</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transform-origin</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> left</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">49</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> transform 1s linear</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">50</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">51</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">结果（由于不能插入mp4，所以这里就搞个静态的截图吧，从左到右，第一章是未点击显示按钮，第二张是点击</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp;显示按钮，第三张是再次点击显示按钮）：</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; &nbsp;<img src="./images/Vue内置组件[回顾]4.png" alt="" width="172" height="127" />&nbsp; &nbsp;<img src="./images/Vue内置组件[回顾]5.png" alt="" width="187" height="124" />&nbsp;&nbsp;<img src="./images/Vue内置组件[回顾]6.png" alt="" width="158" height="125" /></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; 下面让我们来看一段代码：</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp;<span style="color: #000000;"> &nbsp; 这里我们引入了一个新概念key：当元素的key值发生变化时，Vue不回复用原有的元素，而将重建新的元素。根</span></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #000000;">&nbsp; &nbsp; &nbsp; 据这一特点，我们可以通过改变元素的key值来触发过渡动画，这常被用在元素切换时。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="isMaster = !isMaster"</span><span style="color: #0000ff;">&gt;</span>切换身份<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>       <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 此处只写了一个p标签 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 6</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">:key</span><span style="color: #0000ff;">="isMaster ? 'master' : 'other'"</span><span style="color: #0000ff;">&gt;</span>{{ isMaster ? '大家好！' : '东家好！' }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">    data () {
+</span><span style="color: #008080;">15</span>       <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #000000;">        isMaster: </span><span style="background-color: #f5f5f5; color: #0000ff;">true</span>
+<span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">    }
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">20</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span> 
+<span style="color: #008080;">22</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-enter, .v-leave-to </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #ff0000;">    opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">25</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">26</span> <span style="background-color: #f5f5f5; color: #800000;">  .v-enter-active, .v-leave-active </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> opacity 1s</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">28</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">29</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">在浏览器打开如图1，点击切换身份（如图二到三）在身份切换过程中点击切换后前者并没有立刻消失，而是随着</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; 另一个身份的出现而渐渐消失，此间两者都存在，那么如何解决这个问题嘞？</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp;&nbsp;<img src="./images/Vue内置组件[回顾]7.png" alt="" width="212" height="143" /><img src="./images/Vue内置组件[回顾]8.png" alt="" width="149" height="139" /><img src="./images/Vue内置组件[回顾]9.png" alt="" width="178" height="135" /></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; </span><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #ff0000;">&nbsp;解决问题，修改如下代码，这时候上面那个两个身份同时出现的bug就消除啦：</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">1</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition </span><span style="color: #ff0000;">mode</span><span style="color: #0000ff;">="out-in"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>       <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 此处只写了一个p标签 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;">3</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">:key</span><span style="color: #0000ff;">="isMaster ? 'master' : 'other'"</span><span style="color: #0000ff;">&gt;</span>{{ isMaster ? '大家好！' : '东家好！' }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="color: #3366ff;"><strong><span style="font-size: 16px; font-family: 'Microsoft YaHei';">（二）多节点过渡：</span></strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="addNewItem()"</span><span style="color: #0000ff;">&gt;</span>添加元素<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition-group </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="list"</span><span style="color: #ff0000;"> tag</span><span style="color: #0000ff;">="ul"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="item in list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>{{ item }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition-group</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">    data () {
+</span><span style="color: #008080;">15</span>       <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #000000;">        list: [</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">4</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">5</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">6</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">7</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">8</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">9</span><span style="background-color: #f5f5f5; color: #000000;">]
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">    },
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">    methods: {
+</span><span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">      addNewItem () {
+</span><span style="color: #008080;">21</span>         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.push(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.length)
+</span><span style="color: #008080;">22</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #000000;">    }
+</span><span style="color: #008080;">24</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">25</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">26</span> 
+<span style="color: #008080;">27</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #800000;">  .list-enter, .list-leave-to </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #ff0000;">    opacity</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> 0</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">30</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transform</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> translateY(30px)</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">31</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">32</span> <span style="background-color: #f5f5f5; color: #800000;">  .list-enter-active,
+</span><span style="color: #008080;">33</span> <span style="background-color: #f5f5f5; color: #800000;">  .list-leave-active </span><span style="background-color: #f5f5f5; color: #000000;">{</span>
+<span style="color: #008080;">34</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> all 1s linear</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">35</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">36</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp; &nbsp;<span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">结果（点击添加元素，新的元素便会过渡出现，如下图所示）：</span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; <img src="./images/Vue内置组件[回顾]10.png" alt="" width="141" height="263" /></span></p>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #3366ff;">&nbsp; &nbsp; &nbsp; 最后提供一个元素随机排序的简单的项目，读者们可以copy下来自己玩一下，里面涉及的逻辑不是很难</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>   <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="orderByRandom()"</span><span style="color: #0000ff;">&gt;</span>随机顺序<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">transition-group </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="list"</span><span style="color: #ff0000;"> tag</span><span style="color: #0000ff;">="ul"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">="item in list"</span><span style="color: #ff0000;"> :key</span><span style="color: #0000ff;">="item"</span><span style="color: #0000ff;">&gt;</span>{{ item }}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">transition-group</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span> 
+<span style="color: #008080;">11</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span> <span style="background-color: #f5f5f5; color: #000000;">  export </span><span style="background-color: #f5f5f5; color: #0000ff;">default</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">13</span> <span style="background-color: #f5f5f5; color: #000000;">    name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;">14</span> <span style="background-color: #f5f5f5; color: #000000;">    data () {
+</span><span style="color: #008080;">15</span>       <span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">16</span> <span style="background-color: #f5f5f5; color: #000000;">        list: [</span><span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, </span><span style="background-color: #f5f5f5; color: #000000;">4</span><span style="background-color: #f5f5f5; color: #000000;">]
+</span><span style="color: #008080;">17</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">18</span> <span style="background-color: #f5f5f5; color: #000000;">    },
+</span><span style="color: #008080;">19</span> <span style="background-color: #f5f5f5; color: #000000;">    methods: {
+</span><span style="color: #008080;">20</span> <span style="background-color: #f5f5f5; color: #000000;">      orderByRandom () { </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 随机改变数组元素的位置</span>
+<span style="color: #008080;">21</span> <span style="background-color: #f5f5f5; color: #000000;">        let tmp </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> [] </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 初始化新数组</span>
+<span style="color: #008080;">22</span>         <span style="background-color: #f5f5f5; color: #0000ff;">for</span><span style="background-color: #f5f5f5; color: #000000;"> (let i </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">0</span><span style="background-color: #f5f5f5; color: #000000;">; i </span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.length; i</span><span style="background-color: #f5f5f5; color: #000000;">++</span><span style="background-color: #f5f5f5; color: #000000;">) {
+</span><span style="color: #008080;">23</span> <span style="background-color: #f5f5f5; color: #000000;">          let num </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> Math.floor(Math.random() </span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;"> (</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.length </span><span style="background-color: #f5f5f5; color: #000000;">-</span> <span style="background-color: #f5f5f5; color: #000000;">0.001</span><span style="background-color: #f5f5f5; color: #000000;">)) </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 随机新元素</span>
+<span style="color: #008080;">24</span>           <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 当元素不在数组中时，将其加入到数组中</span>
+<span style="color: #008080;">25</span> <span style="background-color: #f5f5f5; color: #000000;">          let index </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> tmp.indexOf(num)
+</span><span style="color: #008080;">26</span>           <span style="background-color: #f5f5f5; color: #0000ff;">while</span><span style="background-color: #f5f5f5; color: #000000;"> (index </span><span style="background-color: #f5f5f5; color: #000000;">!==</span> <span style="background-color: #f5f5f5; color: #000000;">-</span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">) {
+</span><span style="color: #008080;">27</span> <span style="background-color: #f5f5f5; color: #000000;">            num </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> Math.floor(Math.random() </span><span style="background-color: #f5f5f5; color: #000000;">*</span><span style="background-color: #f5f5f5; color: #000000;"> (</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.length </span><span style="background-color: #f5f5f5; color: #000000;">-</span> <span style="background-color: #f5f5f5; color: #000000;">0.001</span><span style="background-color: #f5f5f5; color: #000000;">))
+</span><span style="color: #008080;">28</span> <span style="background-color: #f5f5f5; color: #000000;">            index </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> tmp.indexOf(num)
+</span><span style="color: #008080;">29</span> <span style="background-color: #f5f5f5; color: #000000;">          }
+</span><span style="color: #008080;">30</span> <span style="background-color: #f5f5f5; color: #000000;">          tmp.push(num)
+</span><span style="color: #008080;">31</span> <span style="background-color: #f5f5f5; color: #000000;">        }
+</span><span style="color: #008080;">32</span>         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> tmp </span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> 更改list为新的数组</span>
+<span style="color: #008080;">33</span> <span style="background-color: #f5f5f5; color: #000000;">      }
+</span><span style="color: #008080;">34</span> <span style="background-color: #f5f5f5; color: #000000;">    }
+</span><span style="color: #008080;">35</span> <span style="background-color: #f5f5f5; color: #000000;">  }
+</span><span style="color: #008080;">36</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">37</span> 
+<span style="color: #008080;">38</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style </span><span style="color: #ff0000;">scoped</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">39</span> <span style="background-color: #f5f5f5; color: #800000;">  .list-move </span><span style="background-color: #f5f5f5; color: #000000;">{</span> <span style="background-color: #f5f5f5; color: #008000;">/*</span><span style="background-color: #f5f5f5; color: #008000;"> 定义过渡效果 </span><span style="background-color: #f5f5f5; color: #008000;">*/</span>
+<span style="color: #008080;">40</span> <span style="background-color: #f5f5f5; color: #ff0000;">    transition</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;"> transform 1s</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+<span style="color: #008080;">41</span>   <span style="background-color: #f5f5f5; color: #000000;">}</span>
+<span style="color: #008080;">42</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 16px; font-family: 'Microsoft YaHei'; color: #ff0000;">所有代码都在，读者可自行下载：</span><a href="https://github.com/Stray-Kite/Vue_entry_practice/tree/master/chapter05">https://github.com/Stray-Kite/Vue_entry_practice/tree/master/chapter05</a></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,108 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修web跨域及cookie相关知识总结' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>web跨域及cookie相关知识总结</center></div><div class='banquan'>原文出处:本文由博客园博主烦嚣的人提供。<br/>
+原文连接:https://www.cnblogs.com/wuyoucao/p/11075435.html</div><br>
+    <p>  之前对于跨域相关的知识一致都很零碎，正好现在的代码中用到了跨域相关的，现在来对这些知识做一个汇总整理，方便自己查看，说不定也可能对你有所帮助。</p>
+<p><strong>本篇主要内容如下：</strong></p>
+<ul>
+<li>浏览器同源策略</li>
+<li>http 请求跨域</li>
+<li>http 请求跨域解决办法</li>
+<li>cookie 机制</li>
+<li>如何共享 cookie</li>
+</ul>
+<h1 id="浏览器同源策略">浏览器同源策略</h1>
+<p>  相信很多人在 web 入门时，都被跨域问题折磨的死去活来。要想完全掌握跨域就得知道为什么会有跨域这个问题出现。</p>
+<p>  简单来说跨域问题是因为浏览器的同源策略导致的。那浏览器为什么要有同源策略呢？</p>
+<p>  当然是为了安全。没有同源策略限制的浏览器环境是非常危险的（即使有了同源策略也不是百分百安全），有兴趣的可以去了解了解<strong>CSRF</strong>和<strong>XSS</strong>攻击。</p>
+<p>  所谓的“同源”指的是“三个相同”：</p>
+<ul>
+<li>协议相同。不能一个是 http 协议，一个是 https</li>
+<li>域名相同</li>
+<li>端口相同</li>
+</ul>
+<!-- more -->
+<p>如果非同源页面有以下限制：</p>
+<ul>
+<li>LocalStore 和 IndexDB 无法读取。这两个显然是不能读取的，但是 cookie 有点不一样，放在后面单独说明</li>
+<li>DOM 无法获取,比如如法在页面 A 中通过 iframe 获取异源页面 B 的 DOM</li>
+<li>AJAX 请求无法读取（可以发送请求，但是无法读取到请求结果。比如在页面 A 中请求异源接口 B，请求会正常发出处理，但是在页面 A 中无法获取请求结果，除非响应头 Access-Control-Allow-Headers 中允许了页面 A 的源，这样就能读取到结果）</li>
+</ul>
+<p>  但是这里有个例外，所有带“src”属性的标签都可以跨域加载资源，不受同源策略的限制，这样你应该可以想到一个比较古老的跨域解决方案（JSONP）,同时这个特性也会被用作 CSRF 攻击。</p>
+<h1 id="http-请求跨域">http 请求跨域</h1>
+<p>  在前端开发中经常会遇到跨域的问题，比如前后端分离中前后端部署在不同的端口上，或者在前端页面中需要向另外一个服务请求数据，这些都会被跨域所阻挡。</p>
+<p>目前主要有以下几种办法解决跨域问题：</p>
+<ol>
+<li>关闭浏览器同源检查</li>
+</ol>
+<p>  这个太暴力，也太不安全了，不用考虑。</p>
+<ol>
+<li>jsonp 实现跨域请求</li>
+</ol>
+<p>  前面说过了浏览器对于带 src 属性的标签都可以跨域的。因此 jsonp 的实现流失利用了这个特性，在页面中动态插入一个<code>&lt;script&gt;</code>标签,然后他的 src 属性就是接口调用地址，这样就能访问过去了，然后再讲返回内容特殊处理成立即执行的函数，这样就看起像进行了一次跨域请求。之所以不推荐这种方式，主要有以下两个原因：</p>
+<ul>
+<li>实现复杂,且需要前后台同时修改才能实现</li>
+<li>只能进行 get 请求</li>
+</ul>
+<ol>
+<li>服务器设置运行跨域</li>
+</ol>
+<p>  这种方法只需要后台做处理便能实现跨域，前面说的 http 跨域请求是能够发出去的，只是不能接收，那我们只要在响应头<code>Access-Control-Allow-Headers</code>中加入允许请求的地址即可，以<code>,</code>分隔，同时<code>*</code>代表所有地址都允许。比如：</p>
+<pre><code><code>Access-Control-Allow-Headers:http://localhost:8081,http://localhost:8082</code></pre>
+<p>本方法是较为常用的一中跨域办法,只需简单修改服务端代码即可。</p>
+<ol>
+<li>请求代理</li>
+</ol>
+<p>  这也是非常常用的一种跨域方法。跨域限制只是浏览器限制，服务端并没有这个概念，因此我们在前端还是请求同域地址，然后在服务端做一个代理，将请求转发到真正的 ip 和端口上。通常使用 nginx 实现端口转发，比如下面一段 nginx 配置：</p>
+<pre class="conf"><code>server {
+    # /test1/abc 转发到 http://a.com:8011/abc
+    location /test1/ {
+        proxy_pass http://a.com:8011/;
+    }
+
+    # /test2/abc 转发到 http://b.com:8011/main/abc
+    location /test2/ {
+        proxy_pass http://b.com:8011/main/;
+    }
+
+    # /test3/abc 转发到 http://c.com:8011/test3/abc
+    location /test3/ {
+        proxy_pass http://c.com:8081;
+    }
+}</code></pre>
+<h1 id="cookie-同源策略">cookie 同源策略</h1>
+<p>  cookie 的同源策略是通过<br />
+<img src="./images/web跨域及cookie相关知识总结0.png" /><br />
+<code>Domain</code>和<code>path</code>两个部分来共同确认一个 cookie 在哪些页面上可用。</p>
+<p>  <code>Domain</code>确定这个 cookie 所属的域名，不能带端口或协议。因此 cookie 便可在不同端口/不同协议下共享,只要域名相同。有一个<strong>例外</strong>是父子域名间也能共享 cookie，只需将 Domain 设置为<code>.父域名</code>。</p>
+<p>  <code>path</code>就简单多了，通过 Domain 确定哪些域名可以共享 cookie，然后在通过<code>path</code>来确定 cookie 在哪些路径下可用。使用<code>/</code>表示所有路径都可共享。</p>
+<p>具体如下：</p>
+<ul>
+<li>Domain : <code>example</code>,path : <code>/a</code>可获取 cookie:<a href="http://example:8081/a,https://example:8081/a" class="uri">http://example:8081/a,https://example:8081/a</a></li>
+<li>Domain : <code>example</code>,path : <code>/</code>可获取 cookie:<a href="http://example:8081/a,https://example:8081/a" class="uri">http://example:8081/a,https://example:8081/a</a> , <a href="http://example:12/abcd" class="uri">http://example:12/abcd</a></li>
+<li>Domain : <code>.example</code>,path : <code>/a</code>可获取 cookie:<a href="http://example:8081/a" class="uri">http://example:8081/a</a> , <a href="https://localhost:8081/a" class="uri">https://localhost:8081/a</a> , <a href="http://test.example:889/a" class="uri">http://test.example:889/a</a></li>
+</ul>
+<p><strong>注意</strong>:在跨域请求中，即时目标地址有 cookie 且发起请求的页面也能读取到该 cookie，浏览器也不会将 cookie 自动设置到该跨域请求中。比如在http://localhost:8082/a页面中请求http://localhost:8081/abc,这两个地址下拥有共享cookie，http请求也不会携带cookie。</p>
+<p><strong>本篇原创发布于：</strong><a href="http://tapme.top/blog/detail/2019-03-05-13-41">FleyX 的个人博客</a></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

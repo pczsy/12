@@ -1,0 +1,210 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Iframe 高度自适应，js控制Iframe 高度自适应' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Iframe 高度自适应，js控制Iframe 高度自适应</center></div><div class='banquan'>原文出处:本文由博客园博主蕃薯耀提供。<br/>
+原文连接:https://www.cnblogs.com/fanshuyao/p/12123249.html</div><br>
+    <p><strong>&nbsp;Iframe 高度自适应, js控制Iframe 高度自适应, iframe自适应高度</strong></p>
+<p>&nbsp;</p>
+<p>================================</p>
+<p>&copy;Copyright 蕃薯耀 2019年12月31日</p>
+<p>http://fanshuyao.iteye.com/</p>
+<p>&nbsp;</p>
+<p><span data-darkreader-inline-color=""><strong>方法一：js控制Iframe 高度自适应</strong></span></p>
+<p>&nbsp;</p>
+<p><strong>这个方法之前一直都在用，没有问题，但最新发现有些情况不行（具体原因不清楚）</strong></p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">
+function thisIframeHeightAuto(){
+    setIframeHeight("auditList");
+};
+ </span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">//</span><span style="color: #008000;">window.setInterval("iframeHeightAuto()", 200);</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> setIframeHeight(iframeId){
+    </span><span style="color: #0000ff;">var</span> cwin =<span style="color: #000000;"> document.getElementById(iframeId);
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(document.getElementById){
+        </span><span style="color: #0000ff;">if</span>(cwin &amp;&amp; !<span style="color: #000000;">window.opera){
+            </span><span style="color: #0000ff;">if</span>(cwin.contentDocument &amp;&amp;<span style="color: #000000;"> cwin.contentDocument.body.offsetHeight){
+                cwin.height </span>= cwin.contentDocument.body.offsetHeight;<span style="color: #008000;">//</span><span style="color: #008000;">FF NS</span>
+                console.log("FF NS cwin.height=" +<span style="color: #000000;">cwin.height);
+            }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(cwin.Document &amp;&amp;<span style="color: #000000;"> cwin.Document.body.scrollHeight){
+                cwin.height </span>= cwin.Document.body.scrollHeight;<span style="color: #008000;">//</span><span style="color: #008000;">IE</span>
+                console.log("IE cwin.height=" +<span style="color: #000000;">cwin.height);
+            }
+        }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(cwin.contentWindow.document &amp;&amp;<span style="color: #000000;"> cwin.contentWindow.document.body.scrollHeight){
+            cwin.height </span>= cwin.contentWindow.document.body.scrollHeight;<span style="color: #008000;">//</span><span style="color: #008000;">Opera</span>
+<span style="color: #000000;">        }
+    }
+    console.log(</span>"cwin.height=" +<span style="color: #000000;"> cwin.height);
+};</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<div class="tools">&nbsp;</div>
+</div>
+</div>
+<p><span data-darkreader-inline-color=""><strong>方法二：html代码控制</strong></span></p>
+<p><strong>在方法一不生效的时候，使用了方法二。</strong></p>
+<p>&nbsp;</p>
+<p><strong>头部的html不需要任何的声明，都去掉，如下面代码所示：</strong></p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>iframe高度自适应<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="mt20"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">iframe </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="mapIframe"</span><span style="color: #ff0000;"> border</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> frameborder</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> scrolling</span><span style="color: #0000ff;">="no"</span><span style="color: #ff0000;"> 
+            width</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="padding: 0;margin: 0;"</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">iframe</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text/javascript"</span><span style="color: #ff0000;"> src</span><span style="color: #0000ff;">="../js/jquery-3.4.1.min.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+</div>
+</div>
+<p><strong>上面如果能自适应，就不需要下面的；如果上面还不自适应，需要设置</strong></p>
+<p>1、body样式中的 overflow: hidden; 绝对不对省略；</p>
+<p>2、Iframe 中的 height='100%' 以及 滚动条不能设为no(默认是yes，不用设置即可)</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span data-darkreader-inline-color=""><strong>&nbsp;方法三：同样是js控制<span data-darkreader-inline-color="">（未验证）</span></strong></span></p>
+<p>原理：</p>
+<p>Iframe页面的内容利用一个&lt;div id="iframeContent"&gt;进行包裹，div会自适应内部高度，因此，可以通过div实现子页面高度的获取。</p>
+<p>&nbsp;</p>
+<p>Iframe页面</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="iframeContent"</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    ...
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>父页面（嵌入Iframe的页面）增加js：</p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">跨域或子页面无"iframeContent"则高度不能自适应</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> reinitIframe(iframeId, minHeight) {
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">var</span> iframe =<span style="color: #000000;"> document.getElementById(iframeId);
+        </span><span style="color: #0000ff;">var</span> height = iframe.contentWindow.document.getElementById("iframeContent"<span style="color: #000000;">).offsetHeight;
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">height) {
+            height </span>=<span style="color: #000000;"> minHeight;
+        }
+        </span><span style="color: #0000ff;">if</span> (height &lt;<span style="color: #000000;"> minHeight) {
+            height </span>=<span style="color: #000000;"> minHeight;
+        }
+        iframe.style.height </span>= height + "px"<span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (e) {
+        iframe.style.height </span>=  minHeight + "px"<span style="color: #000000;">;
+    }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p><span data-darkreader-inline-color="">&nbsp;<strong><span data-darkreader-inline-color="">&nbsp;方法四：同样是js控制<span data-darkreader-inline-color="">（未验证）</span></span></strong></span></p>
+<div id="" class="dp-highlighter">
+<div class="bar">
+<div class="tools">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> browserVersion =<span style="color: #000000;"> window.navigator.userAgent.toUpperCase();
+</span><span style="color: #0000ff;">var</span> isOpera = browserVersion.indexOf("OPERA") &gt; -1 ? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> isFireFox = browserVersion.indexOf("FIREFOX") &gt; -1 ? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> isChrome = browserVersion.indexOf("CHROME") &gt; -1 ? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> isSafari = browserVersion.indexOf("SAFARI") &gt; -1 ? <span style="color: #0000ff;">true</span> : <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+</span><span style="color: #0000ff;">var</span> isIE = (!!window.ActiveXObject || "ActiveXObject" <span style="color: #0000ff;">in</span><span style="color: #000000;"> window);
+</span><span style="color: #0000ff;">var</span> isIE9More = (! -[1,] == <span style="color: #0000ff;">false</span><span style="color: #000000;">);
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> reinitIframe(iframeId, minHeight) {
+    </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+        </span><span style="color: #0000ff;">var</span> iframe =<span style="color: #000000;"> document.getElementById(iframeId);
+        </span><span style="color: #0000ff;">var</span> bHeight = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (isChrome == <span style="color: #0000ff;">false</span> &amp;&amp; isSafari == <span style="color: #0000ff;">false</span><span style="color: #000000;">) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                bHeight </span>=<span style="color: #000000;"> iframe.contentWindow.document.body.scrollHeight;
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ex) {                
+            }
+        }
+        </span><span style="color: #0000ff;">var</span> dHeight = 0<span style="color: #000000;">;
+        </span><span style="color: #0000ff;">if</span> (isFireFox == <span style="color: #0000ff;">true</span><span style="color: #000000;">)
+            dHeight </span>= iframe.contentWindow.document.documentElement.offsetHeight + 2;<span style="color: #008000;">//</span><span style="color: #008000;">如果火狐浏览器高度不断增加删除+2</span>
+        <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isIE == <span style="color: #0000ff;">false</span> &amp;&amp; isOpera == <span style="color: #0000ff;">false</span> &amp;&amp;<span style="color: #000000;"> iframe.contentWindow) {
+            </span><span style="color: #0000ff;">try</span><span style="color: #000000;"> {
+                dHeight </span>=<span style="color: #000000;"> iframe.contentWindow.document.documentElement.scrollHeight;
+            } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ex) {
+            }
+        }
+        </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isIE == <span style="color: #0000ff;">true</span> &amp;&amp; isIE9More) {<span style="color: #008000;">//</span><span style="color: #008000;">ie9+</span>
+            <span style="color: #0000ff;">var</span> heightDeviation = bHeight - eval("window.IE9MoreRealHeight" +<span style="color: #000000;"> iframeId);
+            </span><span style="color: #0000ff;">if</span> (heightDeviation == 0<span style="color: #000000;">) {
+                bHeight </span>+= 3<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (heightDeviation != 3<span style="color: #000000;">) {
+                eval(</span>"window.IE9MoreRealHeight" + iframeId + "=" +<span style="color: #000000;"> bHeight);
+                bHeight </span>+= 3<span style="color: #000000;">;
+            }
+        }
+        </span><span style="color: #0000ff;">else</span><span style="color: #008000;">//</span><span style="color: #008000;">ie[6-8]、OPERA</span>
+            bHeight += 3<span style="color: #000000;">;
+
+        </span><span style="color: #0000ff;">var</span> height =<span style="color: #000000;"> Math.max(bHeight, dHeight);
+        </span><span style="color: #0000ff;">if</span> (height &lt; minHeight) height =<span style="color: #000000;"> minHeight;
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">alert(iframe.contentWindow.document.body.scrollHeight + "~" + iframe.contentWindow.document.documentElement.scrollHeight);</span>
+        iframe.style.height = height + "px"<span style="color: #000000;">;
+    } </span><span style="color: #0000ff;">catch</span><span style="color: #000000;"> (ex) { }
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">定时任务</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> startInit(iframeId, minHeight) {
+    eval(</span>"window.IE9MoreRealHeight" + iframeId + "=0"<span style="color: #000000;">);
+    window.setInterval(</span>"reinitIframe('" + iframeId + "'," + minHeight + ")", 100<span style="color: #000000;">);
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>================================</p>
+<p>&copy;Copyright 蕃薯耀 2019年12月31日</p>
+<p>http://fanshuyao.iteye.com/</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

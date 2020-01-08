@@ -1,0 +1,213 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas的常用功能(电脑版)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas的常用功能(电脑版)</center></div><div class='banquan'>原文出处:本文由博客园博主不教一日闲过提供。<br/>
+原文连接:https://www.cnblogs.com/xihailong/p/11640834.html</div><br>
+    <p>前言:</p>
+<p>　　canvas可以单独算为前端的一大知识模块, 今天就研究一下.</p>
+<p>　　先做下前文铺垫:</p>
+<p>　　　　①创建canvas</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="myCanvas"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="200"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100"</span><span style="color: #ff0000;"> style</span><span style="color: #0000ff;">="border:1px solid #000000;"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>　　　　②获取canvas</p>
+<div class="cnblogs_code">
+<pre><code>    <span style="color: #0000ff;">var</span> cavs = document.getElementById("cavs");           <span style="color: #008000;">//</span><span style="color: #008000;">获取canvas</span>
+    <span style="color: #0000ff;">var</span> ctx = cavs.getContext("2d");                     <span style="color: #008000;">//</span><span style="color: #008000;">可以理解为生成一个2d画笔</span>
+        ctx.moveTo(100, 100);                           <span style="color: #008000;">//</span><span style="color: #008000;">落笔点</span>
+        ctx.lineTo(200, 200);                          <span style="color: #008000;">//</span><span style="color: #008000;">结束点</span></pre>
+</div>
+<p>　　　　③常用样式</p>
+<div class="cnblogs_code">
+<pre><code>         ctx.strokeStyle = "#f00"                 <span style="color: #008000;">//</span><span style="color: #008000;">线条的颜色2</span>
+         ctx.lineWidth = 10;                    <span style="color: #008000;">//</span><span style="color: #008000;">线条粗细</span></pre>
+</div>
+<p>　　　　④绘制线条</p>
+<div class="cnblogs_code">
+<pre><code>　　　　　 ctx.stroke();            <span style="color: #008000;">//</span><span style="color: #008000;">绘制线条</span></pre>
+</div>
+<p>　　　　⑤填充图案</p>
+<div class="cnblogs_code">
+<pre><code>　　　　　ctx.fillStyle = "yellow";            <span style="color: #008000;">//</span><span style="color: #008000;">填充颜色<br /></span><span style="color: #000000;">　　　　　ctx.fill();                </span><span style="color: #008000;">//</span><span style="color: #008000;">进行填充</span></pre>
+</div>
+<p>　　　　⑥开始结束</p>
+<div class="cnblogs_code">
+<pre><code>         ctx.beginPath();    <span style="color: #008000;">//</span><span style="color: #008000;">开始</span>
+         ctx.closePath();    <span style="color: #008000;">//</span><span style="color: #008000;">结束</span></pre>
+</div>
+<p>　　　　⑦其他</p>
+<div class="cnblogs_code">
+<pre><code>         <span style="color: #0000ff;">var</span> img = ctx.getImageData(x, y, width, height);     <span style="color: #008000;">//</span><span style="color: #008000;">截取canvas中图案</span>
+         ctx.putImageData(img, width, height)            <span style="color: #008000;">//将img</span><span style="color: #008000;">放到canvas中</span>
+         ctx.clearRect(x,y,canvas.width,canvas.height)         <span style="color: #008000;">//</span><span style="color: #008000;">清除画布</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>正文:</p>
+<p>　　说再多也没用, 最终还是进行实战, 终于进入正文了;</p>
+<p>　　HTML部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrapper"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">canvas </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="cavs"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="1000"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="500"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">canvas</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="btn-list"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="color"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="colorBoard"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="cleanBoard"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="清屏"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="eraser"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="橡皮"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="rescind"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="撤销"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="range"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="lineRuler"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="线条"</span><span style="color: #ff0000;"> min</span><span style="color: #0000ff;">="1"</span><span style="color: #ff0000;"> max</span><span style="color: #0000ff;">="30"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>　　css部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">*</span>{<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> 0</span>;
+}<span style="color: #800000;">
+.wrapper</span>{<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> 15px</span>;
+}<span style="color: #800000;">
+.wrapper canvas</span>{<span style="color: #ff0000;">
+  border</span>:<span style="color: #0000ff;">1px solid #000</span>;<span style="color: #ff0000;">
+  border-radius</span>:<span style="color: #0000ff;"> 25px</span>;<span style="color: #ff0000;">
+  box-shadow</span>:<span style="color: #0000ff;">10px 10px 5px #999</span>;<span style="color: #ff0000;">
+  margin-bottom</span>:<span style="color: #0000ff;"> 20px</span>;
+}<span style="color: #800000;">
+.wrapper ul</span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 1000px</span>;<span style="color: #ff0000;">
+  text-align</span>:<span style="color: #0000ff;"> center</span>;
+}<span style="color: #800000;">
+.wrapper ul li</span>{<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> inline-block</span>;<span style="color: #ff0000;">
+  margin-left</span>:<span style="color: #0000ff;"> 40px</span>;
+}<span style="color: #800000;">
+.wrapper ul li input</span>{<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> block</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> #ddd</span>;<span style="color: #ff0000;">
+  color</span>:<span style="color: #0000ff;"> #000</span>;<span style="color: #ff0000;">
+  border-radius</span>:<span style="color: #0000ff;"> 25px</span>;<span style="color: #ff0000;">
+  border</span>:<span style="color: #0000ff;">none</span>;<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> 10px 20px</span>;<span style="color: #ff0000;">
+  font-size</span>:<span style="color: #0000ff;"> 15px</span>;<span style="color: #ff0000;">
+  transition-duration</span>:<span style="color: #0000ff;"> 0.2s</span>;
+}<span style="color: #800000;">
+.wrapper ul li input:hover</span>{<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> #999</span>;<span style="color: #ff0000;">
+  border</span>:<span style="color: #0000ff;"> 1px solid #f00</span>;<span style="color: #ff0000;">
+  box-shadow</span>:<span style="color: #0000ff;"> 0 12px 16px 0 rgba(0,0,0,0.3)</span>;
+}</pre>
+</div>
+<p>　　js部分</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span><span style="color: #000000;"> ID(str) {
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> document.getElementById(str);
+}
+
+</span><span style="color: #0000ff;">var</span> darwingLineObj =<span style="color: #000000;"> {
+  cavs:</span><span style="color: #0000ff;">this</span>.ID("canvas"<span style="color: #000000;">),
+  color:</span><span style="color: #0000ff;">this</span>.ID("color"<span style="color: #000000;">),
+  clear:</span><span style="color: #0000ff;">this</span>.ID("clear"<span style="color: #000000;">),
+  eraser:</span><span style="color: #0000ff;">this</span>.ID("eraser"<span style="color: #000000;">),
+  rescind:</span><span style="color: #0000ff;">this</span>.ID("rescind"<span style="color: #000000;">),
+  weight:</span><span style="color: #0000ff;">this</span>.ID("weight"<span style="color: #000000;">),
+  bool:</span><span style="color: #0000ff;">false</span><span style="color: #000000;">,
+  arrImg:[],
+  </span><span style="color: #008000;">//</span><span style="color: #008000;">初始化</span>
+  init:<span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+    </span><span style="color: #0000ff;">this</span><span style="color: #000000;">.draw();
+  },
+  draw:</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(){ 
+    </span><span style="color: #0000ff;">var</span> cavs = <span style="color: #0000ff;">this</span><span style="color: #000000;">.cavs,
+        self </span>= <span style="color: #0000ff;">this</span><span style="color: #000000;">,
+        ctx </span>= cavs.getContext("2d"<span style="color: #000000;">);
+        ctx.lineWidth </span>= 15<span style="color: #000000;">;
+        ctx.lineCap </span>= "round";          <span style="color: #008000;">//</span><span style="color: #008000;">线条始终的样式</span>
+        ctx.lineJoin = "round";         <span style="color: #008000;">//</span><span style="color: #008000;">转弯的圆角</span>
+
+    <span style="color: #0000ff;">var</span> c_x = cavs.offsetLeft,          <span style="color: #008000;">//</span><span style="color: #008000;">元素距离左侧的位置</span>
+        c_y = cavs.offsetTop;           <span style="color: #008000;">//</span><span style="color: #008000;">canvas距离顶部</span>
+<span style="color: #000000;">        
+
+    cavs.onmousedown </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+      e </span>= e ||<span style="color: #000000;"> window.event;
+      self.bool </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #0000ff;">var</span> m_x = e.pageX -<span style="color: #000000;"> c_x;
+      </span><span style="color: #0000ff;">var</span> m_y = e.pageY -<span style="color: #000000;"> c_y;
+      ctx.beginPath();
+      ctx.moveTo(m_x,m_y);   </span><span style="color: #008000;">//</span><span style="color: #008000;">鼠标在画布上的触点</span>
+
+      <span style="color: #0000ff;">var</span> imgData = ctx.getImageData(0, 0, cavs.width, cavs.height);  <span style="color: #008000;">//</span><span style="color: #008000;">将每次画完拷贝到数组中</span>
+<span style="color: #000000;">      self.arrImg.push(imgData);
+    }
+
+    cavs.onmousemove </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;">(self.bool){
+          ctx.lineTo(e.pageX</span>-c_x, e.pageY-<span style="color: #000000;">c_y);
+          ctx.stroke();
+        }
+      }
+
+    cavs.onmouseup </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+      self.bool </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+      ctx.closePath();
+    }
+
+    self.color.onchange </span>= <span style="color: #0000ff;">function</span>(e){      <span style="color: #008000;">//</span><span style="color: #008000;">设置颜色</span>
+      e = e ||<span style="color: #000000;"> window.event;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">console.log(e.target.value)</span>
+      ctx.strokeStyle =<span style="color: #000000;"> e.target.value;
+    }
+
+    self.clear.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+      ctx.clearRect(</span>0,0<span style="color: #000000;">,cavs.width,cavs.height)
+    }
+
+    self.eraser.onclick </span>= <span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+      ctx.strokeStyle </span>= "#fff"<span style="color: #000000;">;
+    }
+
+    self.rescind.onclick </span>= <span style="color: #0000ff;">function</span>(){            <span style="color: #008000;">//</span><span style="color: #008000;">撤销的重点难点</span>
+      <span style="color: #0000ff;">if</span> (self.arrImg.length&gt;0<span style="color: #000000;">) {
+        ctx.putImageData(self.arrImg.pop(),</span>0,0<span style="color: #000000;">)
+      }
+    }
+
+    self.weight.onchange </span>= <span style="color: #0000ff;">function</span>(e){       <span style="color: #008000;">//</span><span style="color: #008000;">设置线条粗细</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;">console.log(e.target.value)</span>
+      ctx.lineWidth =<span style="color: #000000;"> e.target.value;     
+    }
+
+   }</span><span style="color: #008000;">//</span><span style="color: #008000;">draw end</span>
+<span style="color: #000000;">
+}
+
+darwingLineObj.init();</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>结语:</p>
+<p>　　本文还有不足之处, 欢迎大家指正.</p>
+<p>声明:</p>
+<p>　　参考: 渡一教育</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>　　　　</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

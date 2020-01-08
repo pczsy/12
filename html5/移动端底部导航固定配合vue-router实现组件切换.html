@@ -1,0 +1,201 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修移动端底部导航固定配合vue-router实现组件切换' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>移动端底部导航固定配合vue-router实现组件切换</center></div><div class='banquan'>原文出处:本文由博客园博主Frank丶HQ提供。<br/>
+原文连接:https://www.cnblogs.com/hq-fighting/p/11017982.html</div><br>
+    <p><span style="font-size: 15px; font-family: 宋体;">在我们平时练习或者实际项目中也好，我们常常遇到这么一个需求：移动端中的导航并不是在顶部也不是在底部，而是在最底部且是固定的，当我们点击该导航项时会切换到对应的组件。相信对于很多朋友而言，这是一个很简单的需求，而且市面上有很多开源的组件库就可以实现，像比如说：cube-ui等！那么对于一个要是还在练习以及对第三方组件库不是很了解的朋友不妨看看我这篇，相信会对你有所收获的！</span></p>
+<p><span style="font-size: 15px; font-family: 宋体;">首先，在实现这个需求之前，我们先分析或者回想下和自己做过的demo中哪个类似，相信很多朋友立马就会想起来---tab栏切换，那么对于HTML结构的设计我们便可以借助tab栏切换的结构：一个大盒子套着两个小盒子，一个作容器，另一个作导航！</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">HTML 结构</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>容器<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="footer"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="module-nav"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe610;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe629;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>发现<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon-add"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe84f;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe62c;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>消息<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">20</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe601;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>我的<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">23</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">24</span>       <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">25</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">26</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-size: 15px; font-family: 宋体;">做完HTML结构的编写，那我们在给上面的骨架穿上衣服，根据需求&ldquo;底部固定&rdquo;，我们很容易便会想到 position: fixed ，当然我这里也是用固定定位实现的，但布局采用的是 flex，在采用 flex 结合固定定位布局的时候常常会出现很多不必要的问题，如：flex 属性失效，两者效果冲突等，原因更多的便是&ldquo;脱标&rdquo;导致的，其中更多的便是出现在父元素 flex，子元素 position的时候，这时候可以中间加个div使两者摆脱联系。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">css 样式（ stylus形式 ）</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">.footer
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">  position fixed
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">  bottom 0
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">  z-index 999
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">  max-width 1080px
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">  width 100%
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">  border-top 1px solid #C0C0C0
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">  .module-nav
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">    display flex
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">    justify-content space-around
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    .nav-i
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">      width 60px
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">      text-align center
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">      .icon
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">        font-size 35px
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">        padding 5px 0
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">      .icon-add
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">        font-size 60px
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">      h3
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">        font-size 15px
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">        font-weight normal
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">        margin 0
+</span><span style="color: #008080;">23</span>         padding-bottom 5px</pre>
+</div>
+<p>骨架和衣服都做好后，那么大概的雏形就出来了，我们的需求也就实现了一半，剩下的便是组件切换了。这个就简单了，只需要配置下路由表，然后指定跳转便可以了</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;">路由表</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">routes: [
+</span><span style="color: #008080;"> 2</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 3</span> <span style="color: #000000;">      path: "/",
+</span><span style="color: #008080;"> 4</span> <span style="color: #000000;">      name: "home",
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">      component: Home
+</span><span style="color: #008080;"> 6</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;"> 7</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">      path: "/find",
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">      name: "find",
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">      component: Find
+</span><span style="color: #008080;">11</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">12</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">13</span> <span style="color: #000000;">      path: "/info",
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">      name: "info",
+</span><span style="color: #008080;">15</span> <span style="color: #000000;">      component: Info
+</span><span style="color: #008080;">16</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">17</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">      path: "/user",
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">      name: "user",
+</span><span style="color: #008080;">20</span> <span style="color: #000000;">      component: User
+</span><span style="color: #008080;">21</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">22</span>   ]</pre>
+</div>
+<p>最后在&ldquo;容器&rdquo;内添加router-view即可，下面可以看看完整代码：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #000000;">// HTML
+</span><span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="main-content"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 4</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-view</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">router-view</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 5</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="footer"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 7</span>       <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="module-nav"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="div"</span><span style="color: #ff0000;"> to</span><span style="color: #0000ff;">="/"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe610;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">10</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>首页<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">12</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="div"</span><span style="color: #ff0000;"> to</span><span style="color: #0000ff;">="/find"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe629;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>发现<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">16</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">17</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon-add"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe84f;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="div"</span><span style="color: #ff0000;"> to</span><span style="color: #0000ff;">="/info"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">20</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe62c;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">21</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>消息<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">22</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">23</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">router-link </span><span style="color: #ff0000;">tag</span><span style="color: #0000ff;">="div"</span><span style="color: #ff0000;"> to</span><span style="color: #0000ff;">="/user"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="nav-i"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">24</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="iconfont icon"</span><span style="color: #0000ff;">&gt;</span>&amp;#xe601;<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">25</span>           <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>我的<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">26</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">router-link</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">27</span>       <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">28</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">29</span>   <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">30</span> 
+<span style="color: #008080;">31</span> <span style="color: #000000;">// css
+</span><span style="color: #008080;">32</span> <span style="color: #000000;">.footer
+</span><span style="color: #008080;">33</span> <span style="color: #000000;">  position fixed
+</span><span style="color: #008080;">34</span> <span style="color: #000000;">  bottom 0
+</span><span style="color: #008080;">35</span> <span style="color: #000000;">  z-index 999
+</span><span style="color: #008080;">36</span> <span style="color: #000000;">  max-width 1080px
+</span><span style="color: #008080;">37</span> <span style="color: #000000;">  width 100%
+</span><span style="color: #008080;">38</span> <span style="color: #000000;">  border-top 1px solid #C0C0C0
+</span><span style="color: #008080;">39</span> <span style="color: #000000;">  .module-nav
+</span><span style="color: #008080;">40</span> <span style="color: #000000;">    display flex
+</span><span style="color: #008080;">41</span> <span style="color: #000000;">    justify-content space-around
+</span><span style="color: #008080;">42</span> <span style="color: #000000;">    .nav-i
+</span><span style="color: #008080;">43</span> <span style="color: #000000;">      width 60px
+</span><span style="color: #008080;">44</span> <span style="color: #000000;">      text-align center
+</span><span style="color: #008080;">45</span> <span style="color: #000000;">      .icon
+</span><span style="color: #008080;">46</span> <span style="color: #000000;">        font-size 35px
+</span><span style="color: #008080;">47</span> <span style="color: #000000;">        padding 5px 0
+</span><span style="color: #008080;">48</span> <span style="color: #000000;">      .icon-add
+</span><span style="color: #008080;">49</span> <span style="color: #000000;">        font-size 60px
+</span><span style="color: #008080;">50</span> <span style="color: #000000;">      h3
+</span><span style="color: #008080;">51</span> <span style="color: #000000;">        font-size 15px
+</span><span style="color: #008080;">52</span> <span style="color: #000000;">        font-weight normal
+</span><span style="color: #008080;">53</span> <span style="color: #000000;">        margin 0
+</span><span style="color: #008080;">54</span> <span style="color: #000000;">        padding-bottom 5px
+</span><span style="color: #008080;">55</span> 
+<span style="color: #008080;">56</span> <span style="color: #000000;">// router
+</span><span style="color: #008080;">57</span> <span style="color: #000000;">export default new Router({
+</span><span style="color: #008080;">58</span> <span style="color: #000000;">  routes: [
+</span><span style="color: #008080;">59</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">60</span> <span style="color: #000000;">      path: "/",
+</span><span style="color: #008080;">61</span> <span style="color: #000000;">      name: "home",
+</span><span style="color: #008080;">62</span> <span style="color: #000000;">      component: Home
+</span><span style="color: #008080;">63</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">64</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">65</span> <span style="color: #000000;">      path: "/find",
+</span><span style="color: #008080;">66</span> <span style="color: #000000;">      name: "find",
+</span><span style="color: #008080;">67</span> <span style="color: #000000;">      component: Find
+</span><span style="color: #008080;">68</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">69</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">70</span> <span style="color: #000000;">      path: "/info",
+</span><span style="color: #008080;">71</span> <span style="color: #000000;">      name: "info",
+</span><span style="color: #008080;">72</span> <span style="color: #000000;">      component: Info
+</span><span style="color: #008080;">73</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">74</span> <span style="color: #000000;">    {
+</span><span style="color: #008080;">75</span> <span style="color: #000000;">      path: "/user",
+</span><span style="color: #008080;">76</span> <span style="color: #000000;">      name: "user",
+</span><span style="color: #008080;">77</span> <span style="color: #000000;">      component: User
+</span><span style="color: #008080;">78</span> <span style="color: #000000;">    }
+</span><span style="color: #008080;">79</span> <span style="color: #000000;">  ]
+</span><span style="color: #008080;">80</span> });</pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 15px; font-family: 宋体;">小事做不好，何以做大事，坚持！</span></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

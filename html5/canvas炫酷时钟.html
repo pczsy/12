@@ -1,0 +1,111 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas炫酷时钟' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas炫酷时钟</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/10818197.html</div><br>
+    <h2 id="canvas炫酷时钟">canvas炫酷时钟</h2>
+<h3 id="实现的功能">实现的功能</h3>
+<ul>
+<li>主要用到canvas的一些基础api</li>
+<li>直接看效果</li>
+</ul>
+<p><img src="./images/canvas炫酷时钟0.png" alt="Alt" /></p>
+<h3 id="html">html：</h3>
+<pre><code><code>   &lt;canvas id=&quot;myCanvas&quot; width=&quot;500&quot; height=&quot;500&quot;&gt;&lt;/canvas&gt;</code></pre>
+<h3 id="css">css：</h3>
+<pre class="css"><code>   #myCanvas{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -250px;
+        margin-left: -250px;
+    }</code></pre>
+<h3 id="js">js：</h3>
+<pre class="javascript"><code>    var myCanvas = document.getElementById(&#39;myCanvas&#39;);
+    var ctx = myCanvas.getContext(&#39;2d&#39;);
+
+    ctx.strokeStyle = &#39;#00ffff&#39;;
+    ctx.lineWidth = &#39;15&#39;;
+    ctx.shadowBlur = &#39;20&#39;;
+    ctx.shadowColor = &#39;black&#39;;
+
+    function draw(){
+        //获取时间
+        var date = new Date();
+        var today = date.toDateString();
+        var h = date.getHours();
+        var m = date.getMinutes();
+        var s = date.getSeconds();
+        var ms = date.getMilliseconds();
+        var s_ms = s + ms/1000;
+        //背景
+        var grd =ctx.createRadialGradient(250,250,50,250,250,300);
+        grd.addColorStop(0,&#39;red&#39;);
+        grd.addColorStop(1,&#39;black&#39;);
+        ctx.fillStyle = grd;
+        ctx.fillRect(0,0,500,500);
+        //时分秒圆弧
+        // 360/12 * h 时
+        ctx.beginPath();
+        ctx.arc(250, 250, 200, 1.5 * Math.PI, formatdeg(360 / 12 * h - 90));
+        ctx.stroke();
+
+        // 360/60 * m 分
+        ctx.beginPath();
+        ctx.arc(250, 250, 170, 1.5 * Math.PI, formatdeg(360 / 60 * m - 90));
+        ctx.stroke();
+
+        // 360/60 * s 秒
+        ctx.beginPath();
+        ctx.arc(250, 250, 140, 1.5 * Math.PI, formatdeg(360 / 60 * s_ms - 90));
+        ctx.stroke();
+
+        ctx.font = &#39;20px Arial&#39;;
+        ctx.textAlign = &#39;center&#39;;
+        ctx.fillStyle = &#39;#00ffff&#39;;
+        ctx.fillText(today,250,250);
+
+        ctx.fillText(formatTime(h) + &#39; : &#39; + formatTime(m) + &#39; : &#39; + formatTime(s) + &#39; &#39; + formatMs(ms), 250, 280);  
+    };
+    setInterval(draw,40);
+
+    //时间处理
+    function formatTime(time){
+        return (&#39;0&#39; + time).slice(-2);
+    }
+    function formatMs(ms){
+        if(ms &lt;10){
+            return &quot;00&quot; + ms;
+        }else if(ms &lt;100){
+            return &quot;0&quot; + ms;
+        }else{
+            return ms;
+        }
+    }
+    //角度转弧度
+    function formatdeg(deg){
+        var fd = Math.PI / 180;
+        return deg * fd;
+    }</code></pre>
+<p>参考自：腾讯课堂渡一教育</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

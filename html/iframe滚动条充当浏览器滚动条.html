@@ -1,0 +1,68 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修iframe滚动条充当浏览器滚动条' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>iframe滚动条充当浏览器滚动条</center></div><div class='banquan'>原文出处:本文由博客园博主Evenssi提供。<br/>
+原文连接:https://www.cnblogs.com/zq77ssi/p/11378311.html</div><br>
+    <p>&nbsp;</p>
+<p>在做博客项目的时候，使用了iframe，方便根据选择的文章类别切换显示的内容，但是文章一般都有很多，通过bootstrap的媒体列表的方式显示的话，iframe是一定会出现滚动条的，特别是我添加了一个&ldquo;滚动条触底之后动态加载更多的文章&rdquo;的功能。这样页面上就会有两个滚动条，特别奇怪。</p>
+<p>在网上学习了一些之后，我把iframe的滚动条隐藏了（不是将iframe的scrolling属性改为scrolling=&ldquo;no&rdquo;），而是通过css将其在视觉上隐藏起来（下面有代码），这样就可以只出现一个滚动条，但是这样的话，文章确实一直在动态加载，但是浏览器的滚动条却一直没有动，感觉也很奇怪~</p>
+<p>最后<br />我决定把浏览器的滚动条隐藏，iframe的滚动条放出来，并且通过对iframe和承载它的div做了一些css上的调整，让iframe滚动条&ldquo;充当&rdquo;了浏览器的滚动条。图片中箭头指向的滚动条实际上是iframe的<br /><img src="./images/iframe滚动条充当浏览器滚动条0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;css：对homepage的滚动条隐藏：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">在视觉上将iframe的滚动条隐藏</span><span style="color: #008000;">*/</span>
+<span style="color: #008000;">/*</span><span style="color: #008000;">主要是将width置为0px</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+        ::-webkit-scrollbar </span>{<span style="color: #ff0000;">
+            width</span>:<span style="color: #0000ff;"> 0px</span>;<span style="color: #ff0000;">
+            height</span>:<span style="color: #0000ff;"> 5px</span>;
+        }
+        <span style="color: #008000;">/*</span><span style="color: #008000;">下面的css定义可以不写，如果width不是0px的时候，通过下面的css定义可以自定义其他样式的滚动条</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+        ::-webkit-scrollbar-thumb</span>{<span style="color: #ff0000;">
+            background-color</span>:<span style="color: #0000ff;"> transparent</span>;<span style="color: #ff0000;">
+            -webkit-border-radius</span>:<span style="color: #0000ff;"> 5px</span>;<span style="color: #ff0000;">
+            border-radius</span>:<span style="color: #0000ff;"> 5px</span>;
+        }<span style="color: #800000;">
+        ::-webkit-scrollbar-thumb:vertical:hover</span>{<span style="color: #ff0000;">
+            background-color</span>:<span style="color: #0000ff;"> transparent</span>;
+        }<span style="color: #800000;">
+        ::-webkit-scrollbar-thumb:vertical:active</span>{<span style="color: #ff0000;">
+            background-color</span>:<span style="color: #0000ff;"> transparent</span>;
+        }<span style="color: #800000;">
+        ::-webkit-scrollbar-button</span>{<span style="color: #ff0000;">
+            display</span>:<span style="color: #0000ff;"> none</span>;
+        }<span style="color: #800000;">
+        ::-webkit-scrollbar-track</span>{<span style="color: #ff0000;">
+            background-color</span>:<span style="color: #0000ff;"> transparent</span>;
+        }</pre>
+</div>
+<p>对承载iframe的div和iframe,一定要充满整个浏览器可视页面，如果有footer和nav的话，也要在右侧给滚动条留出大概15px的宽度，不然就不像浏览器滚动条了</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="container main-page"</span> <span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">iframe </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="/blog/p/recommend"</span><span style="color: #ff0000;"> frameborder</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> scrolling</span><span style="color: #0000ff;">="yes"</span><span style="color: #ff0000;"> height</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="100%"</span><span style="color: #ff0000;">  allowtransparency</span><span style="color: #0000ff;">="true"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="external-frame"</span><span style="color: #ff0000;"> name</span><span style="color: #0000ff;">="frame"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">iframe</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><img src="./images/iframe滚动条充当浏览器滚动条1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>文章转自：<a href="https://blog.csdn.net/qq_41604498/article/details/99735882">https://blog.csdn.net/qq_41604498/article/details/99735882</a></p>
+<p>反正都是自己的博客~~</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

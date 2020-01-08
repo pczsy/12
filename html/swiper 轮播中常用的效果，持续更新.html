@@ -1,0 +1,134 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修swiper 轮播中常用的效果，持续更新' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>swiper 轮播中常用的效果，持续更新</center></div><div class='banquan'>原文出处:本文由博客园博主程先生哈提供。<br/>
+原文连接:https://www.cnblogs.com/daniao11417/p/11322698.html</div><br>
+    <p><span style="font-size: 14px;">　　swiper一款非常好用的轮播插件，支持移动端和PC端，用过很多次了，这次简单的总结一下。方便以后查找使用，说明一下，下面的例子是基于swiper 4.0+版本的，如果你是其他的版本，请自行<a href="https://www.swiper.com.cn/" target="_blank">前往官网</a>查看</span></p>
+<p><span style="font-size: 14px;">至于为什么使用swiper，而不是自己手写，请看下面官网的截图：</span></p>
+<p><span style="font-size: 14px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/swiper 轮播中常用的效果，持续更新0.png" alt="" /></span></p>
+<p><span style="font-size: 14px;">开个玩笑，说白了，就是这个确实非常好用，而且很好上手，没有什么难度。而且里面的API很友好，不像有的文档，看起来很费劲，这个很清晰，好了，不说了，直接进入主题。</span></p>
+<ol>
+<li><span style="font-size: 14px;">第一步肯定是引入他的css和js，它提供了cdn和下载引入两种方式，由于我们现在的项目不是部署在国内，所以我就选择了下载引入。</span></li>
+<li><span style="font-size: 14px;">引入完成之后，就需要按照他的DOM结构引入里，这里，需要注意的是，他的DOM结构是能滑动的骨架，有的class名字可以更改，但是有的是不能更改的。所以还是建议大家，建议他的DOM结果引入。简单的说，就是三层DIV</span></li>
+</ol>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> &lt;div class="swiper-container"&gt;
+<span style="color: #008080;"> 2</span>     &lt;div class="swiper-wrapper"&gt;
+<span style="color: #008080;"> 3</span>         &lt;div class="swiper-slide"&gt;Slide 1&lt;/div&gt;
+<span style="color: #008080;"> 4</span>         &lt;div class="swiper-slide"&gt;Slide 2&lt;/div&gt;
+<span style="color: #008080;"> 5</span>         &lt;div class="swiper-slide"&gt;Slide 3&lt;/div&gt;
+<span style="color: #008080;"> 6</span>     &lt;/div&gt;
+<span style="color: #008080;"> 7</span>     &lt;!-- 如果需要分页器 --&gt;
+<span style="color: #008080;"> 8</span>     &lt;div class="swiper-pagination"&gt;&lt;/div&gt;
+<span style="color: #008080;"> 9</span>     
+<span style="color: #008080;">10</span>     &lt;!-- 如果需要导航按钮 --&gt;
+<span style="color: #008080;">11</span>     &lt;div class="swiper-button-prev"&gt;&lt;/div&gt;
+<span style="color: #008080;">12</span>     &lt;div class="swiper-button-next"&gt;&lt;/div&gt;
+<span style="color: #008080;">13</span>     
+<span style="color: #008080;">14</span>     &lt;!-- 如果需要滚动条 --&gt;
+<span style="color: #008080;">15</span>     &lt;div class="swiper-scrollbar"&gt;&lt;/div&gt;
+<span style="color: #008080;">16</span> &lt;/div&gt;
+<span style="color: #008080;">17</span> 导航等组件可以放在container之外</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　3.初始化Swiper&nbsp;&nbsp; 这里就是swiper的全部控制器了。这里也是3.0和4.0最大不同的地方。（2.0我还真的没有用过）</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span>   <span style="color: #0000ff;">var</span> mySwiper = <span style="color: #0000ff;">new</span> Swiper ('.swiper-container'<span style="color: #000000;">, {
+</span><span style="color: #008080;"> 2</span>     direction: 'vertical', <span style="color: #008000;">//</span><span style="color: #008000;"> 垂直切换选项</span>
+<span style="color: #008080;"> 3</span>     loop: <span style="color: #0000ff;">true</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> 循环模式选项</span>
+<span style="color: #008080;"> 4</span>     
+<span style="color: #008080;"> 5</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 如果需要分页器</span>
+<span style="color: #008080;"> 6</span> <span style="color: #000000;">    pagination: {
+</span><span style="color: #008080;"> 7</span>       el: '.swiper-pagination'<span style="color: #000000;">,
+</span><span style="color: #008080;"> 8</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;"> 9</span>     
+<span style="color: #008080;">10</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 如果需要前进后退按钮</span>
+<span style="color: #008080;">11</span> <span style="color: #000000;">    navigation: {
+</span><span style="color: #008080;">12</span>       nextEl: '.swiper-button-next'<span style="color: #000000;">,
+</span><span style="color: #008080;">13</span>       prevEl: '.swiper-button-prev'<span style="color: #000000;">,
+</span><span style="color: #008080;">14</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">15</span>     
+<span style="color: #008080;">16</span>     <span style="color: #008000;">//</span><span style="color: #008000;"> 如果需要滚动条</span>
+<span style="color: #008080;">17</span> <span style="color: #000000;">    scrollbar: {
+</span><span style="color: #008080;">18</span>       el: '.swiper-scrollbar'<span style="color: #000000;">,
+</span><span style="color: #008080;">19</span> <span style="color: #000000;">    },
+</span><span style="color: #008080;">20</span>   }) </span></pre>
+</div>
+<p><span style="font-size: 14px;">其实到这个时候，最简单的一个swiper已经可以正常的运行了。但是这个毕竟是官网的例子，不是大家通用的， 所以在实际应用中，需要我们自己改造。</span></p>
+<p><span style="font-size: 14px;">------------------------------------------------------------------------------华丽的分割线---------------------------------------------------------------------</span></p>
+<p><span style="font-size: 14px;">下面介绍一下，我自己的是怎么应用的。请看下图，就是简单切换</span></p>
+<p><span style="font-size: 14px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/swiper 轮播中常用的效果，持续更新1.png" alt="" /></span></p>
+<p><span style="font-size: 14px;">本来是做的，点击上面，切换两个显示，但是UI设计师要求，这个要像手机应用一样滑动更换。所以这个时候就想到了swiper</span></p>
+<p><span style="font-size: 14px;">首先应该是我的DOM文档结构。请看下面的截图，为什么是截图，因为截图的时候，我用编辑器把代码折叠了，这样能更好的看到swiper的DOM结构</span></p>
+<p><span style="font-size: 14px;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/swiper 轮播中常用的效果，持续更新2.png" alt="" /></span></p>
+<p><span style="font-size: 14px;">大家可以看到，上面的那个ul里面，两个选项是独立的。而下面的就是swiper中的标准文档结构，其中两个dl是我的页面内容。这个时候，来初始化这个swiper，请看下面的代码</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">var</span> mySwiper = <span style="color: #0000ff;">new</span> Swiper('.swiper-container'<span style="color: #000000;">, {
+</span><span style="color: #008080;"> 2</span>         direction: 'horizontal', <span style="color: #008000;">//</span><span style="color: #008000;"> 切换选项</span>
+<span style="color: #008080;"> 3</span>         loop: <span style="color: #0000ff;">false</span>, <span style="color: #008000;">//</span><span style="color: #008000;"> 循环模式选项     </span>
+<span style="color: #008080;"> 4</span> <span style="color: #000000;">        on: {
+</span><span style="color: #008080;"> 5</span>             slideChangeTransitionEnd: <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+</span><span style="color: #008080;"> 6</span>                 console.log(<span style="color: #0000ff;">this</span>.activeIndex); <span style="color: #008000;">//</span><span style="color: #008000;">切换结束时，告诉我现在是第几个slide</span>
+<span style="color: #008080;"> 7</span>                 <span style="color: #0000ff;">var</span> index = <span style="color: #0000ff;">this</span><span style="color: #000000;">.activeIndex;
+</span><span style="color: #008080;"> 8</span>                 $("#header li").removeClass("this_page").eq(index).addClass("this_page"<span style="color: #000000;">);
+</span><span style="color: #008080;"> 9</span> <span style="color: #000000;">            },
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">        },
+</span><span style="color: #008080;">11</span> 
+<span style="color: #008080;">12</span>     })</span></pre>
+</div>
+<p><span style="font-size: 14px;">这里比较不同的是，在第4行，加入了一个方法，请看官方的解释：回调函数，swiper从一个slide过渡到另一个slide结束时执行。就是当我们滑动完成了，这里会得到一个现在显示的是第几张的一个索引值，通过this.activeIndex来获得，这个时候，我获取到这个值以后，就可控制上面的li元素，添加自定义属性，我这里用到的选中的自定义属性是this_page。当我给那个li添加上这个class名时，就能让这一页选中。这里就实现了下面控制上面了。但是这样显然是不完整的， 应该是一个双向控制，点击上面的li，也应该能控制下面的滑动，所以就继续寻找，找到了另一个方法。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> $("#header li").click(<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+</span><span style="color: #008080;">2</span>         <span style="color: #0000ff;">var</span> index = $(<span style="color: #0000ff;">this</span><span style="color: #000000;">).index();
+</span><span style="color: #008080;">3</span>         $(<span style="color: #0000ff;">this</span>).siblings("li").removeClass("this_page"<span style="color: #000000;">);
+</span><span style="color: #008080;">4</span>         $(<span style="color: #0000ff;">this</span>).addClass("this_page"<span style="color: #000000;">);
+</span><span style="color: #008080;">5</span> <span style="color: #000000;">        console.log(index);
+</span><span style="color: #008080;">6</span> <span style="color: #000000;">        mySwiper.slideTo(index);
+</span><span style="color: #008080;">7</span> })</span></pre>
+</div>
+<p><span style="font-size: 14px;">及时slideTo(index)方法。请看官方的解释：控制Swiper切换到指定slide。然后它里面能传输三个参数，这三个参数的具体用法请看下面你的表格</span></p>
+<table>
+<thead>
+<tr><th><span style="font-size: 14px;">参数名</span></th><th><span style="font-size: 14px;">类型</span></th><th><span style="font-size: 14px;">是否必填</span></th><th><span style="font-size: 14px;">描述</span></th></tr>
+</thead>
+<tbody>
+<tr>
+<td><span style="font-size: 14px;">index</span></td>
+<td><span style="font-size: 14px;">num</span></td>
+<td><span style="font-size: 14px;">必选</span></td>
+<td><span style="font-size: 14px;">指定将要切换到的slide的索引</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 14px;">speed</span></td>
+<td><span style="font-size: 14px;">num</span></td>
+<td><span style="font-size: 14px;">可选</span></td>
+<td><span style="font-size: 14px;">切换速度(单位ms)</span></td>
+</tr>
+<tr>
+<td><span style="font-size: 14px;">runCallbacks</span></td>
+<td><span style="font-size: 14px;">boolean</span></td>
+<td><span style="font-size: 14px;">可选</span></td>
+<td><span style="font-size: 14px;">设置为false时不会触发transition回调函数</span></td>
+</tr>
+</tbody>
+</table>
+<p><span style="font-size: 14px;">到此，我就实现了双向控制，点击上面的li能控制下面的滑动，下面的滑动，也能更改上面的选中。如果还有什么问题，欢迎留言或者自行查看<a href="https://www.swiper.com.cn/api/start/new.html" target="_blank">官网<span style="font-size: 14px;">API文档</span></a></span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

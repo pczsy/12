@@ -1,0 +1,130 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue封装一个简单的div框选时间的组件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue封装一个简单的div框选时间的组件</center></div><div class='banquan'>原文出处:本文由博客园博主赵sir阿提供。<br/>
+原文连接:https://www.cnblogs.com/zqw111/p/11295525.html</div><br>
+    <p>记录一下我前段时间封装的一个vue组件吧。技术需要积累，有时间我把我之前写的还不错的组件都开源出来。并尝试vue和react 两种方式的组件封装。今天简单写下鼠标框选div选中效果的封装吧。</p>
+<h2>div框选实现</h2>
+<p>div框选效果，其实没有什么好的方法，就是获取鼠标事件，根据鼠标的位置，动态创建一个跟随鼠标的div。【注：这种方式需要依赖position的定位方式，一般鼠标事件位置是针对全局的，所以鼠标框选的div 位置的position最好父级元素是根元素的定位。不然，鼠标框选区域和被框选区域很难保持一致。】</p>
+<p>其实总结起来就两步：</p>
+<blockquote>
+<p>鼠标左键按下不放，移动鼠标出现矩形选框；</p>
+<p>鼠标左键松开，根据上边出现的矩形选框统计选框范围内的DOM元素；</p>
+</blockquote>
+<p>创建一个跟随鼠标的div，代码如下：</p>
+<pre><code><code><span class="pln"> <span class="com">//  创建选框节点<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">createElement<span class="pun">(<span class="str">'div'<span class="pun">)<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">className <span class="pun">=<span class="pln"> <span class="str">'haorooms-select-box'<span class="pln">
+
+      document<span class="pun">.<span class="pln">body<span class="pun">.<span class="pln">appendChild<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">)<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">scrollX <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">documentElement<span class="pun">.<span class="pln">scrollLeft <span class="pun">||<span class="pln"> document<span class="pun">.<span class="pln">body<span class="pun">.<span class="pln">scrollLeft
+      <span class="kwd">this<span class="pun">.<span class="pln">scrollY <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">documentElement<span class="pun">.<span class="pln">scrollTop <span class="pun">||<span class="pln"> document<span class="pun">.<span class="pln">body<span class="pun">.<span class="pln">scrollTop
+      <span class="com">//  设置选框的初始位置<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">startX <span class="pun">=<span class="pln"> e<span class="pun">.<span class="pln">x <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollX <span class="pun">||<span class="pln"> e<span class="pun">.<span class="pln">clientX <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollX  <span class="com">// e是鼠标事件的event<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">startY <span class="pun">=<span class="pln"> e<span class="pun">.<span class="pln">y <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollY <span class="pun">||<span class="pln"> e<span class="pun">.<span class="pln">clientY <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollY <span class="com">// e是鼠标事件的event<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">cssText <span class="pun">=<span class="pln"> <span class="str">`left:${this.startX}px;top:${this.startY}px`</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h3>鼠标移动，获取被选中div列表，增加一个临时class</h3>
+<pre><code><code><span class="pln">  <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">display <span class="pun">=<span class="pln"> <span class="str">'block'<span class="pln"> <span class="com">// 上面创建的鼠标跟随div出现<span class="pln">
+      <span class="com">//  根据鼠标移动，设置选框的位置、宽高<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">initx <span class="pun">=<span class="pln"> e<span class="pun">.<span class="pln">x <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollX <span class="pun">||<span class="pln"> e<span class="pun">.<span class="pln">clientX <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollX <span class="com">//鼠标移动的初始位置+滚动轴的位置<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">inity <span class="pun">=<span class="pln"> e<span class="pun">.<span class="pln">y <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollY <span class="pun">||<span class="pln"> e<span class="pun">.<span class="pln">clientY <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">scrollY
+      <span class="com">//  暂存选框的位置及宽高，用于将 select-item 选中<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">left <span class="pun">=<span class="pln"> <span class="typ">Math<span class="pun">.<span class="pln">min<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">initx<span class="pun">,<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">startX<span class="pun">)<span class="pln"> 
+      <span class="kwd">this<span class="pun">.<span class="pln">top <span class="pun">=<span class="pln"> <span class="typ">Math<span class="pun">.<span class="pln">min<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">inity<span class="pun">,<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">startY<span class="pun">)<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">width <span class="pun">=<span class="pln"> <span class="typ">Math<span class="pun">.<span class="pln">abs<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">initx <span class="pun">-<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">startX<span class="pun">)<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">height <span class="pun">=<span class="pln"> <span class="typ">Math<span class="pun">.<span class="pln">abs<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">inity <span class="pun">-<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">startY<span class="pun">)<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">left <span class="pun">=<span class="pln"> <span class="str">`${this.left}px`<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">top <span class="pun">=<span class="pln"> <span class="str">`${this.top}px`<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">width <span class="pun">=<span class="pln"> <span class="str">`${this.width}px`<span class="pln">
+      <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">style<span class="pun">.<span class="pln">height <span class="pun">=<span class="pln"> <span class="str">`${this.height}px`<span class="pln">
+      <span class="kwd">let<span class="pln"> fileDivs <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">getElementsByClassName<span class="pun">(<span class="str">'list'<span class="pun">)<span class="pln"> <span class="com">// 获取要选中的div列表<span class="pln">
+      <span class="kwd">for<span class="pln"> <span class="pun">(<span class="kwd">let<span class="pln"> i <span class="pun">=<span class="pln"> <span class="lit">0<span class="pun">;<span class="pln"> i <span class="pun">&lt;<span class="pln"> fileDivs<span class="pun">.<span class="pln">length<span class="pun">;<span class="pln"> i<span class="pun">++)<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">let<span class="pln"> itemX_pos <span class="pun">=<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetWidth <span class="pun">+<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetLeft
+        <span class="kwd">let<span class="pln"> itemY_pos <span class="pun">=<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetHeight <span class="pun">+<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetTop
+        <span class="kwd">let<span class="pln"> condition1 <span class="pun">=<span class="pln"> itemX_pos <span class="pun">&gt;<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">left
+        <span class="kwd">let<span class="pln"> condition2 <span class="pun">=<span class="pln"> itemY_pos <span class="pun">&gt;<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">top
+        <span class="kwd">let<span class="pln"> condition3 <span class="pun">=<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetLeft <span class="pun">&lt;<span class="pln"> <span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">left <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">width<span class="pun">)<span class="pln">
+        <span class="kwd">let<span class="pln"> condition4 <span class="pun">=<span class="pln"> fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">offsetTop <span class="pun">&lt;<span class="pln"> <span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">top <span class="pun">+<span class="pln"> <span class="kwd">this<span class="pun">.<span class="pln">height<span class="pun">)<span class="pln">
+        <span class="kwd">if<span class="pln"> <span class="pun">(<span class="pln">condition1 <span class="pun">&amp;&amp;<span class="pln"> condition2 <span class="pun">&amp;&amp;<span class="pln"> condition3 <span class="pun">&amp;&amp;<span class="pln"> condition4<span class="pun">)<span class="pln"> <span class="pun">{<span class="com">// 在框选范围之内<span class="pln">
+          fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">classList<span class="pun">.<span class="pln">add<span class="pun">(<span class="str">'temp-selected'<span class="pun">)<span class="pln">
+        <span class="pun">}<span class="pln"> <span class="kwd">else<span class="pln"> <span class="pun">{<span class="pln">
+          fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">classList<span class="pun">.<span class="pln">remove<span class="pun">(<span class="str">'temp-selected'<span class="pun">)<span class="pln">
+        <span class="pun">}<span class="pln">
+      <span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h2>鼠标抬起，增加选中class</h2>
+<pre><code><code><span class="pln"> <span class="kwd">let<span class="pln"> selectDom <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">getElementsByClassName<span class="pun">(<span class="str">'temp-selected'<span class="pun">);<span class="pln">
+      <span class="pun">[].<span class="pln">slice<span class="pun">.<span class="pln">call<span class="pun">(<span class="pln">selectDom<span class="pun">).<span class="pln">forEach<span class="pun">(<span class="pln">item <span class="pun">=&gt;<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">if<span class="pln"> <span class="pun">(<span class="pln">item<span class="pun">.<span class="pln">classList<span class="pun">.<span class="pln">contains<span class="pun">(<span class="str">'selected'<span class="pun">))<span class="pln"> <span class="pun">{<span class="pln">
+          item<span class="pun">.<span class="pln">classList<span class="pun">.<span class="pln">remove<span class="pun">(<span class="str">'selected'<span class="pun">)<span class="pln">
+        <span class="pun">}<span class="pln"> <span class="kwd">else<span class="pln"> <span class="pun">{<span class="pln">
+          item<span class="pun">.<span class="pln">classList<span class="pun">.<span class="pln">add<span class="pun">(<span class="str">'selected'<span class="pun">)<span class="pln">
+        <span class="pun">}<span class="pln">
+        item<span class="pun">.<span class="pln">classList<span class="pun">.<span class="pln">remove<span class="pun">(<span class="str">'temp-selected'<span class="pun">)<span class="pln">
+      <span class="pun">})<span class="pln">
+      <span class="kwd">if<span class="pln"> <span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">)<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">try<span class="pln"> <span class="pun">{<span class="pln">
+          <span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">.<span class="pln">parentNode<span class="pun">.<span class="pln">removeChild<span class="pun">(<span class="kwd">this<span class="pun">.<span class="pln">selectBoxDashed<span class="pun">)<span class="pln">
+        <span class="pun">}<span class="pln"> <span class="kwd">catch<span class="pln"> <span class="pun">(<span class="pln">err<span class="pun">)<span class="pln"> <span class="pun">{<span class="pln">
+          <span class="com">// console.log(err)<span class="pln">
+        <span class="pun">}<span class="pln">
+      <span class="pun">}<span class="pln">
+      <span class="kwd">let<span class="pln"> fileDivs <span class="pun">=<span class="pln"> document<span class="pun">.<span class="pln">getElementsByClassName<span class="pun">(<span class="str">'list'<span class="pun">)<span class="pln"> <span class="com">// 这里是改变数据<span class="pln">
+      <span class="kwd">for<span class="pln"> <span class="pun">(<span class="kwd">let<span class="pln"> i <span class="pun">=<span class="pln"> <span class="lit">0<span class="pun">;<span class="pln"> i <span class="pun">&lt;<span class="pln"> fileDivs<span class="pun">.<span class="pln">length<span class="pun">;<span class="pln"> i<span class="pun">++)<span class="pln"> <span class="pun">{<span class="pln">
+        <span class="kwd">if<span class="pln"> <span class="pun">(<span class="pln">fileDivs<span class="pun">[<span class="pln">i<span class="pun">].<span class="pln">classList<span class="pun">.<span class="pln">contains<span class="pun">(<span class="str">'selected'<span class="pun">))<span class="pln"> <span class="pun">{<span class="pln">
+          <span class="kwd">this<span class="pun">.<span class="pln">timeList<span class="pun">[<span class="pln">i<span class="pun">]<span class="pln"> <span class="pun">=<span class="pln"> <span class="str">'1'<span class="pln">
+        <span class="pun">}<span class="pln"> <span class="kwd">else<span class="pln"> <span class="pun">{<span class="pln">
+          <span class="kwd">this<span class="pun">.<span class="pln">timeList<span class="pun">[<span class="pln">i<span class="pun">]<span class="pln"> <span class="pun">=<span class="pln"> <span class="str">'0'<span class="pln">
+        <span class="pun">}<span class="pln">
+      <span class="pun">}</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h2>效果如下如：</h2>
+<p><img src="./images/vue封装一个简单的div框选时间的组件0.png" alt="enter image description here" /></p>
+<h2>代码发布到npm</h2>
+<p>这个组件，包括我之前写的<a href="https://www.haorooms.com/post/vue-scroll-nextpage" target="_blank">vue移动端下拉加载下一页数据的组件</a>,都发布到了npm，</p>
+<p>npm地址：<a href="https://www.npmjs.com/package/timedivselect" target="_blank">https://www.npmjs.com/package/timedivselect</a></p>
+<p>使用：</p>
+<pre><code><code><span class="pln">npm install timedivselect <span class="pun">-<span class="pln">S
+
+<span class="kwd">import<span class="pln"> timeDivSelect <span class="kwd">from<span class="pln"> <span class="str">'timedivselect'</span></span></span></span></span></span></span></span></code></pre>
+<p>使用例子：</p>
+<p><a href="https://github.com/confidence68/timeDivselect/blob/master/src/App.vue" target="_blank">https://www.jkys120.com</a></p>
+<h2>顺便说说npm发布遇到的一个小问题吧</h2>
+<p>之前我npm也发布过一些，关于如何发布npm包，我博客之前虽然没有写，但是网上很多。</p>
+<p>第一次用的时候一般是：</p>
+<pre><code><code><span class="pln">npm adduser
+
+<span class="com">// 输入用户名，密码等【npm 网站要提前注册，npm网站的用户名和密码】</span></span></code></pre>
+<p>不是第一次</p>
+<pre><code><code><span class="pln">npm login</span></code></pre>
+<p>发布、删除等</p>
+<pre><code><code><span class="pln">npm publish <span class="com">// 发布<span class="pln">
+
+npm unpublish <span class="pun">包名<span class="pln"> <span class="com">// 撤销删除</span></span></span></span></span></span></code></pre>
+<p><strong>回到正题，我今天遇到的问题是npm: no_perms Private mode enable, only admin can publish this module</strong></p>
+<p>之前发布都是好好的，为啥突然这次发布会有这个错误信息呢？原来是因为我指定了npm的淘宝镜像。</p>
+<p>目前推荐使用NRM</p>
+<pre><code><code><span class="pln">sudo npm install <span class="pun">-<span class="pln">g nrm</span></span></span></code></pre>
+<p>查看源列表</p>
+<pre><code><code><span class="pln">nrm ls</span></code></pre>
+<p>使用某个源</p>
+<pre><code><code><span class="pln">nrm <span class="kwd">use<span class="pln"> npm</span></span></span></code></pre>
+<p>这样再发布既可以了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,251 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11208087.html</div><br>
+    <p>普通的插槽里面的数据是在父组件里定义的，而作用域插槽里的数据是在子组件定义的。</p>
+<p>有时候作用域插槽很有用，比如使用Element-ui表格自定义模板时就用到了作用域插槽，Element-ui定义了每个单元格数据的显示格式，我们可以通过作用域插槽自定义数据的显示格式，对于二次开发来说具有很强的扩展性。</p>
+<p>作用域插槽使用&lt;template&gt;来定义模板，可以带两个参数，分别是:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; slot-scope&nbsp;&nbsp; &nbsp;;模板里的变量，旧版使用scope属性</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; slot&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ;该作用域插槽的name,指定多个作用域插槽时用到，默认为default，即默认插槽</p>
+<p>例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">Child</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template </span><span style="color: #ff0000;">slot</span><span style="color: #0000ff;">="header"</span><span style="color: #ff0000;"> slot-scope</span><span style="color: #0000ff;">="props"</span><span style="color: #0000ff;">&gt;</span>                 <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">定义了名为header的作用域插槽的模板</span><span style="color: #008000;">--&gt;</span>
+              <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>{{props.info.name}}-{{props.info.age}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">template </span><span style="color: #ff0000;">slot-scope</span><span style="color: #0000ff;">="show"</span><span style="color: #0000ff;">&gt;</span>                                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">定义了默认作用域插槽的模板</span><span style="color: #008000;">--&gt;</span>
+              <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{show.today}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">template</span><span style="color: #0000ff;">&gt;</span>
+          <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">Child</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+      <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.component(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Child</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{
+          template:`</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">div class</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">container</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span>
+                        <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">header</span><span style="background-color: #f5f5f5; color: #000000;">&gt;&lt;</span><span style="background-color: #f5f5f5; color: #000000;">slot name</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">header</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;"> :info</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">info</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&gt;&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">slot&gt;&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">header</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span>     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">header插槽</span>
+                        <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">main</span><span style="background-color: #f5f5f5; color: #000000;">&gt;&lt;</span><span style="background-color: #f5f5f5; color: #000000;">slot today</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">礼拜一</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">默认内容</span><span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">slot&gt;&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">main</span><span style="background-color: #f5f5f5; color: #000000;">&gt;</span>               <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">默认插槽</span>
+                    <span style="background-color: #f5f5f5; color: #000000;">&lt;</span><span style="background-color: #f5f5f5; color: #000000;">/</span><span style="background-color: #f5f5f5; color: #000000;">div&gt;`,</span>
+<span style="background-color: #f5f5f5; color: #000000;">              data(){
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> { info:{name:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">ge</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,age:</span><span style="background-color: #f5f5f5; color: #000000;">25</span><span style="background-color: #f5f5f5; color: #000000;">} }
+              }
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">debugger</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+          el: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+          data:{
+            title:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">我是标题</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            msg:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">我是内容</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">
+          }
+        })
+      </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>我们在子组件定义了两个插槽，如下:</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #000000;">header</span>插槽内通过v-bind绑定了一个名为info的特性，值为一个对象，包含一个name和age属性</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; 另一个是普通插槽，传递了一个<span style="color: #000000;">today特性，值为礼拜一</span></p>
+<p><span style="color: #000000;">父组件引用子组件时定义了模板，渲染后结果如下:</span></p>
+<p><span style="color: #000000;"><img src="./images/Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解0.png" alt="" /></span></p>
+<p>对应的html代码如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解1.png" alt="" /></p>
+<p>其实Vue内部把父组件template下的子节点编译成了一个函数，在子组件实例化时调用的，所以作用域才是子组件的作用域</p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;父组件解析模板将模板转换成AST对象时会执行processSlot()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processSlot (el) {       <span style="color: #008000;">//</span><span style="color: #008000;">第9767行   解析slot插槽</span>
+  <span style="color: #0000ff;">if</span> (el.tag === 'slot') {          <span style="color: #008000;">//</span><span style="color: #008000;">如果是slot</span>
+    <span style="color: #008000;">/*</span><span style="color: #008000;">普通插槽的逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> slotScope;
+    </span><span style="color: #0000ff;">if</span> (el.tag === 'template') {                <span style="color: #008000;">//</span><span style="color: #008000;">如果标签名为template(作用域插槽的逻辑)</span>
+      slotScope = getAndRemoveAttr(el, 'scope');          <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取scope</span>
+      <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>  
+      <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; slotScope) {  <span style="color: #008000;">//</span><span style="color: #008000;">在开发环境下报一些信息，因为scope属性已淘汰，新版本开始用slot-scope属性了</span>
+        warn$2<span style="color: #000000;">(
+          </span>"the \"scope\" attribute for scoped slots have been deprecated and " +
+          "replaced by \"slot-scope\" since 2.5. The new \"slot-scope\" attribute " +
+          "can also be used on plain elements in addition to &lt;template&gt; to " +
+          "denote scoped slots."<span style="color: #000000;">,
+          </span><span style="color: #0000ff;">true</span><span style="color: #000000;">
+        );
+      }
+      el.slotScope </span>= slotScope || getAndRemoveAttr(el, 'slot-scope'); <span style="color: #008000;">//</span><span style="color: #008000;">获取slot-scope特性，值保存到AST对象的slotScope属性里</span>
+    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> ((slotScope = getAndRemoveAttr(el, 'slot-scope'<span style="color: #000000;">))) {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">其它分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+    </span><span style="color: #0000ff;">var</span> slotTarget = getBindingAttr(el, 'slot');          <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取slot特性</span>
+    <span style="color: #0000ff;">if</span> (slotTarget) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果获取到了</span>
+      el.slotTarget = slotTarget === '""' ? '"default"' : slotTarget;   <span style="color: #008000;">//</span><span style="color: #008000;">则保存到el.slotTarget里面</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> preserve slot as an attribute for native shadow DOM compat</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> only for non-scoped slots.</span>
+      <span style="color: #0000ff;">if</span> (el.tag !== 'template' &amp;&amp; !<span style="color: #000000;">el.slotScope) {
+        addAttr(el, </span>'slot'<span style="color: #000000;">, slotTarget);
+      }
+    }
+  }
+}</span></pre>
+</div>
+<p>执行到这里，对于<span style="color: #0000ff;">&lt;<span style="color: #800000;">template <span style="color: #ff0000;">slot<span style="color: #0000ff;">="header"<span style="color: #ff0000;"> slot-scope<span style="color: #0000ff;">="props"<span style="color: #0000ff;">&gt; 节点</span></span></span></span></span></span></span>来说，添加了一个slotScope和slotTarget属性，如下:</p>
+<p>&nbsp;<img src="./images/Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解2.png" alt="" /></p>
+<p>对于<span style="color: #0000ff;">&lt;<span style="color: #800000;">template <span style="color: #ff0000;">slot-scope<span style="color: #0000ff;">="show"<span style="color: #0000ff;">&gt;</span></span></span></span></span>节点来说，由于没有定义slot属性，它的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解3.png" alt="" /></p>
+<p><span style="color: #ff0000;">作用域插槽和普通节点最大的不同点是它不会将当前结点挂在AST对象树上，而是挂在了父节点的scopedSlots属性上。</span></p>
+<p>在解析完节点属性后会执行start()函数内的末尾会判断如果发现AST对象.slotScope存在，则会在currentParent对象(也就是父AST对象)的scopedSlots上新增一个el.slotTarget属性，值为当前template对应的AST对象。&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">if</span> (currentParent &amp;&amp; !element.forbidden) {    <span style="color: #008000;">//</span><span style="color: #008000;">第9223行  解析模板时的逻辑 如果当前对象不是根对象， 且不是style和text/javascript类型script标签</span>
+  <span style="color: #0000ff;">if</span> (element.elseif || element.<span style="color: #0000ff;">else</span>) {           <span style="color: #008000;">//</span><span style="color: #008000;">如果有elseif或else指令存在(设置了v-else或v-elseif指令)</span>
+<span style="color: #000000;">    processIfConditions(element, currentParent);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (element.slotScope) { <span style="color: #008000;">//</span><span style="color: #008000;"> scoped slot  //如果存在slotScope属性,即是作用域插槽</span>
+    currentParent.plain = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> name = element.slotTarget || '"default"';(currentParent.scopedSlots || (currentParent.scopedSlots = {}))[name] = element;   <span style="color: #008000;">//</span><span style="color: #008000;">给父元素增加一个scopedSlots属性，值为数组，每个键名为对应的目标名称，值为对应的作用域插槽AST对象</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> { 
+    currentParent.children.push(element);
+    element.parent </span>=<span style="color: #000000;"> currentParent;
+  }
+}</span></pre>
+</div>
+<p>这样父节点就存在一个slotTarget属性了，值为对应的作用域插槽AST对象，例子里执行到这一步对应slotTarget如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十六) 高级应用 作用域插槽 详解4.png" alt="" /></p>
+<p>default和header分别对应父组件里的两个template节点</p>
+<p>父组件执行generate的时候,如果AST对象的scopedSlots属性存在，则执行genScopedSlots()函数拼凑data:</p>
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">if</span> (el.scopedSlots) {     <span style="color: #008000;">//</span><span style="color: #008000;">如果el.scopedSlots存在，即子节点存在作用域插槽  </span>
+    data += (genScopedSlots(el.scopedSlots, state)) + ",";    <span style="color: #008000;">//</span><span style="color: #008000;">调用genScopedSlots()函数，并拼接到data里面</span>
+  } </pre>
+</div>
+<p>genScopedSlots函数会返回scopedSlots:_u([])函数字符串,_u就是全局的resolveScopedSlots函数，genScopedSlots如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genScopedSlots (     <span style="color: #008000;">//</span><span style="color: #008000;">第10390行 </span>
+<span style="color: #000000;">  slots,
+  state
+) {
+  </span><span style="color: #0000ff;">return</span> ("scopedSlots:_u([" + (Object.keys(slots).map(<span style="color: #0000ff;">function</span> (key) {     <span style="color: #008000;">//</span><span style="color: #008000;">拼凑一个_u字符串</span>
+      <span style="color: #0000ff;">return</span> genScopedSlot(key, slots[key], state)                            <span style="color: #008000;">//</span><span style="color: #008000;">遍历slots，执行genScopedSlot，将返回值保存为一个数组，作为_u的参数</span>
+    }).join(',')) + "])"<span style="color: #000000;">)
+}</span></pre>
+</div>
+<p>genScopedSlot会拼凑每个slots，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genScopedSlot ( <span style="color: #008000;">//</span><span style="color: #008000;">第10399行 </span>
+<span style="color: #000000;">  key,
+  el,
+  state
+) {
+  </span><span style="color: #0000ff;">if</span> (el.<span style="color: #0000ff;">for</span> &amp;&amp; !<span style="color: #000000;">el.forProcessed) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> genForScopedSlot(key, el, state)
+  }
+  </span><span style="color: #0000ff;">var</span> fn = "function(" + (String(el.slotScope)) + "){" +      <span style="color: #008000;">//</span><span style="color: #008000;">拼凑一个函数,el.slotScope就是模板里设置的slot-scope属性</span>
+    "return " + (el.tag === 'template'
+      ? el.<span style="color: #0000ff;">if</span>
+        ? ((el.<span style="color: #0000ff;">if</span>) + "?" + (genChildren(el, state) || 'undefined') + ":undefined"<span style="color: #000000;">)
+        : genChildren(el, state) </span>|| 'undefined'<span style="color: #000000;">
+      : genElement(el, state)) </span>+ "}"<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">return</span> ("{key:" + key + ",fn:" + fn + "}"<span style="color: #000000;">)
+}</span></pre>
+</div>
+<p>解析后生成的render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"app"}},[_c('child',{scopedSlots:_u([{key:"header",fn:<span style="color: #0000ff;">function</span>(props){<span style="color: #0000ff;">return</span> [_c('h1',[_v(_s(props.info.name)+"-"+_s(props.info.age))])]}},{key:"default",fn:<span style="color: #0000ff;">function</span>(show){<span style="color: #0000ff;">return</span> [_c('p',[_v(_s(show.today))])]}}])})],1)}</pre>
+</div>
+<p>这样看着不清楚，我们整理一下，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> _c(
+        </span>'div'<span style="color: #000000;">, 
+        {attrs: {</span>"id": "app"<span style="color: #000000;">}},
+        [_c(</span>'child'<span style="color: #000000;">, {
+            scopedSlots: _u([
+              {key: </span>"header",fn: <span style="color: #0000ff;">function</span>(props) {<span style="color: #0000ff;">return</span> [_c('h1', [_v(_s(props.info.name) + "-" +<span style="color: #000000;"> _s(props.info.age))])]}},
+              {key: </span>"default",fn: <span style="color: #0000ff;">function</span>(show) {<span style="color: #0000ff;">return</span> [_c('p'<span style="color: #000000;">, [_v(_s(show.today))])]}}
+            ])
+          }
+        )], 
+        </span>1<span style="color: #000000;">)
+}</span></pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p><span style="color: #ff0000;">可以看到_u的参数是一个对象，键名为插槽名，值是一个函数，最后子组件会执行这个函数的,创建子组件的实例时，会将scopedSlots属性保存到data.scopedSlots上</span></p>
+<p>对于子组件的编译过程和普通插槽没有什么区别，唯一不同的是会有attr属性，例子里的组件编译后生成的render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{staticClass:"container"},[_c('header',[_t("header",<span style="color: #0000ff;">null</span>,{info:info})],2),_v(" "),_c('main',[_t("default",[_v("默认内容")],{today:"礼拜一"})],2)])}</pre>
+</div>
+<p>这样看着也不清楚，我们整理一下，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span> _c('div', {staticClass: "container"<span style="color: #000000;">},
+        [
+          _c(</span>'header', [_t("header", <span style="color: #0000ff;">null</span>, {info: info})], 2<span style="color: #000000;">), 
+          _v(</span>" "<span style="color: #000000;">), 
+          _c(</span>'main', [_t("default", [_v("默认内容")], {today: "礼拜一"})], 2<span style="color: #000000;">)
+        ]
+      )
+}</span></pre>
+</div>
+<p>可以看到最后和普通插槽一样也是执行_t函数的，不过在_t函数内会优先从scopedSlots中获取模板，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> renderSlot (       <span style="color: #008000;">//</span><span style="color: #008000;">渲染插槽</span>
+<span style="color: #000000;">  name,
+  fallback,
+  props,
+  bindObject
+) {
+  </span><span style="color: #0000ff;">var</span> scopedSlotFn = <span style="color: #0000ff;">this</span>.$scopedSlots[name];           <span style="color: #008000;">//</span><span style="color: #008000;">尝试从 this.$scopedSlots中获取名为name的函数，也就是我们在上面父组件渲染生成的render函数里的作用域插槽相关函数</span>
+  <span style="color: #0000ff;">var</span><span style="color: #000000;"> nodes;
+  </span><span style="color: #0000ff;">if</span> (scopedSlotFn) { <span style="color: #008000;">//</span><span style="color: #008000;"> scoped slot                    //如果scopedSlotFn存在</span>
+    props = props ||<span style="color: #000000;"> {};
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (bindObject) {
+      </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; !<span style="color: #000000;">isObject(bindObject)) {
+        warn(
+          </span>'slot v-bind without argument expects an Object'<span style="color: #000000;">,
+          </span><span style="color: #0000ff;">this</span><span style="color: #000000;">
+        );
+      }
+      props </span>=<span style="color: #000000;"> extend(extend({}, bindObject), props);
+    }
+    nodes </span>= scopedSlotFn(props) || fallback;          <span style="color: #008000;">//</span><span style="color: #008000;">最后执行scopedSlotFn这个函数，参数为props，也就是特性数组</span>
+  } <span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;">普通插槽的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+  }
+
+  </span><span style="color: #0000ff;">var</span> target = props &amp;&amp;<span style="color: #000000;"> props.slot;
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (target) {
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">this</span>.$createElement('template'<span style="color: #000000;">, { slot: target }, nodes)
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> nodes
+  }
+}</span></pre>
+</div>
+<p>最后将nodes返回，也就是在父节点的template内定义的子节点返回，作为最后渲染的节点集合。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

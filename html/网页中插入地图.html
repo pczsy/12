@@ -1,0 +1,62 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修网页中插入地图' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>网页中插入地图</center></div><div class='banquan'>原文出处:本文由博客园博主凹凸曼啦提供。<br/>
+原文连接:https://www.cnblogs.com/cyhsmile/p/11543235.html</div><br>
+    <p>在我们做官网中经常会在网页中插入百度地图，这个其实挺简单的，下面跟着步骤一步步来。</p>
+<p><img src="./images/网页中插入地图0.png" alt="" width="814" height="480" /></p>
+<p>&nbsp;</p>
+<p>1.进入百度创建地图的网站&nbsp;<a href="http://api.map.baidu.com/lbsapi/creatmap/" rel="nofollow" data-token="50a54eb90ffe221b032c2bd4a8a610b6">http://api.map.baidu.com/lbsapi/creatmap/</a>&nbsp;</p>
+<p>2.看到图中第一步的下面有1,2,3三个小步骤，打开1.定位中心点&rarr;切换里面的城市按钮，选择你要展示的城市位置&rarr;在输入框中输入具体的地址，点击查找，就能在右边地图上显示你要显示的位置地图&nbsp;</p>
+<p><img src="./images/网页中插入地图1.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;3.打开2.设置地图，在里面可以设置地图的宽高，决定哪些按钮是要还是不要，按钮的位置都是可以设置的&nbsp;</p>
+<p><img src="./images/网页中插入地图2.png" alt="" width="825" height="571" /></p>
+<p>&nbsp;</p>
+<p>4.添加标注&rarr;第一个图标&ldquo;点标记&rdquo;，可以设置具体的位置点，以点标记的形式显示在地图中，可以更换点标记的样式，也可以设置你要显示的名称和备注；第二个图标&ldquo;线标记&rdquo;，可以画出线条路线等；第三个图标&ldquo;文字标记&rdquo;，可以写些文字；</p>
+<p><img src="./images/网页中插入地图3.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;至此，一个简单的百度地图位置就设置完了，接下来就是把地图插入到网页中；</p>
+<p>5.点击&ldquo;获取代码&rdquo;，就会出现一个弹框，里面的代码就是我们所要的，把代码复制到一个空的html文件中保存，命名为 &ldquo;map.html&rdquo; ;&nbsp;</p>
+<p>&nbsp;<img src="./images/网页中插入地图4.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>6.它的src路径就写 map.html ，这样在你的网页中就可以显示你自己设置的地图了，当然地图的宽高、在网页中显示的位置要自己写css。&nbsp;</p>
+<p>该文转自&nbsp;https://blog.csdn.net/qq_39533140/article/details/80042315</p>
+<p>写好了效果是出来了，但是<strong><span style="font-size: 14pt;">百度标记的图标并没有</span></strong>，如图：</p>
+<p><img src="./images/网页中插入地图5.png" alt="" width="1279" height="465" /></p>
+<p>&nbsp;</p>
+<p>解决方法也很简单，只要找到生成的代码中的icon地址：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;">创建一个Icon</span>
+    <span style="color: #0000ff;">function</span><span style="color: #000000;"> createIcon(json){
+        </span><span style="color: #0000ff;">var</span> icon = <span style="color: #0000ff;">new</span> BMap.Icon("http://app.baidu.com/map/images/us_mk_icon.png", <span style="color: #0000ff;">new</span> BMap.Size(json.w,json.h),{imageOffset: <span style="color: #0000ff;">new</span> BMap.Size(-json.l,-json.t),infoWindowOffset:<span style="color: #0000ff;">new</span> BMap.Size(json.lb+5,1),offset:<span style="color: #0000ff;">new</span><span style="color: #000000;"> BMap.Size(json.x,json.h)})
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> icon;
+    }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;http://app.baidu.com/map/images/us_mk_icon.png</p>
+<p>替换成这个地址即可&nbsp;http://api.map.baidu.com/lbsapi/creatmap/images/us_mk_icon.png</p>
+<p>图标 就出来了。</p>
+<p><img src="./images/网页中插入地图6.png" alt="" width="1194" height="439" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

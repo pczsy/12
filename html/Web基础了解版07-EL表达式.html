@@ -1,0 +1,451 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Web基础了解版07-EL表达式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Web基础了解版07-EL表达式</center></div><div class='banquan'>原文出处:本文由博客园博主远离颠倒梦想提供。<br/>
+原文连接:https://www.cnblogs.com/Open-ing/p/12094475.html</div><br>
+    <h1 class="md-end-block md-heading md-focus" style="text-align: center;"><span class="md-plain md-expand">EL</span></h1>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">EL（Expression Language）是JSP<span><strong>内置的表达式语言</strong><span class="md-plain">，用以访问页面的上下文以及不同作用域中的对象 ，取得对象属性的值，或执行简单的运算或判断操作。EL在得到某个数据时，会自动进行数据类型的转换。</span></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>EL表达式用于代替JSP表达式(&lt;%= %&gt;)</strong><span class="md-plain">在页面中做输出操作。</span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">EL表达式出现的目的是为了使JSP写起来更加简单，让jsp的代码更佳简化。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">EL表达式<span><strong>仅仅用来读取数据，而不能对数据进行修改。</strong></span></span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">使用EL表达式输出数据时，如果有则输出数据，如果为null则什么也不输出。</span></p>
+</li>
+</ul>
+<p><span class="md-plain md-expand">EL表达式，它能够极大的简化JSP页面上数据的显示。他就是被用来优化数据读取操作的。</span></p>
+<p><span class="md-plain md-expand"><strong><span class="md-plain">EL表达式的最主要功能就是从域对象中获取数据，并且输出</span></strong></span></p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">基本语法</span></h3>
+<p><span class="md-plain md-expand">EL表达式总是放在{}中，而且前边有一个$作为前缀</span></p>
+<div class="cnblogs_code">
+<pre><code> ${标识符}</pre>
+</div>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">第一点：当EL表达式输出的key不存在的时候，输出的是空串&rdquo;&rdquo;</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">第二点：EL表达式在域对象中搜索属性的顺序是pageContext，request，session，application</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取域中的对象可以直接使用对象名，这时按照从小到大的顺序依次向上查找。如获取域中名字为user的对象</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${user}</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取对象的属性值可以直接通过&ldquo;对象.属性名&rdquo;</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">${user.name}</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">注意：这里的属性名是<span><strong>get和set方法对应的属性值</strong><span class="md-plain">，并不是对象中的变量名。</span></span></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">比如：如果获取name属性值，那么该对象中必定要存在一个getName()方法。</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取对象的属性也可以通过&ldquo;对象[&ldquo;属性名&rdquo;]&rdquo;</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">${user[&ldquo;name&rdquo;]}</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">获取Map中属性时可以直接通过属性的key</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${map.key}</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${map[key]}</span></p>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>在指定域中获取属性</strong></span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">在EL表达式中如果我们直接使用属性名如：${user}，它将会在四个域中<span><strong>由小到大</strong><span class="md-plain">依次查找。顺序：pageScope、requestScope、sessionScope、applicationScope。</span></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">也可以指定从哪个域中获取：</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${ pageScope .user}：当前页面</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${requestScope.user}：当前请求</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">${sessionScope.user}：当前会话</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">${applicationScope.user}：当前应用</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">运算符</span></h3>
+<p><span class="md-plain md-expand">语法：${ 运算表达式 }</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-expand">算数运算符</span></span></th><th><span class="td-span"><span>说<span class="md-plain"> <span>明</span></span></span></span></th><th><span class="td-span"><span>范<span class="md-plain"> <span>例</span></span></span></span></th><th><span class="td-span"><span>结果</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">+</span></span></td>
+<td><span class="td-span"><span class="md-plain">加法</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 12 + 18 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">30</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">-</span></span></td>
+<td><span class="td-span"><span class="md-plain">减法</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 18 - 8 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">10</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">*</span></span></td>
+<td><span class="td-span"><span class="md-plain">乘法</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 12 * 12 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">144</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">/ 或div</span></span></td>
+<td><span class="td-span"><span class="md-plain">除法</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 144 / 12 } 或 ${ 144 div 12 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">12</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">% 或mod</span></span></td>
+<td><span class="td-span"><span class="md-plain">取模</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 144 % 10 } 或 ${ 144 mod 10 }</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">4</span></span></td>
+</tr>
+</tbody>
+</table>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-expand">关系运算符</span></span></th><th><span class="td-span"><span>说<span class="md-plain"> <span>明</span></span></span></span></th><th><span class="td-span"><span>范<span class="md-plain"> <span>例</span></span></span></span></th><th><span class="td-span"><span>结果</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">== 或 eq</span></span></td>
+<td><span class="td-span"><span class="md-plain">等于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 5 == 5 } 或 ${ 5 eq 5 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">true</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">!= 或 ne</span></span></td>
+<td><span class="td-span"><span class="md-plain">不等于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 5 !=5 } 或 ${ 5 ne 5 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">false</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">&lt; 或 lt</span></span></td>
+<td><span class="td-span"><span class="md-plain">小于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 3 &lt; 5 } 或 ${ 3 lt 5 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">true</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">&gt; 或 gt</span></span></td>
+<td><span class="td-span"><span class="md-plain">大于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 2 &gt; 10 } 或 ${ 2 gt 10 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">false</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">&lt;= 或 le</span></span></td>
+<td><span class="td-span"><span class="md-plain">小于等于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 5 &lt;= 12 } 或 ${ 5 le 12 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">true</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">&gt;= 或 ge</span></span></td>
+<td><span class="td-span"><span class="md-plain">大于等于</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 3 &gt;= 5 } 或 ${ 3 ge 5 }</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">false</span></span></td>
+</tr>
+</tbody>
+</table>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-expand">逻辑运算符</span></span></th><th><span class="td-span"><span>说<span class="md-plain"> <span>明</span></span></span></span></th><th><span class="td-span"><span>范<span class="md-plain"> <span>例</span></span></span></span></th><th><span class="td-span"><span>结果</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">&amp;&amp; 或 and</span></span></td>
+<td><span class="td-span"><span class="md-plain">与运算</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 12 == 12 &amp;&amp; 12 &lt; 11 } 或 ${ 12 == 12 and 12 &lt; 11 }</span></span></td>
+<td><span class="td-span"><span class="md-plain">false</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span>|<span>|<span class="md-plain"> 或 or</span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">或运算</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ 12 == 12 <span>|<span>|<span class="md-plain"> 12 &lt; 11 } 或 ${ 12 == 12 or 12 &lt; 11 }</span></span></span></span></span></td>
+<td><span class="td-span"><span class="md-plain">true</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">! 或 not</span></span></td>
+<td><span class="td-span"><span class="md-plain">取反运算</span></span></td>
+<td><span class="td-span"><span class="md-plain">${ !true } 或 ${not true }</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain md-expand">false</span></span></td>
+</tr>
+</tbody>
+</table>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">empty运算符</span></h3>
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">empty运算是判断一个对象或者集合是否为空。返回boolean值。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">对象为null时，返回<span><strong>true</strong></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">如果是空的字符串，返回<span><strong>true</strong></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">如果是空的Object数组(Object数组.length == 0)，返回<span><strong>true</strong></span></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">空的集合，返回<span><strong>true</strong></span></span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain">空的map，返回<span class="md-expand"><strong>true</strong></span></span></p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">三元运算符</span></h3>
+<div class="cnblogs_code">
+<pre><code>${ 表达式1 ? 表达式2 : 表达式3 }</pre>
+</div>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">&ldquo;.&rdquo;和[]运算符</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">&ldquo;.&rdquo; 运算符，可以取JavaBean对象的属性值，也可以取map中某个key的值。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">[] 中括号，可以获取顺序集合中指定索引的元素，也可以获取特殊key的值。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">当我们在map对象中存放一些特殊的key的时候，比如说，key字符串中含有 &ldquo;.&rdquo; 、&ldquo;+&rdquo; 、&ldquo;-&rdquo; 、&ldquo;*&rdquo; 、&ldquo;/&rdquo; 、 &ldquo;%&rdquo; 等 这些运算符的时候，会让el解析器产生歧义的时候。我们可以使用[&lsquo;key&rsquo;]中括号加引号包含key的形式取值。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">[]中括号，可以获取有序集合（数组和List集合）中的给定索引的元素</span></p>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">11个隐含对象</span></h3>
+<p><span class="md-plain md-expand">这些对象可以在EL表达式中<strong>直接使用</strong>。</span></p>
+<table class="md-table">
+<thead>
+<tr class="md-end-block md-focus-container"><th><span class="td-span md-focus"><span class="md-expand">隐含对象</span></span></th><th><span class="td-span"><span>类型</span></span></th><th><span class="td-span"><span>说明</span></span></th></tr>
+</thead>
+<tbody>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>pageContext</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">javax.servlet.jsp.PageContext</span></span></td>
+<td><span class="td-span"><span class="md-plain">就是JSP页面中的pageContext对象</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>pageScope</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,Object&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">Page范围属性名和属性值</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>requestScope</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,Object&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">Request范围属性名和属性值</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>sessionScope</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,Object&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">Session范围属性名和属性值</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>applicationScope</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,Object&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">Web应用范围属性名和属性值</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>param</strong></span></span></td>
+<td><span class="td-span"><span><strong>java.util.Map&lt;String,String&gt;</strong></span></span></td>
+<td><span class="td-span"><span><strong>对应一个请求参数</strong></span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">paramValues</span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,String[]&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">对应一组请求参数</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>header</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,String&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">请求头</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span class="md-plain">headerValues</span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String,String[]&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">请求头返回字符数组</span></span></td>
+</tr>
+<tr class="md-end-block">
+<td><span class="td-span"><span><strong>cookie</strong></span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String, Cookie&gt;</span></span></td>
+<td><span class="td-span"><span class="md-plain">获取某个cookie对象</span></span></td>
+</tr>
+<tr class="md-end-block md-focus-container">
+<td><span class="td-span"><span class="md-plain">initParam</span></span></td>
+<td><span class="td-span"><span class="md-plain">java.util.Map&lt;String, String&gt;</span></span></td>
+<td><span class="td-span md-focus"><span class="md-plain">获取web.xml中<span>&lt;<span class="md-plain md-expand">context-param&gt;初始化参数</span></span></span></span></td>
+</tr>
+</tbody>
+</table>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">请求域</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">请求域主要用于获取域对象中的属性，四个对象分别对应四个请求域。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">pageScope</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">requestScope</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">sessionScope</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">applicationScope</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">请求参数</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">参数对象主要用于获取get或post请求中的参数。</span></p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">param：获取指定的请求参数， 如：${param.username},与jsp中request.getParameter()作用一致。</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">paramValues：获取请求参数数组，如：${paramValues.hobby}会返回一个string类型的数组</span></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">获取域数据的顺序</span></h3>
+<p><span class="md-plain md-expand">在执行时，会用标识符为关键字分别从page、request、session、application四个域中查找对应key的对象。找到则返回相应数据。找不到则返回空串。（注意，不是null，而是空字符串）</span></p>
+<p class="md-end-block md-heading md-focus"><strong><span class="md-plain md-expand">获取javaBean普通属性、数组属性、List集合属性，map属性中的数据</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">${  user.username  }        　　// 获取user对象中。username属性值 
+
+${  list[下标]  }               // 访问有序集合（或数组）中给定索引的元素
+
+${  map.key  }                 // 访问map集合中指定key的属性值
+
+${  map[&ldquo;key&rdquo;] }               // 访问特殊字符串的key的属性值</span></pre>
+</div>
+<p>一定要记住一点，EL表达式获取数据的时候，是通过对应的get方法获取的 BeanUtils 是通过set方法设置值</p>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">pageContext访问Jsp中内置对象</span></h3>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">通过pageContext对象我们可以直接获取jsp中的一些内置对象，比如：request对象，session对象，Servletconfig对象，ServletContext对象，然后获取一些我们需要的信息。</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p">常用的功能获取</p>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">协议</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">服务器ip</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">服务器端口</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span><strong>获取工程路径</strong></span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取请求方法</span></p>
+</li>
+<li class="md-list-item">
+<p class="md-end-block md-p"><span class="md-plain">获取客户端ip地址</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">获取会话的id编号</span></p>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="ul-list" data-mark="-">
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span class="md-plain md-expand">工程名(上下文路径):${ pageContext.request.contextPath }</span></p>
+</li>
+<li class="md-list-item md-focus-container">
+<p class="md-end-block md-p md-focus"><span><strong>但是在实际项目中为了缩短代码量，会把request对象放在pageContext域对象中。然后再使用</strong><span class="md-plain md-expand">。比如</span></span></p>
+</li>
+</ul>
+<div class="cnblogs_code">
+<pre><code><span style="background-color: #ffff00; color: #000000;">&lt;%</span> 
+<span style="background-color: #f5f5f5; color: #000000;">//</span><span style="background-color: #f5f5f5; color: #000000;"> 先把request对象放到pageContext域对象中
+pageContext.setAttribute(&ldquo;req&rdquo;,request);
+</span><span style="background-color: #ffff00; color: #000000;">%&gt;</span><span style="color: #000000;">
+//然后EL表达式代码改为
+工程名(上下文路径):${ req.contextPath }</span></pre>
+</div>
+<h3 class="md-end-block md-heading md-focus"><span class="md-plain md-expand">其他隐含对象</span></h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+参数username的值：${ param.username }</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+参数hobby的值：${ paramValues.hobby[0] }</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+请求头Accept-Language的值：${ header["Accept-Language"] }</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+请求头Accept的值：${ headerValues["Accept"][0] }</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+cookie的key = ${ cookie.JSESSIONID.name } : value = ${ cookie.JSESSIONID.value } </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span><span style="color: #000000;">
+上下文参数：${ initParam.username }</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">br</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,149 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修漂亮的无序列表样式' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>漂亮的无序列表样式</center></div><div class='banquan'>原文出处:本文由博客园博主Dotnet9个人博客提供。<br/>
+原文连接:https://www.cnblogs.com/Dotnet9-com/p/12074405.html</div><br>
+    <blockquote>
+<p>时间如流水，只能流去不流回！</p>
+<p>点赞再看，养成习惯，这是您给我创作的动力！</p>
+<p>本文 Dotnet9 https://dotnet9.com 已收录，站长乐于分享dotnet相关技术，比如Winform、WPF、ASP.NET Core等，亦有C++桌面相关的Qt Quick和Qt Widgets等，只分享自己熟悉的、自己会的。</p>
+</blockquote>
+<p>阅读导航：</p>
+<ul>
+<li>一、先看效果</li>
+<li>二、本文背景</li>
+<li>三、代码实现</li>
+<li>四、文章参考</li>
+<li>五、代码下载</li>
+</ul>
+<h2>一、先看效果</h2>
+<div class="wp-block-image"><a class="j-wpcom-lightbox" href="./images/漂亮的无序列表样式0.png" data-group="nogroup" data-id="0" data-index="0"><img class="wp-image-6252 j-lazy" style="display: block; margin-left: auto; margin-right: auto;" src="./images/漂亮的无序列表样式0.png" alt="漂亮的无序列表样式" data-original="./images/漂亮的无序列表样式0.png" /></a></div>
+<h2>二、本文背景</h2>
+<p>最近在学B/S，前端使用Angular，今天学到Angular中文官网的一个例子，其中的无序列表样式设置出来挺好看的，所以在这记录一下。</p>
+<h2>三、代码实现</h2>
+<p>只记录其中关键的代码。</p>
+<p>模拟数据 mock-heroes.ts</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> import { Hero } from "./hero"<span style="color: #000000;">;
+</span><span style="color: #008080;"> 2</span> 
+<span style="color: #008080;"> 3</span> export const HEROES: Hero[] =<span style="color: #000000;"> [
+</span><span style="color: #008080;"> 4</span>   { id: 11, name: 'Dr Nice'<span style="color: #000000;"> },
+</span><span style="color: #008080;"> 5</span>   { id: 12, name: 'Narco'<span style="color: #000000;"> },
+</span><span style="color: #008080;"> 6</span>   { id: 13, name: 'Bombasto'<span style="color: #000000;"> },
+</span><span style="color: #008080;"> 7</span>   { id: 14, name: 'Celeritas'<span style="color: #000000;"> },
+</span><span style="color: #008080;"> 8</span>   { id: 15, name: 'Magneta'<span style="color: #000000;"> },
+</span><span style="color: #008080;"> 9</span>   { id: 16, name: 'RubberMan'<span style="color: #000000;"> },
+</span><span style="color: #008080;">10</span>   { id: 17, name: 'Dynama'<span style="color: #000000;"> },
+</span><span style="color: #008080;">11</span>   { id: 18, name: 'Dr IQ'<span style="color: #000000;"> },
+</span><span style="color: #008080;">12</span>   { id: 19, name: 'Magma'<span style="color: #000000;"> },
+</span><span style="color: #008080;">13</span>   { id: 20, name: 'Tornado'<span style="color: #000000;"> }
+</span><span style="color: #008080;">14</span> ];</pre>
+</div>
+<p>&nbsp;</p>
+<p>Angular模板，展示列表的html文件：heroes.component.html</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>My Heroes<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="heroes"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li </span><span style="color: #ff0000;">*ngFor</span><span style="color: #0000ff;">="let hero of heroes"</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    [class.selected]</span><span style="color: #0000ff;">="hero === selectedHero"</span>
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    (click)</span><span style="color: #0000ff;">="onSelect(hero)"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 6</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="badge"</span><span style="color: #0000ff;">&gt;</span>{{hero.id}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">{{hero.name}}
+</span><span style="color: #008080;"> 7</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">*ngIf</span><span style="color: #0000ff;">="selectedHero"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">11</span>     
+<span style="color: #008080;">12</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>{{selectedHero.name | uppercase}} Details<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">13</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>id: <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>{{selectedHero.id}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">14</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">15</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">name:
+</span><span style="color: #008080;">16</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">[(ngModel)]</span><span style="color: #0000ff;">="selectedHero.name"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="name"</span><span style="color: #0000ff;">/&gt;</span>
+<span style="color: #008080;">17</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">18</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">19</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>最主要的是这个样式文件，以后可以作为参考：heroes.component.css</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span> <span style="color: #800000;">.selected </span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #CFD8DC !important</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    color</span>:<span style="color: #0000ff;"> white</span>;
+<span style="color: #008080;"> 4</span> }
+<span style="color: #008080;"> 5</span> <span style="color: #800000;">.heroes </span>{
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> 0 0 2em 0</span>;
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    list-style-type</span>:<span style="color: #0000ff;"> none</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    padding</span>:<span style="color: #0000ff;"> 0</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 15em</span>;
+<span style="color: #008080;">10</span> }
+<span style="color: #008080;">11</span> <span style="color: #800000;">.heroes li </span>{
+<span style="color: #008080;">12</span> <span style="color: #ff0000;">    cursor</span>:<span style="color: #0000ff;"> pointer</span>;
+<span style="color: #008080;">13</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> 0</span>;
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #EEE</span>;
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> .5em</span>;
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">    padding</span>:<span style="color: #0000ff;"> .3em 0</span>;
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 1.6em</span>;
+<span style="color: #008080;">19</span> <span style="color: #ff0000;">    border-radius</span>:<span style="color: #0000ff;"> 4px</span>;
+<span style="color: #008080;">20</span> }
+<span style="color: #008080;">21</span> <span style="color: #800000;">.heroes li.selected:hover </span>{
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #BBD8DC !important</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">    color</span>:<span style="color: #0000ff;"> white</span>;
+<span style="color: #008080;">24</span> }
+<span style="color: #008080;">25</span> <span style="color: #800000;">.heroes li:hover </span>{
+<span style="color: #008080;">26</span> <span style="color: #ff0000;">    color</span>:<span style="color: #0000ff;"> #607D8B</span>;
+<span style="color: #008080;">27</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #DDD</span>;
+<span style="color: #008080;">28</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> .1em</span>;
+<span style="color: #008080;">29</span> }
+<span style="color: #008080;">30</span> <span style="color: #800000;">.heroes .text </span>{
+<span style="color: #008080;">31</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">32</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;"> -3px</span>;
+<span style="color: #008080;">33</span> }
+<span style="color: #008080;">34</span> <span style="color: #800000;">.heroes .badge </span>{
+<span style="color: #008080;">35</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;"> inline-block</span>;
+<span style="color: #008080;">36</span> <span style="color: #ff0000;">    font-size</span>:<span style="color: #0000ff;"> small</span>;
+<span style="color: #008080;">37</span> <span style="color: #ff0000;">    color</span>:<span style="color: #0000ff;"> white</span>;
+<span style="color: #008080;">38</span> <span style="color: #ff0000;">    padding</span>:<span style="color: #0000ff;"> 0.8em 0.7em 0 0.7em</span>;
+<span style="color: #008080;">39</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #405061</span>;
+<span style="color: #008080;">40</span> <span style="color: #ff0000;">    line-height</span>:<span style="color: #0000ff;"> 1em</span>;
+<span style="color: #008080;">41</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">42</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;"> -1px</span>;
+<span style="color: #008080;">43</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;"> -4px</span>;
+<span style="color: #008080;">44</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 1.8em</span>;
+<span style="color: #008080;">45</span> <span style="color: #ff0000;">    margin-right</span>:<span style="color: #0000ff;"> .8em</span>;
+<span style="color: #008080;">46</span> <span style="color: #ff0000;">    border-radius</span>:<span style="color: #0000ff;"> 4px 0 0 4px</span>;
+<span style="color: #008080;">47</span> }</pre>
+</div>
+<h2>四、文章参考</h2>
+<p>参考：<br /><a href="https://angular.cn/tutorial/toh-pt2" rel="noreferrer noopener" target="_blank">https://angular.cn/tutorial/toh-pt2</a></p>
+<h2>五、代码下载</h2>
+<p>文章中贴出了部分代码，上面参考的网址有全部代码，跟着教程一步一步走就可以实现。</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>除非注明，文章均由&nbsp;<span style="text-decoration: underline;"><a href="https://dotnet9.com/" target="_blank">Dotnet9</a></span>&nbsp;整理发布，欢迎转载。</p>
+<p>转载请注明本文地址：<span style="text-decoration: underline;"><a href="https://dotnet9.com/2019/12/it-technology/front-end/angular/beautiful-angular-unordered-list-style.html" target="_blank">https://dotnet9.com/2019/12/it-technology/front-end/angular/beautiful-angular-unordered-list-style.html</a></span></p>
+<p>欢迎扫描下方二维码关注&nbsp;<span style="text-decoration: underline;"><a href="https://dotnet9.com/" target="_blank">Dotnet9</a></span>&nbsp;的微信公众号，本站会及时推送最新技术文章（微信公众号&ldquo;dotnet9_com&rdquo;）：</p>
+<div align="center"><a class="j-wpcom-lightbox" href="./images/漂亮的无序列表样式1.png" data-group="nogroup" data-id="1" data-index="1"><img src="./images/漂亮的无序列表样式1.png" alt="微信搜索公众号&ldquo;dotnet9_com&rdquo;添加关注" /></a></div>
+<p>&nbsp;</p>
+<p>如有收获，请大力转发，<a href="https://dotnet9.com/2019/11/it-technology/station-building/website-donation.html" target="_blank"><span style="text-decoration: underline;">给Dotnet9赞助和支持</span></a>，谢谢大家对dotnet技术的关注和支持 。</p>
+<p>本站使用&nbsp;<a href="https://www.wpcom.cn/?ref=4807" target="_blank"><span style="text-decoration: underline;">wpcom</span></a>&nbsp;的&nbsp;<a href="https://www.wpcom.cn/themes/justnews.html?ref=4807" target="_blank"><span style="text-decoration: underline;">JustNews主题</span></a></p>
+</blockquote>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

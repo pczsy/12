@@ -1,0 +1,109 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修堆叠（栈）上下文' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>堆叠（栈）上下文</center></div><div class='banquan'>原文出处:本文由博客园博主加减乘除t提供。<br/>
+原文连接:https://www.cnblogs.com/lipmtb/p/stackContext.html</div><br>
+    <h1 id="堆叠栈上下文-stack-context">堆叠（栈）上下文 （stack context）</h1>
+<p>由某个元素创建的一块独立区域，规定了该区域中的内容在Z轴上（z-index ）的排列的先后顺序。（类似bfc）</p>
+<h2 id="创建堆叠栈上下文stack-context的元素">创建堆叠（栈）上下文（stack context）的元素</h2>
+<ol>
+<li><p>根元素（html）</p></li>
+<li><p>定位元素设置了z-index!=auto(z-index=auto不能创建stack context,position=relative/absolute/fixed都是定位元素的依据)</p></li>
+</ol>
+<h2 id="同一个stack-context中元素的层次高低排列规则">同一个stack context中元素的层次高低排列规则</h2>
+<p>从视觉靠后到视觉靠前的排列顺序</p>
+<p>关于z-index：只有定位元素有效，对于常规流和浮动流无效</p>
+<ol>
+<li>创建stack context的元素的背景和边框</li>
+<li>级别(z-index,stack level)为负值的stack context</li>
+<li>常规流非定位（position:static）的块盒</li>
+<li>非定位的浮动盒</li>
+<li>常规流非定位行盒</li>
+<li>任何 z-index=auto的定位子元素，以及z-index=0的stack context</li>
+<li>级别为正值的的stack context</li>
+</ol>
+<p><strong>extra:</strong></p>
+<ul>
+<li>相同时按照书写顺序靠后的覆盖前面的(即后写的越靠近用户)</li>
+<li>z-index默认为auto</li>
+<li>z-index=auto 层级约为z-index=0</li>
+<li>每一个stack context 独立于其他stack context ，context内部元素无法影响到外部</li>
+</ul>
+<pre><code><code> &lt;!-- 
+html的stack context下的排列层级：
+    第一层：html创建的stack context作为底层
+    第二层：.wrapper-back ：position:relative;z-index:-1;stack context&#39;s level 负数级别-1
+    第三层：p.passage：非定位常规流块盒
+    第四层：div.floatbox：非定位浮动盒
+    第五层：p.passage的子元素文字：内部的匿名常规流非定位行盒
+    第六层:.wrapper-middle ：position:relative;z-index:auto;
+    第七层: .wrapper-top :position:relative;z-index:0;
+    第八层：.wrapper-over :position:relative;z-index:1; stack context&#39;s level 正数级别1
+    第九层：.wrapper-middle &gt; .testmiddle :position:absolute;z-index:2;stack context&#39;s level 正数级别2
+    (.testmiddle 也是位于html所在的stack context,它的父元素（.wrapper-middle）未形成自己的stack context)
+
+extra：相同层的看书写顺序（后写的高于先写的）
+ --&gt;
+
+    &lt;p class=&quot;passage&quot; style=&quot;padding-left:20px;background-color:lightblue;color:red;font-weight:bold;&quot;&gt;
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde,
+        suscipit aspernatur dolore doloribus quibusdam distinctio nulla fugiat adipisci,
+        in nesciunt eaque error expedita quae vero sint illo dolores voluptas nemo!
+        Debitis quas enim, nemo non quos sed beatae. Aperiam, fuga?&lt;/p&gt;
+
+    &lt;div class=&quot;floatbox&quot; style=&quot;float:left;width:800px;background-color:rgb(43, 255, 0);margin-top:-40px;&quot;&gt;
+        float
+    &lt;/div&gt;
+
+    &lt;div class=&quot;wrapper-back&quot;
+        style=&quot;position:relative;z-index:-1;left:80px;top:-100px;width:200px;height:200px;background-color:rgb(88, 46, 253);&quot;&gt;
+        &lt;div class=&quot;testleft&quot; style=&#39;width:100px;height:100px;background-color:red;position:absolute;z-index:6;&#39;&gt;
+            wrapper-back&lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;wrapper-middle&quot;
+        style=&quot;position:relative;z-index:auto;top:0px;width:300px;height:200px;background-color:rgb(10, 0, 6);&quot;&gt;
+        &lt;div class=&quot;testmiddle&quot;
+            style=&#39;width:100px;height:100px;background-color:rgb(255, 10, 10);position:absolute;z-index:2;&#39;&gt;
+            wrapper-middle
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;wrapper-top&quot;
+        style=&quot;position:relative;z-index:0;top:-40px;width:100px;height:200px;background-color:rgb(255, 1, 153);&quot;&gt;
+        &lt;div class=&quot;testbottom&quot;
+            style=&#39;width:50px;height:50px;background-color:rgba(10, 255, 30, 0.829);position:absolute;z-index:0;&#39;&gt;
+            wrapper-top
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;wrapper-over&quot;
+        style=&quot;position:relative;z-index:1;top:0px;width:100px;height:200px;background-color:rgb(1, 255, 170);&quot;&gt;
+        &lt;div class=&quot;testbottom&quot;
+            style=&#39;width:50px;height:50px;background-color:rgba(255, 230, 10, 0.829);position:absolute;z-index:0;&#39;&gt;
+            wrapper-over
+        &lt;/div&gt;
+    &lt;/div&gt;</code></pre>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

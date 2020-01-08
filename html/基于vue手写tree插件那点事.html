@@ -1,0 +1,332 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修基于vue手写tree插件那点事' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>基于vue手写tree插件那点事</center></div><div class='banquan'>原文出处:本文由博客园博主烟花散尽13141提供。<br/>
+原文连接:https://www.cnblogs.com/zhangxinhua/p/11375929.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#iview提供的控件">iview提供的控件</a></li>
+        <li><a href="#手写控件">手写控件</a></li>
+        <li><a href="#手写控件扩展">手写控件扩展</a></li>
+        <li><a href="#手写控件总结">手写控件总结</a></li>
+        <li><a href="#加入战队"># <span id="addMe">加入战队</span></a><ul>
+        <li><a href="#微信公众号">微信公众号</a></li>
+        </ul></li>
+        <li><a href="#主题">主题</a></li>
+        </ul>
+    </div>
+</div>
+<p><em>Tree树形控件在前端开发中必不可少，对于数据的展示现在网站大都采取树形展示。因为大数据全部展示出来对于用户来说是不友好的。今天我们自己手写一个Tree插件。</em></p>
+<h1 id="iview提供的控件">iview提供的控件</h1>
+<ul>
+<li>iview已经很成熟了，如果说我写的控件和iview提供的控件谁更好，那肯定是选择iview ， 手写控件只是为了更好的了解vue父子组件之间的通信的。 请读者还是不要拿我的控件和iview或者其他第三方的去对比。下面我们先来看看iview的Tree控件如何使用</li>
+</ul>
+<pre><code><code>
+&lt;template&gt;
+    &lt;Tree :data=&quot;data2&quot; show-checkbox&gt;&lt;/Tree&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    export default {
+        data () {
+            return {
+                data2: [
+                    {
+                        title: &#39;parent 1&#39;,
+                        expand: true,
+                        children: [
+                            {
+                                title: &#39;parent 1-1&#39;,
+                                expand: true,
+                                children: [
+                                    {
+                                        title: &#39;leaf 1-1-1&#39;
+                                    },
+                                    {
+                                        title: &#39;leaf 1-1-2&#39;
+                                    }
+                                ]
+                            },
+                            {
+                                title: &#39;parent 1-2&#39;,
+                                expand: true,
+                                children: [
+                                    {
+                                        title: &#39;leaf 1-2-1&#39;
+                                    },
+                                    {
+                                        title: &#39;leaf 1-2-1&#39;
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+&lt;/script&gt;
+
+</code></pre>
+<ul>
+<li>上述的代码形成的效果如下</li>
+</ul>
+<p><img src="./images/基于vue手写tree插件那点事0.png" alt="iview树形图" /></p>
+<ul>
+<li>在使用Tree控件时在Template中还有如下树形可以使用(根据自己需求)</li>
+</ul>
+<p><img src="./images/基于vue手写tree插件那点事1.png" alt="树形介绍" /></p>
+<ul>
+<li>然后就是控件的一些事件捕获</li>
+</ul>
+<p><img src="./images/基于vue手写tree插件那点事2.png" alt="事件" /></p>
+<ul>
+<li>子节点的一些设置</li>
+</ul>
+<p><img src="./images/基于vue手写tree插件那点事3.png" alt="children" /></p>
+<ul>
+<li>对于iview的Tree总结就是一句话：到位！。在这里小编也推荐大家使用iview来开发。这个框架对于后端程序员来说是个福利。因为我们不需要了解太专业的前端的只是就能够满足80%的需求了。</li>
+</ul>
+<h1 id="手写控件">手写控件</h1>
+<p>同样的我们先来看看他的用法其实和iview一样。用我们封装好的模板就行了。下面是做一个部门树。部门下面挂着人员这个功能。</p>
+<pre><code><code>
+&lt;zxhtree
+        v-if=&quot;userChange&quot;
+        class=&quot;item&quot;
+        treekey=&quot;deptId&quot;
+        treename=&quot;deptName&quot;
+        treechildren=&quot;children&quot;
+        :model=&quot;deptData&quot;
+        :ids=&quot;sysUserRole.deptIds&quot;
+        :names=&quot;sysUserRole.deptNames&quot;
+        @keyname=&quot;selectedUserObj&quot;
+&gt;
+&lt;/zxhtree&gt;
+</code></pre>
+<p>js就是去填补上述的数据，比如deptData、sysUserRole这些。至于这些属性代表什么意思我们先不着急看。先上个效果图。</p>
+<p><img src="./images/基于vue手写tree插件那点事4.png" alt="树形" /></p>
+<p>那么我们的zxhtree控件是在哪里注册的呢，这里被我们抽离在component.js里。<code>Vue.component('zxhtree', {});</code><br />
+继续在zxhtree里看除绑定的节点是<code>template: '#tree-template'</code>。<br />
+tree-template的模板是在component.html中写好的</p>
+<pre><code><code>
+&lt;script type=&quot;text/x-template&quot; id=&quot;tree-template&quot;&gt;
+    &lt;div&gt;
+        &lt;tree-item
+                class=&quot;item&quot;
+                :treekey=&quot;treekey&quot;
+                v-for=&quot;(model, index) in model&quot;
+                :treename=&quot;treename&quot;
+                :treechildren=&quot;treechildren&quot;
+                :model=&quot;model&quot;
+                :ids=&quot;ids&quot;
+                :names=&quot;names&quot;
+                @keyname=&quot;selectedObj&quot;
+                @data=&quot;synchdata&quot;
+        &gt;
+        &lt;/tree-item&gt;
+    &lt;/div&gt;
+&lt;/script&gt;
+</code></pre>
+<p>而在tree-template用到的tree-item控件才是真正的tree控件。这里是为了将树形包裹起来，所以才包裹了一层模板。<br />
+tree-item对应的模板代码是</p>
+<pre><code><code>
+&lt;script type=&quot;text/x-template&quot; id=&quot;item-template&quot;&gt;
+    &lt;ul class=&quot;ztree&quot;&gt;
+        &lt;li class=&quot;level0&quot; @blur=&quot;blur&quot; @focus=&quot;focus&quot; tabindex=&quot;0&quot; hidefocus=&quot;true&quot; treenode=&quot;&quot;&gt;
+            &lt;input type=&quot;checkbox&quot; :disabled=&quot;model.disabled&quot; :ref=&quot;model[treename]&quot; :checked=&quot;checkStatus&quot; @click=&quot;selectedObj&quot;/&gt;
+            &lt;span title=&quot;&quot; @click=&quot;toggle&quot; :class=&quot;openStatus&quot; treenode_switch=&quot;&quot;&gt;&lt;/span&gt;
+            &lt;a :class=&quot;selectClass&quot; treenode_a=&quot;&quot; onclick=&quot;&quot; target=&quot;_blank&quot; style=&quot;&quot; :title=&quot;model[treename]&quot;&gt;
+                &lt;span title=&quot;&quot; treenode_ico=&quot;&quot; class=&quot;button ico_open&quot; style=&quot;&quot;&gt;&lt;/span&gt;
+                &lt;span @dblclick=&quot;toggle&quot; class=&quot;node_name&quot;&gt;{{model[treename]}}&lt;/span&gt;
+            &lt;/a&gt;
+            &lt;tree-item
+                class=&quot;item&quot;
+                v-show=&quot;open&quot;
+                v-for=&quot;(model, index) in model[treechildren]&quot;
+                :key=&quot;index&quot;
+                :model=&quot;model&quot;
+                :treekey=&quot;treekey&quot;
+                :treename=&quot;treename&quot;
+                :vistreekey=&quot;vistreekey&quot;
+                :vistreename=&quot;vistreename&quot;
+                :treechildren=&quot;treechildren&quot;
+                ref=&quot;child&quot;
+                @keyname=&quot;keyname&quot;
+            &gt;
+            &lt;/tree-item&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/script&gt;
+</code></pre>
+<p>可以很明显的看到这里我们使用了递归进行展示树形结构。因为树形结构你无法确定层级。所以在里面又使用了针对子节点的展示<code>tree-item</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>属性</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>treekey</td>
+<td>内部树形展示</td>
+<td>deptId</td>
+</tr>
+<tr class="even">
+<td>vistreekey</td>
+<td>树形展示key</td>
+<td>deptId</td>
+</tr>
+<tr class="odd">
+<td>ids</td>
+<td>默认显示的数据</td>
+<td>无</td>
+</tr>
+<tr class="even">
+<td>names</td>
+<td>默认显示的数据</td>
+<td>无</td>
+</tr>
+<tr class="odd">
+<td>treename</td>
+<td>内部真是展示数据</td>
+<td>deptName</td>
+</tr>
+<tr class="even">
+<td>vistreename</td>
+<td>树形展示数据</td>
+<td>deptName</td>
+</tr>
+<tr class="odd">
+<td>treechildren</td>
+<td>当前树的子节点数据</td>
+<td>无</td>
+</tr>
+<tr class="even">
+<td>model</td>
+<td>当前树的数据</td>
+<td>无</td>
+</tr>
+<tr class="odd">
+<td>(M)keyname</td>
+<td>用于接受返回的数据</td>
+<td>无</td>
+</tr>
+</tbody>
+</table>
+<h1 id="手写控件扩展">手写控件扩展</h1>
+<p>控件接受数据处理逻辑</p>
+<pre><code><code>
+//接收到数据在外面套一层
+if(this.model[this.treekey]==undefined){
+    this.treekey=this.vistreekey;
+}
+if(this.model[this.treename]==undefined){
+    this.treename=this.vistreename;
+}
+if (this.model.disabled == true) {
+    this.model.disabled = &#39;disabled&#39;;
+}
+console.log(&#39;组件注册了吗&#39;);
+if ((&#39;,&#39;+this.ids+&#39;,&#39;).indexOf(&#39;,&#39;+this.model[this.treekey]+&#39;,&#39;) == -1) {
+    this.checkStatus = false;
+    this.model.checkStatus=this.checkStatus;
+} else {
+    this.checkStatus=true;
+    this.model.checkStatus=this.checkStatus;
+    this.treekeys[this.model[this.treekey]]= this.checkStatus;
+    this.treenames[this.model[this.treename]]= this.checkStatus;
+    this.opt.key=this.treekeys;
+    this.opt[&#39;name&#39;]=this.treenames;
+}
+if(this.ids!=&#39;&#39;){
+    var idarr = this.ids;
+    for(var index in idarr){
+        this.treekeys[idarr[index]]=true;
+    }
+    if (this.names.indexOf(&quot;,&quot;) == -1&amp;&amp;this.names!=&#39;&#39;) {
+        this.treenames[this.names]=true;
+    }else{
+        var namearr = this.names.split(&quot;,&quot;);
+        for(var index in namearr){
+            this.treenames[namearr[index]]=true;
+        }
+    }
+}
+</code></pre>
+<p>渲染默认数据</p>
+<pre><code><code>
+var newOpt ={&#39;key&#39;:{},&#39;name&#39;:{}};
+    newOpt.key = Object.assign(this.opt.key, opt.key);
+    newOpt.name = Object.assign(this.opt.name, opt.name);
+    var flag=false;
+    for(var index in this.model[this.treechildren]){
+        if(newOpt.key[this.model[this.treechildren][index][this.treekey]]!=true){
+            flag=true;
+        }
+    }
+    if(!flag){
+        newOpt.key[this.model[this.treekey]]=true;
+        newOpt.name[this.model[this.treename]]=true;
+        this.checkStatus=true;
+        this.model.checkStatus=true;
+    }
+    for(var key in newOpt){
+        this.filterRealCheck(newOpt[key]);
+    }
+    this.opt=newOpt;
+    this.$emit(&#39;keyname&#39;, newOpt);
+</code></pre>
+<p>选择节点数据处理</p>
+<pre><code><code>
+if(selected instanceof MouseEvent){
+    this.checkStatus=!this.checkStatus;
+}else{
+    this.checkStatus=selected;
+}
+
+this.model.checkStatus=this.checkStatus;
+if (this.model.expected != true) {
+    this.treekeys[this.model[this.treekey]]= this.checkStatus;
+    this.treenames[this.model[this.treename]]= this.checkStatus;
+    this.opt.key=this.treekeys;
+    this.opt[&#39;name&#39;]=this.treenames;
+}
+for(var index in this.$refs.child){
+    this.$refs.child[index].selectedObj(this.checkStatus);
+}
+
+this.$emit(&#39;keyname&#39;, this.opt);
+</code></pre>
+<h1 id="手写控件总结">手写控件总结</h1>
+<p>因为笔者是侧重后端，所以前端知识不是很好，这个组件写的也是很乱。这个组件是之前临时写的。里面没有进行系统的梳理，上述的逻辑也是很乱。读者需要的可以选择下列加入战队(#addMe)联系我<br />
+需要源码的可关注下面公众号发点击进群后咨询。</p>
+<p><a href="#addMe">加入战队</a></p>
+<h1 id="加入战队"># <span id="addMe">加入战队</span></h1>
+<h2 id="微信公众号">微信公众号</h2>
+<p><img src="./images/基于vue手写tree插件那点事5.png" alt="微信公众号" /></p>
+<h1 id="主题">主题</h1>
+<p><img src="./images/基于vue手写tree插件那点事6.png" alt="封面" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

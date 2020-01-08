@@ -1,0 +1,141 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【带着canvas去流浪（11）】Three.js入门学习笔记' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【带着canvas去流浪（11）】Three.js入门学习笔记</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/11182474.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-资料推荐及建议">一. 资料推荐及建议</a></li>
+        <li><a href="#二.-three.js中的基本概念">二. Three.js中的基本概念</a></li>
+        <li><a href="#三.重点笔记">三.重点笔记</a></li>
+        <li><a href="#四.补充示例">四.补充示例</a></li>
+        </ul>
+    </div>
+</div>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记0.png" /></p>
+<blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/threejs-demo/%E5%B8%A6%E7%9D%80canvas%E5%8E%BB%E6%B5%81%E6%B5%AA%EF%BC%8811%EF%BC%89-demo">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<h2 id="一.-资料推荐及建议">一. 资料推荐及建议</h2>
+<p>1.官方文档</p>
+<p>很详细，但是API部分单独理解也很难，属于工具书。官方<code>github</code>仓库里提供了海量的插件和<code>demo</code>页面。</p>
+<p>2.在<code>CSDN</code>上找到的一个<a href="https://blog.csdn.net/qq_30100043/article/category/7003591/5?">【Three.js系列博文】</a></p>
+<p>内容相当全，包括了<code>three.js</code>的基本知识，官方仓库的实例说明，插件说明等等，是笔者学习的主线。</p>
+<p>3.上面的内容最好是做个大作业实践一下</p>
+<p>4.想要学习底层知识的话，需要学习的资料是<strong>线性代数</strong>和<strong>WebGL编程指南</strong>。</p>
+<h2 id="二.-three.js中的基本概念">二. Three.js中的基本概念</h2>
+<p>官方文档中的新手示例过于简单，所以本节对<code>Three.js</code>中的概念进行一些补充描述：</p>
+<ul>
+<li><p>客观三要素：场景<code>Scene</code>，相机<code>Camera</code>，渲染器<code>Renderer</code></p>
+<p>具体用法可以看官方文档的<a href="https://threejs.org/docs/index.html#manual/en/introduction/Creating-a-scene%3E">【新手示例Demo】</a></p></li>
+<li><p>光照<code>Light</code></p>
+<p><code>THREE.js</code>提供了点光源，射线光源，平行光，环境光的等多种光源来模拟光。</p></li>
+<li><p>几何模型<code>Geometry</code></p>
+<p>生成实体的第一步是要建立几何模型<code>geometry</code>，<code>THREE.js</code>根据构建数据的数据类型将几何模型分为<code>Geometry</code>和<code>BufferGeometry</code>两个大类，每种内置类型都可以使用其中任何一种来实现，<code>BufferGeometry</code>基于定型数组运作，使用起来要求更严格也更复杂，但性能相对更好。<code>THREE.js</code>中内置了包含立方体，球体，多面体数十种常见的几何体，也可以将<code>canvas</code>绘制的平面图形拉伸成为实体。</p></li>
+<li><p>材质<code>Material</code></p>
+<p>第二步是为实体选择材质<code>material</code>，材质是描述几何体表面对于光照的表现的，是像金属表面那种高光，还是像粗糙表面那样会对光进行漫反射的，几何体的不同表面也可以选择不同的材质。材质<code>material</code>需要和贴图<code>texture</code>的合理搭配才能使最终的实体效果更加逼真，比如你给一个立方体选择了镜面反射的材料，但是又贴了砖头墙面的纹理，最终效果就会很诡异。</p></li>
+<li><p>贴图纹理<code>Texture</code></p>
+<p>第三步是为实体选择贴图纹理<code>texture</code>，纹理通常是通过引入图片来生成，通过贴图可以让几何体呈现为它所代表的实体模型，比如一个球体，你贴上足球的纹理，它就是足球，贴上篮球纹理，把周围环境作为贴图贴在它表面，它就是水晶球。<code>texture</code>通常是在<code>material</code>实例化时通过指定<code>map</code>参数来关联的。</p></li>
+<li><p>实体<code>Object</code></p>
+<p>大多数博文的示例中只使用到了<code>Mesh</code>（网格实体）这一种类型的实体模型，实际上<code>THREE.js</code>中还提供了<code>Points</code>（粒子点集实体）,<code>Line</code>（线性实体），<code>Skeleton</code>（骨骼动画实体）等等多种抽象实体模型来构建模型。实体的实例化依赖于<code>geometry</code>几何模型实例和<code>material</code>材料实例，最终调用场景的<code>add</code>方法将实体实例添加进场景中，实体就可以被渲染器<code>renderer</code>渲染出来。</p></li>
+<li><p>动画的更新</p>
+<p>动画的更新实际上和二维动画是一样的，也是通过<code>requestAnimationFrame</code>和逐帧动画来实现的。</p></li>
+</ul>
+<h2 id="三.重点笔记">三.重点笔记</h2>
+<ul>
+<li><p><code>webGL</code>中的世界坐标是以屏幕中心为原点(0,0,0)的，面对屏幕时，右为正X，上为正Y，指向屏幕外为正Z。</p></li>
+<li><p><code>dat.GUI</code>是个非常棒的动态调试工具，官方仓库地址：<a href="https://github.com/dataarts/dat.gui" class="uri">https://github.com/dataarts/dat.gui</a></p></li>
+<li><p><code>THREE.CameraHelper</code>类可以生成相机视锥辅助线，非常有用。</p></li>
+<li><p>常见材质的区别如下：<code>MeshLambertMaterial</code>材质适合表现<strong>漫反射表面</strong>，<code>MeshStandardMaterial</code>和<code>MeshPhongMaterial</code>适合表现<strong>镜面反射表面</strong>,<code>MeshBasicMaterial</code>是不响应光照的基本材质。</p></li>
+<li><p><code>THREE.PointLight</code>是真正的点光源，<code>THREE.SpotLight</code>是射线光源</p></li>
+<li><p><code>flyControls</code>控件相当于为相机实现第一人称视角，玩过CS的应该都懂。</p></li>
+<li><p>材质的基本定义：</p></li>
+</ul>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记1.png" /></p>
+<ul>
+<li><p>生成网格实例时传入<code>wireframe:true</code>即可以网格形式展示几何体。</p></li>
+<li><p><code>THREE.LatheGeometry</code>相当于三维建模软件中的“根据样条曲线生成回转体”，构造函数的参数中没有回转轴，此处官方文档中有说明：车削是绕着Y轴来进行旋转的。</p></li>
+<li><p><code>THREE.shapeGeometry</code>,<code>THREE.ExtrudeGeometry</code>等一类由平面生成<code>3D</code>实体的模型，感兴趣的可以尝试一下三维建模软件<code>solidworks</code>，完全是一个路数，对理解这些抽象几何实体很有帮助。</p></li>
+<li><p>三维的动画和二维动画的原理没什么区别，都是通过逐帧动画实现的。</p></li>
+<li><p><code>AnimationMixer</code>是场景中特定对象的动画播放器，场景中有多个独立动画时，可以为每一个对象使用一个<code>AnimationMixer</code>。</p></li>
+<li><p>变形动画的实现过程：获得<code>animationMixer</code>实例,获得<code>clip</code>实例，获得<code>action</code>实例，最后调用<code>action.setDuration().play()</code>开启动画播放。</p></li>
+<li><p><code>morph</code>和<code>skeleton</code>动画对比，morph文件更大加载更慢，但实际在网页上计算量更小；骨骼动画文件更小，当在网页上运行时需要进行更多计算。</p></li>
+<li><p>反光表面是通过材质实例化时修改<code>envMap</code>属性实现的。</p></li>
+<li><p>舞台背景<code>scene.background</code>是可以设置贴图纹理的。</p></li>
+<li><p>调整贴图的</p></li>
+</ul>
+<h2 id="四.补充示例">四.补充示例</h2>
+<p><strong>第15节-关于物体阴影</strong></p>
+<blockquote>
+<p>后来发现这个问题在第27节有说明。</p>
+</blockquote>
+<p>许多demo都无法生成投影，投影不仅需要设置光线和物体的<code>castShadow = true</code> ,<code>receiveShadow = true</code>,同时需要选择能够响应光线的材质，另外，<strong>阴影需要独立的相机去拍，默认是一个正交相机，需要正确调整其参数才能够显示阴影</strong>,参数配置错误时可能会显示一半阴影或者马赛克黑区：</p>
+<pre><code><code>//初始化灯光
+function initLight(color) {
+  //添加环境光
+  ambientLight = new THREE.AmbientLight(0x404040)
+  scene.add(ambientLight);
+
+  //添加平衡光
+  light = new THREE.DirectionalLight( 0xffffff );
+  light.castShadow = true;
+  light.shadow.camera.near = 0.1;    // default
+  light.shadow.camera.far = 1000;     // default
+  light.shadow.camera.left= -5;     // default
+  light.shadow.camera.top= 10;     // default
+  light.position.set(60,30,0);
+  scene.add(light);
+}</code></pre>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记2.png" /></p>
+<p>另外，可以通过开启相机辅助功能查看阴影相机的视锥，并配合<code>dat.GUI</code>等其他工具进行调节：</p>
+<pre><code><code>  shadowCameraHelper = new THREE.CameraHelper( light.shadow.camera );
+  scene.add(shadowCameraHelper);</code></pre>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记3.png" /></p>
+<p><strong>第46节-关于将svg拉伸为实体</strong></p>
+<p>原文中提到的<code>transformSVGPathExposed</code>函数和官方代码仓lib里的脚本已经找不到了，新版的官方文档中已经听过了<code>SVGLoader</code>来完成<code>svg</code>到<code>shape</code>的转换，具体用法可参考<a href="https://threejs.org/docs/index.html#examples/zh/loaders/SVGLoader">SVGLoader文档</a> ，官方仓库的example中提供了<code>webgl_loader_svg.html</code>示例文件，我们在其中稍作改动，将转换后的<code>shape</code>作为参数来得到拉伸体实例<code>THREE.ExtrudeGeometry</code>，就可以看到读入的<code>svg</code>被拉伸了：</p>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记4.png" /></p>
+<p><strong>第58节-重点：用THREE.Raycaster实现交互</strong></p>
+<blockquote>
+<p>这里很重要，是3D模型能响应用户交互行为的关键。后文的<strong>第101节</strong>也有这部分知识的说明</p>
+</blockquote>
+<p>官方文档中已经提供了示例代码，平面坐标到3D坐标转换的部分如果不明白，可以看这篇博文<a href="https://segmentfault.com/a/1190000010490845">ThreeJS中的点击与交互——Raycaster的用法</a>,笔者也提供了示例demo供参考。</p>
+<p><img src="./images/【带着canvas去流浪（11）】Three.js入门学习笔记5.png" /></p>
+<p><strong>第85节：用morphTargetInfluences实现动画（简称Morph动画）</strong></p>
+<p>关于<code>Morph</code>动画的基本原理摘抄如下(<a href="https://blog.csdn.net/jcq521045349/article/details/52829189">原文链接</a>)：</p>
+<blockquote>
+<p>The value is a scalar that determines the effect of a morph target. A morph target is another list of verticies (same length) that go along side the original list of verticies. Say we have a list of size 2 (a line),<br />
+var list1 = [0.1, -0.2]<br />
+and a morph target:<br />
+var list2 = [0.2, -0.3]<br />
+the scalar value is used like so:<br />
+finalVertexPosition = list1[0] + (list2[0] * scalar);</p>
+</blockquote>
+<p>使用时需要在<code>Geometry</code>实例构造函数的配置项中开启<code>morphTargets: true</code>,目标几何体的点集<code>vertices</code>相当于上面的<code>list1</code>,存放在目标集合体<code>geometry</code>实例<code>morphTargets</code>数组中的向量相当于上面的<code>list2</code>（它可以存放多个），而每一个<code>morphTargets</code>中的变形向量对原物体的影响系数存放在<code>morphTargetInfluences</code>数组中，取值为<code>-1</code>~<code>1</code>,相当于上面的<code>scalar</code>，通过连续改变<code>morphTargetInfluences</code>的值就可以实现变形动画，<code>morphTargetInfluences</code>是<code>mesh</code>实例的属性而不是 <code>geometry</code>的属性。</p>
+<p><strong>第101节：3D世界坐标求平面坐标</strong></p>
+<p>文中提及的<code>localToWorld</code>方法实际上继承自<code>Object3D</code>这个父类，当前版本的方法签名是：</p>
+<pre><code><code>Object3D.localToWorld(target:THREE.Vector3):target</code></pre>
+<p>也就是说调用的时候需要传一个空的<code>Vector3</code>实例，然后结果会被填充在里面，文中那种无参调用的模式会报错。其他的按照原文的方法就可以反求二维空间的坐标了。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

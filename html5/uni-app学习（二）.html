@@ -1,0 +1,316 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修uni-app学习（二）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>uni-app学习（二）</center></div><div class='banquan'>原文出处:本文由博客园博主老梁讲Java提供。<br/>
+原文连接:https://www.cnblogs.com/sky-chen/p/11029047.html</div><br>
+    <h1 id="uni-app学习二">1. uni-app学习（二）</h1>
+<h2 id="好用css记录">1.1. 好用css记录</h2>
+<ol>
+<li>一定透明度的背景色<code>background: rgba(255,255,255,.6);</code></li>
+</ol>
+<h2 id="好用的代码段">1.2. 好用的代码段</h2>
+<ol>
+<li>store（用户登录）</li>
+</ol>
+<pre><code><code>export default {
+    state: {
+        hasLogin: false, //登陆状态
+        loginProvider: &quot;&quot;, //登陆方式 如 微信
+        openid: null, //应用id
+        address: {}, //收货地址
+        userinfo: {
+            nickName: &quot;未登录&quot;,
+            headimg: &quot;../../static/image/logo.png&quot;,
+            user_id: &quot;123&quot;,
+            individuality: &quot;爱你一万年&quot;,
+            address: &quot;北京市西城区中南海大院1号&quot;,
+            sex: &quot;男&quot;,
+            area: &quot;北京-北京-东城区&quot;
+        } //用户信息
+    },
+    getters: {
+        userinfo(state) {
+            return state.userinfo;
+        },
+        login(state) {
+            return state.hasLogin;
+        },
+        address(state) {
+            return state.address;
+        }
+    },
+    mutations: {
+        login(state, provider) {
+            state.hasLogin = true;
+            state.loginProvider = provider;
+        },
+        logout(state) {
+            state.hasLogin = false
+            state.openid = null
+        },
+        setOpenid(state, openid) {
+            state.openid = openid
+        },
+        setAddress(state, address) {
+            state.address = address;
+        },
+        setUserinfo(state, userinfo) {
+            state.userinfo = userinfo;
+        }
+    },
+    actions: {
+        isLogin: async function(context) {
+            return await new Promise((resolve, reject) =&gt; {
+                var hasLogin = context.state.hasLogin;
+                console.log(context)
+                if (!hasLogin) {
+                    uni.showModal({
+                        title: &quot;您还未登陆,立即登陆?&quot;,
+                        content: &quot;请登陆后进行访问&quot;,
+                        success(e) {
+                            if (e.confirm) {
+                                //登陆
+                                uni.navigateTo({
+                                    url: &#39;../login/login&#39;
+                                })
+                            } else {
+                                context.commit(&#39;logout&#39;, &quot;退出&quot;)
+                                console.log(context.state)
+                                console.log(&quot;放弃登陆&quot;)
+                            }
+                        }
+                    })
+                    resolve(false)
+                } else {
+                    resolve(true)
+                }
+            })
+
+        }
+    }
+}
+</code></pre>
+<ol>
+<li>窗口宽高</li>
+</ol>
+<pre><code><code>export default{
+        state: {
+            screen:{
+                mode:true,//窗口宽度比高度 长
+                height:0,//窗口高度
+                width:0,//窗口宽度
+            }
+        },getters:{
+            screen(state){
+                    return state.screen;
+            }
+        },mutations: {
+            screen(state,screen){
+                var width=screen.width || 720;
+                var height=screen.height || 1440;
+                var mode=true;
+                if(width&lt;height){
+                    mode=false;
+                }
+                state.screen={
+                    mode,
+                    width,
+                    height
+                };
+            }
+            
+        },actions: {
+
+        }
+}</code></pre>
+<pre><code><code>// 监听窗口宽高变化
+(function screenListener(){
+    uni.onWindowResize((res) =&gt; {
+        that.$store.commit(&#39;screen&#39;,{width:res.size.windowWidth,height:res.size.windowHeight});
+//                  console.log(&#39;变化后的窗口宽度=&#39; + res.size.windowWidth)
+//                  console.log(&#39;变化后的窗口高度=&#39; + res.size.windowHeight)
+})
+})()</code></pre>
+<ol>
+<li>store汇总 <code>index.js</code></li>
+</ol>
+<pre><code><code>import Vue from &#39;vue&#39;
+import Vuex from &#39;vuex&#39;
+import user from &quot;./store.js&quot;
+import win from &quot;./win.js&quot;
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+      modules:{
+           user:user,
+           win:win
+           
+      }
+})
+
+export default store
+</code></pre>
+<h2 id="storage封装">1.3. storage封装</h2>
+<pre><code><code>var Storage={
+    /**
+     * 异步存入缓存 可对象可数组
+     * k        string              键
+     * val      array|object|string 缓存的内容
+     * expires  int                 有效期
+     */
+    set(k,val,expires){
+        var type= typeof val;
+        var expires=expires || 300;
+        return uni.setStorage({key:k,data:{data:val,expires:expires+(Date.parse(new Date())/1000),type:type},success: function () {
+            console.log(&#39;保存成功&#39;)
+        }})
+    },get(k,Func=function(){}){
+        try{
+            uni.getStorage({key: k,
+            success: function (res) {
+                var data=res.data;
+                if(data.expires){
+                    if(data.expires&gt; (Date.parse(new Date())/1000)){
+                        Func(data.data)
+                        return data.data;
+                    }
+                    // uni.removeStorage(k);
+                    try {
+                        uni.removeStorage(k);
+                        } catch (e) {
+                                // error
+                    }
+                }
+            }})
+            
+        }catch(e){
+            console.log(e)
+            return false;
+            //TODO handle the exception
+        }
+            return false;
+        
+    },remove(k){
+        uni.removeStorage(k);
+    },reset(){
+        // 获取本地说有缓存信息 删除过期的，超长的，净化系统
+        uni.getStorageInfo({    
+                success: function (res) {
+                    console.log(res.keys);
+                    console.log(res.currentSize);
+                    console.log(res.limitSize);
+                }
+            }); 
+    }
+}
+
+var Sync={
+    set(k,val,expires){
+        var expires=expires || 300;
+        var type= typeof val;
+        if(type===&#39;object&#39;){
+            val =JSON.stringify(val)
+        }
+        return uni.setStorageSync(k,{data:val,expires:expires+(Date.parse(new Date())/1000),type:type})
+    },get(k){
+        try{
+            var data= uni.getStorageSync(k) || {};
+            // console.log(data)
+            if(data.expires){
+                if(data.expires&gt; (Date.parse(new Date())/1000)){
+                    if(data.type===&#39;object&#39;){
+                        return  JSON.parse(data.data)
+                    }
+                    return data.data;
+                }
+                uni.removeStorageSync(k);
+                try {
+                            uni.removeStorageSync(k);
+                    } catch (e) {
+                            // error
+                    }
+            }
+        }catch(e){
+            console.log(e)
+            return false;
+            //TODO handle the exception
+        }
+    
+            return false;
+        
+    },reset(){
+        // 获取本地说有缓存信息 删除过期的，超长的，净化系统
+        try {
+            const res = uni.getStorageInfoSync();
+            console.log(res.keys);
+            console.log(res.currentSize);
+            console.log(res.limitSize);
+        } catch (e) {
+            // error
+        }
+    }
+}
+export default {
+    // CusBASE64: __BASE64,
+    set:Storage.set,//异步
+    get:Storage.get,
+    reset:Storage.reset,
+    setSync:Sync.set,//同步
+    getSync:Sync.get,
+    resetSync:Sync.reset
+    // encoder:base64decode
+  }</code></pre>
+<p>引入</p>
+<pre><code><code>import Storage from &#39;@/common/utils/Storage.js&#39;</code></pre>
+<h2 id="节点布局交叉状态">1.4. 节点布局交叉状态</h2>
+<ol>
+<li>uni.createIntersectionObserver，<a href="https://uniapp.dcloud.io/api/ui/intersection-observer?id=createintersectionobserver">地址</a></li>
+<li>作用：可以用来推断某些节点是否可以被用户看见、有多大比例可以被用户看见</li>
+</ol>
+<h2 id="tabbar操作">1.5. TabBar操作</h2>
+<ol>
+<li>uni.hideTabBar()</li>
+<li>作用：隐藏TabBar，还有很多TabBar相关操作，参看<a href="https://uniapp.dcloud.io/api/ui/tabbar?id=showtabbar">这里</a></li>
+<li>可以进行红点显示，角标显示等等</li>
+</ol>
+<h2 id="uni的节点选择器">1.6. uni的节点选择器</h2>
+<ol>
+<li>uni.createSelectorQuery()，可以用来选择特定节点进行操作，参看<a href="https://uniapp.dcloud.io/api/ui/nodes-info?id=createselectorquery">这里</a>，用于懒加载图片</li>
+<li>例子</li>
+</ol>
+<pre><code><code>uni.createSelectorQuery().selectAll(&#39;.lazy&#39;).boundingClientRect((images) =&gt; {
+                    images.forEach((image, index) =&gt; {
+                        if (image.top &lt;= this.windowHeight) {
+                            this.list[image.dataset.index].show = true;
+                        }
+                    })
+                }).exec()</code></pre>
+<ol>
+<li>当然图片自身有个属性可以设置懒加载，只是有一定局限性，参考<a href="https://uniapp.dcloud.io/component/image">这里</a>，使用<code>lazy-load</code>属性为true能达到同样的效果</li>
+</ol>
+<h2 id="布局上遇到的问题">1.7. 布局上遇到的问题</h2>
+<ol>
+<li>想实现类似饿了吗的悬浮框效果，即上移过程中，中间的某个组件框到顶部后不再上移，呈类似置顶效果</li>
+<li>参考<a href="https://blog.csdn.net/qq_27717857/article/details/88039668">这个</a></li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

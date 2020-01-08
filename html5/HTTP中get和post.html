@@ -1,0 +1,112 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP中get和post' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP中get和post</center></div><div class='banquan'>原文出处:本文由博客园博主小小咸鱼YwY提供。<br/>
+原文连接:https://www.cnblogs.com/pythonywy/p/11449043.html</div><br>
+    <h1 id="http中get和post的区别">HTTP中get和post的区别</h1>
+<ul>
+<li><em>GET</em> - 从指定的资源请求数据。</li>
+<li><em>POST</em> - 向指定的资源提交要被处理的数据</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>GET</th>
+<th>POST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>后退/刷新</td>
+<td>无害的</td>
+<td>数据会被重新提交</td>
+</tr>
+<tr class="even">
+<td>书签</td>
+<td>可收藏为书签</td>
+<td>不可收藏为书签</td>
+</tr>
+<tr class="odd">
+<td>缓存</td>
+<td>能被缓存</td>
+<td>不能缓存</td>
+</tr>
+<tr class="even">
+<td>编码类型</td>
+<td>application</td>
+<td>多为二进制数据使用多重编码</td>
+</tr>
+<tr class="odd">
+<td>历史</td>
+<td>会保留参数在历史中</td>
+<td>不会保存在历史数据中</td>
+</tr>
+<tr class="even">
+<td>对长度的限制</td>
+<td>最大为2048</td>
+<td>无限制</td>
+</tr>
+<tr class="odd">
+<td>对数据类型的限制</td>
+<td>ASCII</td>
+<td>没有限制，也可以为二进制数据</td>
+</tr>
+<tr class="even">
+<td>安全性</td>
+<td>安全性较差，敏感数据，密码请勿使用后</td>
+<td>安全性较高</td>
+</tr>
+<tr class="odd">
+<td>可见性</td>
+<td>数据在URL中对所有人可见</td>
+<td>数据不会限制在URL中</td>
+</tr>
+</tbody>
+</table>
+<h1 id="常见问题">常见问题：</h1>
+<p>​</p>
+<ol>
+<li><p>GET方法参数是固定的么？</p>
+<p>在约定中我们的参数是写在？后面，用&amp;分割，解析报文的过程是通过获取TCP数据，用正则表达式等工具获取Header和Body</p></li>
+<li><p>GET的长度限制：</p>
+<p>浏览器地址栏输入的参数是有限的，Http协议中没有长度限制，对URl的长度限制通常为浏览器或者服务器的原因</p></li>
+<li><p>POST比GET安全：</p>
+<p>因为POST数据在地址栏中不可见， 但是安全只是相对的，因为HTTP在网络中是明文传输的，要想加密，就必须要用HTTPS</p></li>
+<li><p>POST会产生2个TCP数据包？</p>
+<p>POST会将Header和Body分开发送，但是HTTP协议中没有明确会产生2个数据包，而且实际测试的时候也不会分开发送，所以分开发送只是部分浏览器和框架的请求方法，不属于POST的必然行为。</p></li>
+</ol>
+<p><strong>请说一下GET和POST两者的本质区别：</strong></p>
+<p>​ <strong>GET和POST本质上两者没有任何区别。他们都是HTTP协议中的请求方法。底层实现都是基于TCP/IP协议。上述的所谓区别，只是浏览器厂家根据约定，做得限制而已</strong></p>
+<p>HTTP请求，最初设定了八种方法。这八种方法本质上没有任何区别。只是让请求，更加有语义而已。</p>
+<ul>
+<li>OPTIONS 返回服务器所支持的请求方法</li>
+<li>GET 向服务器获取指定资源</li>
+<li>HEAD 与GET一致，只不过响应体不返回，只返回响应头</li>
+<li>POST 向服务器提交数据，数据放在请求体里</li>
+<li>PUT 与POST相似，只是具有幂等特性，一般用于更新</li>
+<li>DELETE 删除服务器指定资源</li>
+<li>TRACE 回显服务器端收到的请求，测试的时候会用到这个</li>
+</ul>
+<hr />
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

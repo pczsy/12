@@ -1,0 +1,202 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Webpack 使用' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Webpack 使用</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11911538.html</div><br>
+    <h1><strong>简介</strong></h1>
+<p>webpakc的定位实际上是打包器.而不是任务执行器.</p>
+<p>当然也可以配合grunt进行使用. webpack也提供了便捷的打包流程,项目构建,插件管理等等.</p>
+<p>为了更好的构建项目从开发到生产都一一提供了解决方案. Vue官方也推荐使用的vue-loader也是基于webpack的.</p>
+<p>因此这里简单介绍一下webpack的使用一些总结.更详细细致的内容可以到官网进行拓展.</p>
+<h2>安装</h2>
+<h3>局部安装</h3>
+<p>使用命令行的安装方式 :</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>npminstall--save-devwebpack</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>我们可以写到配置文件当中<code>package.json</code>,对应的目录中然后再执行<code>npm install</code></p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">{
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">name</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">XXXX</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">version</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">1.0.0</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">description</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">XXX</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">author</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">XXX</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">private</span><span style="color: #800000;">"</span>: <span style="color: #0000ff;">true</span><span style="color: #000000;">,
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">scripts</span><span style="color: #800000;">"</span>: {<span style="color: #008000;">//</span><span style="color: #008000;">指定执行命令</span>
+    <span style="color: #800000;">"</span><span style="color: #800000;">dev</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">webpack-dev-server --inline --progress --config build/webpack.dev.conf.js</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">start</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">npm run dev</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">watch</span><span style="color: #800000;">"</span>:<span style="color: #800000;">"</span><span style="color: #800000;">webpack --watch</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">build</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">webpack --config webpack.prod.js</span><span style="color: #800000;">"</span>,<span style="color: #008000;">//</span><span style="color: #008000;">也可以进行自定义</span>
+    <span style="color: #800000;">"</span><span style="color: #800000;">debug</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">nodemon build/build.js</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  },
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">dependencies</span><span style="color: #800000;">"</span><span style="color: #000000;">: {
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">swiper</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">^4.0.7</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">vue</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">^2.5.2</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">vue-router</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">^2.8.1</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+    </span><span style="color: #800000;">"</span><span style="color: #800000;">element-ui</span><span style="color: #800000;">"</span>: <span style="color: #800000;">"</span><span style="color: #800000;">2.2.1</span><span style="color: #800000;">"</span><span style="color: #000000;">
+  },
+  </span><span style="color: #800000;">"</span><span style="color: #800000;">devDependencies</span><span style="color: #800000;">"</span><span style="color: #000000;">: {
+  }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>全局安装</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>npm install --<span style="color: #0000ff;">global</span> webpack</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<h2>工程结构</h2>
+<p>我们可以根据项目的实际的情况设置目录.&nbsp;<br />一般情况下可以设置为源码目录,生产目录.</p>
+<p>我们可以将webpack配置文件与package.json放入到项目的根目录.</p>
+<p>webpack配置文件</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">const</span> path = require(<span style="color: #800000;">'</span><span style="color: #800000;">path</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+
+module.exports </span>=<span style="color: #000000;"> {
+  entry: </span><span style="color: #800000;">'</span><span style="color: #800000;">./src/index.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+  output: {
+    filename: </span><span style="color: #800000;">'</span><span style="color: #800000;">bundle.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+    path: path.resolve(__dirname, </span><span style="color: #800000;">'</span><span style="color: #800000;">dist</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+  }
+};  </span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>目录结构如下:</p>
+<p>1.webpack-demo</p>
+<p>2.|- package.json</p>
+<p>3.|- webpack.config.js</p>
+<p>4.|- /dist</p>
+<p>5.|- bundle.js</p>
+<p>6.|- index.html</p>
+<p>7.|- /src</p>
+<p>8. /src|- index.js</p>
+<p>9.|- /node_modules</p>
+<h2>资源管理</h2>
+<p>这里先简单介绍下CSS资源的管理配置.</p>
+<p>安装loader,loader的作用就是将文件进行处理(编译,压缩).</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #800080;">1</span>.npm install --save-dev style-loader css-<span style="color: #000000;">loader
+
+
+module.exports </span>=<span style="color: #000000;">     
+{
+    module: {
+      rules: [
+        {
+          test: </span>/\.css$/, <span style="color: #008000;">//</span><span style="color: #008000;">指定匹配文件,使用style-loader,css-loader</span>
+<span style="color: #000000;">          use: [
+            </span><span style="color: #800000;">'</span><span style="color: #800000;">style-loader</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+            </span><span style="color: #800000;">'</span><span style="color: #800000;">css-loader</span><span style="color: #800000;">'</span><span style="color: #000000;">
+          ]
+      }]
+     }
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<h2>输出管理</h2>
+<p>输出管理的目的是为了更好的简化工作.&nbsp;<br />我们可以使用插件,输出js名字更替等</p>
+<p>webpack当中有许多的插件我么可以将其进行更替.</p>
+<p>这边先简单介绍两个插件 生成html的插件,清除目录的插件.</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>npm install clean-webpack-plugin--save-<span style="color: #000000;">dev 
+ npm install </span>--save-dev html-webpack-plugin</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>整个配置文件,注意插件的配置顺序.</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code>  <span style="color: #0000ff;">const</span> path = require(<span style="color: #800000;">'</span><span style="color: #800000;">path</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+  </span><span style="color: #0000ff;">const</span> HtmlWebpackPlugin = require(<span style="color: #800000;">'</span><span style="color: #800000;">html-webpack-plugin</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+  </span><span style="color: #0000ff;">const</span> CleanWebpackPlugin = require(<span style="color: #800000;">'</span><span style="color: #800000;">clean-webpack-plugin</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+
+  module.exports </span>=<span style="color: #000000;"> {
+    entry: {
+      app: </span><span style="color: #800000;">'</span><span style="color: #800000;">./src/index.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+      print: </span><span style="color: #800000;">'</span><span style="color: #800000;">./src/print.js</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    },
+    plugins: [
+      </span><span style="color: #0000ff;">new</span> CleanWebpackPlugin([<span style="color: #800000;">'</span><span style="color: #800000;">dist</span><span style="color: #800000;">'</span>]),<span style="color: #008000;">//</span><span style="color: #008000;">清除dist目录</span>
+      <span style="color: #0000ff;">new</span> HtmlWebpackPlugin({ <span style="color: #008000;">//</span><span style="color: #008000;">生成一个html页面指定其title,然后会自动将js文件生成引入js代码</span>
+        title: <span style="color: #800000;">'</span><span style="color: #800000;">Output Management</span><span style="color: #800000;">'</span><span style="color: #000000;">
+      })
+    ],
+    output: {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;">publicPath:XXX 可以资金定义路径,build后输出的内容将会放入到这个路径当中</span>
+      filename: <span style="color: #800000;">'</span><span style="color: #800000;">[name].bundle.js</span><span style="color: #800000;">'</span>, <span style="color: #008000;">//</span><span style="color: #008000;">注意name用方括号括起来,name的值对应的为entry的key值,这样为了区分多个文件 </span>
+      path: path.resolve(__dirname, <span style="color: #800000;">'</span><span style="color: #800000;">dist</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    }
+  };</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>开发工具</p>
+<p>webpack 最强大的是开发提供的开发工具</p>
+<p>webpack-server 提供了访问页面的服务</p>
+<p>webpack-watch 提供了观察文件的变化</p>
+<p>webpack-dev-middleware webpack-server内部也是采用了该方法,不仅如此,也提供了其它的自定义的功能很强大.</p>
+<div class="highlight">
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">const</span> path = require(<span style="color: #800000;">'</span><span style="color: #800000;">path</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+  </span><span style="color: #0000ff;">const</span> HtmlWebpackPlugin = require(<span style="color: #800000;">'</span><span style="color: #800000;">html-webpack-plugin</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+  </span><span style="color: #0000ff;">const</span> CleanWebpackPlugin = require(<span style="color: #800000;">'</span><span style="color: #800000;">clean-webpack-plugin</span><span style="color: #800000;">'</span><span style="color: #000000;">);
+
+  module.exports </span>=<span style="color: #000000;"> {
+    entry: {
+      app: </span><span style="color: #800000;">'</span><span style="color: #800000;">./src/index.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+      print: </span><span style="color: #800000;">'</span><span style="color: #800000;">./src/print.js</span><span style="color: #800000;">'</span><span style="color: #000000;">
+    },
+    devtool: </span><span style="color: #800000;">'</span><span style="color: #800000;">inline-source-map</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">devServer: {
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">  contentBase: './dist'
+   </span><span style="color: #008000;">//</span><span style="color: #008000;">},</span>
+<span style="color: #000000;">    plugins: [
+      </span><span style="color: #0000ff;">new</span> CleanWebpackPlugin([<span style="color: #800000;">'</span><span style="color: #800000;">dist</span><span style="color: #800000;">'</span><span style="color: #000000;">]),
+      </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> HtmlWebpackPlugin({
+        title: </span><span style="color: #800000;">'</span><span style="color: #800000;">Output Management</span><span style="color: #800000;">'</span><span style="color: #000000;">
+      })
+    ],
+    output: {
+      filename: </span><span style="color: #800000;">'</span><span style="color: #800000;">[name].bundle.js</span><span style="color: #800000;">'</span><span style="color: #000000;">,
+      path: path.resolve(__dirname, </span><span style="color: #800000;">'</span><span style="color: #800000;">dist</span><span style="color: #800000;">'</span><span style="color: #000000;">),
+     publicPath: </span><span style="color: #800000;">'</span><span style="color: #800000;">/</span><span style="color: #800000;">'</span><span style="color: #008000;">//</span><span style="color: #008000;">middleware会用到该路径,url访问的路径</span>
+<span style="color: #000000;">    }
+  };</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<p>版权声明：本文为CSDN博主「代码界吴彦祖」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。</p>
+<p>原文链接：<a class=" external" href="https://link.zhihu.com/?target=https%3A//blog.csdn.net/lzx_victory/article/details/79995225" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043"><span class="invisible">https://<span class="visible">blog.csdn.net/lzx_victo<span class="invisible">ry/article/details/79995225</span></span></span></a></p>
+<p><span class="invisible"><span class="visible"><span class="invisible">感谢给位的阅读，本人在休闲之余整理了一些资料和视频，并刚刚创建了一个交流群：907694362 也是我之前刚开始学前端时候看的一些资料，希望对给位有所帮助，也祝各位在前端之路一帆风顺！！</span></span></span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

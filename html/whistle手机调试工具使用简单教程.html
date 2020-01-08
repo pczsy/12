@@ -1,0 +1,71 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修whistle手机调试工具使用简单教程' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>whistle手机调试工具使用简单教程</center></div><div class='banquan'>原文出处:本文由博客园博主蓓蕾心晴提供。<br/>
+原文连接:https://www.cnblogs.com/beileixinqing/p/11384209.html</div><br>
+    <p>npm全局安装</p>
+<div class="cnblogs_code">
+<pre><code>npm <span style="color: #0000ff;">install</span> -g whistle</pre>
+</div>
+<p>全局启动</p>
+<div class="cnblogs_code">
+<pre><code>w2 start</pre>
+</div>
+<p><img src="./images/whistle手机调试工具使用简单教程0.png" alt="" /></p>
+<p>启动之后，输入127.0.0.1:8899 就可以访问到whistle调试界面了：</p>
+<p><img src="./images/whistle手机调试工具使用简单教程1.png" alt="" width="820" height="226" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;我们主要常用几个功能：</p>
+<p>1、mock本地数据映射，即手机请求线上某个接口的时候做本地映射，直接请求本地json数据</p>
+<p>2、查看console打印信息，对于windows系统的电脑来说还是很有用的，否则调试ios是个很大的麻烦</p>
+<p>&nbsp;</p>
+<h2>mock数据映射</h2>
+<p><img src="./images/whistle手机调试工具使用简单教程2.png" alt="" width="585" height="99" /></p>
+<p>点击该调试界面的左边第二个按钮，rules，输入想要拦截的接口 空格 本地mock数据文件路径</p>
+<p>eg:&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code>net.abc.com/getlist E:\project\mock-data\ios.json</pre>
+</div>
+<p>如果想要注释掉此行，前面加&nbsp; &ldquo; # &rdquo;</p>
+<p>如果想要调试某个页面，在页面后面加&nbsp;weinre:// 任意名称</p>
+<p>如果要查看某个页面的log，在页面后面加 log://&nbsp;</p>
+<p>这些都可以同时写在一起如下：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800080;">192.168</span>.<span style="color: #800080;">5.252</span>:<span style="color: #800080;">3001</span>/aaa.html log:<span style="color: #008000;">//</span><span style="color: #008000;"> weinre:</span><span style="color: #008000;">//</span><span style="color: #008000;">aaa</span></pre>
+</div>
+<p>&nbsp;</p>
+<h2>手机代理设置</h2>
+<p>1、手机在连着和电脑同一个局域网下，手机进入wifi设置，设置代理为手动，IP地址为电脑IP地址，端口号为whistle本地调试界面打开的端口号，这里是8899</p>
+<p>2、安装证书，手机浏览器输入rootca.pro （或者在调试界面点HTTPS，手机扫描即可跳转） ,会跳转到下载证书界面，点击下载好之后安装，安卓需要起个名字，ios需要在 设置&mdash;&mdash;通用&mdash;&mdash;关于本机&mdash;&mdash;证书信任设置中开关置为开。</p>
+<p><span style="color: #993366;"><strong>注意：很多浏览器不支持下载此类文件，或者有些浏览器虽然可以下载此类文件但是无法安装，因为不识别相应文件格式，可以使用扣扣浏览器或者其他支持的浏览器下载安装即可。</strong></span></p>
+<p><span style="color: #993366;"><strong>小米手机独特的解决方案，参考此文：<a href="https://blog.csdn.net/jinshitou2012/article/details/79044560" target="_blank">https://blog.csdn.net/jinshitou2012/article/details/79044560</a></strong></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>页面调试</h2>
+<p>至此，手机点击请求的页面，whistle调试界面已经可以看到请求了，右侧点击tools-log，可以查看页面console.log打印，如果想要调试html，点击调试界面上面的weinre，找到刚刚rules配置的时候weinre后面名字点击即可看到</p>
+<p><img src="./images/whistle手机调试工具使用简单教程3.png" alt="" /><img src="./images/whistle手机调试工具使用简单教程4.png" alt="" width="377" height="301" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>点开调试界面之后还需要一步重要操作，targets下会显示页面调试地址，点击地址，地址变为绿色，就可以到 【elements】中审查元素了。</p>
+<p>其他使用方法参考官方文档：<a href="http://wproxy.org/whistle/" target="_blank">http://wproxy.org/whistle/</a></p>
+<p>推荐好文：<a href="https://segmentfault.com/a/1190000014891582" target="_blank">https://segmentfault.com/a/1190000014891582</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

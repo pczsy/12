@@ -1,0 +1,580 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vuex' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vuex</center></div><div class='banquan'>原文出处:本文由博客园博主feiliaows提供。<br/>
+原文连接:https://www.cnblogs.com/wangsong123/p/10918839.html</div><br>
+    <h3>一. 什么是Vuex?</h3>
+<div>
+<div>
+<p>Vuex是一个专门为Vue.js应用程序开发的状态管理模式, 它采用集中式存储管理所有组件的公共状态, 并以相应的规则保证状态以一种可预测的方式发生变化.</p>
+<div class="image-package"><img src="./images/vuex0.png" alt="Vuex核心" data-original-src="./images/vuex0.png" />
+<div class="image-caption">Vuex核心</div>
+</div>
+<p>上图中绿色虚线包裹起来的部分就是Vuex的核心, <code>state</code>中保存的就是公共状态, 改变<code>state</code>的唯一方式就是通过<code>mutations</code>进行更改. 可能你现在看这张图有点不明白, 等经过本文的解释和案例演示, 再回来看这张图, 相信你会有更好的理解.</p>
+<h3><strong>二. 为什么要使用Vuex?</strong></h3>
+<p>试想这样的场景, 比如一个Vue的根实例下面有一个根组件名为<code>App.vue</code>, 它下面有两个子组件<code>A.vue</code>和<code>B.vue</code>, <code>App.vue</code>想要与<code>A.vue</code>或者<code>B.vue</code>通讯可以通过props传值的方式, 但是如果<code>A.vue</code>和<code>B.vue</code>之间的通讯就很麻烦了, 他们需要共有的父组件通过<strong>自定义事件</strong>进行实现, A组件想要和B组件通讯往往是这样的:<br />
+</p>
+<div class="image-package">
+<img src="./images/vuex1.png" alt="组件通讯" data-original-src="./images/vuex1.png" />
+<div class="image-caption">组件通讯</div>
+
+
+
+</div>
+<p>&nbsp;</p>
+<ul>
+<li>A组件说: "报告老大, 能否帮我托个信给小弟B" =&gt; dispatch一个事件给App</li>
+<li>App老大说: "包在我身上, 它需要监听A组件的dispatch的时间, 同时需要broadcast一个事件给B组件"</li>
+<li>B小弟说: "信息已收到", 它需要on监听App组件分发的事件</li>
+
+
+
+</ul>
+<p>这只是一条通讯路径, 如果父组件下有多个子组件, 子组件之间通讯的路径就会变的很繁琐, 父组件需要监听大量的事件, 还需要负责分发给不同的子组件, 很显然这并不是我们想要的组件化的开发体验.</p>
+<blockquote>
+<p><strong>Vuex就是为了解决这一问题出现的</strong></p>
+
+
+
+</blockquote>
+<h3><strong>三.如何引入Vuex?</strong></h3>
+<ol>
+<li>下载<code>vuex</code>: <code>npm install vuex --save</code>
+</li>
+<li>在<code>main.js</code>添加:</li>
+
+
+
+</ol>
+<pre><code><code class="javascript"><span class="hljs-keyword">import Vuex <span class="hljs-keyword">from <span class="hljs-string">'vuex'
+
+Vue.use( Vuex );
+
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+    <span class="hljs-comment">//待添加
+})
+
+<span class="hljs-keyword">new Vue({
+    <span class="hljs-attr">el: <span class="hljs-string">'#app',
+    store,
+    <span class="hljs-attr">render: <span class="hljs-function"><span class="hljs-params">h =&gt; h(App)
+})
+</span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h3><strong>四. Vuex的核心概念?</strong></h3>
+<p>在介绍Vuex的核心概念之前, 我使用<code>vue-cli</code>初始化了一个demo, 准备以代码的形式来说明Vuex的核心概念.这个demo分别有两个组件<code>ProductListOne.vue</code>和<code>ProductListTwo.vue</code>, 在<code>App.vue</code>的<code>datat</code>中保存着共有的商品列表, 代码和初始化的效果如下图所示:<br />
+</p>
+<div class="image-package">
+<img src="./images/vuex2.png" alt="初始化效果" data-original-src="./images/vuex2.png" />
+<div class="image-caption">初始化效果</div>
+
+
+
+</div>
+<p>&nbsp;</p>
+<pre><code><code class="javascript"><span class="hljs-comment">//App.vue中的初始化代码
+
+&lt;template&gt;
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">id=<span class="hljs-string">"app"&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">product-list-one <span class="hljs-attr">v-bind:products=<span class="hljs-string">"products"&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">product-list-one&gt;
+    <span class="hljs-tag">&lt;<span class="hljs-name">product-list-two <span class="hljs-attr">v-bind:products=<span class="hljs-string">"products"&gt;<span class="hljs-tag">&lt;/<span class="hljs-name">product-list-two&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+<span class="hljs-tag">&lt;/<span class="hljs-name">template&gt;
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script&gt;<span class="javascript">
+<span class="hljs-keyword">import ProductListOne <span class="hljs-keyword">from <span class="hljs-string">'./components/ProductListOne.vue'
+<span class="hljs-keyword">import ProductListTwo <span class="hljs-keyword">from <span class="hljs-string">'./components/ProductListTwo.vue'
+
+<span class="hljs-keyword">export <span class="hljs-keyword">default {
+    <span class="hljs-attr">name: <span class="hljs-string">'app',
+    <span class="hljs-attr">components: {
+        <span class="hljs-string">'product-list-one': ProductListOne,
+        <span class="hljs-string">'product-list-two': ProductListTwo
+    },
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products: [
+                {<span class="hljs-attr">name: <span class="hljs-string">'鼠标', <span class="hljs-attr">price: <span class="hljs-number">20},
+                {<span class="hljs-attr">name: <span class="hljs-string">'键盘', <span class="hljs-attr">price: <span class="hljs-number">40},
+                {<span class="hljs-attr">name: <span class="hljs-string">'耳机', <span class="hljs-attr">price: <span class="hljs-number">60},
+                {<span class="hljs-attr">name: <span class="hljs-string">'显示屏', <span class="hljs-attr">price: <span class="hljs-number">80}
+            ]
+        }
+    }
+}
+<span class="hljs-tag">&lt;/<span class="hljs-name">script&gt;
+
+<span class="hljs-tag">&lt;<span class="hljs-name">style&gt;<span class="css">
+<span class="hljs-selector-tag">body{
+    <span class="hljs-attribute">font-family: Ubuntu;
+    <span class="hljs-attribute">color: <span class="hljs-number">#555;
+}
+<span class="hljs-tag">&lt;/<span class="hljs-name">style&gt;
+
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListOne.vue
+&lt;template&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">id=<span class="hljs-string">"product-list-one"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2&gt;Product List One<span class="hljs-tag">&lt;/<span class="hljs-name">h2&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">li <span class="hljs-attr">v-for=<span class="hljs-string">"product in products"&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"name"&gt;{{ product.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"price"&gt;${{ product.price }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+            <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+&lt;<span class="hljs-regexp">/template&gt;
+
+&lt;script&gt;
+export default {
+    props: ['products'],
+    data () {
+        return {
+
+        }
+    }
+}
+&lt;/script&gt;
+
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">style <span class="hljs-attr">scoped&gt;<span class="css">
+<span class="hljs-selector-id">#product-list-one{
+    <span class="hljs-attribute">background: <span class="hljs-number">#FFF8B1;
+    <span class="hljs-attribute">box-shadow: <span class="hljs-number">1px <span class="hljs-number">2px <span class="hljs-number">3px <span class="hljs-built_in">rgba(0,0,0,0.2);
+    <span class="hljs-attribute">margin-bottom: <span class="hljs-number">30px;
+    <span class="hljs-attribute">padding: <span class="hljs-number">10px <span class="hljs-number">20px;
+}
+<span class="hljs-selector-id">#product-list-one <span class="hljs-selector-tag">ul{
+    <span class="hljs-attribute">padding: <span class="hljs-number">0;
+}
+<span class="hljs-selector-id">#product-list-one <span class="hljs-selector-tag">li{
+    <span class="hljs-attribute">display: inline-block;
+    <span class="hljs-attribute">margin-right: <span class="hljs-number">10px;
+    <span class="hljs-attribute">margin-top: <span class="hljs-number">10px;
+    <span class="hljs-attribute">padding: <span class="hljs-number">20px;
+    <span class="hljs-attribute">background: <span class="hljs-built_in">rgba(255,255,255,0.7);
+}
+<span class="hljs-selector-class">.price{
+    <span class="hljs-attribute">font-weight: bold;
+    <span class="hljs-attribute">color: <span class="hljs-number">#E8800C;
+}
+<span class="hljs-tag">&lt;/<span class="hljs-name">style&gt;
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListTwo.vue
+&lt;template&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">id=<span class="hljs-string">"product-list-two"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2&gt;Product List Two<span class="hljs-tag">&lt;/<span class="hljs-name">h2&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">li <span class="hljs-attr">v-for=<span class="hljs-string">"product in products"&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"name"&gt;{{ product.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"price"&gt;${{ product.price }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+            <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+&lt;<span class="hljs-regexp">/template&gt;
+
+&lt;script&gt;
+export default {
+    props: ['products'],
+    data () {
+        return {
+            
+        }
+    }
+}
+&lt;/script&gt;
+
+<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">style <span class="hljs-attr">scoped&gt;<span class="css">
+<span class="hljs-selector-id">#product-list-two{
+    <span class="hljs-attribute">background: <span class="hljs-number">#D1E4FF;
+    <span class="hljs-attribute">box-shadow: <span class="hljs-number">1px <span class="hljs-number">2px <span class="hljs-number">3px <span class="hljs-built_in">rgba(0,0,0,0.2);
+    <span class="hljs-attribute">margin-bottom: <span class="hljs-number">30px;
+    <span class="hljs-attribute">padding: <span class="hljs-number">10px <span class="hljs-number">20px;
+}
+<span class="hljs-selector-id">#product-list-two <span class="hljs-selector-tag">ul{
+    <span class="hljs-attribute">padding: <span class="hljs-number">0;
+    <span class="hljs-attribute">list-style-type: none;
+}
+<span class="hljs-selector-id">#product-list-two <span class="hljs-selector-tag">li{
+    <span class="hljs-attribute">margin-right: <span class="hljs-number">10px;
+    <span class="hljs-attribute">margin-top: <span class="hljs-number">10px;
+    <span class="hljs-attribute">padding: <span class="hljs-number">20px;
+    <span class="hljs-attribute">background: <span class="hljs-built_in">rgba(255,255,255,0.7);
+}
+<span class="hljs-selector-class">.price{
+    <span class="hljs-attribute">font-weight: bold;
+    <span class="hljs-attribute">color: <span class="hljs-number">#860CE8;
+    <span class="hljs-attribute">display: block;
+}
+<span class="hljs-tag">&lt;/<span class="hljs-name">style&gt;
+
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<h4><strong>核心概念1: State</strong></h4>
+<p><code>state</code>就是Vuex中的公共的状态, 我是将<code>state</code>看作是所有组件的<code>data</code>, 用于保存所有组件的公共数据.</p>
+<ul>
+<li>此时我们就可以把<code>App.vue</code>中的两个组件共同使用的data抽离出来, 放到<code>state</code>中,代码如下:</li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//main.js
+<span class="hljs-keyword">import Vue <span class="hljs-keyword">from <span class="hljs-string">'vue'
+<span class="hljs-keyword">import App <span class="hljs-keyword">from <span class="hljs-string">'./App.vue'
+<span class="hljs-keyword">import Vuex <span class="hljs-keyword">from <span class="hljs-string">'vuex'
+
+Vue.use( Vuex )
+
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+  <span class="hljs-attr">state:{ 
+    <span class="hljs-attr">products: [
+      {<span class="hljs-attr">name: <span class="hljs-string">'鼠标', <span class="hljs-attr">price: <span class="hljs-number">20},
+      {<span class="hljs-attr">name: <span class="hljs-string">'键盘', <span class="hljs-attr">price: <span class="hljs-number">40},
+      {<span class="hljs-attr">name: <span class="hljs-string">'耳机', <span class="hljs-attr">price: <span class="hljs-number">60},
+      {<span class="hljs-attr">name: <span class="hljs-string">'显示屏', <span class="hljs-attr">price: <span class="hljs-number">80}
+    ]
+  }
+})
+
+<span class="hljs-keyword">new Vue({
+  <span class="hljs-attr">el: <span class="hljs-string">'#app',
+  store,
+  <span class="hljs-attr">render: <span class="hljs-function"><span class="hljs-params">h =&gt; h(App)
+})
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>此时,<code>ProductListOne.vue</code>和<code>ProductListTwo.vue</code>也需要做相应的更改</li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListOne.vue
+<span class="hljs-keyword">export <span class="hljs-keyword">default {
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products : <span class="hljs-keyword">this.$store.state.products <span class="hljs-comment">//获取store中state的数据
+        }
+    }
+}
+</span></span></span></span></span></span></span></code></pre>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListTwo.vue
+<span class="hljs-keyword">export <span class="hljs-keyword">default {
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products: <span class="hljs-keyword">this.$store.state.products <span class="hljs-comment">//获取store中state的数据
+        }
+    }
+}
+</span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>
+<p>此时的页面如下图所示, 可以看到, 将公共数据抽离出来后, 页面没有发生变化.</p>
+<br />
+<div class="image-package">
+<img src="./images/vuex3.png" alt="state效果" data-original-src="./images/vuex3.png" />
+<div class="image-caption">state效果</div>
+
+</div>
+
+</li>
+
+</ul>
+<h4><strong>核心概念2: Getters</strong></h4>
+<p>我将<code>getters</code>属性理解为所有组件的<code>computed</code>属性, 也就是计算属性. vuex的官方文档也是说到可以将getter理解为store的计算属性, getters的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算。</p>
+<ul>
+<li>此时,我们可以在<code>main.js</code>中添加一个<code>getters</code>属性, 其中的<code>saleProducts</code>对象将<code>state</code>中的价格减少一半(除以2)</li>
+
+
+
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//main.js
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+  <span class="hljs-attr">state:{
+    <span class="hljs-attr">products: [
+      {<span class="hljs-attr">name: <span class="hljs-string">'鼠标', <span class="hljs-attr">price: <span class="hljs-number">20},
+      {<span class="hljs-attr">name: <span class="hljs-string">'键盘', <span class="hljs-attr">price: <span class="hljs-number">40},
+      {<span class="hljs-attr">name: <span class="hljs-string">'耳机', <span class="hljs-attr">price: <span class="hljs-number">60},
+      {<span class="hljs-attr">name: <span class="hljs-string">'显示屏', <span class="hljs-attr">price: <span class="hljs-number">80}
+    ]
+  },
+  <span class="hljs-attr">getters:{ <span class="hljs-comment">//添加getters
+    saleProducts: <span class="hljs-function">(<span class="hljs-params">state) =&gt; {
+      <span class="hljs-keyword">let saleProducts = state.products.map( <span class="hljs-function"><span class="hljs-params">product =&gt; {
+        <span class="hljs-keyword">return {
+          <span class="hljs-attr">name: product.name,
+          <span class="hljs-attr">price: product.price / <span class="hljs-number">2
+        }
+      })
+      <span class="hljs-keyword">return saleProducts;
+    }
+  } 
+})
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>将<code>productListOne.vue</code>中的<code>products</code>的值更换为<code>this.$store.getters.saleProducts</code></li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-keyword">export <span class="hljs-keyword">default {
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products : <span class="hljs-keyword">this.$store.getters.saleProducts 
+        }
+    }
+}
+</span></span></span></span></span></code></pre>
+<ul>
+<li>现在的页面中,Product List One中的每项商品的价格都减少了一半</li>
+</ul>
+<div class="image-package"><img src="./images/vuex4.png" alt="getters效果" data-original-src="./images/vuex4.png" />
+<div class="image-caption">getters效果</div>
+</div>
+<h4><strong>核心概念3: Mutations</strong></h4>
+<p>我将<code>mutaions</code>理解为<code>store</code>中的<code>methods</code>, <code>mutations</code>对象中保存着更改数据的回调函数,该函数名官方规定叫<code>type</code>, 第一个参数是<code>state</code>, 第二参数是<code>payload</code>, 也就是自定义的参数.</p>
+<ul>
+<li>下面,我们在<code>main.js</code>中添加<code>mutations</code>属性,其中<code>minusPrice</code>这个回调函数用于将商品的价格减少<code>payload</code>这么多, 代码如下:</li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//main.js
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+  <span class="hljs-attr">state:{
+    <span class="hljs-attr">products: [
+      {<span class="hljs-attr">name: <span class="hljs-string">'鼠标', <span class="hljs-attr">price: <span class="hljs-number">20},
+      {<span class="hljs-attr">name: <span class="hljs-string">'键盘', <span class="hljs-attr">price: <span class="hljs-number">40},
+      {<span class="hljs-attr">name: <span class="hljs-string">'耳机', <span class="hljs-attr">price: <span class="hljs-number">60},
+      {<span class="hljs-attr">name: <span class="hljs-string">'显示屏', <span class="hljs-attr">price: <span class="hljs-number">80}
+    ]
+  },
+  <span class="hljs-attr">getters:{
+    <span class="hljs-attr">saleProducts: <span class="hljs-function">(<span class="hljs-params">state) =&gt; {
+      <span class="hljs-keyword">let saleProducts = state.products.map( <span class="hljs-function"><span class="hljs-params">product =&gt; {
+        <span class="hljs-keyword">return {
+          <span class="hljs-attr">name: product.name,
+          <span class="hljs-attr">price: product.price / <span class="hljs-number">2
+        }
+      })
+      <span class="hljs-keyword">return saleProducts;
+    }
+  },
+  <span class="hljs-attr">mutations:{ <span class="hljs-comment">//添加mutations
+    minusPrice (state, payload ) {
+      <span class="hljs-keyword">let newPrice = state.products.forEach( <span class="hljs-function"><span class="hljs-params">product =&gt; {
+        product.price -= payload
+      })
+    }
+  }
+})
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>在<code>ProductListTwo.vue</code>中添加一个按钮,为其添加一个点击事件, 给点击事件触发<code>minusPrice</code>方法</li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListTwo.vue
+&lt;template&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">id=<span class="hljs-string">"product-list-two"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2&gt;Product List Two<span class="hljs-tag">&lt;/<span class="hljs-name">h2&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">li <span class="hljs-attr">v-for=<span class="hljs-string">"product in products"&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"name"&gt;{{ product.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"price"&gt;${{ product.price }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+            <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">button @<span class="hljs-attr">click=<span class="hljs-string">"minusPrice"&gt;减少价格<span class="hljs-tag">&lt;/<span class="hljs-name">button&gt; //添加按钮
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+&lt;<span class="hljs-regexp">/template&gt;
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>在<code>ProductListTwo.vue</code>中注册<code>minusPrice</code>方法, 在该方法中commit<code>mutations</code>中的<code>minusPrice</code>这个回调函数<br />
+<strong>注意:调用mutaions中回调函数, 只能使用store.commit(type, payload)</strong>
+</li>
+
+
+
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//ProductListTwo.vue
+<span class="hljs-keyword">export <span class="hljs-keyword">default {
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products: <span class="hljs-keyword">this.$store.state.products
+        }
+    },
+    <span class="hljs-attr">methods: {
+        minusPrice() {
+            <span class="hljs-keyword">this.$store.commit(<span class="hljs-string">'minusPrice', <span class="hljs-number">2); <span class="hljs-comment">//提交`minusPrice,payload为2
+        }
+    }
+}
+</span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>添加按钮, 可以发现, Product List Two中的价格减少了2, 当然你可以自定义<code>payload</code>,以此自定义减少对应的价格.<br />
+<div class="image-package">
+<img src="./images/vuex5.png" alt="mutations效果" data-original-src="./images/vuex5.png" />
+<div class="image-caption">mutations效果</div>
+
+
+
+</div>
+
+
+
+</li>
+
+
+
+</ul>
+<p>(Product List One中的价格没有发生变化，原因是getter 监听的是map方法产生的新对象)</p>
+<h4><strong>核心概念4: Actions</strong></h4>
+<p><code>actions</code> 类似于 <code>mutations</code>，不同在于：</p>
+<ul>
+<li>
+<p><code>actions</code>提交的是<code>mutations</code>而不是直接变更状态</p>
+
+
+</li>
+<li>
+<p><code>actions</code>中可以包含异步操作, <code>mutations</code>中绝对不允许出现异步</p>
+
+
+</li>
+<li>
+<p><code>actions</code>中的回调函数的第一个参数是<code>context</code>, 是一个与<code>store</code>实例具有相同属性和方法的对象</p>
+
+
+</li>
+<li>
+<p>此时,我们在<code>store</code>中添加<code>actions</code>属性, 其中<code>minusPriceAsync</code>采用<code>setTimeout</code>来模拟异步操作,延迟2s执行 该方法用于异步改变我们刚才在<code>mutaions</code>中定义的<code>minusPrice</code></p>
+
+
+</li>
+
+
+
+</ul>
+<pre><code><code class="javascript"><span class="hljs-comment">//main.js
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+  <span class="hljs-attr">state:{
+    <span class="hljs-attr">products: [
+      {<span class="hljs-attr">name: <span class="hljs-string">'鼠标', <span class="hljs-attr">price: <span class="hljs-number">20},
+      {<span class="hljs-attr">name: <span class="hljs-string">'键盘', <span class="hljs-attr">price: <span class="hljs-number">40},
+      {<span class="hljs-attr">name: <span class="hljs-string">'耳机', <span class="hljs-attr">price: <span class="hljs-number">60},
+      {<span class="hljs-attr">name: <span class="hljs-string">'显示屏', <span class="hljs-attr">price: <span class="hljs-number">80}
+    ]
+  },
+  <span class="hljs-attr">getters:{
+    <span class="hljs-attr">saleProducts: <span class="hljs-function">(<span class="hljs-params">state) =&gt; {
+      <span class="hljs-keyword">let saleProducts = state.products.map( <span class="hljs-function"><span class="hljs-params">product =&gt; {
+        <span class="hljs-keyword">return {
+          <span class="hljs-attr">name: product.name,
+          <span class="hljs-attr">price: product.price / <span class="hljs-number">2
+        }
+      })
+      <span class="hljs-keyword">return saleProducts;
+    }
+  },
+  <span class="hljs-attr">mutations:{
+    minusPrice (state, payload ) {
+      <span class="hljs-keyword">let newPrice = state.products.forEach( <span class="hljs-function"><span class="hljs-params">product =&gt; {
+        product.price -= payload
+      })
+    }
+  },
+  <span class="hljs-attr">actions:{ <span class="hljs-comment">//添加actions
+    minusPriceAsync( context, payload ) {
+      setTimeout( <span class="hljs-function"><span class="hljs-params">() =&gt; {
+        context.commit( <span class="hljs-string">'minusPrice', payload ); <span class="hljs-comment">//context提交
+      }, <span class="hljs-number">2000)
+    }
+  }
+})
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>在<code>ProductListTwo.vue</code>中添加一个按钮,为其添加一个点击事件, 给点击事件触发<code>minusPriceAsync</code>方法</li>
+</ul>
+<pre><code><code class="javascript">&lt;template&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div <span class="hljs-attr">id=<span class="hljs-string">"product-list-two"&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2&gt;Product List Two<span class="hljs-tag">&lt;/<span class="hljs-name">h2&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">li <span class="hljs-attr">v-for=<span class="hljs-string">"product in products"&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"name"&gt;{{ product.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+                <span class="hljs-tag">&lt;<span class="hljs-name">span <span class="hljs-attr">class=<span class="hljs-string">"price"&gt;${{ product.price }}<span class="hljs-tag">&lt;/<span class="hljs-name">span&gt;
+            <span class="hljs-tag">&lt;/<span class="hljs-name">li&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">button @<span class="hljs-attr">click=<span class="hljs-string">"minusPrice"&gt;减少价格<span class="hljs-tag">&lt;/<span class="hljs-name">button&gt;
+            <span class="hljs-tag">&lt;<span class="hljs-name">button @<span class="hljs-attr">click=<span class="hljs-string">"minusPriceAsync"&gt;异步减少价格<span class="hljs-tag">&lt;/<span class="hljs-name">button&gt; //添加按钮
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul&gt;
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div&gt;
+&lt;<span class="hljs-regexp">/template&gt;
+</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>在<code>ProductListTwo.vue</code>中注册<code>minusPriceAsync</code>方法, 在该方法中dispatch<code>actions</code>中的<code>minusPriceAsync</code>这个回调函数</li>
+</ul>
+<pre><code><code class="javascript"><span class="hljs-keyword">export <span class="hljs-keyword">default {
+    data () {
+        <span class="hljs-keyword">return {
+            <span class="hljs-attr">products: <span class="hljs-keyword">this.$store.state.products
+        }
+    },
+    <span class="hljs-attr">methods: {
+        minusPrice() {
+            <span class="hljs-keyword">this.$store.commit(<span class="hljs-string">'minusPrice', <span class="hljs-number">2);
+        },
+        minusPriceAsync() {
+            <span class="hljs-keyword">this.$store.dispatch(<span class="hljs-string">'minusPriceAsync', <span class="hljs-number">5); <span class="hljs-comment">//分发actions中的minusPriceAsync这个异步函数
+        }
+    }
+}
+</span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<ul>
+<li>
+<p>添加按钮, 可以发现, Product List Two中的价格延迟2s后减少了5</p>
+<br />
+<div class="image-package">
+<img src="./images/vuex6.png" alt="actions效果" data-original-src="./images/vuex6.png" />
+<div class="image-caption">actions效果</div>
+
+</div>
+
+</li>
+
+</ul>
+<h4><strong>核心概念5: Modules</strong></h4>
+<blockquote>
+<p>由于使用单一状态树，应用的所有状态会集中到一个比较大的对象。当应用变得非常复杂时，store 对象就有可能变得相当臃肿。为了解决以上问题，Vuex 允许我们将 store 分割成模块（module）。每个模块拥有自己的 state、mutation、action、getter、甚至是嵌套子模块&mdash;&mdash;从上至下进行同样方式的分割</p>
+
+
+
+</blockquote>
+<pre><code><code class="javascript"><span class="hljs-keyword">const moduleA = {
+  <span class="hljs-attr">state: { ... },
+  <span class="hljs-attr">mutations: { ... },
+  <span class="hljs-attr">actions: { ... },
+  <span class="hljs-attr">getters: { ... }
+}
+
+<span class="hljs-keyword">const moduleB = {
+  <span class="hljs-attr">state: { ... },
+  <span class="hljs-attr">mutations: { ... },
+  <span class="hljs-attr">actions: { ... }
+}
+
+<span class="hljs-keyword">const store = <span class="hljs-keyword">new Vuex.Store({
+  <span class="hljs-attr">modules: {
+    <span class="hljs-attr">a: moduleA,
+    <span class="hljs-attr">b: moduleB
+  }
+})
+
+store.state.a <span class="hljs-comment">// -&gt; moduleA 的状态
+store.state.b <span class="hljs-comment">// -&gt; moduleB 的状态</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+</div>
+<br /><br /><ol>
+<li>Vuex官方文档:&nbsp;<a href="https://vuex.vuejs.org/zh-cn/intro.html" rel="nofollow" target="_blank">https://vuex.vuejs.org/zh-cn/intro.html</a></li>
+<li>Vuex官方案例演示源码:&nbsp;<a href="https://github.com/vuejs/vuex/tree/dev/examples" rel="nofollow" target="_blank">https://github.com/vuejs/vuex/tree/dev/examples</a></li>
+
+</ol></div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

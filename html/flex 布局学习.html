@@ -1,0 +1,386 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修flex 布局学习' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>flex 布局学习</center></div><div class='banquan'>原文出处:本文由博客园博主nykuo提供。<br/>
+原文连接:https://www.cnblogs.com/nykuo/p/11163802.html</div><br>
+    <h1 class="article-title" style="text-align: center;" data-v-4f8894a8="">&nbsp;flex 布局学习</h1>
+<div class="article-content" data-v-4f8894a8="" data-id="58f6e7d3a0bb9f006ab54af9">
+<h2 id="-" data-id="heading-0">寻根溯源话布局</h2>
+<p>一切都始于这样一个问题：怎样通过 CSS 简单而优雅的实现水平、垂直同时居中。记得刚开始学习 CSS 的时候，看到&nbsp;<code>float</code>&nbsp;属性不由得感觉眼前一亮，顺理成章的联想到 Word 文档排版中用到的的左对齐、右对齐和居中对齐，然而很快就失望的发现 CSS 中并不存在&nbsp;<code>float: center</code>&nbsp;的写法，那么&nbsp;<code>text-align: center</code>、<code>verticle-align: center</code>&nbsp;是否可行呢？答案也是否定的。这两个属性只能用于行内元素，对于块级元素的布局是无效的。</p>
+<p>在网页布局没有进入 CSS 的时代，排版几乎是通过&nbsp;<code>table</code>&nbsp;元素实现的，在&nbsp;<code>table</code>&nbsp;的单元格里可以方便的使用&nbsp;<code>align</code>、<code>valign</code>&nbsp;来实现水平和垂直方向的对齐，随着 Web 语义化的流行，这些写法逐渐淡出了视野，CSS 标准为我们提供了 3 种布局方式：<code>标准文档流</code>、<code>浮动布局</code>和<code>定位布局</code>。这几种方式的搭配使用可以轻松搞定 PC 端页面的常见需求，比如实现水平居中可以使用&nbsp;<code>margin: 0 auto</code>，实现水平垂直同时居中可以如下设置：</p>
+<pre><code><code class="hljs css copyable"><span class="hljs-selector-class">.dad {
+    <span class="hljs-attribute">position: relative;
+}<span class="copy-code-btn">复制代码</span></span></span></code></pre>
+<pre><code><code class="hljs css copyable"><span class="hljs-selector-class">.son {
+    <span class="hljs-attribute">position: absolute;
+    <span class="hljs-attribute">margin: auto;
+    <span class="hljs-attribute">top: <span class="hljs-number">0;
+    <span class="hljs-attribute">right: <span class="hljs-number">0;
+    <span class="hljs-attribute">bottom: <span class="hljs-number">0;
+    <span class="hljs-attribute">left: <span class="hljs-number">0;
+}<span class="copy-code-btn">复制代码</span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<hr />
+<pre><code><code class="hljs css copyable"><span class="hljs-selector-class">.dad {
+    <span class="hljs-attribute">position: relative;
+}<span class="copy-code-btn">复制代码</span></span></span></code></pre>
+<pre><code><code class="hljs css copyable"><span class="hljs-selector-class">.son {
+    <span class="hljs-attribute">width: <span class="hljs-number">100px;
+    <span class="hljs-attribute">height: <span class="hljs-number">100px;
+    <span class="hljs-attribute">position: absolute;
+    <span class="hljs-attribute">top: <span class="hljs-number">50%;
+    <span class="hljs-attribute">left: <span class="hljs-number">50%;
+    <span class="hljs-attribute">margin-top: -<span class="hljs-number">50px;
+    <span class="hljs-attribute">margin-left: -<span class="hljs-number">50px;
+}<span class="copy-code-btn">复制代码</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></code></pre>
+<p>然而，这些写法都存在一些缺陷：缺少语义并且不够灵活。我们需要的是通过 1 个属性就能优雅的实现子元素居中或均匀分布，甚至可以随着窗口缩放自动适应。在这样的需求下，CSS 的第 4 种布局方式诞生了，这就是我们今天要重点介绍的 flex 布局。</p>
+<h2 id="flex-" data-id="heading-1">flex 基本概念</h2>
+<p>使用 flex 布局首先要设置父容器&nbsp;<code>display: flex</code>，然后再设置&nbsp;<code>justify-content: center</code>&nbsp;实现水平居中，最后设置&nbsp;<code>align-items: center</code>&nbsp;实现垂直居中。</p>
+<pre><code><code class="hljs css copyable"><span class="hljs-selector-id">#dad {
+    <span class="hljs-attribute">display: flex;
+    <span class="hljs-attribute">justify-content: center;
+    <span class="hljs-attribute">align-items: center
+}<span class="copy-code-btn">复制代码</span></span></span></span></span></code></pre>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习0.png" alt="" data-src="./images/flex 布局学习0.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>就是这么简单，大功告成。等等，好像哪里不对，<code>justify-content</code>&nbsp;和&nbsp;<code>align-items</code>&nbsp;是啥？哪里可以看出横向、竖向的语义？是的，flex 的确没有那么简单，这就要从两个基本概念说起了。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习1.png" alt="" data-src="./images/flex 布局学习1.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>说来也不难，flex 的核心的概念就是&nbsp;容器&nbsp;和&nbsp;轴。容器包括外层的&nbsp;父容器&nbsp;和内层的&nbsp;子容器，轴包括&nbsp;主轴&nbsp;和&nbsp;交叉轴，可以说 flex 布局的全部特性都构建在这两个概念上。flex 布局涉及到 12 个 CSS 属性（不含&nbsp;<code>display: flex</code>），其中父容器、子容器各 6 个。不过常用的属性只有 4 个，父容器、子容器各 2 个，我们就先从常用的说起吧。</p>
+<h3 id="1-" data-id="heading-2">1. 容器</h3>
+<blockquote>
+<p>容器具有这样的特点：父容器可以统一设置子容器的排列方式，子容器也可以单独设置自身的排列方式，如果两者同时设置，以子容器的设置为准。</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习2.png" alt="" data-src="./images/flex 布局学习2.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<h4 id="1-1-" data-id="heading-3">1.1 父容器</h4>
+<ul>
+<li>设置子容器沿主轴排列：justify-content</li>
+</ul>
+<p><code>justify-content</code>&nbsp;属性用于定义如何沿着主轴方向排列子容器。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习3.png" alt="" data-src="./images/flex 布局学习3.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-start：起始端对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习4.png" alt="" data-src="./images/flex 布局学习4.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-end：末尾段对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习5.png" alt="" data-src="./images/flex 布局学习5.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>center：居中对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习6.png" alt="" data-src="./images/flex 布局学习6.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>space-around：子容器沿主轴均匀分布，位于首尾两端的子容器到父容器的距离是子容器间距的一半。</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习7.png" alt="" data-src="./images/flex 布局学习7.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>space-between：子容器沿主轴均匀分布，位于首尾两端的子容器与父容器相切。</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习8.png" alt="" data-src="./images/flex 布局学习8.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>设置子容器如何沿交叉轴排列：align-items</p>
+<p><code>align-items</code>&nbsp;属性用于定义如何沿着交叉轴方向分配子容器的间距。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习9.png" alt="" data-src="./images/flex 布局学习9.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-start：起始端对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习10.png" alt="" data-src="./images/flex 布局学习10.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-end：末尾段对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习11.png" alt="" data-src="./images/flex 布局学习11.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>center：居中对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习12.png" alt="" data-src="./images/flex 布局学习12.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>baseline：基线对齐，这里的&nbsp;<code>baseline</code>&nbsp;默认是指首行文字，即&nbsp;<code>first baseline</code>，所有子容器向基线对齐，交叉轴起点到元素基线距离最大的子容器将会与交叉轴起始端相切以确定基线。</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习13.png" alt="" data-src="./images/flex 布局学习13.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>stretch：子容器沿交叉轴方向的尺寸拉伸至与父容器一致。</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习14.png" alt="" data-src="./images/flex 布局学习14.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<h4 id="1-2-" data-id="heading-4">1.2 子容器</h4>
+<ul>
+<li>在主轴上如何伸缩：flex</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习15.png" alt="" data-src="./images/flex 布局学习15.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>子容器是有弹性的（flex 即弹性），它们会自动填充剩余空间，子容器的伸缩比例由&nbsp;<code>flex</code>&nbsp;属性确定。</p>
+<p><code>flex</code>&nbsp;的值可以是无单位数字（如：1, 2, 3），也可以是有单位数字（如：15px，30px，60px），还可以是&nbsp;<code>none</code>&nbsp;关键字。子容器会按照&nbsp;<code>flex</code>&nbsp;定义的尺寸比例自动伸缩，如果取值为&nbsp;<code>none</code>&nbsp;则不伸缩。</p>
+<p>虽然&nbsp;<code>flex</code>&nbsp;是多个属性的缩写，允许 1 - 3 个值连用，但通常用 1 个值就可以满足需求，它的全部写法可参考下图。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习16.png" alt="" data-src="./images/flex 布局学习16.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>单独设置子容器如何沿交叉轴排列：align-self</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习17.png" alt="" data-src="./images/flex 布局学习17.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>每个子容器也可以单独定义沿交叉轴排列的方式，此属性的可选值与父容器&nbsp;<code>align-items</code>&nbsp;属性完全一致，如果两者同时设置则以子容器的&nbsp;<code>align-self</code>&nbsp;属性为准。</p>
+<blockquote>
+<p>flex-start：起始端对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习18.png" alt="" data-src="./images/flex 布局学习18.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-end：末尾段对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习19.png" alt="" data-src="./images/flex 布局学习19.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>center：居中对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习20.png" alt="" data-src="./images/flex 布局学习20.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>baseline：基线对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习21.png" alt="" data-src="./images/flex 布局学习21.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>stretch：拉伸对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习22.png" alt="" data-src="./images/flex 布局学习22.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<h3 id="2-" data-id="heading-5">2. 轴</h3>
+<p>如图所示，轴&nbsp;包括&nbsp;主轴&nbsp;和&nbsp;交叉轴，我们知道&nbsp;<code>justify-content</code>&nbsp;属性决定子容器沿主轴的排列方式，<code>align-items</code>&nbsp;属性决定子容器沿着交叉轴的排列方式。那么轴本身又是怎样确定的呢？在 flex 布局中，<code>flex-direction</code>&nbsp;属性决定主轴的方向，交叉轴的方向由主轴确定。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习23.png" alt="" data-src="./images/flex 布局学习23.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>主轴</li>
+</ul>
+<p>主轴的起始端由&nbsp;<code>flex-start</code>&nbsp;表示，末尾段由&nbsp;<code>flex-end</code>&nbsp;表示。不同的主轴方向对应的起始端、末尾段的位置也不相同。</p>
+<blockquote>
+<p>向右：<code>flex-direction: row</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习24.png" alt="" data-src="./images/flex 布局学习24.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>向下：<code>flex-direction: column</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习25.png" alt="" data-src="./images/flex 布局学习25.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>向左：<code>flex-direction: row-reverse</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习26.png" alt="" data-src="./images/flex 布局学习26.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>向上：<code>flex-direction: column-reverse</code></p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习27.png" alt="" data-src="./images/flex 布局学习27.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>交叉轴</p>
+<p>主轴沿逆时针方向旋转 90&deg; 就得到了交叉轴，交叉轴的起始端和末尾段也由&nbsp;<code>flex-start</code>&nbsp;和&nbsp;<code>flex-end</code>&nbsp;表示。</p>
+<p>上面介绍的几项属性是 flex 布局中最常用到的部分，一般来说可以满足大多数需求，如果实现复杂的布局还需要深入了解更多的属性。</p>
+</li>
+</ul>
+<hr />
+<h2 id="flex-" data-id="heading-6">flex 进阶概念</h2>
+<h3 id="1-" data-id="heading-7">1. 父容器</h3>
+<ul>
+<li>
+<p>设置换行方式：flex-wrap</p>
+<p>决定子容器是否换行排列，不但可以顺序换行而且支持逆序换行。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习28.png" alt="" data-src="./images/flex 布局学习28.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>nowrap：不换行</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习29.png" alt="" data-src="./images/flex 布局学习29.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>wrap：换行</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习30.png" alt="" data-src="./images/flex 布局学习30.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>wrap-reverse：逆序换行</p>
+</blockquote>
+<p>逆序换行是指沿着交叉轴的反方向换行。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习31.png" alt="" data-src="./images/flex 布局学习31.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>轴向与换行组合设置：flex-flow</p>
+<p>flow 即流向，也就是子容器沿着哪个方向流动，流动到终点是否允许换行，比如&nbsp;<code>flex-flow: row wrap</code>，<code>flex-flow</code>&nbsp;是一个复合属性，相当于 flex-direction 与 flex-wrap 的组合，可选的取值如下：</p>
+<ul>
+<li>
+<p><code>row</code>、<code>column</code>&nbsp;等，可单独设置主轴方向</p>
+</li>
+<li>
+<p><code>wrap</code>、<code>nowrap</code>&nbsp;等，可单独设置换行方式</p>
+</li>
+<li>
+<p><code>row nowrap</code>、<code>column wrap</code>&nbsp;等，也可两者同时设置</p>
+</li>
+</ul>
+</li>
+<li>
+<p>多行沿交叉轴对齐：align-content</p>
+<p>当子容器多行排列时，设置行与行之间的对齐方式。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习32.png" alt="" data-src="./images/flex 布局学习32.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-start：起始端对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习33.png" alt="" data-src="./images/flex 布局学习33.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>flex-end：末尾段对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习34.png" alt="" data-src="./images/flex 布局学习34.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>center：居中对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习35.png" alt="" data-src="./images/flex 布局学习35.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>space-around：等边距均匀分布</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习36.png" alt="" data-src="./images/flex 布局学习36.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>space-between：等间距均匀分布</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习37.png" alt="" data-src="./images/flex 布局学习37.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<blockquote>
+<p>stretch：拉伸对齐</p>
+</blockquote>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习38.png" alt="" data-src="./images/flex 布局学习38.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<h3 id="2-" data-id="heading-8">2. 子容器</h3>
+<ul>
+<li>
+<p>设置基准大小：flex-basis</p>
+<p><code>flex-basis</code>&nbsp;表示在不伸缩的情况下子容器的原始尺寸。主轴为横向时代表宽度，主轴为纵向时代表高度。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习39.png" alt="" data-src="./images/flex 布局学习39.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习40.png" alt="" data-src="./images/flex 布局学习40.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>设置扩展比例：flex-grow</p>
+<p>子容器弹性伸展的比例。如图，剩余空间按 1:2 的比例分配给子容器。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习41.png" alt="" data-src="./images/flex 布局学习41.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习42.png" alt="" data-src="./images/flex 布局学习42.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>设置收缩比例：flex-shrink</p>
+<p>子容器弹性收缩的比例。如图，超出的部分按 1:2 的比例从给子容器中减去。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习43.png" alt="" data-src="./images/flex 布局学习43.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习44.png" alt="" data-src="./images/flex 布局学习44.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<ul>
+<li>
+<p>设置排列顺序：order</p>
+<p>改变子容器的排列顺序，覆盖 HTML 代码中的顺序，默认值为 0，可以为负值，数值越小排列越靠前。</p>
+</li>
+</ul>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习45.png" alt="" data-src="./images/flex 布局学习45.png" data-width="800" data-height="600" />
+<p>&nbsp;</p>
+<hr />
+<p>以上就是 flex 布局的全部属性，一共 12 个，父容器、子容器各 6 个，可以随时通过下图进行回顾。</p>
+<p>&nbsp;</p>
+<img class="lazyload inited loaded" src="./images/flex 布局学习46.png" alt="" data-src="./images/flex 布局学习46.png" data-width="800" data-height="600" /></div>
+<div class="article-content" data-v-4f8894a8="" data-id="58f6e7d3a0bb9f006ab54af9">学习使用，摘自<a href="https://juejin.im/post/58e3a5a0a0bb9f0069fc16bb">https://juejin.im/post/58e3a5a0a0bb9f0069fc16bb</a></div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

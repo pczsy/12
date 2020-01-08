@@ -1,0 +1,232 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue中图片放大镜功能' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue中图片放大镜功能</center></div><div class='banquan'>原文出处:本文由博客园博主阿泽码农提供。<br/>
+原文连接:https://www.cnblogs.com/zhengzemin/p/vue_photo_Zoom_display.html</div><br>
+    <p><span style="font-size: 18px;"><strong>仿淘宝详情页图片鼠标移过去可对图片放大显示在右侧</strong></span></p>
+<p><span style="font-size: 18px;"><strong>效果图如下图，此功能<span style="color: #ff0000;">支持PC端与移动端</span></strong></span></p>
+<p><span style="font-size: 18px;"><strong><img src="./images/vue中图片放大镜功能0.png" alt="" /></strong></span></p>
+<p>&nbsp;</p>
+<p>接下来进入代码实现环节：</p>
+<p>先准备两张图片，一张小图片叫 '土味.jpg'，大小160*91；一张大图片叫 ' 土味Big.jpg '，大小320*181。</p>
+<p>大家看图片名字是什么就知道我要干什么，大家都懂的，接下来素材准备好了，进入代码环节：</p>
+<p>html结构：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="productLeft"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 左侧中图  </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="mdImg"</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">:src</span><span style="color: #0000ff;">="qall"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 遮罩层  </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="isShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="marks"</span><span style="color: #ff0000;"> :style</span><span style="color: #0000ff;">="{top:top+'px',left:left+'px'}"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 遮罩层 玻璃板 superMarks </span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="isPC==false"</span><span style="color: #ff0000;"> @touchstart.prevent</span><span style="color: #0000ff;">="enter"</span><span style="color: #ff0000;"> @touchend.prevent</span><span style="color: #0000ff;">="leave"</span><span style="color: #ff0000;">  @touchmove.prevent</span><span style="color: #0000ff;">="marks"</span><span style="color: #ff0000;"> @click.prevent</span><span style="color: #0000ff;">="sub()"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="superMarks"</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-if</span><span style="color: #0000ff;">="isPC==true"</span><span style="color: #ff0000;"> @mouseenter</span><span style="color: #0000ff;">="enter"</span><span style="color: #ff0000;"> @mouseleave</span><span style="color: #0000ff;">="leave"</span><span style="color: #ff0000;">  @mousemove</span><span style="color: #0000ff;">="marks"</span><span style="color: #ff0000;"> @click.prevent</span><span style="color: #0000ff;">="sub()"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="superMarks"</span> <span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">v-show</span><span style="color: #0000ff;">="isShow"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="lgImg"</span><span style="color: #0000ff;">&gt;</span>
+                    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">:src</span><span style="color: #0000ff;">="qallBig"</span><span style="color: #ff0000;"> alt</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> :style</span><span style="color: #0000ff;">="{top:topLgImg+'px',left:leftLgImg+'px'}"</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>js部分：</p>
+<div class="cnblogs_code">
+<pre><code>export <span style="color: #0000ff;">default</span><span style="color: #000000;">{
+        name : </span>'blog-header'<span style="color: #000000;">,
+        data(){
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">{
+                isPC:</span><span style="color: #0000ff;">true</span><span style="color: #000000;">,
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> 大图片</span>
+                qall: '../../static/image/土味.jpg'<span style="color: #000000;">,
+                qallBig: </span>'../../static/image/土味Big.jpg'<span style="color: #000000;">,
+                isShow:</span><span style="color: #0000ff;">false</span>,   <span style="color: #008000;">//</span><span style="color: #008000;">控制遮罩层marks和大图片是否显示"</span>
+                left:0,       <span style="color: #008000;">//</span><span style="color: #008000;">marks左移位置</span>
+                top:0,         <span style="color: #008000;">//</span><span style="color: #008000;">marks下移位置</span>
+                leftLgImg:0,       <span style="color: #008000;">//</span><span style="color: #008000;">大图lgImg移动的位置</span>
+                topLgImg:0         <span style="color: #008000;">//</span><span style="color: #008000;">大图lgImg移动的位置</span>
+<span style="color: #000000;">            }
+            
+        },
+        methods:{
+          </span><span style="color: #008000;">//</span><span style="color: #008000;">鼠标进入和离开</span>
+<span style="color: #000000;">        enter(){
+            </span><span style="color: #0000ff;">this</span>.isShow=<span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        },
+        leave(){
+            </span><span style="color: #0000ff;">this</span>.isShow=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        },
+        </span><span style="color: #008000;">//</span><span style="color: #008000;">遮罩层放大镜</span>
+<span style="color: #000000;">        marks(e){</span>
+            <span style="color: #0000ff;">var</span> marksWidth=48;<span style="color: #008000;">//</span><span style="color: #008000;">marks的宽</span>
+            <span style="color: #0000ff;">var</span> marksHeight=48;<span style="color: #008000;">//</span><span style="color: #008000;">marks的高</span>
+           <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.isPC==<span style="color: #0000ff;">true</span><span style="color: #000000;">){
+            </span><span style="color: #008000;">//</span><span style="color: #008000;">PC端</span>
+                <span style="color: #0000ff;">this</span>.left=e.offsetX-marksWidth/2;   
+                <span style="color: #0000ff;">this</span>.top=e.offsetY-marksHeight/2;
+                <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.left&lt;0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.left=0<span style="color: #000000;">;
+                }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.left&gt;160<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.left=160<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.top&lt;0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.top=0<span style="color: #000000;">;
+                }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.top&gt;160<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.top=160<span style="color: #000000;">;
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">大d图片除以小的图片的宽高</span>
+                <span style="color: #0000ff;">this</span>.leftLgImg=-<span style="color: #0000ff;">this</span>.left*320/160;
+                <span style="color: #0000ff;">this</span>.topLgImg=-<span style="color: #0000ff;">this</span>.top*181/91;
+            }<span style="color: #0000ff;">else</span><span style="color: #000000;">{
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">移动端</span>
+                <span style="color: #0000ff;">this</span>.left=e.changedTouches[0].clientX-marksWidth/2;   
+                <span style="color: #0000ff;">this</span>.top=e.changedTouches[0].clientY-marksHeight/2;
+                <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.left&lt;0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.left=0<span style="color: #000000;">;
+                }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.left&gt;160<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.left=160<span style="color: #000000;">;
+                }
+                </span><span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.top&lt;0<span style="color: #000000;">){
+                    </span><span style="color: #0000ff;">this</span>.top=0<span style="color: #000000;">;
+                }</span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span>(<span style="color: #0000ff;">this</span>.top&gt;45<span style="color: #000000;">){ <br />　　　　　　　　　　　　//45就是小图片的高度的一半，91/2
+                    </span><span style="color: #0000ff;">this</span>.top=45<span style="color: #000000;">;
+                }
+                
+                </span><span style="color: #008000;">//</span><span style="color: #008000;">大d图片除以小的图片的宽高</span>
+                <span style="color: #0000ff;">this</span>.leftLgImg=-<span style="color: #0000ff;">this</span>.left*320/160;
+                <span style="color: #0000ff;">this</span>.topLgImg=-<span style="color: #0000ff;">this</span>.top*181/91;
+<span style="color: #000000;">               
+          
+            }
+
+            
+        }
+
+        },
+        mounted(){
+    </span><span style="color: #0000ff;">if</span> (navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/<span style="color: #000000;">i,)) {
+        </span><span style="color: #0000ff;">this</span>.isPC = <span style="color: #0000ff;">false</span><span style="color: #000000;">; 
+      
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        console.log(</span>'PC端'<span style="color: #000000;">)
+
+    }
+
+
+    }
+    }</span></pre>
+</div>
+<p>css部分：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 左侧大小图样式 160*91  320*181</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .productLeft</span>{<span style="color: #ff0000;">
+
+        width</span>:<span style="color: #0000ff;">160px</span>;<span style="color: #ff0000;">
+        position</span>:<span style="color: #0000ff;"> relative</span>;
+
+    }
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 左侧中图 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .mdImg,.mdImg&gt;img</span>{<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;">160px</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;">91px</span>;<span style="color: #ff0000;">
+        margin-left</span>:<span style="color: #0000ff;"> 15px</span>;
+    }
+    <span style="color: #008000;">/*</span><span style="color: #008000;">遮罩层superMarks </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .superMarks</span>{<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;">160px</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;">91px</span>;<span style="color: #ff0000;">
+        background-color</span>:<span style="color: #0000ff;">rgba(220, 220, 220, 0)</span>;<span style="color: #ff0000;">
+        position</span>:<span style="color: #0000ff;">absolute</span>;<span style="color: #ff0000;">
+        top</span>:<span style="color: #0000ff;">0px</span>;<span style="color: #ff0000;">
+        left</span>:<span style="color: #0000ff;">0px</span>;
+
+    }
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 遮罩层 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .marks</span>{<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;">48px</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;">48px</span>;<span style="color: #ff0000;">
+        position</span>:<span style="color: #0000ff;">absolute</span>;<span style="color: #ff0000;">
+        background-color</span>:<span style="color: #0000ff;">rgba(220, 220, 220, 0.5)</span>;
+        <span style="color: #008000;">/*</span><span style="color: #008000;">top:0px;  //内联设置了动态的top，left
+        left:0px;</span><span style="color: #008000;">*/</span>
+    }
+    
+    <span style="color: #008000;">/*</span><span style="color: #008000;"> 左侧隐藏大图 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+    .lgImg</span>{<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;">160px</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;">91px</span>;<span style="color: #ff0000;">
+        overflow</span>:<span style="color: #0000ff;"> hidden</span>;<span style="color: #ff0000;">
+        position</span>:<span style="color: #0000ff;">absolute</span>;<span style="color: #ff0000;">
+        top</span>:<span style="color: #0000ff;">0px</span>;<span style="color: #ff0000;">
+        left</span>:<span style="color: #0000ff;">195px</span>;<span style="color: #ff0000;">
+        border</span>:<span style="color: #0000ff;">2px solid #aaa</span>;<span style="color: #ff0000;">
+        background-color</span>:<span style="color: #0000ff;">#fff</span>;
+    }<span style="color: #800000;">
+    .lgImg img</span>{<span style="color: #ff0000;">
+        width</span>:<span style="color: #0000ff;">320px</span>;<span style="color: #ff0000;">
+        height</span>:<span style="color: #0000ff;">181px</span>;<span style="color: #ff0000;">
+        position</span>:<span style="color: #0000ff;">absolute</span>;
+        <span style="color: #008000;">/*</span><span style="color: #008000;">top:100px;
+        left:100px;</span><span style="color: #008000;">*/</span>
+    }</pre>
+</div>
+<p><strong>兼容：移动端可f12选择移动端查看（鼠标长按移动查看效果），pc端鼠标移动查看效果</strong></p>
+<p>大家的图片的路径记得要写对！！！</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>还有第二种方法（vue的写法）</strong></span></p>
+<p><img src="./images/vue中图片放大镜功能1.png" alt="" /></p>
+<h1 id="articleHeader0"><span style="color: #99cc00;">vue-piczoom</span></h1>
+<p><span style="color: #000000;">先安装此插件：</span></p>
+<p><span style="color: #000000;">&nbsp;<span class="cnblogs_code"><span style="color: #000000;"># 安装 install npm install vue-piczoom --save</span></span>&nbsp;</span></p>
+<p><span style="color: #000000;">使用：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;"># 使用 use
+--script
+import PicZoom from 'vue-piczoom'
+export default {
+  name: 'App',
+  components: {
+    PicZoom
+  }
+}
+
+--html
+</span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pic-zoom </span><span style="color: #ff0000;">url</span><span style="color: #0000ff;">="static/aze.jpg"</span><span style="color: #ff0000;"> :scale</span><span style="color: #0000ff;">="3"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">pic-zoom</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3 id="articleHeader4">Suggest 注意事项</h3>
+<p>组件默认是100%的高宽，所以建议将组件包含在一个有固定高宽的容器内。如：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="pic-box"</span><span style="color: #0000ff;">&gt;</span> <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">pic-box:width:500px;height:500px</span><span style="color: #008000;">--&gt;</span>
+     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">pic-zoom </span><span style="color: #ff0000;">url</span><span style="color: #0000ff;">="static/imac2.jpg"</span><span style="color: #ff0000;"> :scale</span><span style="color: #0000ff;">="3"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">pic-zoom</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<h3>兼容：支持pc端，不支持移动端</h3>
+<p><a href="https://github.com/826327700/vue-piczoom" rel="nofollow noreferrer" target="_blank">Github</a></p>
+<p>虽然以上的两种方法已经可以满足我们了，</p>
+<p>但还为大家在网上搜索到以下的实现方法，大家有兴趣可以移步观看：</p>
+<ol>
+<li>使用vue photo zoom pro：<a href="https://codepen.io/xbup/project/editor/AjnEgE">https://codepen.io/xbup/project/editor/AjnEgE</a></li>
+<li>js仿淘宝主图放大镜功能：<a href="https://www.moyublog.com/codes/2019-07-06/4.html">https://www.moyublog.com/codes/2019-07-06/4.html</a></li>
+<li>vue.js手机端图片点击放大展示代码：<a href="https://www.sucaihuo.com/js/3144.html">https://www.sucaihuo.com/js/3144.html</a></li>
+</ol>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

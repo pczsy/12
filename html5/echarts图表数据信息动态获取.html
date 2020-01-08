@@ -1,0 +1,162 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修echarts图表数据信息动态获取' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>echarts图表数据信息动态获取</center></div><div class='banquan'>原文出处:本文由博客园博主青瑟少年提供。<br/>
+原文连接:https://www.cnblogs.com/webdom/p/11652658.html</div><br>
+    <div id="cnblogs_post_body" class="blogpost-body">
+<p>最近开发项目用到echarts图表展示数据信息，需要调用后台接口，写一篇博客来记录一下实现过程，末尾附源码</p>
+<p>&nbsp;</p>
+<p>首先准备一个json文件echarts.json（名字无所谓），用来模拟从后台获取数据&nbsp;</p>
+<p><img src="./images/echarts图表数据信息动态获取0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>第二步上echarts官网下载，或直接引用生成图表用到的js，这里给出官网：<a href="https://www.echartsjs.com/index.html" rel="nofollow" data-token="d9dd2ca415bc9680369139bf09bcc3a1">https://www.echartsjs.com/index.html</a></p>
+<p>然后在页面直接引用&nbsp;&nbsp;</p>
+<p><img src="./images/echarts图表数据信息动态获取1.png" alt="" /></p>
+<p>这里给出echarts.js的下载链接：<a href="https://echarts.baidu.com/dist/echarts.min.js" rel="nofollow" data-token="e665f41a0e7f5d68f58ab6ba793e9249">https://echarts.baidu.com/dist/echarts.min.js</a></p>
+<p>&nbsp;</p>
+<p>第三步在body中准备一个容器，用来显示图表</p>
+<p><img src="./images/echarts图表数据信息动态获取2.png" alt="" /></p>
+<p>&nbsp;</p>
+<p>紧接着在js中初始化echarts对象，直接上代码</p>
+<div class="cnblogs_code">
+<pre><code>&lt;script type="text/javascript"&gt;
+            var container = document.getElementById('container');
+            // 初始化加载对象myContainer
+            var myContainer = echarts.init(container);
+            //未获取数据前，显示loading加载动画
+            myContainer.showLoading();
+
+            function bindData() {
+                //为了效果明显，我们做了延迟读取数据
+                setTimeout(function() {
+                    //异步加载数据,get请求我们刚刚准备的json文件,正式开发中调用相应的接口
+                    $.get('js/echarts.json', function(res) {
+                        console.log(res)
+                        //获取数据后，隐藏loading动画
+                        myContainer.hideLoading();
+                        myContainer.setOption(option = {
+                            title: {
+                                text: 'echartsLoading加载'
+                            },
+                            tooltip: {},
+                            legend: {},
+                            // xAxis代表x轴的数据
+                            xAxis: {
+                                data: res.name,
+                                // 字段对应从json里面的字段
+                            },
+                            // yAxis代表y轴的数据,不写会自动适应数据
+                            yAxis: {},
+                            // series代表鼠标悬浮到图标上时提示的对应信息
+                            series: [{
+                                name: '访问量',
+                                type: 'bar',
+                                data: res.data,
+                                // 字段对应从json里面的字段
+                            }]
+                        });
+                    })
+                }, 2000)
+            }
+            bindData();
+        &lt;/script&gt;</pre>
+</div>
+<p>看到这里如果能生成一个柱状图，那么恭喜你已经可以从后台获取数据了</p>
+<p>&nbsp;</p>
+<p>如果还没有的话就看全部代码吧，加油哦</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8"&gt;
+        &lt;title&gt;echarts-异步加载数据&lt;/title&gt;
+        &lt;link rel="stylesheet" href="11.scss"&gt;
+        &lt;script src="js/eacher.min.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+        &lt;script src="js/new_file.js" type="text/javascript" charset="utf-8"&gt;&lt;/script&gt;
+        &lt;style&gt;
+            #container{
+                width: 500px;
+                height: 400px;
+                border: 1px solid #ccc;
+                /**/
+            }
+    &lt;/style&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;div id="container"&gt;&lt;/div&gt;
+        &lt;!--  --&gt;
+        &lt;script type="text/javascript"&gt;
+            var container = document.getElementById('container');
+            // 初始化加载对象myContainer
+            var myContainer = echarts.init(container);
+            //未获取数据前，显示loading加载动画
+            myContainer.showLoading();
+
+            function bindData() {
+                //为了效果明显，我们做了延迟读取数据
+                setTimeout(function() {
+                    //异步加载数据,get请求我们刚刚准备的json文件,正式开发中调用相应的接口
+                    $.get('js/echarts.json', function(res) {
+                        console.log(res)
+                        //获取数据后，隐藏loading动画
+                        myContainer.hideLoading();
+                        myContainer.setOption(option = {
+                            title: {
+                                text: 'echartsLoading加载'
+                            },
+                            tooltip: {},
+                            legend: {},
+                            // xAxis代表x轴的数据
+                            xAxis: {
+                                data: res.name,
+                                // 字段对应从json里面的字段
+                            },
+                            // yAxis代表y轴的数据,不写会自动适应数据
+                            yAxis: {},
+                            // series代表鼠标悬浮到图标上时提示的对应信息
+                            series: [{
+                                name: '访问量',
+                                type: 'bar',
+                                data: res.data,
+                                // 字段对应从json里面的字段
+                            }]
+                        });
+                    })
+                }, 2000)
+            }
+            bindData();
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>json文件</p>
+<div class="cnblogs_code">
+<pre><code>{
+    "name":["iso","english","china","ufo","seo"],
+    "data":[400,200,300,100,11]
+}</pre>
+</div>
+<p>效果图</p>
+<p><img src="./images/echarts图表数据信息动态获取3.png" alt="" /></p>
+<p>转载于:https://www.cnblogs.com/songzxblog/p/11383879.html</p>
+</div>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

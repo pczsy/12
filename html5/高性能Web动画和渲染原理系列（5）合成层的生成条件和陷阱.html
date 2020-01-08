@@ -1,0 +1,99 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/11885045.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-硬件加速相关的几个概念">一. 硬件加速相关的几个概念</a></li>
+        <li><a href="#二.-合成层的生成条件">二. 合成层的生成条件</a><ul>
+        <li><a href="#显式提升">显式提升</a></li>
+        <li><a href="#隐式提升">隐式提升</a></li>
+        </ul></li>
+        <li><a href="#三.-硬件加速的权衡">三. 硬件加速的权衡</a></li>
+        <li><a href="#四.-动画实现的一些建议">四. 动画实现的一些建议</a></li>
+        </ul>
+    </div>
+</div>
+<blockquote>
+<p>示例代码托管在：<a href="http://www.github.com/dashnowords/blogs" class="uri">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱0.png" /></p>
+<h2 id="一.-硬件加速相关的几个概念">一. 硬件加速相关的几个概念</h2>
+<p>之前介绍到了<code>RenderLayer</code>渲染层的概念，在涉及到硬件加速的话题时，出现了很多新的概念，参考《Webkit技术内幕》一书的介绍总结如下：</p>
+<p><code>Webkit</code>决定将哪些<code>RenderLayer</code>对象组合在一起，形成一个有后端存储的新层，这一新层不久后会用于合成，这里称之为<strong>合成层</strong>（<code>CompositingLayer</code>）。每一个合成层都会对应一个或多个后端存储，由<code>RenderLayerBacking</code>类进行统一管理，后端存储空间使用<code>GraphicsLayer</code>来表示，也就是说<code>RenderLayerBacking</code>管理着一个或多个与对应的合成层有关的<code>GraphicsLayer</code>。</p>
+<blockquote>
+<p><strong>笔者旁白</strong>：对于渲染过程来说，只需要理解这里形成了新的<code>CompositingLayer</code>合成层就可以了，其他的层概念基本都是用于实现对<code>CompositingLayer</code>功能支持的，概念数量太多对于理解宏观流程是一大障碍。</p>
+</blockquote>
+<h2 id="二.-合成层的生成条件">二. 合成层的生成条件</h2>
+<h3 id="显式提升">显式提升</h3>
+<p>合成层的处理是依赖于硬件加速的，但是<code>GPU</code>的存储空间有限最好不要滥用，过多的合成层有可能还会造成相反的效果，所以浏览器只会将满足下列任意条件的<code>RenderLayer</code>提升为<code>CompositingLayer</code>：</p>
+<ul>
+<li>具有<code>CSS3D</code>属性或<code>CSS</code>透视效果</li>
+<li>包含的<code>RenderObject</code>节点表示的是使用硬件加速的视频解码技术的HTML5<code>video</code>元素</li>
+<li>包含的<code>RenderObject</code>节点包含使用了硬件加速的<code>Canvas2D</code>或<code>WebGL</code>技术</li>
+<li>使用了<code>CSS</code>透明效果或<code>CSS</code>变形动画</li>
+<li>使用了硬件加速的<code>CSS Filters</code>技术（有的文献中表示<code>filters</code>属性并没有提升为合成层的效果，推测只有一部分<code>filters</code>滤镜效果需要使用硬件加速，并非所有）</li>
+<li>使用了剪裁<code>Clip</code>或者反射<code>Reflection</code>，并且它的后代中包含一个合成层</li>
+<li>拥有一个Z坐标比自己小的兄弟节点，且该节点是一个合成层。</li>
+</ul>
+<p>上面的规则里我们最熟悉的可能就是<code>transform:translateZ(0)</code>或者在关键帧动画的定义中改变<code>transform</code>和<code>opacity</code>属性。当然，<strong>随着技术的演进，上面的规则并不一定全面</strong>，<code>Chromium</code>官网提供的开发者演讲PPT中也对提升的理由进行了相关的描述：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱1.png" /></p>
+<p>你可以在<code>Chrome</code>调试面板的<strong>【Layers】</strong>功能中对分层相关的结果进行检视，查看哪些层进行了提升以及被提升的具体原因，避免出现与自己意图相悖的层提升：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱2.png" /></p>
+<h3 id="隐式提升">隐式提升</h3>
+<p><code>RenderLayer</code>满足特殊条件时被提升为<code>CompositingLayer</code>对开发者而言是比较可控的。但除此之外，在浏览器的合成阶段，还存在隐式合成的状况，一些特定的场景中出现的合成层并不是开发者主观期望的。</p>
+<p><strong>隐式合成</strong>主要发生在元素出现重叠时，层级较低的元素如果被提升为合成层后，最终合成的结果就可能出现在原来比自己层级更高的元素之上，从而出现错误的堆叠关系，为了纠正这种关系，只能让原本层级高（但是并不用提升为<code>合成层</code>的元素）发生提升也成为合成层。例如下面的代码：</p>
+<pre><code><code>&lt;div style=&quot;position:absolute;height:200px;width:200px;background-color: #DA5961;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;position:absolute;left:30px;top:50px;height:200px;width:200px;background-color: #3498db;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;position:absolute;left:60px;top:100px;height:200px;width:200px;background-color: #1abc9c;&quot;&gt;&lt;/div&gt;</code></pre>
+<p>三个div盒子堆叠在一起，可以看到它们都绘制在同一个层上（这里的层并不与<code>RenderLayer</code>对应，毕竟它只是一个中间态的树结构）：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱3.png" /></p>
+<p>此时如果为最底下的红色矩形添加<code>transform:translateZ(0)</code>属性将其提升为合成层后，为了保证正确的堆叠关系，蓝色和绿色的矩形就会被提升为合成层，代码如下：</p>
+<pre><code><code>&lt;div style=&quot;transform:translateZ(0);position:absolute;height:200px;width:200px;background-color: #DA5961;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;position:absolute;left:30px;top:50px;height:200px;width:200px;background-color: #3498db;&quot;&gt;&lt;/div&gt;
+&lt;div style=&quot;position:absolute;left:60px;top:100px;height:200px;width:200px;background-color: #1abc9c;&quot;&gt;&lt;/div&gt;</code></pre>
+<p>蓝色和绿色的矩形并没有形成独立的合成层，而是被压缩在同一个合成层中：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱4.png" /></p>
+<p>从上图中的细节信息中可以看到，提升的原因是<code>layerFotSquashingContent</code>，也就是为了保证堆叠顺序的正确，用一个单独的合成层来将受到影响的元素收集在一起，既保证堆叠顺序，也避免在期望之外生成过多的合成层。如果调整绿色矩形的位置，就可以看到，当视觉上不存在覆盖时，它就不需要提升了：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱5.png" /></p>
+<p>BUT！！！还没完，最坑的部分来了，如果此时给蓝色的<code>div</code>加上一点动画，你会发现绿色<code>div</code>又被提升到了独立的合成层上，尽管他们之间并没有重叠区，但还是被提升了：</p>
+<p><img src="./images/高性能Web动画和渲染原理系列（5）合成层的生成条件和陷阱6.png" /></p>
+<p>从图中的合成原因可以看到：它可能和一个相邻的合成层元素发生交叠，所以被提升了。没错，就是“可能”。Fouber这篇<a href="https://div.io/topic/1348">CSS硬件加速也有坑</a>中的示例更加详细，子元素引发父元素提升，父元素又引发兄弟元素提升。</p>
+<h2 id="三.-硬件加速的权衡">三. 硬件加速的权衡</h2>
+<p>所有的技术方案都是有代价的，这是亘古不变的道理，合成层的好处很明显，<code>GPU</code>比<code>CPU</code>的处理速度快很多，触发<code>repaint</code>重绘时，只需要重绘独立的层，然后重新合成即可，不需要重绘整个画面。但它也存在一些弊端：首先是数据传输的问题，<code>CPU</code>和<code>GPU</code>的关系就好比客户端和服务端一样，它们的协作是需要传输数据的，当层的数量达到一定量级后，传输的速度就会影响到整体的处理效率，进而导致在一些低中端设备上出现闪烁等现象；另外，每个合成层都具会占据额外的内存，这个数量通常比开发者以为的要大的多，尤其是在移动端这种硬件资源受限制的场景中，过量的内存使用分分钟就会让应用崩溃。</p>
+<h2 id="四.-动画实现的一些建议">四. 动画实现的一些建议</h2>
+<ol>
+<li><p><strong>使用<code>transform</code>实现动画</strong></p>
+<p>这可能是我们编写动画时听到最多的建议了。例如使用<code>left</code>和<code>top</code>来实现位置动画时，绝对定位的元素会形成<code>RenderLayer</code>，但是却不符合提升为<code>CompositingLayer</code>的条件，所以动画元素就会和<code>Document</code>处在同一个合成层里，持续进行的动画就会导致<code>Document</code>这一层（通常是正常文档流这一层，包含了大量的流式布局的元素）不断重绘，从而影响渲染效率，如果能够让动画的节点放到单独的合成层里，就可以避免这种大规模重绘，并借助<code>GPU</code>加速合成的能力加速整个渲染流程。</p></li>
+<li><p><strong>排查被动提升的情形</strong></p>
+<p>被动提升主要是指<strong>“兄弟元素相对层级低于自己但却是一个合成层”</strong>的情形以及<strong>“发生堆叠遮挡的几个元素中层级较低的元素被提升为合成层”</strong>的状况。一般的解决方案是主动提升动画元素的<code>z-index</code>值或者调整文档结构中节点的先后顺序，当然所有的结果都还需要通过测试来确认。</p></li>
+<li><p><strong>考虑合成层的空间占用</strong></p>
+<p>合成层的后端存储是渲染后的像素点数据，它的体积可能会非常大，在使用大屏图片时需要尽可能将其压缩至视觉可接受的范围而不能一味追求高清，对于纯色的元素，可以使用较小的尺寸并借助<code>transform:scale</code>来放大至需要的尺寸。</p></li>
+<li><p><strong>实测为王</strong></p>
+<p>任何方案都只是一种思路，必须通过在真实环境测试验证才能确认其有效性。</p></li>
+</ol>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

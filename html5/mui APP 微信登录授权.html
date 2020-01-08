@@ -1,0 +1,154 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修mui APP 微信登录授权' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>mui APP 微信登录授权</center></div><div class='banquan'>原文出处:本文由博客园博主屎壳郎推代码提供。<br/>
+原文连接:https://www.cnblogs.com/username-liu/p/11676392.html</div><br>
+    <p>一、在微信平台上申请appid、appsecret。</p>
+<p>二、app --》 manifest.json--》SDK配置(填写申请好的appid和appsecret)</p>
+<p>三、在登录页，点击微信登录按钮，若绑定微信，则免账号密码登录直接跳转到首页；若未绑定，则弹出未绑定微信。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 微信授权登录对象</span>
+<span style="color: #0000ff;">var</span> aweixin=<span style="color: #0000ff;">null</span>;    <span style="color: #008000;">//</span><span style="color: #008000;"> 调用plus.oauth.getServices获取保存</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 当前环境支持的所有授权登录对象</span>
+<span style="color: #0000ff;">var</span> auths =<span style="color: #000000;"> {};
+
+mui.plusReady(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">() {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取鉴权服务</span>
+<span style="color: #000000;">    getService()；
+}）
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取登录授权认证服务列表，单独保存微信登录授权对象</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 5+APP在plusready事件中调用，uni-app在vue页面的onLoad中调用</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> getService(){
+    plus.oauth.getServices(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(services){
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;services.length;i++<span style="color: #000000;">){
+            auths[services[i].id] </span>=<span style="color: #000000;"> services[i];
+        }
+        aweixin </span>= auths['weixin'<span style="color: #000000;">];
+    }, </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+        plus.nativeUI.alert(</span>"获取登录授权服务列表失败："+<span style="color: #000000;">JSON.stringify(e));
+    } );
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">wx登录                <br /><span style="color: #333333;">document.getElementById('wxdenglu').addEventListener('tap',function(){</span></span>
+    plus.nativeUI.showWaiting("正在登录中...",{padlock: <span style="color: #0000ff;">true</span><span style="color: #000000;">});
+    </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">aweixin.authResult){
+        authLogin().then(res</span>=&gt;<span style="color: #000000;">{
+        wxLogin()</span><span style="color: #008000;">//</span><span style="color: #008000;">调用自定义的登录接口</span>
+        }).<span style="color: #0000ff;">catch</span>(res=&gt;<span style="color: #000000;">{
+        plus.nativeUI.closeWaiting();
+        })
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+        wxLogin()</span><span style="color: #008000;">//</span><span style="color: #008000;">调用自定义的登录接口</span>
+<span style="color: #000000;">    }
+});</span></pre>
+</div>
+<p>四、用账号密码登进首页时，判断是否绑定微信，若为绑定微信，则提示让其绑定微信。</p>
+<p>五、微信绑定和解绑。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">//</span><span style="color: #008000;"> 微信授权登录对象</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 调用plus.oauth.getServices获取保存</span>
+<span style="color: #0000ff;">var</span> aweixin=<span style="color: #0000ff;">null</span><span style="color: #000000;">;    
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 当前环境支持的所有授权登录对象</span>
+<span style="color: #0000ff;">var</span> auths =<span style="color: #000000;"> {};
+
+mui.plusReady(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(){
+           </span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取鉴权服务</span>
+<span style="color: #000000;">          getService()
+});
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">wx绑定</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> weixinBind(){
+    plus.nativeUI.showWaiting(</span>"正在绑定中...",{padlock: <span style="color: #0000ff;">true</span><span style="color: #000000;">});
+    </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">aweixin.authResult){
+        authorize().then(res</span>=&gt;<span style="color: #000000;">{
+            wxBind(</span>1<span style="color: #000000;">,aweixin.authResult.openid)
+        }).</span><span style="color: #0000ff;">catch</span>(res=&gt;<span style="color: #000000;">{
+            plus.nativeUI.closeWaiting();
+        })
+    }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+        wxBind(</span>1<span style="color: #000000;">,aweixin.authResult.openid)
+    }
+};
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">wx解绑</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> weixinUnBind(){
+    plus.nativeUI.showWaiting(</span>"正在解绑中...",{padlock: <span style="color: #0000ff;">true</span><span style="color: #000000;">});
+    wxBind(</span>2,""<span style="color: #000000;">)
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取登录授权认证服务列表，单独保存微信登录授权对象</span><span style="color: #008000;">
+//</span><span style="color: #008000;"> 5+APP在plusready事件中调用，uni-app在vue页面的onLoad中调用</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> getService(){
+    plus.oauth.getServices(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(services){
+        </span><span style="color: #0000ff;">for</span>(<span style="color: #0000ff;">var</span> i=0;i&lt;services.length;i++<span style="color: #000000;">){
+            auths[services[i].id] </span>=<span style="color: #000000;"> services[i];
+        }
+        aweixin </span>= auths['weixin'<span style="color: #000000;">];
+    }, </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+        plus.nativeUI.alert(</span>"获取登录授权服务列表失败："+<span style="color: #000000;">JSON.stringify(e));
+    } );
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取微信登录授权对象后可进行授权操作</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> authorize(){
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (resolve, reject) {
+        </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">aweixin){
+            plus.nativeUI.alert(</span>"当前环境不支持微信登录"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        aweixin.authorize(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> plus.nativeUI.alert("授权成功："+JSON.stringify(e));</span>
+            authLogin().then(res=&gt;<span style="color: #000000;">{
+                resolve(res);
+            });
+        }, </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> plus.nativeUI.alert("授权失败："+JSON.stringify(e));</span>
+<span style="color: #000000;">            plus.nativeUI.closeWaiting();
+            reject(e);
+        }, {scope:</span>'snsapi_userinfo',state:'authorize test'<span style="color: #000000;">});
+    })
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;"> 获取微信登录授权对象后可进行登录认证操作</span>
+<span style="color: #0000ff;">function</span><span style="color: #000000;"> authLogin(){
+    </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">new</span> Promise(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (resolve, reject) {
+        </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">aweixin){
+            plus.nativeUI.alert(</span>"当前环境不支持微信登录"<span style="color: #000000;">);
+            </span><span style="color: #0000ff;">return</span><span style="color: #000000;">;
+        }
+        </span><span style="color: #0000ff;">if</span>(!<span style="color: #000000;">aweixin.authResult){
+            aweixin.login(</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+                </span><span style="color: #008000;">//</span><span style="color: #008000;"> plus.nativeUI.alert("登录认证成功!"+JSON.stringify(e));</span>
+<span style="color: #000000;">                resolve(e);
+            }, </span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e){
+                reject(e);
+            } );
+        }</span><span style="color: #0000ff;">else</span><span style="color: #000000;">{
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> plus.nativeUI.alert("已经登录认证!");</span>
+<span style="color: #000000;">        }
+    })
+}
+        </span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,544 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修前端学习日记 (一)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>前端学习日记 (一)</center></div><div class='banquan'>原文出处:本文由博客园博主Fantac提供。<br/>
+原文连接:https://www.cnblogs.com/Fantac/p/11778049.html</div><br>
+    <h1><span style="color: #ffffff; background-color: #ff0000; font-family: 'Microsoft YaHei'; font-size: 18pt;"><strong>前端介绍</strong></span></h1>
+<p><span style="font-family: 宋体; font-size: 18px;">前端开发是创建WEB页面或APP等前端界面呈现给用户的过程,通过<strong><span style="color: #ff9900;">HTML、CSS、JavaScript</span></strong>以及衍生出来的各种技术、框架、解决方案,来实现互联网产品的用户界面交互。它从网页制作演变而来,名称上有很明显的时代特征。</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">HTML用于展现网页的内容、CSS用于展现网页的外观、JavaScript用于实现一些网页动作。</span></p>
+<p>&nbsp;</p>
+<h1><span style="color: #ffffff; background-color: #ff0000;"><strong><span style="font-family: 'Microsoft YaHei'; font-size: 18pt;">WEB框架的本质</span></strong></span></h1>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">浏览器输入网址回车后都发生了什么?</span></strong></p>
+<p><span style="font-family: 宋体; font-size: 18px;">浏览器(客户端)给服务端发送了一个消息,服务端在拿到了消息之后,服务端返回消息,浏览器展示页面</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体; font-size: 18px;">客户端和服务端的消息格式要一致,因此就有了<strong><span style="color: #ff9900;">HTTP协议</span></strong>来约束两边的消息格式。</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">我们可以写一个服务端来访问自定义的网页:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">import</span><span style="color: #000000;"> socket
+sk </span>=<span style="color: #000000;"> socket.socket()
+sk.bind((</span><span style="color: #800000;">'</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">'</span>,8000<span style="color: #000000;">))
+sk.listen(</span>4<span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">while</span> 1<span style="color: #000000;">:
+    conn,addr </span>=<span style="color: #000000;"> sk.accept()
+    data </span>= conn.recv(1024)                      <span style="color: #008000;">#</span><span style="color: #008000;">接收消息</span>
+    conn.send(b<span style="color: #800000;">'</span><span style="color: #800000;">HTTP/1.1 200 OK\r\n\r\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    conn.send(b</span><span style="color: #800000;">'</span><span style="color: #800000;">Hello World!</span><span style="color: #800000;">'</span>)                  <span style="color: #008000;">#</span><span style="color: #008000;">发送消息</span>
+<span style="color: #000000;">
+    conn.close()</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">执行代码后再打开浏览器去访问127.0.0.1:8000这个网址,就可以看到下面的页面:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)0.png" alt="" width="409" height="121" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">改变程式码:</span></p>
+<div class="cnblogs_code">
+<pre><code>conn.send(b<span style="color: #800000;">'</span><span style="color: #800000;">&lt;h1&gt;Hello world!&lt;/h1&gt;\n</span><span style="color: #800000;">'</span>)</pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">这样字体就发生了改变:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)1.png" alt="" width="509" height="136" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>发送多行的HTML代码</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">我们可以新建一个txt文件,把要执行的HTML代码放到里面&nbsp;</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">服务端通过文件读取HTML代码展现页面:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">import</span><span style="color: #000000;"> socket
+sk </span>=<span style="color: #000000;"> socket.socket()
+sk.bind((</span><span style="color: #800000;">'</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">'</span>,8000<span style="color: #000000;">))
+sk.listen(</span>4<span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">while</span> 1<span style="color: #000000;">:
+    conn,addr </span>=<span style="color: #000000;"> sk.accept()
+    data </span>= conn.recv(1024)                      <span style="color: #008000;">#</span><span style="color: #008000;">接收消息</span>
+    conn.send(b<span style="color: #800000;">'</span><span style="color: #800000;">HTTP/1.1 200 OK\r\n\r\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    with open(</span><span style="color: #800000;">'</span><span style="color: #800000;">h.txt</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">rb</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+        msg </span>=<span style="color: #000000;"> f.read()
+    conn.send(msg)
+    conn.close()</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">txt文档:</span></p>
+<p><img src="./images/前端学习日记 (一)2.png" alt="" width="419" height="105" /></p>
+<p><span style="font-family: 宋体; font-size: 18px;">那最后的展现结果和上面是一致的</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>展示图片</strong>:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">在网上随便找一张图片去拿到它的图片地址,然后在txt档中写下这段代码:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFC_UkJ_78k9qpn5-JoC16WAa-phw7hF8lGsT8AVumfen3FghR&amp;s'</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">执行服务端代码再刷新网页:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)3.png" alt="" width="646" height="477" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>增加一个链接</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">='https://ieeexplore.ieee.org/Xplore/home.jsp'</span><span style="color: #0000ff;">&gt;</span>Open Website!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">执行服务端代码再刷新网页:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)4.png" alt="" width="754" height="468" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>WEB开发的本质</strong>:服务端、浏览器、HTML文件</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><span style="font-family: 宋体; font-size: 18px;">同样如果要将txt档里的文件变更为html档,也是可以有相同的执行效果</span></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><span style="font-family: 宋体; font-size: 18px;"><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)5.png" alt="" /></span></span></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">服务端:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">import</span><span style="color: #000000;"> socket
+sk </span>=<span style="color: #000000;"> socket.socket()
+sk.bind((</span><span style="color: #800000;">'</span><span style="color: #800000;">127.0.0.1</span><span style="color: #800000;">'</span>,8000<span style="color: #000000;">))
+sk.listen(</span>4<span style="color: #000000;">)
+
+</span><span style="color: #0000ff;">while</span> 1<span style="color: #000000;">:
+    conn,addr </span>=<span style="color: #000000;"> sk.accept()
+    data </span>= conn.recv(1024)                      <span style="color: #008000;">#</span><span style="color: #008000;">接收消息</span>
+    conn.send(b<span style="color: #800000;">'</span><span style="color: #800000;">HTTP/1.1 200 OK\r\n\r\n</span><span style="color: #800000;">'</span><span style="color: #000000;">)
+    with open(</span><span style="color: #800000;">'</span><span style="color: #800000;">h.html</span><span style="color: #800000;">'</span>,<span style="color: #800000;">'</span><span style="color: #800000;">rb</span><span style="color: #800000;">'</span><span style="color: #000000;">) as f:
+        msg </span>=<span style="color: #000000;"> f.read()
+    conn.send(msg)
+    conn.close()</span></pre>
+</div>
+<p>&nbsp;</p>
+<h1><span style="background-color: #ff0000; color: #ffffff; font-family: 'Microsoft YaHei'; font-size: 18pt;"><strong>常用标签</strong></span></h1>
+<p><span style="font-family: 宋体; font-size: 18px;">HTML是一个标准它规定了大家怎么写网页</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">像'&lt;标签名&gt;...&lt;/标签名&gt;'这种格式的语言是标记语言,比如XML、HTML。标签可以分为单标签和双标签。</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">那像前面所写的HTML语句并不是规范的语句,接下来对它进行改进:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>     <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">声明这是一个HTML5的文件</span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span>      　　　　 <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">HTML格式</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">用来展示浏览器相关的一些信息(标题、引用的文件)</span><span style="color: #008000;">--&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>      <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">放文件</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>Hello world!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">img </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFC_UkJ_78k9qpn5-JoC16WAa-phw7hF8lGsT8AVumfen3FghR&amp;s'</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">='https://ieeexplore.ieee.org/Xplore/home.jsp'</span><span style="color: #0000ff;">&gt;</span>Open Website!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">标签分析</span></strong></p>
+<p><span style="font-family: 宋体; font-size: 18px;">我们可以直接创建一个新的HTML档,里面就有已经写好的HTML结构</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Title<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;html lang="en"&gt;...&lt;/html&gt;</strong>表示这个网页的主要语言是英文,那如果是中文可以改成&lt;html lang="zh-CN"&gt;...&lt;/html&gt;</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;meta charset="UTF-8"&gt;</strong>表示编码方式为UTF-8</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;title&gt;...&lt;/title&gt;</strong>表示网页的标题</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;!--注释内容--&gt;</strong>表示注释</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;style&gt;...&lt;/style&gt;</strong>表示内部的样式表</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>My first HTML FILE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        a</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">red</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+         <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>Hello world!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>     
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页结果:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)6.png" alt="" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;script&gt;...&lt;/script&gt;</strong>表示JS代码或引入JS外部文件&nbsp;</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>My first HTML FILE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #800000;">
+        a</span><span style="background-color: #f5f5f5; color: #000000;">{</span><span style="background-color: #f5f5f5; color: #ff0000;">
+            color</span><span style="background-color: #f5f5f5; color: #000000;">:</span><span style="background-color: #f5f5f5; color: #0000ff;">red</span><span style="background-color: #f5f5f5; color: #000000;">;</span>
+         <span style="background-color: #f5f5f5; color: #000000;">}</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">style</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        alert(</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Please wait...</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">)
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>Hello world!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页结果:</span></p>
+<p><img src="./images/前端学习日记 (一)7.png" alt="" width="462" height="132" /></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;link/&gt;</strong>引入外部样式表文件,比如说把CSS写入另外一个文件中在通过link给引入进来&nbsp;</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">先创建一个c.css文件再写入代码:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">a</span>{<span style="color: #ff0000;">
+    color </span>:<span style="color: #0000ff;"> green</span>;
+}</pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">再在html文件中引入这个css文件:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>My first HTML FILE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="c.css"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>Hello world!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">最后网页上显示:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)8.png" alt="" /></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&lt;meta/&gt;</strong>定义网页元信息</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="description"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="html meta,meta properties,meta conclution"</span><span style="color: #0000ff;">&gt;</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">表示这个网页的相关描述</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="keywords"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="The first HTML file."</span><span style="color: #0000ff;">&gt;</span>                           <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">表示网页的关键字</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="refresh"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="10;https://www.runoob.com/"</span><span style="color: #0000ff;">&gt;</span>                <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">表示这个网页在十秒之后跳转到另外一个网站</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="x-ua-compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="IE=edge"</span><span style="color: #0000ff;">&gt;</span>                           <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">让IE以最高模式渲染文档</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>My first HTML FILE<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">link </span><span style="color: #ff0000;">rel</span><span style="color: #0000ff;">="stylesheet"</span><span style="color: #ff0000;"> href</span><span style="color: #0000ff;">="c.css"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>Hello world!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">&lt;h1、2..6&gt;...&lt;/h1、2...6&gt;之间的差异</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>This is h1!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>This is h2!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h2</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>This is h3!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h3</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>This is h4!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h4</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h5</span><span style="color: #0000ff;">&gt;</span>This is h5!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h5</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h6</span><span style="color: #0000ff;">&gt;</span>This is h6!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h6</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    This is h!
+</span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p><img src="./images/前端学习日记 (一)9.png" alt="" width="624" height="349" /></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">&lt;img src=" " alt=" " title=" "&gt;</span></strong><span style="font-family: 宋体; font-size: 18px;">src表示图片的来源地址,alt表示当图片失效后的一些处理,title表示图片的提示</span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">&lt;a href=" " target="_blank"&gt;...&lt;/a&gt;</span></strong><span style="font-family: 宋体; font-size: 18px;">表示可以保留当前的页面下开启一个新的页面</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">='https://ieeexplore.ieee.org/Xplore/home.jsp' </span><span style="color: #ff0000;">target</span><span style="color: #0000ff;">="_blank"</span><span style="color: #0000ff;">&gt;</span>Open Website!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">制作到顶部到底部效果:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#a2"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a1"</span><span style="color: #0000ff;">&gt;</span>到底部<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>aaaaaaaaa<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">='https://ieeexplore.ieee.org/Xplore/home.jsp' </span><span style="color: #ff0000;">target</span><span style="color: #0000ff;">="_blank"</span><span style="color: #0000ff;">&gt;</span>Open Website!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">="#a1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a2"</span><span style="color: #0000ff;">&gt;</span>到顶部<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffffff; font-family: 'Microsoft YaHei'; font-size: 18pt;"><strong>其他常用标签</strong></span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">1.&lt;b&gt;...&lt;/b&gt;表示字体加粗</span></strong></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">2.&lt;i&gt;...&lt;/i&gt;表示斜体</span></strong></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>3.&lt;u&gt;...&lt;/u&gt;表示加下划线</strong></span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">4.&lt;s&gt;...&lt;/s&gt;表示加删除线</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">
+    你好!
+    </span><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">b</span><span style="color: #0000ff;">&gt;</span>你好!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">b</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>你好!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">i</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">u</span><span style="color: #0000ff;">&gt;</span>你好!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">u</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">s</span><span style="color: #0000ff;">&gt;</span>你好!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">s</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">5.&lt;p&gt;...&lt;/p&gt;表示一个段落</span></strong></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>6.&lt;br&gt;表示换行</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>7.&lt;hr&gt;表示水平线</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 18pt; background-color: #ff0000; color: #ffffff;"><strong>特殊字符</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>1.空格 &amp;nbsp;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>2.&gt;　　&amp;gt;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>3.&lt;　　&amp;lt;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>4.&amp;　　&amp;amp;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>5.</strong></span>&yen;　　&nbsp; &nbsp;&amp;yen;</p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>6.&copy;　　&amp;copy;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>7.注册 &amp;reg;</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>&nbsp;<br /></strong></span></p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 18pt; background-color: #ff0000; color: #ffffff;"><strong>div标签和span标签</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>div标签:</strong>用于定义一个块级元素,本身没有其他的特点,可以通过CSS样式去赋予不同的表现</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>span标签:</strong>用来定义一个行内元素,本身没有其他的特点,可以通过CSS样式去赋予不同的表现</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>d第一行!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>d第二行!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>d第三行!<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>s第一行<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>s第二行<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>s第三行<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">span</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p><img src="./images/前端学习日记 (一)10.png" alt="" width="400" height="130" /></p>
+<p><span style="font-family: 宋体; font-size: 18px;">标签可以分为<strong>块级标签</strong>和<strong>行内标签</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>块级标签</strong>(h1~h6、div、p、hr):</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">　　默认占浏览器长度、能设置长和宽</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>行内标签</strong>(a、img、u、s、i、b、span):</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">　　根据内容决定长度、不能设置长和宽</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 18pt;"><strong><span style="background-color: #ff0000; color: #ffffff;">列表标签</span></strong></span></p>
+<p><span style="font-family: 宋体; font-size: 14pt;">分为有序列表、无序列表和标题列表</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>apple<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>orange<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>pear<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ol</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>apple<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>orange<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>pear<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ol</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p><img src="./images/前端学习日记 (一)11.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>无序列表&lt;ul&gt;...&lt;/ul&gt;:</strong></span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">type属性:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">①disc(实心圆点,默认值)</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">②circle(空心圆圈)</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">③square(实心方块)</span></p>
+<p><span style="font-size: 18px; font-family: 宋体;">④none(无样式)</span></p>
+<p><span style="font-size: 18px; font-family: 宋体;">以实心方块为例:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="square"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>apple<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>orange<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>pear<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p>&nbsp;<img src="./images/前端学习日记 (一)12.png" alt="" width="257" height="114" /></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">有序列表&lt;ol&gt;...&lt;/ol&gt;:</span></strong></p>
+<p><span style="font-family: 宋体; font-size: 18px;">type属性:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">①1 数字列表,默认值</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">②A 大写字母</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">③a 小写字母</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">④I 大写罗马</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">⑤i 小写罗马</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">strat属性(表示这个标签的起始值)</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;">以大写罗马为例:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ol </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="I"</span><span style="color: #ff0000;"> start</span><span style="color: #0000ff;">="5"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>apple<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>orange<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>pear<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ol</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)13.png" alt="" width="352" height="135" /></span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">标题列表</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dl</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dt</span><span style="color: #0000ff;">&gt;</span>title1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dt</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>content1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>content1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dt</span><span style="color: #0000ff;">&gt;</span>title2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dt</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>content2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>content2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dd</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">dl</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p><span style="font-family: 宋体; font-size: 18px;"><img src="./images/前端学习日记 (一)14.png" alt="" width="409" height="213" /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><span style="background-color: #ff0000; color: #ffffff; font-size: 18pt; font-family: 'Microsoft YaHei';"><strong>表格标签</strong></span></h1>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="zh-CN"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="GB2312"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>表格示例<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">table </span><span style="color: #ff0000;">border</span><span style="color: #0000ff;">="1"</span><span style="color: #ff0000;"> cellpadding</span><span style="color: #0000ff;">="10"</span><span style="color: #ff0000;"> cellspacing</span><span style="color: #0000ff;">="0"</span><span style="color: #ff0000;"> width</span><span style="color: #0000ff;">="0"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">border表示边框的像素 cellpadding表示内边距 cellspacing表示外边距 width表示像素的百分比</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">thead</span><span style="color: #0000ff;">&gt;</span>             <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">thead可以写也可以不写</span><span style="color: #008000;">--&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>姓名<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>年龄<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>性别<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>爱好<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">th</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">thead</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tbody</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>Alice<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>18<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td </span><span style="color: #ff0000;">rowspan</span><span style="color: #0000ff;">="2"</span><span style="color: #0000ff;">&gt;</span>Male<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>   <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">rowspan表示单元格竖跨多少行(类似于合并单元格) colspan表示单元格横跨多少列</span><span style="color: #008000;">--&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>Football<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>Bob<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>19<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>Skiing<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>Maria<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>20<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+                <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">td </span><span style="color: #ff0000;">colspan</span><span style="color: #0000ff;">="2"</span><span style="color: #0000ff;">&gt;</span>Female<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">td</span><span style="color: #0000ff;">&gt;</span>
+            <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tr</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">tbody</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">table</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;">网页效果:</span></p>
+<p>&nbsp;<img src="./images/前端学习日记 (一)15.png" alt="" width="462" height="302" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="background-color: #ff0000; color: #ffffff; font-family: 'Microsoft YaHei'; font-size: 18pt;"><strong>快捷写法</strong></span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">1.h1*4+Tab</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="font-family: 宋体; font-size: 18px;"><strong>2.h1*4&gt;a+Tab</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">3.h1*4&gt;a{标签$}+Tab</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>标签1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>标签2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>标签3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span>标签4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">4.h1*4&gt;a.c1{标签$}+Tab</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #0000ff;">&gt;</span>标签1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #0000ff;">&gt;</span>标签2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #0000ff;">&gt;</span>标签3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #0000ff;">&gt;</span>标签4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">5.h1*4&gt;a.c1[id=a$]{标签$}+Tab</span></strong></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a1"</span><span style="color: #0000ff;">&gt;</span>标签1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a2"</span><span style="color: #0000ff;">&gt;</span>标签2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a3"</span><span style="color: #0000ff;">&gt;</span>标签3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">href</span><span style="color: #0000ff;">=""</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="c1"</span><span style="color: #ff0000;"> id</span><span style="color: #0000ff;">="a4"</span><span style="color: #0000ff;">&gt;</span>标签4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">h1</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">5.多行操作alt键+左键</span></strong></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 'Microsoft YaHei'; font-size: 18pt; background-color: #ff0000; color: #ffffff;"><strong>总结</strong></span></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">1.行内标签不能嵌套块级标签</span></strong></p>
+<p><strong><span style="font-family: 宋体; font-size: 18px;">2.p标签不能嵌套块级标签　　　　</span></strong></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

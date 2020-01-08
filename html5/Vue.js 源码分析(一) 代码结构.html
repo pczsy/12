@@ -1,0 +1,139 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(一) 代码结构' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(一) 代码结构</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11010659.html</div><br>
+    <p><strong><span class="bjh-p" style="font-size: 18px;">关于Vue</span></strong></p>
+<p><span class="bjh-p">vue是一个兴起的前端js库，是一个精简的MVVM。</span>MVVM模式是由经典的软件架构MVC衍生来的，当View(视图层)变化时，会自动更新到ViewModel(视图模型)，反之亦然，View和ViewModel之间通过双向绑定(data-binding)建立联系。</p>
+<p>&nbsp;</p>
+<p><strong><span class="bjh-p" style="font-size: 18px;">前言</span></strong></p>
+<p>花了一个月时间撸了vue2.0的源码，最近空了一点，今天开始记录一下学习心得，按照自己理解的代码的结构，分为三部分来讲</p>
+<p>　　基础篇　　　　;比如全局配置、模板渲染、data、method、computed、watch、生命周期、ref、组件原理、组件-props、组件自定义事件</p>
+<p>　　指令篇　　　　;比如v-bind、v-on、v-if、v-else、v-else-if、v-for、v-html、v-text、v-once、v-pre、v-model、v-show</p>
+<p>　　高级篇　　　　;过滤器、自定义指令、插槽、作用域插槽、异步组件、transition内置组件、transition-group内置组件、Keep-Alive内置组件</p>
+<p>每一个知识点都会讲得比较详细，理解源码需要扎实的js基础。如果有遗漏的，最后再做一下补充，如果有问题，欢迎留言指出，非常感谢！</p>
+<p>从源码的角度看，Vue和jQuery看是差不多，都只是一个前端框架， 区别是一个是mvc模式，一个是mvvc模式。Vue是把ES5的defineProperty函数用到了极致,而jQuery为了兼容低版本IE是没有封装这个API的，就像搭积木(对应的浏览器接口和ECMASCRIPT接口)，Vue用到了几个新的积木，而jQuery没有用到而已。从功能上，Vue应该和React、Angular来对比，它们和jQuery可以配合使用的。</p>
+<p>vue实例化时会把模板(挂载到vue上的el元素对应的DOM节点，或者template属性)转换成一个虚拟的VNode，并在更新DOM时采用diff算法对DOM树进行检测，只更新需要更新的DOM节点，对于一些静态节点则不进行变更，以达到最快的速度。</p>
+<p>采用的是v2.5.16这个版本的vue.js,本节先讲解Vue源码的大致结构,</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px;"><strong>代码结构</strong></span></p>
+<p>vue.js源码就是一个立即执行匿名函数表达式,内部定义了一个vue函数对象，组后返回挂载到window的vue属性上，先复习一下立即执行匿名函数表达式，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        (</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(global,msg){　　　　　　
+            global.alert(msg)　　　　<span style="color: #339966;">//运行时会弹出一个窗口，内容为:Hello World</span>
+        })(</span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">Hello World</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">)
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>知道了匿名函数后，我们来看看在Vue内部的样式，如下:</p>
+<div class="cnblogs_code">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (global, factory) {   　　　　　<span style="color: #339966;">　//在浏览器环境下global等于全局window
+    </span></span><span style="color: #0000ff;">typeof</span> exports === 'object' &amp;&amp; <span style="color: #0000ff;">typeof</span> module !== 'undefined' ? module.exports = factory() : <span style="color: #0000ff;">typeof</span> define === 'function' &amp;&amp; define.amd ? define(factory) : (global.Vue = factory()); <span style="color: #008000;">//</span><span style="color: #008000;">执行factory()函数，将返回值Vue传递给window.Vue</span>
+}(<span style="color: #0000ff;">this</span>, (<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {　　　　　　　
+
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> Vue(options) {           　　　　<span style="color: #339966;">//内部定义的Vue函数                </span> 　　　　　　
+        </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; !(<span style="color: #0000ff;">this</span> <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Vue)) {
+            warn(</span>'Vue is a constructor and should be called with the `new` keyword'<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">this</span><span style="color: #000000;">._init(options);                          
+    }
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> Vue; 　　　　　　　　　　　　　　　　<span style="color: #339966;">//返回Vue这个函数对象</span>
+})));</span></pre>
+</div>
+<p>这样执行完这个匿名函数后就可以通过window.Vue访问到匿名函数内的Vue函数对象了。</p>
+<p class="hwi">&nbsp;writer by:大沙漠 QQ:22969969</p>
+<p>这个匿名函数内部会在Vue的原型对象上挂载很多方法和属性以供我们使用，大致的主线流程如下(为了更好理解，去掉了所有分支)</p>
+<div class="cnblogs_code">
+<pre><code>(<span style="color: #0000ff;">function</span><span style="color: #000000;"> (global, factory) {   
+    </span><span style="color: #0000ff;">typeof</span> exports === 'object' &amp;&amp; <span style="color: #0000ff;">typeof</span> module !== 'undefined' ? module.exports = factory() : <span style="color: #0000ff;">typeof</span> define === 'function' &amp;&amp; define.amd ? define(factory) : (global.Vue = factory()); <span style="color: #008000;">//</span><span style="color: #008000;">执行factory()函数，将返回值Vue传递给window.Vue</span>
+}(<span style="color: #0000ff;">this</span>, (<span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+    </span>'use strict'<span style="color: #000000;">;
+
+    </span><span style="color: #0000ff;">function</span> Vue(options) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">VUE的构造函数</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; !(<span style="color: #0000ff;">this</span> <span style="color: #0000ff;">instanceof</span><span style="color: #000000;"> Vue)) {
+            warn(</span>'Vue is a constructor and should be called with the `new` keyword'<span style="color: #000000;">);
+        }
+        </span><span style="color: #0000ff;">this</span>._init(options);                                    <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">1</span>.实例化时，先执行到这里进行初始化</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> initMixin(Vue) {      
+        Vue.prototype._init </span>= <span style="color: #0000ff;">function</span> (options) {              <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">2</span>.再执行到这里 </span>
+            <span style="color: #008000;">/**/</span>
+            <span style="color: #0000ff;">if</span> (vm.$options.el) {                               <span style="color: #008000;">//</span><span style="color: #008000;">如果有传入了挂载点的el节点</span>
+                vm.$mount(vm.$options.el);                          <span style="color: #008000;">//</span><span style="color: #008000;">通过$mount函数把组件挂载到DOM上面</span>
+<span style="color: #000000;">            }
+        }
+    }
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> lifecycleMixin(Vue) {  
+        Vue.prototype._update </span>= <span style="color: #0000ff;">function</span> (vnode, hydrating) {   <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">7</span>.更新操作，把Vnode渲染成真实DOM</span>
+            <span style="color: #008000;">/**/</span>
+            <span style="color: #0000ff;">if</span> (!prevVnode) {                                       <span style="color: #008000;">//</span><span style="color: #008000;">如果prevVnode为空，即初始化时</span>
+                vm.$el = vm.__patch__(vm.$el, vnode, hydrating, <span style="color: #0000ff;">false</span>, vm.$options._parentElm, vm.$options._refElm);    <span style="color: #008000;">//</span><span style="color: #008000;">执行vm.__patch__方法渲染成真实的DOM节点</span>
+                vm.$options._parentElm = vm.$options._refElm = <span style="color: #0000ff;">null</span><span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果prevVnode不为空，即更新操作时</span>
+                vm.$el = vm.__patch__(prevVnode, vnode);                <span style="color: #008000;">//</span><span style="color: #008000;">调用vm.__patch__进行更新操作</span>
+<span style="color: #000000;">            }
+        }
+    }
+    </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> renderMixin(Vue) { 
+        </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+        Vue.prototype._render </span>= <span style="color: #0000ff;">function</span> () {                   <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">6</span>.把rener渲染成Vnode</span>
+<span style="color: #000000;">        }
+    }
+    </span><span style="color: #0000ff;">function</span> mountComponent(vm, el, hydrating) {                <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">5</span>.挂载组件 vm:Vue实例  el:真实的DOM节点对象 </span>
+        <span style="color: #008000;">/**/</span>
+        <span style="color: #0000ff;">var</span><span style="color: #000000;"> updateComponent;
+        </span><span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; config.performance &amp;&amp;<span style="color: #000000;"> mark) {     
+            </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            updateComponent </span>= <span style="color: #0000ff;">function</span> () {vm._update(vm._render(), hydrating);};   <span style="color: #008000;">//</span><span style="color: #008000;">渲染成Vnode并转换为真实DOM</span>
+<span style="color: #000000;">        }
+
+        </span><span style="color: #0000ff;">new</span> Watcher(vm, updateComponent, noop, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">true</span><span style="color: #000000;">);   　　　　　　　　　　　　  <span style="color: #008000;">//</span><span style="color: #008000;">Watcher实例创建后会通过get()方法执行updateComponent()方法的</span>
+        </span><span style="color: #008000;">/**/</span><span style="color: #000000;">
+    }
+    Vue.prototype.__patch__ </span>= inBrowser ?<span style="color: #000000;"> patch : noop;
+
+    Vue.prototype.$mount </span>= <span style="color: #0000ff;">function</span> (el, hydrating) {           <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">4</span>.原型上的挂载(runtime-only版本)</span>
+        el = el &amp;&amp; inBrowser ? query(el) : undefined;               <span style="color: #008000;">//</span><span style="color: #008000;">进行一些修正,因为runtime-only版本是从这里开始执行的</span>
+        <span style="color: #0000ff;">return</span> mountComponent(<span style="color: #0000ff;">this</span>, el, hydrating)                  <span style="color: #008000;">//</span><span style="color: #008000;">//再调用mountComponent方法</span>
+<span style="color: #000000;">    };
+
+    </span><span style="color: #0000ff;">var</span> mount = Vue.prototype.$mount;                           <span style="color: #008000;">//</span><span style="color: #008000;">保存原型上的$mount函数</span>
+    Vue.prototype.$mount = <span style="color: #0000ff;">function</span> (el, hydrating) {           <span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">3</span>.解析源码(Runtime+Compiler版本用的)</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">中间进行模板的解析</span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">return</span> mount.call(<span style="color: #0000ff;">this</span>, el, hydrating)                      <span style="color: #008000;">//</span><span style="color: #008000;">最后执行mount</span>
+<span style="color: #000000;">    };
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> Vue; 　　　　　　　　　　　　　　　　　　　　　　　　　　　　<span style="color: #008000;">//<span style="color: #008000;">最后返回Vue函数对象，会作为一个Vue属性挂载到window上</span></span>
+})));</span></pre>
+</div>
+<p>后面源码讲解时会仔细讲每个细节的</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,84 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修canvas之事件交互效果isPointPath' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>canvas之事件交互效果isPointPath</center></div><div class='banquan'>原文出处:本文由博客园博主张最棒提供。<br/>
+原文连接:https://www.cnblogs.com/jiaobaba/p/11641022.html</div><br>
+    <p><span style="font-family: 仿宋; font-size: 18px;">isPointInPath() 用来检测某个点是否在当前路径中,常用来做点击交互等。</span></p>
+<p><span style="font-family: 仿宋;"><span style="font-size: 18px;">需要注意的是，每次执行一次beginPath方法，检测路径就变成这次beginPath之后绘制的路径，原来的路径不参与检测。</span></span></p>
+<p><span style="font-family: 仿宋;"><span style="font-size: 18px;">例如实现点击下面的圆，颜色变成蓝色。</span></span></p>
+<p><img src="./images/canvas之事件交互效果isPointPath0.png" alt="" /></p>
+<p>&nbsp;</p>
+<p><span style="font-family: 仿宋; font-size: 18px;">我们需要实现的是鼠标点击当前位置是否在我绘制的圆圈的路径内，而每个圆都是一个新的路径，而isPointPath检测的是当前的路径，也就是说我们需要在点击的过程中重新画圆的路径，每画一个圆就检测鼠标点击的点是否在当前的圆的路径中。-- 当点击鼠标时遍历小球的数组画圆，并检测点是否在当前路径上。</span></p>
+<p><span style="font-family: 仿宋; font-size: 18px;">代码实现如下</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">var balls = [];
+        var canvas = document.getElementById('canvas');
+        canvas.onclick = function(e){ <br />　　　　　　　//获取基于画布的位置
+            var x = e.clientX - canvas.getBoundingClientRect().left;    //getBoundingClientRect是获取元素相对于文档的位置
+            var y = e.clientY - canvas.getBoundingClientRect().top;    //getBoundingClientRect是获取元素相对于文档的位置
+           </span> for(var i = 0 ; i <span style="color: #0000ff;">&lt;</span><span style="color: #800000;"> ball<span style="color: #000000;">s</span></span><span style="color: #ff0000;"><span style="color: #000000;">.length; i++ ){
+                context.beginPath();
+                context.arc(balls[i].x, balls[i].y, balls[i].radius, Math.PI * 0, Math.PI * 2, 0);
+                if(context.isPointInPath(x, y)){
+                    context.fillStyle</span></span><span style="color: #000000;">='#058';
+                   </span> <span style="color: #ff0000;"><span style="color: #000000;">context.fill();
+                }                
+            }
+            context.isPointInPath(x, y);
+        }</span>
+       <span style="color: #000000;"> if (canvas.getContext) {
+            canvas.width </span></span><span style="color: #000000;">= 1200;
+            canvas.height = 800;
+            var context = canvas.getContext('2d');
+
+            for (var i = 0; i &lt; 20; i++) {
+                var radius = Math.random() </span><span style="color: #ff0000;"><span style="color: #000000;">* 50 + 20;</span>
+               <span style="color: #000000;"> var R </span></span><span style="color: #000000;">= Math.floor(Math.random() * 255);
+                var G = Math.floor(Math.random() * 255);
+                var B = Math.floor(Math.random() </span><span style="color: #ff0000;"><span style="color: #000000;">* 255);</span>
+              <span style="color: #000000;">  var obj </span></span><span style="color: #000000;">= {
+                    radius: radius,
+                    x: Math.random() * (canvas.width - 2 * radius) + radius,
+                    y: Math.random() * (canvas.height - 2 * radius) + radius,
+                    color: 'rgb(' + R + "," + G + "," + B + ')'
+                }
+                balls[i] </span><span style="color: #0000ff;"><span style="color: #000000;">= obj;</span> 
+            </span><span style="color: #ff0000;"><span style="color: #000000;">}
+            draw(context);
+
+        }
+        function draw(context) {
+            // context.clearRect(0, 0, canvas.width, canvas.height);</span>
+            
+            <span style="color: #000000;">for (var i </span></span><span style="color: #000000;">= 0; i &lt; balls.length; i++) {
+                context.beginPath();
+                context.fillStyle = balls[i].color;
+                context.arc(balls[i].x, balls[i].y, balls[i].radius, Math.PI * 0, Math.PI * 2, 0);
+                context.closePath();
+                context.fill();
+            }
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-family: 仿宋; font-size: 18px;">地方</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

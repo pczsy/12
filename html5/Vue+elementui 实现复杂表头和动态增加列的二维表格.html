@@ -1,0 +1,126 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue+elementui 实现复杂表头和动态增加列的二维表格' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue+elementui 实现复杂表头和动态增加列的二维表格</center></div><div class='banquan'>原文出处:本文由博客园博主了、凡提供。<br/>
+原文连接:https://www.cnblogs.com/ly612322/p/11551915.html</div><br>
+    <p>先上完成的效果图：列是根据查询结果增加的<img src="./images/Vue+elementui 实现复杂表头和动态增加列的二维表格0.png" alt="" width="967" height="552" /></p>
+<p>&nbsp;数据格式：<img src="./images/Vue+elementui 实现复杂表头和动态增加列的二维表格1.png" alt="" /></p>
+<p>&nbsp;表头的数据取出：</p>
+<div class="cnblogs_Highlighter">
+<pre><code> data.data.forEach(element =&gt; {
+          this.thead.push({
+            品名: element.品名,
+            面取数: element.面取数,
+            LOTNO: element.LOT
+          });
+</pre>
+</div>
+<p>　element table中：</p>
+<div class="cnblogs_Highlighter">
+<pre><code>      &lt;el-table-column
+        v-for="(item,index) in thead"
+        :prop="item.LOTNO"
+        :key="index"
+        align="center"
+        width="180"
+      &gt;
+        &lt;template slot="header"&gt;
+          &lt;tr&gt;
+            &lt;td&gt;{{item.品名}}&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td&gt;{{item.面取数}}&lt;/td&gt;
+          &lt;/tr&gt;
+          &lt;tr&gt;
+            &lt;td @click="querylot(item.LOTNO)"&gt;
+              &lt;el-link&gt;{{item.LOTNO}}&lt;/el-link&gt;
+            &lt;/td&gt;
+          &lt;/tr&gt;
+        &lt;/template&gt;
+      &lt;/el-table-column&gt;
+</pre>
+</div>
+<p>　　表格内数据整理：</p>
+<div class="cnblogs_Highlighter">
+<pre><code>  for (let index1 = 3;index1 &lt; Object.keys(结果_data[0]).length;index1++) {
+          let newmap = new Map();
+          let datakey = Object.keys(结果_data[0])[index1];
+          newmap.set("mode", datakey); //取出每个数组对象的键值
+          for (let index2 = 0; index2 &lt; 结果_data_length; index2++) {
+            let datavalue = 结果_data[index2][Object.keys(结果_data[0])[index1]];
+            if (datakey == "投入日期") {
+              datavalue = datavalue.slice(0, 10);
+            }
+            newmap.set(
+              结果_data[index2][Object.keys(结果_data[index2])[0]],datavalue);//获得这个键对应的所有的值
+          }
+</pre>
+</div>
+<p>　　左侧表头合并：需要注意的是，当有固定列的时候需要设置表格的max-height属性，不然会出现列空白</p>
+<div class="cnblogs_Highlighter">
+<div>
+<div>&nbsp;&nbsp;&nbsp;&nbsp;&lt;el-table&nbsp;:data="tableData"&nbsp;span-method="objectSpanMethod"&gt;</div>
+</div>
+<pre><code>objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 0) {
+        if (rowIndex % this.tableData.length === 0) {
+          return {
+            rowspan: this.tableData.length,
+            colspan: 1
+          };
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          };
+        }
+      }
+    }
+</pre>
+</div>
+<p>　　表格导出：</p>
+<div class="cnblogs_Highlighter">
+<pre><code>import FileSaver from "file-saver";
+import XLSX from "xlsx";
+    output() {
+      alert(1);
+      let wb = XLSX.utils.table_to_book(document.querySelector("#mytable")); //mytable为表格的id名
+      let wbout = XLSX.write(wb, {
+        bookType: "xlsx",
+        bookSST: true,
+        type: "array"
+      });
+      try {
+        FileSaver.saveAs(
+          new Blob([wbout], { type: "application/octet-stream" }),
+          "sheet.xlsx"
+        );
+      } catch (e) {
+        if (typeof console !== "undefined") console.log(e, wbout);
+      }
+      return wbout;
+    }
+</pre>
+</div>
+<p>　　</p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

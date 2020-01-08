@@ -1,0 +1,180 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修grid布局笔记' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>grid布局笔记</center></div><div class='banquan'>原文出处:本文由博客园博主王梓瑞提供。<br/>
+原文连接:https://www.cnblogs.com/wangzirui98/p/11107268.html</div><br>
+    <p>最近挺忙的，准备考试，还有其他的事，没时间研究东西，快周末了，难得学点东西，grid是之前看到的，很好奇，讲的二维的布局，看起来很方便，应该很适合移动端布局，所以今天抽时间学一学，这个当是笔记了。参考的是阮老师的博客和HTML中文网的文章。</p>
+<blockquote>
+<p>阮一峰：CSS Grid 网格布局教程</p>
+<p><a href="http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html" class="uri">http://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html</a></p>
+<p>CSS Grid 布局示例大全</p>
+<p><a href="https://www.html.cn/archives/8635" class="uri">https://www.html.cn/archives/8635</a></p>
+</blockquote>
+<p>不系统的解释了，系统的看阮老师的博客，我再复述一遍没屁用，然后再看布局示例大全，然后就能懂个八九不离十了。但是我途中遇到一些问题，我这篇是总结一下我遇到的问题，顺便和flex做一下对比，方便以后回顾。</p>
+<h4 id="fr关键字">fr关键字：</h4>
+<pre><code><code>grid-template-columns:150px 1fr 2fr</code></pre>
+<p>这个1fr 和 2fr和父容器宽度有关系，1fr 和2fr是会主动填补父容器宽度（类似flex里的basis属性），保证他们俩的宽度关系为1:2，但是他们和150px没有关系，150px始终为150px。</p>
+<h4 id="布局实例">布局实例：</h4>
+<h5 id="父容器中设置两个项目分别占七三比例">1.父容器中设置两个项目分别占七三比例</h5>
+<pre><code><code>.wrapper {
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+</code></pre>
+<p>这个是一维的，只有一行，所以flex也能够布局出来。(简写啥的看不懂的话可以去看我有一篇flex布局笔记)</p>
+<pre><code><code>.wrapper{
+  display: flex;
+}
+.item1{
+  flex:70%
+}
+.item2{
+  flex:30%
+}</code></pre>
+<p>好像grid方便一点哈，那就接着往下看哈。</p>
+<h5 id="传统十二网格布局">2.传统十二网格布局</h5>
+<p>可以直接在容器上定义一个</p>
+<pre><code><code>display: grid;
+grid-template-columns: repeat(12, 1fr);</code></pre>
+<p>就完事了。</p>
+<p>flex布局虽然也是一维的，但是要分别定义容器还有项目</p>
+<pre><code><code>.warpper{
+  display:flex
+}
+//前提12个项目的class都为item
+.item{
+  flex:1
+}</code></pre>
+<p>各有千秋吧，但是flex强项就是一维的，grid强项在于二维布局。我接着看看二维的布局</p>
+<h4 id="控制边距">控制边距</h4>
+<p>flex没有控制边距的特殊属性，都是自动的，如果想要就是加margin.但是grid加了gap属性，可以column-gap也可以row-gap</p>
+<h4 id="指定区域合并多块">指定区域，合并多块</h4>
+<pre><code><code>.container {
+  display: grid;
+  grid-template-columns: 100px 100px 100px;
+  grid-template-rows: 100px 100px 100px;
+  grid-template-areas: &#39;a b c&#39;
+                       &#39;d e f&#39;
+                       &#39;g h i&#39;;
+}</code></pre>
+<p>上面这个是默认的情况，九个单元格各司其职。谁都不理谁。</p>
+<p>但是可以可以将他们更换变成</p>
+<pre><code><code>grid-template-areas: &#39;a a a&#39;
+                     &#39;b b b&#39;
+                     &#39;c c c&#39;;</code></pre>
+<p>类似，如果将其中一块变成<code>.</code>的话，那<code>.</code>所属的区域傻东西都没有</p>
+<blockquote>
+<p>表示没有用到该单元格，或者该单元格不属于任何区域</p>
+</blockquote>
+<blockquote>
+<p>注意，区域的命名会影响到网格线。每个区域的起始网格线，会自动命名为<code>区域名-start</code>，终止网格线自动命名为<code>区域名-end</code>。</p>
+<p>比如，区域名为<code>header</code>，则起始位置的水平网格线和垂直网格线叫做<code>header-start</code>，终止位置的水平网格线和垂直网格线叫做<code>header-end</code>。</p>
+</blockquote>
+<h4 id="grid-auto-flow">grid-auto-flow</h4>
+<p>跟flex的flow不一样，flow是wrap和nowrap还有wrap-reverse。而这个gird-auto-flow可以调整密度。</p>
+<p><code>column dense</code>和<code>row dense</code>可以自动填补竖向和横向的空白</p>
+<p>剩下没啥东西了，记得东西偏多，感觉和flex差不多，都是比较方便的布局方式，多了二维操作和指定特殊的块儿的功能。</p>
+<h4 id="项目中应用">项目中应用</h4>
+<p>在项目中的布局主要是应用到下面这样的类似的效果。</p>
+<pre><code><code>.warpper{
+    display: grid;
+    grid-gap: 5px;    
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 50px 350px 50px;
+    grid-template-areas:
+        &quot;h h h h h h h h h h h h&quot;
+        &quot;m m c c c c c c c c c c&quot;
+        &quot;f f f f f f f f f f f f&quot;;
+}</code></pre>
+<p>然后再在项目中指定相应的iteam为h,m,c,f</p>
+<pre><code><code>.header {
+    grid-area: h;
+}
+.menu {
+    grid-area: m;
+}
+.content {
+    grid-area: c;
+}
+.footer {
+   grid-area: f;
+}</code></pre>
+<h4 id="圣杯布局">圣杯布局:</h4>
+<pre class="html"><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;grid&quot;&gt;
+        &lt;header&gt;Header&lt;/header&gt;
+        &lt;aside class=&quot;siderbar-left&quot;&gt;Lefr Sidebar&lt;/aside&gt;
+        &lt;article&gt;Article&lt;/article&gt;
+        &lt;aside class=&quot;sidebar-right&quot;&gt;Right Sidebar&lt;/aside&gt;
+        &lt;footer&gt;Footer&lt;/footer&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;style type=&quot;text/css&quot;&gt;
+    .grid{
+        display:grid;
+        grid-template-rows: repeat(3,100px);
+        grid-template-columns: 150px auto 150px;
+        grid-gap:1em;
+    }
+    header,
+    aside,
+    article,
+    footer {
+      background: #eaeaea;
+      padding: 1em;
+    }
+    header,footer{
+        grid-column: 1/4;
+    }
+&lt;/style&gt;
+&lt;/html&gt;</code></pre>
+<h4 id="关于span">关于span</h4>
+<p>sapn表示跨越，有些时候可以<code>gird-column:1/span2</code>这样会让人感到困惑，我到底是跨越到哪去了，span2就是加两个，相当于<code>gird-column:1/3</code>，其实占得部分就是1块儿和2块儿。</p>
+<p>​</p>
+<h4 id="auto-fill的补充">auto-fill的补充</h4>
+<pre><code><code>.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 100px);
+}</code></pre>
+<p>我自己瞎看，于是乎走进了误区，因为总觉得这个gird-template-columns明明说设置列，但是为什么设计出来却是控制的行，我现在想明白了，就像上面这个例子，因为他要控制的是一个列的宽度，然后配合上auto-fill，我一列设置成100px，然后将这100px宽度的列自动填满整个行的宽度。直到写到这里我的困惑才被揭开，我服了。</p>
+<h4 id="关于fr的补充">关于fr的补充</h4>
+<p>fr是自动计算剩余地方的，比如说让</p>
+<p><code>grid-template-columns:100px repeat(10,1fr)</code>这个解释一下就是，第一个列的宽度为100px,然后这十个把剩下的父容器宽度（一般grid布局的父容器都是body元素，所以会根据浏览器的宽度进行变化，方便进行响应式布局，以下父容器如果没有特殊标注的话一般都指的body元素）平均分了。</p>
+<p>这个fr有几种情况：</p>
+<ul>
+<li>1fr单独出现，会把父容器都占满</li>
+<li>N个1fr出现，这几个1fr会平均分父容器</li>
+<li>N个1fr，和一个2fr出现，会n+2的平均分，然后给1fr的一份，给2fr的两份。其他比例同理</li>
+</ul>
+<h4 id="自认为的难点">自认为的难点</h4>
+<p><code>grid-template-columns: repeat(auto-fill, minmax(200px, 1fr) )</code></p>
+<p>这个破玩意困扰我很久，repeat的意思是前面是个数，后面是宽度，表示一种快速方便的写法。auto-fill是用列给这一行自动添加满元素，minmax是控制这个列的宽度最小为200px，最大为1fr。fr是上面讲过的。</p>
+<p><strong>可是最大为1fr ，1fr不是占满整个父容器宽度吗？</strong>，既然占满也就没有auto-fill的事儿了，一行一个不就完事了吗？</p>
+<p>我开始陷入了这个误区好久，后来写了写demo才发现我的误区在于盲目的认为1fr会占整个宽度，<strong>但却忽略了几个1fr同时存在会平分的关系。</strong>也就是说，在父容器变化宽度的同时，我们的列会自动添加进来，比如说由399px变到了400px(现实情况一般会比400px大，因为默认会有边距)那么我们就会出现第二个列加入到同一行。但是在400px到600px这之间，我们列的最小宽度是200px，所以不会有新的列加入。那么剩下的宽度就会空着吗？</p>
+<p>答案显然是不是的，因为我们设置了列的宽度，宽度为minmax这个范围，200px到1fr，1fr这时候的作用便显示出来了，因为比如说现在父容器宽度为500px,现在两个列存在这一行，都是1fr，所以这两个会把500px平均分，变成250px。</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

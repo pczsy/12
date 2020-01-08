@@ -1,0 +1,264 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修arcgis三维球中加载2000坐标系出现错误（The tiling scheme of this layer is not supported by SceneView）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>arcgis三维球中加载2000坐标系出现错误（The tiling scheme of this layer is not supported by SceneView）</center></div><div class='banquan'>原文出处:本文由博客园博主cehui0303提供。<br/>
+原文连接:https://www.cnblogs.com/cehui0303/p/11401202.html</div><br>
+    <p>&nbsp; &nbsp; &nbsp; 目前我们国家测绘地理信息的坐标体系基准是国家2000坐标系CGCS2000.各类地图组件如OpenLayers、Mapbox、Cesuim和ArcGIS Javascrip等都主要是支持WGS84(wkid=4326)和墨卡托投影坐标系(wkid=102100)两种，对CGCS2000坐标系基本上都不支持。特别是在三维地球展示中基本上都是以WGS84球面坐标系加载，因为三维球是个球，当然是要加载球面坐标系了。（但我知道以前科澜三维是平面的！）所以三维地球都加载不了国内的2000坐标系，要加载也是通过扩展和定制WebTileLayer类进行特殊处理。</p>
+<p>&nbsp; &nbsp; ArcGIS Javascript Api 4.*系列一直在朝着二三维一体化的方向发展，其开发商ESRI一直专攻GIS领域，而且是全球头部GIS软件平台，特别是随着ArcGIS 10.1后，其软件产品迭代更新的速度极快。三维产品也是其重点发展对象之一。在今年中旬发布的ArcGIS Javascript Api 4.12版本，不仅性能提升，增加了一些牛逼的功能，更重要的是支持CGCS2000坐标系！！！支持CGCS2000坐标系！！！支持CGCS2000坐标系！！！重要的事情说三遍！</p>
+<p>&nbsp; &nbsp; &nbsp;这正是一个喜大普奔的事情，可能是因为ESRI的三维软件开发团队在北京的缘故吧，爱国注意情怀和中国市场总得发挥点作用。但我看到这个信息后，一直想试试，因为我对他支持2000坐标系还是存有疑惑，加载应该没那么容易！咱天朝的标准规范永远是跟着参考国际标准，但必须在上面进行小幅修改，开发人员蛋疼的事情太多了！</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008080;"> 1</span>         
+<span style="color: #008080;"> 2</span>         <span style="color: #0000ff;">var</span> arcgisUrl = 'http://myserver.net/hserver/rest/services/imageserver2000/MapServer'<span style="color: #000000;">;
+</span><span style="color: #008080;"> 3</span> 
+<span style="color: #008080;"> 4</span> <span style="color: #000000;">        Layer.fromArcGISServerUrl({
+</span><span style="color: #008080;"> 5</span> <span style="color: #000000;">          url: arcgisUrl
+</span><span style="color: #008080;"> 6</span>          
+<span style="color: #008080;"> 7</span>         }).then(<span style="color: #0000ff;">function</span><span style="color: #000000;">(layer){
+</span><span style="color: #008080;"> 8</span> 
+<span style="color: #008080;"> 9</span>             <span style="color: #0000ff;">var</span> customBasemap = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Basemap({
+</span><span style="color: #008080;">10</span> <span style="color: #000000;">                baseLayers: [layer],
+</span><span style="color: #008080;">11</span>                 title: "ArcGIS REST Service"<span style="color: #000000;">,
+</span><span style="color: #008080;">12</span>                 id: "切片"
+<span style="color: #008080;">13</span> <span style="color: #000000;">            });
+</span><span style="color: #008080;">14</span>             
+<span style="color: #008080;">15</span>             <span style="color: #0000ff;">var</span> map = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Map({
+</span><span style="color: #008080;">16</span>                 <span style="color: #008000;">//</span><span style="color: #008000;">basemap: "topo-vector"</span>
+<span style="color: #008080;">17</span> <span style="color: #000000;">                basemap:customBasemap
+</span><span style="color: #008080;">18</span> <span style="color: #000000;">              });
+</span><span style="color: #008080;">19</span> 
+<span style="color: #008080;">20</span>             <span style="color: #0000ff;">var</span> view = <span style="color: #0000ff;">new</span><span style="color: #000000;"> SceneView({
+</span><span style="color: #008080;">21</span>                 container: "viewDiv"<span style="color: #000000;">,
+</span><span style="color: #008080;">22</span> <span style="color: #000000;">                map: map,
+</span><span style="color: #008080;">23</span> <span style="color: #000000;">                spatialReference: {
+</span><span style="color: #008080;">24</span>                     "wkid": 4490<span style="color: #000000;">,
+</span><span style="color: #008080;">25</span>                     "latestWkid": 4490
+<span style="color: #008080;">26</span> <span style="color: #000000;">                }
+</span><span style="color: #008080;">27</span> <span style="color: #000000;">            });
+</span><span style="color: #008080;">28</span>         });</pre>
+</div>
+<p>&nbsp;</p>
+<p>上述代码就是我想用我自己的影像地图作为三维球的底图，满怀期待，但最后还是出现我预料中的事情，没有那么简单！</p>
+<p><img style="display: block; margin-left: auto; margin-right: auto;" src="./images/arcgis三维球中加载2000坐标系出现错误（The tiling scheme of this layer is not supported by SceneView）0.png" alt="" /></p>
+<p>球出来了，提示&ldquo;The tiling scheme of this layer is not supported by SceneView&rdquo;，当时没注意看这个信息，以为是坐标系统还是继续不支持，但官方明明说了支持2000坐标系啊，不能够啊！</p>
+<p>&nbsp;</p>
+<p>继续发挥Chrome强大的调试功能，在SceneViewer.js文件中调试出三块关键代码行数，checkIfTileInfoSupportedForViewSR，makeGCSWithTileSize，ompatibleWith。经过调试和研究发现，2000坐标系确实是支持的，但是切片规则（Tiling Scheme)必须跟esri规定的要一样。</p>
+<p>&nbsp;</p>
+<p style="text-align: center;">天地图切片规则</p>
+<div align="center">
+<table style="width: 445px;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td width="40">
+<p class="A" align="center"><strong>级别</strong></p>
+</td>
+<td width="227">
+<p class="A" align="center"><strong>比例尺</strong></p>
+</td>
+<td width="178">
+<p class="A" align="center"><strong>分辨率</strong><strong>(</strong><strong>度</strong><strong>/</strong><strong>像素</strong><strong>)</strong></p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">7</p>
+</td>
+<td width="227">
+<p>4617149.9776692898246525792559&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+</td>
+<td width="178">
+<p>0.010986328125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">8</p>
+</td>
+<td width="227">
+<p>2308574.9888346449123262896279&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+</td>
+<td width="178">
+<p>0.0054931640625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">9</p>
+</td>
+<td width="227">
+<p>1154287.494417322456163144814</p>
+</td>
+<td width="178">
+<p>0.00274658203125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">10</p>
+</td>
+<td width="227">
+<p>577143.74720866122808157240698</p>
+</td>
+<td width="178">
+<p>0.001373291015625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">11</p>
+</td>
+<td width="227">
+<p>288571.87360433061404078620349</p>
+</td>
+<td width="178">
+<p>0.0006866455078125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">12</p>
+</td>
+<td width="227">
+<p>144285.93680216530702039310175</p>
+</td>
+<td width="178">
+<p>0.00034332275390625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">13</p>
+</td>
+<td width="227">
+<p>72142.968401082653510196550873</p>
+</td>
+<td width="178">
+<p>0.000171661376953125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">14</p>
+</td>
+<td width="227">
+<p>36071.484200541326755098275436</p>
+</td>
+<td width="178">
+<p>0.0000858306884765625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">15</p>
+</td>
+<td width="227">
+<p>18035.742100270663377549137718</p>
+</td>
+<td width="178">
+<p>0.00004291534423828125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">16</p>
+</td>
+<td width="227">
+<p>9017.871050135331688774568859</p>
+</td>
+<td width="178">
+<p>0.000021457672119140625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">17</p>
+</td>
+<td width="227">
+<p>4508.9355250676658443872844296</p>
+</td>
+<td width="178">
+<p>0.0000107288360595703125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">18</p>
+</td>
+<td width="227">
+<p>2254.4677625338329221936422148</p>
+</td>
+<td width="178">
+<p>0.00000536441802978515625</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">19</p>
+</td>
+<td width="227">
+<p>1127.2338812669164610968211074</p>
+</td>
+<td width="178">
+<p>0.000002682209014892578125</p>
+</td>
+</tr>
+<tr>
+<td width="40">
+<p align="center">20</p>
+</td>
+<td width="227">
+<p>563.61694063345823054841055369</p>
+</td>
+<td width="178">
+<p>0.0000013411045074462890625</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align: left;">esri脚本代码里第一级分辨率固定了 res[0] = 0.703125,下面以及都是一半的比例尺进行处理。下面是两个切片规则的比较。</p>
+<p style="text-align: left;"><img src="./images/arcgis三维球中加载2000坐标系出现错误（The tiling scheme of this layer is not supported by SceneView）1.png" alt="" width="406" height="279" />&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<img src="./images/arcgis三维球中加载2000坐标系出现错误（The tiling scheme of this layer is not supported by SceneView）2.png" alt="" width="419" height="274" /></p>
+<p style="text-align: left;">&nbsp; &nbsp; &nbsp; &nbsp; arcgis javascript api 规定的切片规则&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;天地图服务切片规则</p>
+<p style="text-align: left;">&nbsp;</p>
+<p style="text-align: left;">可以看出我的服务的切片规则和arcgis的恰好错开一个层级，我怀疑是因为我们是从0级开始算，arcgis是从第1级开始算导致的吧。但仔细看看其实两个瓦片规则的分辨率还是有细微的差别的。</p>
+<p style="text-align: left;">&nbsp;</p>
+<p>&nbsp;</p>
+<p style="text-align: left;">&nbsp;</p>
+<div class="cnblogs_Highlighter" style="text-align: left;">
+<pre class="brush:javascript;gutter:true;">q.prototype.compatibleWith = function(a) {
+    if (! (a instanceof q)) {
+        if (q._checkUnsupported(a)) return ! 1;
+        a = new q(a)
+    }
+    if (!a.spatialReference.equals(this.spatialReference) || a.pixelSize[0] !== this.pixelSize[0] || a.pixelSize[1] !== this.pixelSize[1]) return ! 1;
+    var c = Math.min(this.levels.length, a.levels.length) - 1,
+    f = this.levels[c].resolution,
+    b = .5 * f;
+    if (!e.floatEqualAbsolute(a.origin[0], this.origin[0], b) || !e.floatEqualAbsolute(a.origin[1], this.origin[1], b)) return ! 1;
+    b = .5 * f / Math.pow(2, c) / Math.max(this.pixelSize[0], this.pixelSize[1]) * 12;
+    return e.floatEqualAbsolute(f, a.levels[c].resolution, b)
+}
+</pre>
+</div>
+<p>　　</p>
+</div>
+<p>问题如何处理呢？我的服务是用的已有的缓存切片进行发布的啊！下一步就是操作ArcGIS Server 的信息了，强制去掉一个层级，让其从第1级开始算瓦片吧，这样我猜应该能加载了吧。</p>
+<p>请听下会demo汇报......</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

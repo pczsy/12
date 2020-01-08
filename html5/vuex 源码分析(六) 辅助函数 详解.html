@@ -1,0 +1,138 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vuex 源码分析(六) 辅助函数 详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vuex 源码分析(六) 辅助函数 详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11430122.html</div><br>
+    <p>对于state、getter、mutation、action来说，如果每次使用的时候都用this.$store.state、this.$store.getter等引用，会比较麻烦，代码也重复和冗余，我们可以用辅助函数来帮助我们生成要的代码，辅助函数有如下四个:</p>
+<p>&nbsp;&nbsp;&nbsp; mapState(namespace, map) 　　　　　　 ;用于获取state<br />&nbsp;&nbsp; &nbsp;mapGetters(namespace, map) 　　　　　 ;用于获取getters<br />&nbsp;&nbsp; &nbsp;mapMutations(namespace, map)&nbsp;　　　　 ;用于获取mutations<br />&nbsp;&nbsp; &nbsp;mapActions(namespace, map)&nbsp;&nbsp; &nbsp;&nbsp;　　　　 ;用于获取actions</p>
+<p>每个辅助函数都可以带两个参数:</p>
+<p>　　namespace　　　&nbsp; ;命名空间，也就是模块名</p>
+<p>　　map　　　　　　　;要获取的信息</p>
+<p>map有两种用法，可以是对象(键名是当前Vue实例设置的变量名，值是从store要获取的变量名)或者字符串数组(此时获取和设置的变量名为同一个)。</p>
+<p><span style="color: #ff0000;">注:使用辅助函数需要在根节点注入store</span></p>
+<p>ps:很多新手可能只会使用辅助函数，不知道还可以用this.$store.state,this.$store.getter这些用法...</p>
+<p>这些辅助函数返回的都是一个对象，我们可以<span style="color: #ff0000;">配合ES6的对象展开运算符，我们可以极大地简化写法</span>，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://unpkg.com/vuex@3.1.0/dist/vuex.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{no}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{No}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test1"</span><span style="color: #0000ff;">&gt;</span>测试1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test2"</span><span style="color: #0000ff;">&gt;</span>测试2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        const store </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vuex.Store({
+            state:{no:</span><span style="background-color: #f5f5f5; color: #000000;">100</span><span style="background-color: #f5f5f5; color: #000000;">},
+            getters:{
+                No:</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(state){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> state.no</span><span style="background-color: #f5f5f5; color: #000000;">+</span><span style="background-color: #f5f5f5; color: #000000;">100</span><span style="background-color: #f5f5f5; color: #000000;">}
+            },
+            mutations:{
+                increment(state,payload){state.no</span><span style="background-color: #f5f5f5; color: #000000;">+=</span><span style="background-color: #f5f5f5; color: #000000;">payload.no;}
+            },
+            actions:{
+                increment({commit},info){
+                    setTimeout(</span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;">(){
+                        commit(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">increment</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,info)
+                    },</span><span style="background-color: #f5f5f5; color: #000000;">500</span><span style="background-color: #f5f5f5; color: #000000;">)
+                }
+            }
+        })
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+            store,
+            computed:{
+                ...Vuex.mapState([</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">no</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]),
+                ...Vuex.mapGetters([</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">No</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">])
+            },
+            methods:{
+                ...Vuex.mapMutations([</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">increment</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">]),
+                ...Vuex.mapActions({increment1:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">increment</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">}),
+                test1(){
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.increment({no:</span><span style="background-color: #f5f5f5; color: #000000;">100</span><span style="background-color: #f5f5f5; color: #000000;">})
+                },
+                test2(){
+                    </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.increment1({no:</span><span style="background-color: #f5f5f5; color: #000000;">200</span><span style="background-color: #f5f5f5; color: #000000;">})
+                }
+            }
+        })  
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p class="hwi">writer by:大沙漠 QQ:22969969</p>
+<p>我觉得吧，如果用到的vuex里的属性比较多还好一点，如果只用到一个state还不如用this.$store.state来获取呢，毕竟在node环境下还需要import{<span style="color: #000000;">mapState</span>} from 'vuex'来获取导出的符号，可以看页面具体的需求选择合理的方法。</p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>&nbsp;vuex内的所有辅助函数格式都一样，都是执行一个normalizeNamespace()函数，并传入一个匿名函数，该匿名函数带有两个参数，分别是namespace和map，以mapState为例，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> mapState = normalizeNamespace(<span style="color: #0000ff;">function</span> (namespace, states) {        <span style="color: #008000;">//</span><span style="color: #008000;">state辅助函数 name:命名空间 states:比如:count2: "count"</span>
+  <span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> {};
+  normalizeMap(states).forEach(</span><span style="color: #0000ff;">function</span> (ref) {                             <span style="color: #008000;">//</span><span style="color: #008000;">将states转换为对象格式，例如:[{key:count2,val:count}]</span>
+    <span style="color: #0000ff;">var</span> key =<span style="color: #000000;"> ref.key;
+    </span><span style="color: #0000ff;">var</span> val =<span style="color: #000000;"> ref.val;
+
+    res[key] </span>= <span style="color: #0000ff;">function</span> mappedState () {                                      <span style="color: #008000;">//</span><span style="color: #008000;">计算属性对应的是一个函数，该函数内的this指向的是Vue实例</span>
+      <span style="color: #0000ff;">var</span> state = <span style="color: #0000ff;">this</span>.$store.state;                                              <span style="color: #008000;">//</span><span style="color: #008000;">获取state对象</span>
+      <span style="color: #0000ff;">var</span> getters = <span style="color: #0000ff;">this</span>.$store.getters;                                          <span style="color: #008000;">//</span><span style="color: #008000;">获取getters对象</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (namespace) {
+        </span><span style="color: #0000ff;">var</span> module = getModuleByNamespace(<span style="color: #0000ff;">this</span>.$store, 'mapState'<span style="color: #000000;">, namespace);
+        </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">module) {
+          </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+        }
+        state </span>=<span style="color: #000000;"> module.context.state;
+        getters </span>=<span style="color: #000000;"> module.context.getters;
+      }
+      </span><span style="color: #0000ff;">return</span> <span style="color: #0000ff;">typeof</span> val === 'function'                                        
+        ? val.call(<span style="color: #0000ff;">this</span>, state, getters)                                      <span style="color: #008000;">//</span><span style="color: #008000;">state是函数时的逻辑,获取子模块的state会执行到这里</span>
+        : state[val]                                                          <span style="color: #008000;">//</span><span style="color: #008000;">返回state[val],也就是值</span>
+<span style="color: #000000;">    };
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> mark vuex getter for devtools</span>
+    res[key].vuex = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+  });
+  </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> res
+});</span></pre>
+</div>
+<p>normalizeNamespace是统一的一个入口，用于格式化所有的辅助函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> normalizeNamespace (fn) {                          <span style="color: #008000;">//</span><span style="color: #008000;">返回一个匿名函数，需要两个参数，分别是命名空间和映射，参数1可以省略</span>
+  <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">function</span><span style="color: #000000;"> (namespace, map) {
+    </span><span style="color: #0000ff;">if</span> (<span style="color: #0000ff;">typeof</span> namespace !== 'string') {                          <span style="color: #008000;">//</span><span style="color: #008000;">如果参数1不是字符串(即忽略了命名空间)</span>
+      map = namespace;                                              <span style="color: #008000;">//</span><span style="color: #008000;">则修正参数1为map</span>
+      namespace = '';                                               <span style="color: #008000;">//</span><span style="color: #008000;">重置命名空间为null</span>
+    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (namespace.charAt(namespace.length - 1) !== '/'<span style="color: #000000;">) {
+      namespace </span>+= '/'<span style="color: #000000;">;
+    }
+    </span><span style="color: #0000ff;">return</span> fn(namespace, map)                                     <span style="color: #008000;">//</span><span style="color: #008000;">最后执行fn函数</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>其它几个辅助函数都差不多，就是传给normalizeNamespace的函数内实现略有不同。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

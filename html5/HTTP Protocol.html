@@ -1,0 +1,1763 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTTP Protocol' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTTP Protocol</center></div><div class='banquan'>原文出处:本文由博客园博主StrongerBrother提供。<br/>
+原文连接:https://www.cnblogs.com/stronger-brother/p/11055746.html</div><br>
+    <p align="center"><strong>HTTP</strong><strong>协议</strong></p>
+<h1>1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP请求状态码</h1>
+<p>当用户试图通过 HTTP 访问一台正在运行 Internet 信息服务 (IIS) 的服务器上的内容时，IIS 返回一个表示该请求的状态的数字代码。状态代码可以指明具体请求是否已成功，还可以揭示请求失败的确切原因。</p>
+<h2>1.1&nbsp;&nbsp; 1xx - 信息提示</h2>
+<p>这些状态代码表示临时的响应。客户端在收到常规响应之前，应准备接收一个或多个 1xx 响应。</p>
+<p>&middot; 100 - Continue 初始的请求已经接受，客户应当继续发送请求的其余部分。（HTTP 1.1新）</p>
+<p>&middot; 101 - Switching Protocols 服务器将遵从客户的请求转换到另外一种协议（HTTP 1.1新）</p>
+<h2>1.2&nbsp;&nbsp; 2xx - 成功</h2>
+<p>这类状态代码表明服务器成功地接受了客户端请求。</p>
+<p>&middot; <strong>200 - OK</strong> 一切正常，对GET和POST请求的应答文档跟在后面。</p>
+<p>&middot; 201 - Created 服务器已经创建了文档，Location头给出了它的URL。</p>
+<p>&middot; 202 - Accepted 已经接受请求，但处理尚未完成。</p>
+<p>&middot; 203 - Non-Authoritative Information 文档已经正常地返回，但一些应答头可能不正确，因为使用的是文档的拷贝，非权威性信息（HTTP 1.1新）。</p>
+<p>&middot; 204 - No Content 没有新文档，浏览器应该继续显示原来的文档。如果用户定期地刷新页面，而Servlet可以确定用户文档足够新，这个状态代码是很有用的。</p>
+<p>&middot; 205 - Reset Content 没有新的内容，但浏览器应该重置它所显示的内容。用来强制浏览器清除表单输入内容（HTTP 1.1新）。</p>
+<p>&middot; 206 - Partial Content 客户发送了一个带有Range头的GET请求，服务器完成了它（HTTP 1.1新）。</p>
+<h2>1.3&nbsp;&nbsp; 3xx - 重定向</h2>
+<p>客户端浏览器必须采取更多操作来实现请求。例如，浏览器可能不得不请求服务器上的不同的页面，或通过代理服务器重复该请求。</p>
+<p>&middot; 300 - Multiple Choices 客户请求的文档可以在多个位置找到，这些位置已经在返回的文档内列出。如果服务器要提出优先选择，则应该在Location应答头指明。</p>
+<p>&middot; 301 - Moved Permanently 客户请求的文档在其他地方，新的URL在Location头中给出，浏览器应该自动地访问新的URL。</p>
+<p>&middot; 302 - Found 类似于301，但新的URL应该被视为临时性的替代，而不是永久性的。注意，在HTTP1.0中对应的状态信息是&ldquo;Moved Temporatily&rdquo;。出现该状态代码时，浏览器能够自动访问新的URL，因此它是一个很有用的状态代码。注意这个状态代码有时候可以和301替换使用。例如，如果浏览器错误地请求 http://host/~user （缺少了后面的斜杠），有的服务器返回301，有的则返回302。严格地说，我们只能假定只有当原来的请求是GET时浏览器才会自动重定向。请参见 307。</p>
+<p>&middot; 303 - See Other 类似于301/302，不同之处在于，如果原来的请求是POST，Location头指定的重定向目标文档应该通过GET提取（HTTP 1.1新）。</p>
+<p>&middot; 304 - Not Modified 客户端有缓冲的文档并发出了一个条件性的请求（一般是提供If-Modified-Since头表示客户只想比指定日期更新的文档）。服务器告诉客户，原来缓冲的文档还可以继续使用。</p>
+<p>&middot; 305 - Use Proxy 客户请求的文档应该通过Location头所指明的代理服务器提取（HTTP 1.1新）。</p>
+<p>&middot; 307 - Temporary Redirect 和302（Found）相同。许多浏览器会错误地响应302应答进行重定向，即使原来的请求是POST，即使它实际上只能在POST请求的应答是303时才能重定向。由于这个原因，HTTP 1.1新增了307，以便更加清除地区分几个状态代码：当出现303应答时，浏览器可以跟随重定向的GET和POST请求；如果是307应答，则浏览器只能跟随对GET请求的重定向。（HTTP 1.1新）</p>
+<h2>1.4&nbsp;&nbsp; 4xx - 客户端错误</h2>
+<p>发生错误，客户端似乎有问题。例如，客户端请求不存在的页面，客户端未提供有效的身份验证信息。</p>
+<p>&middot; 400 - Bad Request 请求出现语法错误。</p>
+<p>&middot; 401 - Unauthorized 访问被拒绝，客户试图未经授权访问受密码保护的页面。应答中会包含一个WWW-Authenticate头，浏览器据此显示用户名字/密码对话框，然后在填写合适的Authorization头后再次发出请求。IIS 定义了许多不同的 401 错误，它们指明更为具体的错误原因。这些具体的错误代码在浏览器中显示，但不在 IIS 日志中显示：</p>
+<p>&middot; 401.1 - 登录失败。</p>
+<p>&middot; 401.2 - 服务器配置导致登录失败。</p>
+<p>&middot; 401.3 - 由于 ACL 对资源的限制而未获得授权。</p>
+<p>&middot; 401.4 - 筛选器授权失败。</p>
+<p>&middot; 401.5 - ISAPI/CGI 应用程序授权失败。</p>
+<p>&middot; 401.7 &ndash; 访问被 Web 服务器上的 URL 授权策略拒绝。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&nbsp;</p>
+<p>&middot; 403 - Forbidden 资源不可用。服务器理解客户的请求，但拒绝处理它。通常由于服务器上文件或目录的权限设置导致。禁止访问：IIS 定义了许多不同的 403 错误，它们指明更为具体的错误原因：</p>
+<p>&middot; 403.1 - 执行访问被禁止。</p>
+<p>&middot; 403.2 - 读访问被禁止。</p>
+<p>&middot; 403.3 - 写访问被禁止。</p>
+<p>&middot; 403.4 - 要求 SSL。</p>
+<p>&middot; 403.5 - 要求 SSL 128。</p>
+<p>&middot; 403.6 - IP 地址被拒绝。</p>
+<p>&middot; 403.7 - 要求客户端证书。</p>
+<p>&middot; 403.8 - 站点访问被拒绝。</p>
+<p>&middot; 403.9 - 用户数过多。</p>
+<p>&middot; 403.10 - 配置无效。</p>
+<p>&middot; 403.11 - 密码更改。</p>
+<p>&middot; 403.12 - 拒绝访问映射表。</p>
+<p>&middot; 403.13 - 客户端证书被吊销。</p>
+<p>&middot; 403.14 - 拒绝目录列表。</p>
+<p>&middot; 403.15 - 超出客户端访问许可。</p>
+<p>&middot; 403.16 - 客户端证书不受信任或无效。</p>
+<p>&middot; 403.17 - 客户端证书已过期或尚未生效。</p>
+<p>&middot; 403.18 - 在当前的应用程序池中不能执行所请求的 URL。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; 403.19 - 不能为这个应用程序池中的客户端执行 CGI。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; 403.20 - Passport 登录失败。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; <strong>404 - Not Found</strong> 无法找到指定位置的资源。这也是一个常用的应答。</p>
+<p>&middot; 404.0 -（无） &ndash; 没有找到文件或目录。</p>
+<p>&middot; 404.1 - 无法在所请求的端口上访问 Web 站点。</p>
+<p>&middot; 404.2 - Web 服务扩展锁定策略阻止本请求。</p>
+<p>&middot; 404.3 - MIME 映射策略阻止本请求。</p>
+<p>&middot; 405 - Method Not Allowed 请求方法（GET、POST、HEAD、Delete、PUT、TRACE等）对指定的资源不适用，用来访问本页面的 HTTP 谓词不被允许（方法不被允许）（HTTP 1.1新）</p>
+<p>&middot; 406 - Not Acceptable 指定的资源已经找到，但它的MIME类型和客户在Accpet头中所指定的不兼容，客户端浏览器不接受所请求页面的 MIME 类型（HTTP 1.1新）。</p>
+<p>&middot; 407 - Proxy Authentication Required 要求进行代理身份验证，类似于401，表示客户必须先经过代理服务器的授权。（HTTP 1.1新）</p>
+<p>&middot; 408 - Request Timeout 在服务器许可的等待时间内，客户一直没有发出任何请求。客户可以在以后重复同一请求。（HTTP 1.1新）</p>
+<p>&middot; 409 - Conflict 通常和PUT请求有关。由于请求和资源的当前状态相冲突，因此请求不能成功。（HTTP 1.1新）</p>
+<p>&middot; 410 - Gone 所请求的文档已经不再可用，而且服务器不知道应该重定向到哪一个地址。它和404的不同在于，返回407表示文档永久地离开了指定的位置，而404表示由于未知的原因文档不可用。（HTTP 1.1新）</p>
+<p>&middot; 411 - Length Required 服务器不能处理请求，除非客户发送一个Content-Length头。（HTTP 1.1新）</p>
+<p>&middot; 412 - Precondition Failed 请求头中指定的一些前提条件失败（HTTP 1.1新）。</p>
+<p>&middot; 413 &ndash; Request Entity Too Large 目标文档的大小超过服务器当前愿意处理的大小。如果服务器认为自己能够稍后再处理该请求，则应该提供一个Retry-After头（HTTP 1.1新）。</p>
+<p>&middot; 414 - Request URI Too Long URI太长（HTTP 1.1新）。</p>
+<p>&middot; 415 &ndash; 不支持的媒体类型。</p>
+<p>&middot; 416 &ndash; Requested Range Not Satisfiable 服务器不能满足客户在请求中指定的Range头。（HTTP 1.1新）</p>
+<p>&middot; 417 &ndash; 执行失败。</p>
+<p>&middot; 423 &ndash; 锁定的错误。</p>
+<h2>1.5&nbsp;&nbsp; 5xx - 服务器错误</h2>
+<p>服务器由于遇到错误而不能完成该请求。</p>
+<p>&middot; <strong>500 - Internal Server Error</strong> 服务器遇到了意料不到的情况，不能完成客户的请求。</p>
+<p>&middot; 500.12 - 应用程序正忙于在 Web 服务器上重新启动。</p>
+<p>&middot; 500.13 - Web服务器太忙。</p>
+<p>&middot; 500.15 - 不允许直接请求 Global.asa。</p>
+<p>&middot; 500.16 &ndash; UNC 授权凭据不正确。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; 500.18 &ndash; URL 授权存储不能打开。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; 500.100 - 内部 ASP 错误。</p>
+<p>&middot; 501 - Not Implemented 服务器不支持实现请求所需要的功能，页眉值指定了未实现的配置。例如，客户发出了一个服务器不支持的PUT请求。</p>
+<p>&middot; 502 - Bad Gateway 服务器作为网关或者代理时，为了完成请求访问下一个服务器，但该服务器返回了非法的应答。 亦说Web 服务器用作网关或代理服务器时收到了无效响应。</p>
+<p>&middot; 502.1 - CGI 应用程序超时。</p>
+<p>&middot; 502.2 - CGI 应用程序出错。</p>
+<p>&middot; <strong>503 - Service Unavailable</strong> 服务不可用，服务器由于维护或者负载过重未能应答。例如，Servlet可能在数据库连接池已满的情况下返回503。服务器返回503时可以提供一个 Retry-After头。这个错误代码为 IIS 6.0 所专用。</p>
+<p>&middot; 504 - Gateway Timeout 网关超时，由作为代理或网关的服务器使用，表示不能及时地从远程服务器获得应答。（HTTP 1.1新） 。</p>
+<p>&middot; 505 - HTTP Version Not Supported 服务器不支持请求中所指明的HTTP版本。（HTTP 1.1新）。</p>
+<h1>2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HTTP头部</h1>
+<h2>2.1&nbsp;&nbsp; 请求头</h2>
+<p><strong>1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Accept&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+<p>指定客户端能够接收的内容类型，示例：Accept: text/plain, text/html</p>
+<p><strong>2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Accept-Charset</strong></p>
+<p>浏览器可以接受的字符编码集，示例：Accept-Charset: iso-8859-5</p>
+<p><strong>3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Accept-Encoding</strong></p>
+<p>指定浏览器可以支持的web服务器返回内容压缩编码类型，示例：Accept-Encoding: compress, gzip</p>
+<p><strong>4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Accept-Language</strong></p>
+<p>浏览器可接受的语言，示例：Accept-Language: en,zh</p>
+<p>5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Accept-Ranges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>可以请求网页实体的一个或者多个子范围字段，示例：Accept-Ranges: bytes</p>
+<p>6)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authorization</p>
+<p>HTTP授权的授权证书，示例：Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</p>
+<p><strong>7)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Cache-Control&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+<p>指定请求和响应遵循的缓存机制，示例：Cache-Control: no-cache</p>
+<p><strong>8)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Connection</strong></p>
+<p>表示是否需要持久连接。（HTTP 1.1默认进行持久连接），示例：Connection: close/Keep-Alive</p>
+<p><strong>9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong><strong>Cookie</strong></p>
+<p>HTTP请求发送时，会把保存在该请求域名下的所有cookie值一起发送给web服务器，示例：Cookie: $Version=1; Skin=new;</p>
+<p><strong>10)&nbsp;&nbsp;&nbsp; </strong><strong>Content-Length</strong></p>
+<p>请求的内容长度，示例：Content-Length: 348</p>
+<p><strong>11)&nbsp;&nbsp;&nbsp; </strong><strong>Content-Type</strong></p>
+<p>请求的与实体对应的MIME信息，示例：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Type:application/x-www-form-urlencoded</p>
+<p><strong>12)&nbsp;&nbsp;&nbsp; </strong><strong>Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </strong></p>
+<p>请求发送的日期和时间，示例：Date: Tue, 15 Nov 2010 08:12:31 GMT</p>
+<p>13)&nbsp;&nbsp;&nbsp; Expect</p>
+<p>请求的特定的服务器行为，示例：Expect: 100-continue</p>
+<p><strong>14)&nbsp;&nbsp;&nbsp; </strong><strong>From</strong></p>
+<p>发出请求的用户的Email，示例：From: user@email.com</p>
+<p><strong>15)&nbsp;&nbsp;&nbsp; </strong><strong>Host </strong></p>
+<p>指定请求的服务器的域名和端口号，示例：Host: www.zcmhi.com</p>
+<p>16)&nbsp;&nbsp;&nbsp; If-Match</p>
+<p>只有请求内容与实体相匹配才有效，示例：If-Match: &ldquo;737060cd8c284d8af7ad3082f209582d&rdquo;</p>
+<p>17)&nbsp;&nbsp;&nbsp; If-Modified-Since</p>
+<p>如果请求的部分在指定时间之后被修改则请求成功，未被修改则返回304代码，示例：If-Modified-Since: Sat, 29 Oct 2010 19:43:31 GMT</p>
+<p>18)&nbsp;&nbsp;&nbsp; If-None-Match&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>如果内容未改变返回304代码，参数为服务器先前发送的Etag，与服务器回应的Etag比较判断是否改变，示例：If-None-Match: &ldquo;737060cd8c284d8af7ad3082f209582d&rdquo;</p>
+<p>19)&nbsp;&nbsp;&nbsp; If-Range</p>
+<p>如果实体未改变，服务器发送客户端丢失的部分，否则发送整个实体。参数也为Etag，示例：If-Range: &ldquo;737060cd8c284d8af7ad3082f209582d&rdquo;</p>
+<p>20)&nbsp;&nbsp;&nbsp; If-Unmodified-Since</p>
+<p>只在实体在指定时间之后未被修改才请求成功，示例：If-Unmodified-Since: Sat, 29 Oct 2010 19:43:31 GMT</p>
+<p>21)&nbsp;&nbsp;&nbsp; Max-Forwards&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>限制信息通过代理和网关传送的时间，示例：Max-Forwards: 10</p>
+<p><strong>22)&nbsp;&nbsp;&nbsp; </strong><strong>Pragma</strong></p>
+<p>用来包含实现特定的指令，示例：Pragma: no-cache</p>
+<p>23)&nbsp;&nbsp;&nbsp; Proxy-Authorization</p>
+<p>连接到代理的授权证书，示例：Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==</p>
+<p>24)&nbsp;&nbsp;&nbsp; Range</p>
+<p>只请求实体的一部分，指定范围，示例：Range: bytes=500-999</p>
+<p>25)&nbsp;&nbsp;&nbsp; Referer</p>
+<p>先前网页的地址，当前请求网页紧随其后,即来路，示例：Referer: http://www.zcmhi.com/archives/71.html</p>
+<p>26)&nbsp;&nbsp;&nbsp; TE</p>
+<p>客户端愿意接受的传输编码，并通知服务器接受接受尾加头信息，示例：TE: trailers,deflate;q=0.5</p>
+<p>27)&nbsp;&nbsp;&nbsp; Upgrade</p>
+<p>向服务器指定某种传输协议以便服务器进行转换（如果支持），示例：Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11</p>
+<p><strong>28)&nbsp;&nbsp;&nbsp; </strong><strong>User-Agent</strong></p>
+<p>User-Agent的内容包含发出请求的用户信息，示例：User-Agent: Mozilla/5.0 (Linux; X11)</p>
+<p>29)&nbsp;&nbsp;&nbsp; Via</p>
+<p>通知中间网关或代理服务器地址，通信协议，示例：Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)</p>
+<p>30)&nbsp;&nbsp;&nbsp; Warning</p>
+<p>关于消息实体的警告信息，示例：Warn: 199 Miscellaneous warning</p>
+<h2>2.2&nbsp;&nbsp; 响应头</h2>
+<p>1)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Accept-Ranges&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>表明服务器是否支持指定范围请求及哪种类型的分段请求，示例：Accept-Ranges: bytes</p>
+<p>2)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Age</p>
+<p>从原始服务器到代理缓存形成的估算时间（以秒计，非负），示例：Age: 12</p>
+<p>3)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Allow</p>
+<p>对某网络资源的有效的请求行为，不允许则返回405，示例：Allow: GET, HEAD</p>
+<p>4)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cache-Control&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>告诉所有的缓存机制是否可以缓存及哪种类型，示例：Cache-Control: no-cache</p>
+<p>5)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Encoding</p>
+<p>web服务器支持的返回内容压缩编码类型，示例：Content-Encoding: gzip</p>
+<p>6)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Language</p>
+<p>响应体的语言，示例：Content-Language: en,zh</p>
+<p>7)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Length</p>
+<p>响应体的长度，示例：Content-Length: 348</p>
+<p>8)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Location</p>
+<p>请求资源可替代的备用的另一地址，示例：Content-Location: /index.htm</p>
+<p>9)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-MD5</p>
+<p>返回资源的MD5校验值，示例：Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==</p>
+<p>10)&nbsp;&nbsp;&nbsp; content-disposition</p>
+<p>文件下载，示例：content-disposition:&nbsp; attachment; filename=URLEncode.encode(releaname, "utf-8")</p>
+<p>11)&nbsp;&nbsp;&nbsp; Content-Range</p>
+<p>在整个返回体中本部分的字节位置，示例：Content-Range: bytes 21010-47021/47022</p>
+<p>12)&nbsp;&nbsp;&nbsp; Content-Type</p>
+<p>返回内容的MIME类型，示例：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Content-Type: text/html; charset=utf-8</p>
+<p>13)&nbsp;&nbsp;&nbsp; Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>原始服务器消息发出的时间，示例：Date: Tue, 15 Nov 2010 08:12:31 GMT</p>
+<p>14)&nbsp;&nbsp;&nbsp; ETag&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>请求变量的实体标签的当前值，示例：ETag: &ldquo;737060cd8c284d8af7ad3082f209582d&rdquo;</p>
+<p>15)&nbsp;&nbsp;&nbsp; Expires</p>
+<p>响应过期的日期和时间，示例：Expires: Thu, 01 Dec 2010 16:00:00 GMT；Expires:-1表示不缓存网页</p>
+<p>16)&nbsp;&nbsp;&nbsp; Last-Modified</p>
+<p>请求资源的最后修改时间，示例：Last-Modified: Tue, 15 Nov 2010 12:45:26 GMT</p>
+<p>17)&nbsp;&nbsp;&nbsp; Location</p>
+<p>用来重定向接收方到非请求URL的位置来完成请求或标识新的资源，示例：Location: http://www.zcmhi.com/archives/94.html</p>
+<p>18)&nbsp;&nbsp;&nbsp; Pragma</p>
+<p>包括实现特定的指令，它可应用到响应链上的任何接收方，示例：Pragma: no-cache</p>
+<p>19)&nbsp;&nbsp;&nbsp; Proxy-Authenticate&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<p>它指出认证方案和可应用到代理的该URL上的参数，示例：Proxy-Authenticate: Basic</p>
+<p>20)&nbsp;&nbsp;&nbsp; refresh</p>
+<p>应用于重定向或一个新的资源被创造，在5秒之后重定向（由网景提出，被大部分浏览器支持），示例：Refresh: 5; url=http://www.zcmhi.com/archives/94.html</p>
+<p>21)&nbsp;&nbsp;&nbsp; Retry-After</p>
+<p>如果实体暂时不可取，通知客户端在指定时间之后再次尝试，示例：Retry-After: 120</p>
+<p>22)&nbsp;&nbsp;&nbsp; Server</p>
+<p>web服务器软件名称，示例：Server: Apache/1.3.27 (Unix) (Red-Hat/Linux)</p>
+<p>23)&nbsp;&nbsp;&nbsp; Set-Cookie</p>
+<p>设置Http Cookie，示例：Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1</p>
+<p>24)&nbsp;&nbsp;&nbsp; Trailer</p>
+<p>指出头域在分块传输编码的尾部存在，示例：Trailer: Max-Forwards</p>
+<p>25)&nbsp;&nbsp;&nbsp; Transfer-Encoding</p>
+<p>文件传输编码，示例：Transfer-Encoding:chunked</p>
+<p>26)&nbsp;&nbsp;&nbsp; Vary</p>
+<p>告诉下游代理是使用缓存响应还是从原始服务器请求，示例：Vary: *</p>
+<p>27)&nbsp;&nbsp;&nbsp; Via&nbsp;&nbsp;</p>
+<p>告知代理客户端响应是通过哪里发送的，示例：Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)</p>
+<p>28)&nbsp;&nbsp;&nbsp; Warning</p>
+<p>警告实体可能存在的问题，示例：Warning: 199 Miscellaneous warning</p>
+<p>29)&nbsp;&nbsp;&nbsp; WWW-Authenticate</p>
+<p>表明客户端请求实体应该使用的授权方案，示例：WWW-Authenticate: Basic</p>
+<h1>3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MIME类型</h1>
+<table style="width: 100%;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="bottom" width="20%">
+<p align="left"><strong>扩展名</strong></p>
+</td>
+<td valign="bottom" width="79%">
+<p align="left"><strong>类型</strong><strong>/</strong><strong>子类型</strong></p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">&nbsp;</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">323</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/h323</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">acx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/internet-property-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ai</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/postscript</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">aif</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-aiff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">aifc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-aiff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">aiff</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-aiff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">asf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-ms-asf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">asr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-ms-asf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">asx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-ms-asf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">au</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/basic</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">avi</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-msvideo</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">axs</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/olescript</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">bas</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/plain</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">bcpio</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-bcpio</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">bin</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">bmp</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/bmp</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">c</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/plain</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cat</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-pkiseccat</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cdf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-cdf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cer</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-x509-ca-cert</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">class</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">clp</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msclip</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cmx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-cmx</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cod</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/cis-cod</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">cpio</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-cpio</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">crd</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-mscardfile</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">crl</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/pkix-crl</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">crt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-x509-ca-cert</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">csh</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-csh</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">css</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/css</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dcr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-director</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">der</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-x509-ca-cert</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dir</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-director</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dll</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msdownload</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dms</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">doc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/msword</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dot</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/msword</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dvi</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-dvi</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">dxr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-director</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">eps</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/postscript</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">etx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/x-setext</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">evy</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/envoy</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">exe</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">fif</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/fractals</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">flr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">gif</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/gif</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">gtar</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-gtar</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">gz</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-gzip</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">h</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/plain</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">hdf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-hdf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">hlp</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/winhlp</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">hqx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/mac-binhex40</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">hta</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/hta</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">htc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/x-component</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">htm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/html</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">html</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/html</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">htt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/webviewhtml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ico</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-icon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ief</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/ief</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">iii</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-iphone</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ins</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-internet-signup</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">isp</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-internet-signup</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">jfif</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/pipeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">json</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/json</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">jpe</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/jpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">jpeg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/jpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">jpg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/jpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">js</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-javascript</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">latex</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-latex</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">lha</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">lsf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-la-asf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">lsx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-la-asf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">lzh</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/octet-stream</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">m13</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msmediaview</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">m14</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msmediaview</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">m3u</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-mpegurl</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">man</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff-man</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mdb</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msaccess</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">me</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff-me</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mht</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">message/rfc822</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mhtml</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">message/rfc822</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mid</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/mid</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mny</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msmoney</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mov</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/quicktime</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">movie</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/x-sgi-movie</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mp2</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mp3</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpa</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpe</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpeg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpp</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-project</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mpv2</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/mpeg</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ms</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff-ms</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">mvb</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msmediaview</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">nws</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">message/rfc822</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">oda</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/oda</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p10</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/pkcs10</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p12</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs12</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p7b</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-certificates</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p7c</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-mime</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p7m</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-mime</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p7r</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-certreqresp</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">p7s</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-signature</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pbm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-portable-bitmap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pdf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/pdf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pfx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs12</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pgm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-portable-graymap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pko</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/ynd.ms-pkipko</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pma</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-perfmon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pmc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-perfmon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pml</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-perfmon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pmr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-perfmon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pmw</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-perfmon</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pnm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-portable-anymap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pot,</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-powerpoint</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ppm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-portable-pixmap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pps</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-powerpoint</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ppt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-powerpoint</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">prf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/pics-rules</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ps</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/postscript</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">pub</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-mspublisher</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">qt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">video/quicktime</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ra</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-pn-realaudio</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ram</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-pn-realaudio</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ras</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-cmu-raster</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">rgb</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-rgb</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">rmi</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/mid</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">roff</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">rtf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/rtf</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">rtx</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/richtext</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">scd</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msschedule</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sct</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/scriptlet</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">setpay</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/set-payment-initiation</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">setreg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/set-registration-initiation</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sh</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-sh</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">shar</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-shar</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sit</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-stuffit</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">snd</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/basic</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">spc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-pkcs7-certificates</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">spl</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/futuresplash</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">src</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-wais-source</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sst</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-pkicertstore</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">stl</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-pkistl</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">stm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/html</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">svg</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/svg+xml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sv4cpio</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-sv4cpio</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">sv4crc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-sv4crc</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">swf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-shockwave-flash</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">t</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tar</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-tar</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tcl</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-tcl</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tex</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-tex</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">texi</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-texinfo</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">texinfo</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-texinfo</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tgz</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-compressed</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tif</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/tiff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tiff</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/tiff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tr</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-troff</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">trm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msterminal</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">tsv</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/tab-separated-values</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">txt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/plain</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">uls</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/iuls</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">ustar</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-ustar</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">vcf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">text/x-vcard</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">vrml</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wav</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">audio/x-wav</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wcm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-works</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wdb</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-works</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wks</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-works</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wmf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-msmetafile</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wps</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-works</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wri</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-mswrite</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wrl</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">wrz</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xaf</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xbm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-xbitmap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xla</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xlc</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xlm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xls</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xlt</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xlw</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/vnd.ms-excel</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xof</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">x-world/x-vrml</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xpm</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-xpixmap</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">xwd</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">image/x-xwindowdump</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">z</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/x-compress</p>
+</td>
+</tr>
+<tr>
+<td valign="top" width="20%">
+<p align="left">zip</p>
+</td>
+<td valign="top" width="79%">
+<p align="left">application/zip</p>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

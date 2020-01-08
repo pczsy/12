@@ -1,0 +1,86 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修换个角度使用VUE过滤器' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>换个角度使用VUE过滤器</center></div><div class='banquan'>原文出处:本文由博客园博主_herbert提供。<br/>
+原文连接:https://www.cnblogs.com/yfrs/p/vuefilter.html</div><br>
+    <h3 id="换个角度使用vue过滤器">换个角度使用VUE过滤器</h3>
+<p>过滤器在Vue中的主要用于文本格式化，如小写转大小，日期格式化等操作。官方对这个功能介绍也很简单，不过确实很简单，就一个函数而已。但最近在做两款APP时，遇到一些特殊的需求。然后就对vue中的filter一些用法结合源码好好的梳理了下。下边我们以一个日期格式化展开讨论。本文配套的demo可以微信关注公众号【小院不小】回复vuefilter获得。</p>
+<h4 id="定义一个日期格式化函数">1. 定义一个日期格式化函数</h4>
+<p>都9012了，我们就采用 ES Module的写法，在vue初始化的项目src的文件中新建一个filters文件夹，并在其中添加DateFmt.js文件，代码如下</p>
+<pre><code><code>// wx:46488492
+export function DateFmt(date, fmt) {
+if (date == null) return null;
+var o = {
+    &quot;M+&quot;: date.getMonth() + 1, // 月份
+    &quot;d+&quot;: date.getDate(), // 日
+    &quot;h+&quot;: date.getHours(), // 小时
+    &quot;m+&quot;: date.getMinutes(), // 分
+    &quot;s+&quot;: date.getSeconds(), // 秒
+    &quot;q+&quot;: Math.floor((date.getMonth() + 3) / 3), // 季度
+    &quot;S&quot;: date.getMilliseconds()
+};
+if (/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + &quot;&quot;).substr(4 - RegExp.$1.length));
+for (var k in o)
+    if (new RegExp(&quot;(&quot; + k + &quot;)&quot;).test(fmt))
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : ((&quot;00&quot; + o[k]).substr((&quot;&quot; + o[k]).length)));
+return fmt;
+}</code></pre>
+<h4 id="使用过滤器-datefmt">2. 使用过滤器 DateFmt</h4>
+<p>定义好函数后，我们采用全局注册filter的方式。在<code>main.js</code>中使用<code>import { DateFmt } from '@/filters/DateFmt.js'</code> 导入我们上边定义的函数。 使用<code>Vue.filter(&quot;DateFmt&quot;, DateFmt)</code> 完成filter全局注册。</p>
+<p>在<code>components</code>文件夹中，添加我们的测试组件<code>DateFormat.vue</code>,在该文件<code>template&gt;div</code>节点下输入<code>{{new Date()|DateFmt('yyyy-MM-dd hh:mm:ss')}}</code> 然后在app.vue引入我们刚新添加的组件，运行，你就会在看到当前日期已经按照我们需要的格式显示在网页上。是的，就是这么简单，那完了么？</p>
+<h4 id="在js中使用-datefmt">3. 在JS中使用 DateFmt</h4>
+<p>好奇的朋友会发现，我们定义的filter都是在template中使用的，那我如何在js代码中使用呢？当然，在开发这两个app期间，减少数据转换的次数，有了这样的需求。</p>
+<h5 id="在组件页面导入函数">3.1 在组件页面导入函数</h5>
+<p>回到开头，我们强调了一下，过滤器其实就是一个函数。既然是函数，那引入就好了。所以在我们最初建立 <code>DateFormat.vue</code> 单文件组件的<code>&lt;script&gt;</code>块中使用<code>import { DateFmt } from '@/filters/DateFmt.js'</code>导入我们的函数。代码如下：</p>
+<pre><code><code>&lt;script&gt;
+// wx:46488492
+import { DateFmt } from &#39;@/filters/DateFmt.js&#39;;
+export default {
+data(){
+return{
+curDateImportFilter: DateFmt(new Date(), &#39;yyyy-MM-dd hh:mm:ss&#39;)
+}}}
+&lt;/script&gt;</code></pre>
+<p>在我们<code>&lt;template&gt;</code>中新加一个元素，并绑定 <code>curDateImportFilter</code>属性，运行 npm run serve 回到浏览器，你就会看到两个格式化日期。这样好吗？我们多了一个import , 虽然实现了，但觉得<strong>不够好</strong>。</p>
+<h5 id="使用vue.filter-返回过滤器">3.2 使用Vue.filter 返回过滤器</h5>
+<p>如果我们仔细看官方文档，就会发现官说明了，通过 <code>Vue.filter(&quot;filter&quot;)</code>返回定义的<code>函数</code> ,所以Vue.filter不仅可以注册，还可以返回。<br />
+我们继续在data中添加属性 :</p>
+<pre><code><code>curDateVueFilter: Vue.filter(&quot;DateFmt&quot;)(new Date(), &#39;yyyy-MM-dd hh:mm:ss&#39;)</code></pre>
+<p>通过上边的步骤绑定该属性，你会在浏览器上看到三个格式化好的日期。要使用Vue.filter,我们不得不额外的导入<code>import Vue from 'vue'</code>。跟上边一样，虽然实现了，但<strong>不够好</strong>。</p>
+<h5 id="使用实例属性options">3.3 使用实例属性$options</h5>
+<p>在vue组件，每个组件都有各自的属性，这些属性大多挂载中属性 <code>$options</code>中，在chrome浏览器打印<em>$vm0</em>信息，我们就找到filter的信息。这里科普一下，在安装vue开发者工具后<em>$vm0</em>表示我们当前选择的组件，结果如下图所示：</p>
+<p><img src="./images/换个角度使用VUE过滤器0.png" alt="$vm0信息" /></p>
+<p>从图形上看，当前组件的filters为一个对象，并不能直接找到，不过展开至<code>__proto__</code>原型上看到了我们的DateFmt方法。好了现在我们在继续在data中添加属性</p>
+<pre><code><code>curDateOptFilter: this.$options.filters.DateFmt(new Date(), &#39;yyyy-MM-dd hh:mm:ss&#39;)</code></pre>
+<p>是的，采用这个方式，就不用再引入vue或者函数了，跟直接在template使用一样。简洁方便，感觉好多了。在深入一点，通过调试我们就会发现 Vue.filter 是调用options.filters原型上的方法，如下图所示</p>
+<p><img src="./images/换个角度使用VUE过滤器1.png" alt="vue_filter_call" /></p>
+<h4 id="总结">4. 总结</h4>
+<p>再简单的功能，也有你想不到的用法。做开发，还是要会发散。本来这篇文章还想分享一下 vue 中<strong>scope css穿透功能</strong>。为了方便阅读，就且听下回分解吧。</p>
+<p>欢迎感兴趣的朋友关注我的微信订阅号&quot;小院不小&quot;，或者点击下方的二维码关注。我将多年开发中遇到的难点，以及一些有意思的功能，体会都会一一发布到我的订阅号中</p>
+<p><img src="./images/换个角度使用VUE过滤器2.png" alt="微信关注【小院不小】" /></p>
+<p>闲来无事，采用cocos creator开发了一个小游戏，感兴趣的朋友一个可以来玩玩</p>
+<p><img src="./images/换个角度使用VUE过滤器3.png" alt="小游戏坦克侠" /></p>
+<p>有喜欢聊技术朋友也欢迎入群，若二维码失效可加我微信回复<strong>前端</strong></p>
+<p><img src="./images/换个角度使用VUE过滤器4.png" /></p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

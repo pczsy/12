@@ -1,0 +1,254 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue-awesome-swiper轮播插件' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue-awesome-swiper轮播插件</center></div><div class='banquan'>原文出处:本文由博客园博主早安帆提供。<br/>
+原文连接:https://www.cnblogs.com/VCplus/p/11627067.html</div><br>
+    <p><span style="font-size: 15px;">1. github上搜索vue-awesome-swiper</span></p>
+<p><span style="font-size: 15px;">2. readme中有安装方法，建议在插件名后@版本号，使用稳定的老版本&nbsp;<span class="cnblogs_code">npm install vue-awesome-swiper<span style="color: #ff0000;">@x.x.x</span> --save</span>&nbsp;</span></p>
+<p><span style="font-size: 15px;">3. 在项目main.js中引入</span></p>
+<div class="cnblogs_code">
+<pre><code>import Vue from 'vue'<span style="color: #000000;">
+import VueAwesomeSwiper from </span>'vue-awesome-swiper'
+
+<span style="color: #008000;">//</span><span style="color: #008000;"> require styles</span>
+import 'swiper/dist/css/swiper.css'<span style="color: #000000;">
+
+Vue.use(VueAwesomeSwiper, </span><span style="color: #008000;">/*</span><span style="color: #008000;"> { default global options } </span><span style="color: #008000;">*/</span>)</pre>
+</div>
+<p><span style="font-size: 15px;">4.创建单文件组件Swiper.vue（单文件组件三部分template、script、style）</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;swiper :options="swiperOption"&gt;
+        &lt;!-- slides --&gt;<br />　　　　 //这里是轮播的内容
+        &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 1&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;I</span>'m Slide 2&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;<br />　　　　　　&lt;img src=""/&gt;<br />　　　　  <span style="color: #000000;">&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;I</span>'m Slide 4&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 5&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;I</span>'m Slide 6&lt;/swiper-slide&gt;
+        &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 7&lt;/swiper-slide&gt;
+        &lt;!-- Optional controls --&gt;
+        &lt;div class="swiper-pagination" slot="pagination"&gt;&lt;/div&gt;<br />　　　　 //两个箭头，不需要可以删了
+        &lt;div class="swiper-button-prev" slot="button-prev"&gt;&lt;/div&gt;
+        &lt;div class="swiper-button-next" slot="button-next"&gt;&lt;/div&gt;<br />　　　　 //滚动条，不需要可以删了
+        &lt;div class="swiper-scrollbar" slot="scrollbar"&gt;&lt;/div&gt;
+    &lt;/swiper&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    name: </span>'HomeSwiper'<span style="color: #000000;">,
+    <span style="color: #ff0000;">// 子组件的data必须是个函数</span>
+    data() {
+        return {
+            swiperOption: {}
+        }
+    },
+}
+&lt;/script&gt;
+
+&lt;style lang="stylus" <span style="color: #ff0000;">scoped</span>&gt;
+  
+&lt;/style&gt;</span></pre>
+</div>
+<p><span style="font-size: 15px;">5. 在别的页面中引用，如在Home.vue</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div&gt;
+        &lt;home-header&gt;&lt;/home-header&gt;
+        <span style="color: #ff0000;">&lt;home-swiper&gt;&lt;/home-swiper&gt;</span>
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+import HomeHeader from </span>'./component/Header'<span style="color: #ff0000;">
+import HomeSwiper from './component/Swiper'</span><span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+    name: </span>'Home'<span style="color: #000000;">,
+    components: {
+        HomeHeader,
+        <span style="color: #ff0000;">HomeSwiper</span>
+    }
+
+}
+</span>&lt;/script&gt;
+
+&lt;style lang="stylus"&gt;
+  
+&lt;/style&gt;</pre>
+</div>
+<p><span style="font-size: 15px;">6.<span style="color: #ff0000;">防抖动</span>：在网速不好的情况下，swiper未加载出前，下方的div会占据，等到swiper出来时，占据位置的div会蹦走</span></p>
+<p><span style="font-size: 15px;">处理方法：swiper<span style="color: #ff0000;">外层嵌套div</span>，让这个div撑开高度</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    <span style="color: #ff0000;">&lt;div class="wrapper"&gt;</span>
+        &lt;swiper :options="swiperOption"&gt;<span style="color: #000000;">
+            ...
+        </span>&lt;/swiper&gt;
+    <span style="color: #ff0000;">&lt;/div&gt;</span>
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+    ...
+</span>&lt;/script&gt;
+
+&lt;style lang="stylus" scoped&gt;<span style="color: #ff0000;">
+  .wrapper
+    overflow: hidden
+    width:100%
+    height:0
+    padding-bottom: 31.25%   (宽高比,如果写在height，那么是和父级元素的高度,不是对比wrapper的宽度)
+</span>&lt;/style&gt;</pre>
+</div>
+<p><span style="font-size: 15px;">7.轮播图下面跟着跑的<span style="color: #ff0000;">一排小圆点</span></span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;swiper :options="swiperOption"&gt;
+            &lt;!-- slides --&gt;
+            &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 1&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I</span>'m Slide 2&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 3&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I</span>'m Slide 4&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 5&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I</span>'m Slide 6&lt;/swiper-slide&gt;
+            &lt;swiper-slide&gt;I'<span style="color: #000000;">m Slide 7&lt;/swiper-slide&gt;
+            &lt;!-- Optional controls --&gt;
+            &lt;div class="swiper-pagination" slot="pagination"&gt;&lt;/div&gt;
+            &lt;div class="swiper-button-prev" slot="button-prev"&gt;&lt;/div&gt;
+            &lt;div class="swiper-button-next" slot="button-next"&gt;&lt;/div&gt;
+            &lt;div class="swiper-scrollbar" slot="scrollbar"&gt;&lt;/div&gt;
+        &lt;/swiper&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+    name: </span>'HomeSwiper'<span style="color: #000000;">,
+    // 子组件的data必须是个函数
+    data() {
+        return {
+            <span style="color: #ff0000;">swiperOption: {
+                pagination: </span></span><span style="color: #ff0000;">'swiper-pagination'</span><span style="color: #000000;"><span style="color: #ff0000;">
+            }</span>
+        }
+    },
+}
+&lt;/script&gt;
+
+&lt;style lang="stylus" scoped&gt;
+  <span style="color: #ff0000;">//三个箭头是穿透，这样就突破了scoped的限制
+  //这个class名从何而来，是从页面中审查元素得到的
+  .wrapper &gt;&gt;&gt; .swiper-pagination-bullet-active
+    background: red !important</span>
+  .wrapper
+    overflow: hidden
+    width:100%
+    height:0
+    padding-bottom: 31.25%   (宽高比,如果写在height，那么是和父级元素的高度,不是对比wrapper的宽度)
+&lt;/style&gt;</span></pre>
+</div>
+<p><span style="font-size: 15px;">8.Vue是<span style="color: #ff0000;">数据驱动</span>的框架，轮播的图片地址和数量不该固定写死</span></p>
+<p><span style="font-size: 15px;">处理方法：<span style="color: #ff0000;">v-for循环</span>item，注意循环要加<span style="color: #ff0000;">key</span></span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;swiper :options="swiperOption"&gt;
+            &lt;!-- slides --&gt;
+            <span style="color: #ff0000;">&lt;swiper-slide v-for="item of swiperList" :key="item.id"&gt;<br />　　　　　　　　　　&lt;img :src="item.imgUrl" /&gt;<br />　　　　　　　&lt;/swiper-slide&gt;</span>
+            &lt;!-- Optional controls --&gt;
+            &lt;div class="swiper-pagination" slot="pagination"&gt;&lt;/div&gt;
+        &lt;/swiper&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+    name: </span>'HomeSwiper'<span style="color: #000000;">,
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 子组件的data必须是个函数</span>
+<span style="color: #000000;">    data() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+            swiperOption: {
+                pagination: </span>'swiper-pagination'<span style="color: #000000;">
+            },
+            <span style="color: #ff0000;">swiperList: [{ id: </span></span><span style="color: #ff0000;">'0001', imgUrl: 'http://lkadand.adoaidiajd.jada.jpg' }, { id: '0002', imgUrl: 'jndakm.adkand.sda.jpg'</span><span style="color: #000000;"><span style="color: #ff0000;"> }]</span>
+        }
+    },
+}
+</span>&lt;/script&gt;
+
+&lt;style lang="stylus" scoped&gt;
+  <span style="color: #008000;">//</span><span style="color: #008000;">三个箭头是穿透，这样就突破了scoped的限制</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;">这个class名从何而来，是从页面中审查元素得到的</span>
+  .wrapper &gt;&gt;&gt; .swiper-pagination-bullet-<span style="color: #000000;">active
+    background: red </span>!<span style="color: #000000;">important
+  .wrapper
+    overflow: hidden
+    width:</span>100%<span style="color: #000000;">
+    height:</span>0<span style="color: #000000;">
+    padding</span>-bottom: 31.25%<span style="color: #000000;">   (宽高比,如果写在height，那么是和父级元素的高度,不是对比wrapper的宽度)
+</span>&lt;/style&gt;</pre>
+</div>
+<p><span style="font-size: 15px;">9.循环轮播</span></p>
+<p><span style="font-size: 15px;">处理方法：加<span style="color: #ff0000;">loop</span>值为true</span></p>
+<div class="cnblogs_code">
+<pre><code>&lt;template&gt;
+    &lt;div class="wrapper"&gt;
+        &lt;swiper :options="swiperOption"&gt;
+            &lt;!-- slides --&gt;
+            &lt;swiper-slide v-<span style="color: #0000ff;">for</span>="item of swiperList" :key="item.id"&gt;&lt;img :src="item.imgUrl" /&gt;&lt;/swiper-slide&gt;
+            &lt;!-- Optional controls --&gt;
+            &lt;div class="swiper-pagination" slot="pagination"&gt;&lt;/div&gt;
+        &lt;/swiper&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;<span style="color: #000000;">
+export </span><span style="color: #0000ff;">default</span><span style="color: #000000;"> {
+    name: </span>'HomeSwiper'<span style="color: #000000;">,
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> 子组件的data必须是个函数</span>
+<span style="color: #000000;">    data() {
+        </span><span style="color: #0000ff;">return</span><span style="color: #000000;"> {
+            swiperOption: {
+                pagination: </span>'swiper-pagination'<span style="color: #000000;">,
+                <span style="color: #ff0000;">loop: </span></span><span style="color: #ff0000;">true</span><span style="color: #000000;">
+            },
+            swiperList: [{ id: </span>'0001', imgUrl: 'http://lkadand.adoaidiajd.jada.jpg' }, { id: '0002', imgUrl: 'jndakm.adkand.sda.jpg'<span style="color: #000000;"> }]
+        }
+    },
+}
+</span>&lt;/script&gt;
+
+&lt;style lang="stylus" scoped&gt;
+  <span style="color: #008000;">//</span><span style="color: #008000;">三个箭头是穿透，这样就突破了scoped的限制</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;">这个class名从何而来，是从页面中审查元素得到的</span>
+  .wrapper &gt;&gt;&gt; .swiper-pagination-bullet-<span style="color: #000000;">active
+    background: red </span>!<span style="color: #000000;">important
+  .wrapper
+    overflow: hidden
+    width:</span>100%<span style="color: #000000;">
+    height:</span>0<span style="color: #000000;">
+    padding</span>-bottom: 31.25%<span style="color: #000000;">   (宽高比,如果写在height，那么是和父级元素的高度,不是对比wrapper的宽度)
+</span>&lt;/style&gt;</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

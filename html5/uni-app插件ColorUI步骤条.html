@@ -1,0 +1,70 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修uni-app插件ColorUI步骤条' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>uni-app插件ColorUI步骤条</center></div><div class='banquan'>原文出处:本文由博客园博主老梁讲Java提供。<br/>
+原文连接:https://www.cnblogs.com/sky-chen/p/11081430.html</div><br>
+    <h1 id="uni-app插件colorui步骤条">1. uni-app插件ColorUI步骤条</h1>
+<h2 id="前言">1.1. 前言</h2>
+<ol>
+<li>uni-app就不介绍了，前面几篇已经有所介绍，不知道的可以翻看我前面几篇博客</li>
+<li><a href="https://ext.dcloud.net.cn/plugin?id=239">ColorUI-uniApp</a>是uni-app的一款ui组件，事实上就是对uni-app组件添加css，使其更加漂亮</li>
+<li>这里我抛砖引玉的介绍一下步骤条的使用，之所以介绍它是因为使用它的过程中，发现的几点问题
+<ul>
+<li>第一它本身的例子太过简单，但事实上它是可以实现的更复杂的</li>
+<li>第二它本身带有很多css样式是可以直接拿来用的，不需要自己改造自己写</li>
+</ul></li>
+</ol>
+<h2 id="例子">1.2. 例子</h2>
+<ol>
+<li>比如如下实现</li>
+</ol>
+<p><img src="./images/uni-app插件ColorUI步骤条0.png" /></p>
+<ol>
+<li>他的例子每一步都是完成蓝色背景，中间勾选，但如果我中间取消订单呢，我想要显示个X，并且红色背景，先看它的例子代码，我用的是最后的多级显示</li>
+</ol>
+<pre><code><code>&lt;scroll-view scroll-x class=&quot;bg-white padding response cu-steps steps-bottom&quot; :scroll-into-view=&quot;&#39;scroll-&#39; + scroll&quot;
+ scroll-with-animation&gt;
+    &lt;view class=&quot;cu-item padding-lr-xl&quot; :class=&quot;index&gt;scroll?&#39;&#39;:&#39;text-blue&#39;&quot; v-for=&quot;(item,index) in 10&quot; :key=&quot;index&quot; :id=&quot;&#39;scroll-&#39; + index&quot;&gt;
+        Level {{index + 1}} &lt;text class=&quot;num&quot; :data-index=&quot;index + 1&quot;&gt;&lt;/text&gt;
+    &lt;/view&gt;
+&lt;/scroll-view&gt;</code></pre>
+<ol>
+<li>前面代码的例子中有个表示X的代码，但那是用class为<code>cuIcon-roundclosefill</code>，一旦我替换num属性就变成这样了，之后可能还要不断去调整样式</li>
+</ol>
+<p><img src="./images/uni-app插件ColorUI步骤条1.png" /></p>
+<ol>
+<li>事实上还有其它更好的方法，如下改法，我在需要的item添加isErr属性，为true时显示红色，text中添加err类属性就会把图标修改成X</li>
+</ol>
+<pre><code><code>&lt;view class=&quot;cu-item padding-lr-xl&quot; :class=&quot;item.status&gt;step.scroll?&#39;&#39;:item.isErr?&#39;text-red&#39;:&#39;text-blue&#39;&quot; v-for=&quot;(item,index) in 10&quot; :key=&quot;index&quot; :id=&quot;&#39;scroll-&#39; + index&quot;&gt;
+        Level {{index + 1}} &lt;text class=&quot;num err&quot; :data-index=&quot;index + 1&quot;&gt;&lt;/text&gt;
+    &lt;/view&gt;</code></pre>
+<p><img src="./images/uni-app插件ColorUI步骤条2.png" /></p>
+<ol>
+<li>至于我怎么发现的，那就是直接找源码，可以看到在main.css中</li>
+</ol>
+<p><img src="./images/uni-app插件ColorUI步骤条3.png" /></p>
+<h2 id="总结">1.3. 总结</h2>
+<ol>
+<li>这里就给出个思路，希望帮到有需要的人，共同学习进步</li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

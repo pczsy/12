@@ -1,0 +1,168 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修记一次博客页面美化过程,分享代码.' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>记一次博客页面美化过程,分享代码.</center></div><div class='banquan'>原文出处:本文由博客园博主炭烧生蚝提供。<br/>
+原文连接:https://www.cnblogs.com/tanshaoshenghao/p/10801547.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#感谢热心博主分享的攻略">感谢热心博主分享的攻略</a></li>
+        <li><a href="#markdown美化">1. Markdown美化</a></li>
+        <li><a href="#给博客页面加上鼠标停留响应">2. 给博客页面加上鼠标停留响应</a><ul>
+        <li><a href="#div容器的宽高发生改变">Ⅰ. <code>div</code>容器的宽高发生改变</a></li>
+        <li><a href="#字体大小font-size发生变化">Ⅱ. 字体大小<code>font-size</code>发生变化</a></li>
+        <li><a href="#给容器添加阴影效果">Ⅲ. 给容器添加阴影效果</a></li>
+        </ul></li>
+        <li><a href="#处理一些细节">3. 处理一些细节</a></li>
+        <li><a href="#源码分享">4. 源码分享</a><ul>
+        <li><a href="#点击此处跳转到github"><span>点击此处跳转到Github</span></a></li>
+        </ul></li>
+        </ul>
+    </div>
+</div>
+<blockquote>
+<p>注册博客园账号有一个多月了, 一切都很好, 但就一直觉得自己的博客页面比较老土. 在首页浏览时候发现一位博主的页面挺干净整洁的, 而且他分享了制作的思路, 于是下定决心美化一番。 本文将介绍美化的思路, 并贴上所有代码, 俗话说授之以鱼也要授之以渔。</p>
+</blockquote>
+<h1 id="感谢热心博主分享的攻略">感谢热心博主分享的攻略</h1>
+<ul>
+<li>致谢要写在前面, 这位博主把他博客的整套CSS代码都贡献出来了, 在此基础上进行修改变得十分容易. 秉承这种精神, 文章末尾也将奉献上我的所有定制代码, 如果哪位朋友想直接体验以下, 直接复制就行了.</li>
+<li><a href="https://www.cnblogs.com/hafiz/">该博主的博客地址</a></li>
+</ul>
+<h1 id="markdown美化">1. Markdown美化</h1>
+<ul>
+<li>首先要美化的就是<code>Markdown</code>的显示了. 第一次接触<code>Markdown</code>是在注册完Github创建一个新仓库的时候, 写<code>README</code>必须得用<code>Markdown</code>写, 当时就觉得怎么有这么好看的排版.</li>
+<li>后来在博客园上第一次用<code>Markdown</code>写博客, 点完发布回头一看...???...</li>
+<li>当时觉得这个估计是<code>Markdown</code>的变种, 也能凑合着用就没管了.</li>
+<li>现在知道了<code>Markdown</code>其实是使文字通过某种<code>CSS</code>样式美化后显示出来而已, 既然这样, 我们可以自己修改<code>Markdown</code>的显示样式.</li>
+<li>这里贴一段简单的代码演示修改的过程, 后面会贴上带有注释的完整代码.</li>
+</ul>
+<ol>
+<li>首先选中你要修改的地方, 然后在开发者工具中(谷歌浏览器快捷键F12)中直接对<code>CSS</code>样式进行修改. (博主是后端方向, 也没记得几个CSS样式, 基本都是边查边改哈)</li>
+</ol>
+<p><img src="./images/记一次博客页面美化过程,分享代码.0.png" alt="在这里插入图片描述" /></p>
+<ol>
+<li>修改得到满意的<code>CSS</code>样式后, 把他复制到<code>页面定制CSS代码</code>栏中, 可以通过<code>我的博客-&gt;管理-&gt;设置</code>找到该栏.</li>
+</ol>
+<p><img src="./images/记一次博客页面美化过程,分享代码.1.png" alt="在这里插入图片描述" /></p>
+<ol>
+<li>这样便完成了一个样式的美化。</li>
+</ol>
+<h1 id="给博客页面加上鼠标停留响应">2. 给博客页面加上鼠标停留响应</h1>
+<ul>
+<li>我觉得现代网页和十几年前的网页不同之处在于当你的鼠标滑过网页, 各种模块就不停的动, 交互感十足. 为了能让博客看起来更具科技性, 未来性(忍住别笑, 给后端小白一个装比的机会), 我决定给博客首页也加上这些效果.</li>
+<li>本博客制作这种特效目前有三种思路:</li>
+</ul>
+<h2 id="div容器的宽高发生改变">Ⅰ. <code>div</code>容器的宽高发生改变</h2>
+<p><img src="./images/记一次博客页面美化过程,分享代码.2.png" alt="在这里插入图片描述" /></p>
+<p> </p>
+<ul>
+<li>具体的<code>CSS</code>代码如下:</li>
+</ul>
+<pre><code><code>#header #navigator ul li {
+    float: left;
+    width: 13%; /*div原来的宽度为13%*/
+    text-align: center;
+    margin-right: 0px;
+    background: #9e9e9e14;
+    transition: width 0.5s; /*CSS3中引入的过渡功能, 意思是width属性将会发生变化, 变化时间为0.5秒*/
+    -moz-transition: width 0.5s; /*后面几个意思一样, 多写几个为了兼容不同的浏览器*/   
+    -webkit-transition: width 0.5s;
+    -o-transition: width 0.5s;
+}
+#header #navigator ul li:hover { /*hover即为鼠标停留时的样式*/
+    width: 20%; /*宽度变为20%*/
+}</code></pre>
+<p> </p>
+<h2 id="字体大小font-size发生变化">Ⅱ. 字体大小<code>font-size</code>发生变化</h2>
+<p><img src="./images/记一次博客页面美化过程,分享代码.3.png" alt="在这里插入图片描述" /></p>
+<p> </p>
+<ul>
+<li>具体代码如下:</li>
+</ul>
+<pre><code><code>.postTitle, .entrylistPosttitle {
+    font-family: &quot;Lato&quot;, Helvetica Neue, Helvetica, Arial, sans-serif;
+    font-size: 1.8em;
+    padding: 20px 20px 15px 0px;
+    background: #fff;
+    border-radius: 10px 10px 0px 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: font-size 0.5s; /*这里改变的是字体的大小*/
+    -moz-transition: font-size 0.5s;
+    -webkit-transition: font-size 0.5s;
+    -o-transition: font-size 0.5s;
+}
+.postTitle:hover {
+    font-size: 2em; 
+}</code></pre>
+<p> </p>
+<h2 id="给容器添加阴影效果">Ⅲ. 给容器添加阴影效果</h2>
+<p><img src="./images/记一次博客页面美化过程,分享代码.4.png" alt="在这里插入图片描述" /></p>
+<ul>
+<li>具体代码如下</li>
+</ul>
+<pre><code><code>.search, .newsItem, .catListPostCategory, .catListPostArchive, .catListTag, .catListView, .catListBlogRank {
+    background: #fff;
+    margin-bottom: 30px;
+    word-wrap: break-word;
+    border-radius: 10px;
+    margin-top: 10px;
+    border: 2px solid #9E9E9E;
+    transition: box-shadow 0.5s;
+    -moz-transition: box-shadow 0.5s;
+    -webkit-transition: box-shadow 0.5s;
+    -o-transition: box-shadow 0.5s;
+}
+/*添加阴影*/
+.newsItem:hover, .catListPostCategory:hover, .catListPostArchive:hover, .catListTag:hover, .catListView:hover, .catListBlogRank:hover {
+    /* border: 5px solid; */
+    box-shadow: 10px 10px 10px #9E9E9E;
+}</code></pre>
+<h1 id="处理一些细节">3. 处理一些细节</h1>
+<ul>
+<li>让点赞图标也能旋转起来.</li>
+<li>隐藏掉文章数量显示(感觉都是写随笔, 百度了一下文章的功能, 但还是没有搞懂)</li>
+<li>修改了一些文本的颜色.</li>
+<li>在页面右上角添加<code>Github</code>标签. (如果你打算使用这套模板, 别忘了在页首的html代码中把<code>Github</code>地址修改为自己的<code>Github</code>)</li>
+</ul>
+<p> </p>
+<h1 id="源码分享">4. 源码分享</h1>
+<h2 id="点击此处跳转到github"><a href="https://github.com/liuyj24/CnblogStyle">点击此处跳转到Github</a></h2>
+<ul>
+<li>体验该皮肤你只需要在<code>个人博客页面-&gt;管理-&gt;设置</code>中禁用模板默认CSS, 然后把各部分代码复制到相应的地方即可.</li>
+<li><a href="https://github.com/liuyj24/CnblogStyle/blob/master/%E9%A1%B5%E9%9D%A2%E5%AE%9A%E5%88%B6CSS%E4%BB%A3%E7%A0%81.css">页面定制CSS代码</a></li>
+</ul>
+<p><img src="./images/记一次博客页面美化过程,分享代码.5.png" alt="在这里插入图片描述" /></p>
+<ul>
+<li><a href="https://github.com/liuyj24/CnblogStyle/blob/master/%E9%A1%B5%E8%84%9Ahtml%E4%BB%A3%E7%A0%81.html">页脚html代码</a></li>
+</ul>
+<p><img src="./images/记一次博客页面美化过程,分享代码.6.png" alt="在这里插入图片描述" /></p>
+<ul>
+<li><a href="https://github.com/liuyj24/CnblogStyle/blob/master/%E9%A1%B5%E9%A6%96Html%E4%BB%A3%E7%A0%81.html">页首Html代码</a></li>
+</ul>
+<p><img src="./images/记一次博客页面美化过程,分享代码.7.png" alt="在这里插入图片描述" /></p>
+<ul>
+<li>温馨提示: 为了让<code>JS</code>代码生效你需要申请代码权限.</li>
+</ul>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

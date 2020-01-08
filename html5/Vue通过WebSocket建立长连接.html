@@ -1,0 +1,114 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue通过WebSocket建立长连接' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue通过WebSocket建立长连接</center></div><div class='banquan'>原文出处:本文由博客园博主夕颜非颜提供。<br/>
+原文连接:https://www.cnblogs.com/helen9822/p/11793328.html</div><br>
+    <h1><span style="font-family: 楷体; font-size: 18pt;">使用场景：</span></h1>
+<p><span style="font-size: 18px;">　　<span style="font-family: 楷体;">在项目开发中，后端需要处理一连串的逻辑，或者等待第三方的数据返回来进行处理之后在返回给前端，可能时间会很长，而且前端也不知道后端什么时候能处理好（时间长的话会达到10分钟左右），如果采用普通的HTTP连接，前后端无法一直保持联系，麻烦的时候可能还需要采用轮询的机制，所以使用WebSocket连接效果还是比较好的。</span></span></p>
+<h1><span style="font-family: 楷体; font-size: 18pt;">使用时间：</span></h1>
+<p><span style="font-family: 楷体; font-size: 18px;">　　在界面加载完之后，建上WebSocket连接，此时前端还可以发送普通的HTTP的请求，等到后端处理完之后，通过建立的WebSocket连接返给前端，前端根据返回的数据进行对应的操作。</span></p>
+<h1><span style="font-family: 楷体; font-size: 18pt;">代码展示：</span></h1>
+<div class="cnblogs_Highlighter">
+<pre><code><span style="font-family: 'comic sans ms', sans-serif; font-size: 14px;">&lt;template&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+  data() {
+    return{
+      // 用户Id
+      userId:'',
+      appid:'',
+      // 事件类型
+      type:'',
+      msg:'',
+      wsUrl:''
+    }    
+  },
+  methods: {
+    //初始化weosocket
+    initWebSocket() {
+      if (typeof WebSocket === "undefined") {
+        alert("您的浏览器不支持WebSocket");
+        return false;
+      }
+      const wsuri = 'ws://(后端WebSocket地址)/websocket/' + this.userId + '/' + this.appid // websocket地址
+
+      this.websock = new WebSocket(wsuri);
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onclose = this.websocketclose;
+    },
+    //连接成功
+    websocketonopen() {
+      console.log("WebSocket连接成功");
+      // 添加心跳检测，每30秒发一次数据，防止连接断开（这跟服务器的设置有关，如果服务器没有设置每隔多长时间不发消息断开，可以不进行心跳设置）
+      let self = this;
+      this.timer = setInterval(() =&gt; {
+        try {
+          self.websock.send('test')
+          console.log('发送消息');
+        }catch(err){
+          console.log('断开了：' + err);
+          self.connection()
+        }
+      }, 30000)
+    },
+    //接收后端返回的数据，可以根据需要进行处理
+    websocketonmessage(e) {
+      var vm = this;
+      let data1Json = JSON.parse(e.data);
+      console.log(data1Json);
+    },
+    //连接建立失败重连
+    websocketonerror(e) {
+      console.log(`连接失败的信息：`, e);
+      this.initWebSocket(); // 连接失败后尝试重新连接
+    },
+    //关闭连接
+    websocketclose(e) {
+      console.log("断开连接", e);
+    }
+  },
+  created() {
+    if (this.websock) {
+      this.websock.close(); // 关闭websocket连接
+    }
+    this.initWebSocket();
+  },
+  destroyed() {
+    //页面销毁时关闭ws连接
+    if (this.websock) {
+      this.websock.close(); // 关闭websocket
+    }
+  }
+};
+&lt;/script&gt;</span></pre>
+</div>
+<h1><span style="font-family: 楷体; font-size: 18pt;">问题回顾：</span></h1>
+<p><span style="font-family: 楷体; font-size: 18px;">　　在实际使用的时候遇到的问题：有的时候页面链接还没有建立上，但是后端已经把数据都处理好了，这个时候推给前端，前端接收不到。</span></p>
+<h1><span style="font-family: 楷体; font-size: 18pt;">解决方案：</span></h1>
+<p><span style="font-family: 楷体; font-size: 18px;">　　1）简单的方法：让后端延迟几秒再推</span></p>
+<p><span style="font-family: 楷体; font-size: 18px;">　　优势：简单</span></p>
+<p><span style="font-family: 楷体; font-size: 18px;">　　劣势：降低了性能</span></p>
+<p><span style="font-family: 楷体; font-size: 18px;">　　2）优化之后的方法：使用Redis保存用户的登录状态，缓存这个用户的数据，等到建立连接之后再推，推完就清空Redis</span></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

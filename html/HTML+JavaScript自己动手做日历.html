@@ -1,0 +1,185 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML+JavaScript自己动手做日历' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML+JavaScript自己动手做日历</center></div><div class='banquan'>原文出处:本文由博客园博主半兮〆烟雨情提供。<br/>
+原文连接:https://www.cnblogs.com/zhsh666/p/11380873.html</div><br>
+    <blockquote>
+<p>当我们需要在页面中显示某月的事项，或是选择某一段日期时，常常要使用到日历组件。这一组件同样有着许多现成的类库，然而亲自动手开发一个日历，从中了解其实现原理也是非常必要的。在本例中我们就将制作一款非常经典的日历组件。</p>
+</blockquote>
+<blockquote>
+<h3 id="更多精彩内容欢迎访问我的个人博客皮皮猪httpwww.zhsh666.xyz或者httpwww.zh66.club期待您的光临哦我是皮皮猪感谢各位光临能为您排忧解难小站深感荣幸祝您生活愉快">更多精彩内容欢迎访问我的个人博客皮皮猪：<a href="http://www.zhsh666.xyz" class="uri">http://www.zhsh666.xyz</a>或者<a href="http://www.zh66.club" class="uri">http://www.zh66.club</a>期待您的光临哦！我是皮皮猪，感谢各位光临，能为您排忧解难小站深感荣幸！祝您生活愉快！</h3>
+</blockquote>
+<h2 id="创建dom代码">1. 创建DOM代码</h2>
+<p>本例的HTML代码如下：</p>
+<pre><code><code>&lt;div class=&quot;calendar&quot;&gt;
+  &lt;div class=&quot;title&quot;&gt;
+    &lt;h1 class=&quot;green&quot; id=&quot;calendar-title&quot;&gt;Month&lt;/h1&gt;
+    &lt;h2 class=&quot;green small&quot; id=&quot;calendar-year&quot;&gt;Year&lt;/h2&gt;
+    &lt;a href=&quot;&quot; id=&quot;prev&quot;&gt;Prev Month&lt;/a&gt;
+    &lt;a href=&quot;&quot; id=&quot;next&quot;&gt;Next Month&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div class=&quot;body&quot;&gt;
+    &lt;div class=&quot;lightgrey body-list&quot;&gt;
+      &lt;ul&gt;
+        &lt;li&gt;MON&lt;/li&gt;
+        &lt;li&gt;TUE&lt;/li&gt;
+        &lt;li&gt;WED&lt;/li&gt;
+        &lt;li&gt;THU&lt;/li&gt;
+        &lt;li&gt;FRI&lt;/li&gt;
+        &lt;li&gt;SAT&lt;/li&gt;
+        &lt;li&gt;SUN&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;darkgrey body-list&quot;&gt;
+      &lt;ul id=&quot;days&quot;&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+<p>由以上代码可见，日历的最外层是一个类名为calendar的div元素，其内部包含了两大部分，分别是日历顶部的标题区域，其类名为title，以及其下方的日期区域，其类名为body。</p>
+<p>在title中包含了当前所选日期的月份、年份，其id分别为calendar-title和calendar-year，此外该元素还包括了prev和next两个按钮，分别用于切换选择上一月和下一月。</p>
+<p>在body中首先包含了一个周一到周日的英文表头，它们放在一个ul元素中。在表头之后是另一个div元素，用于显示日历主体。其中，日历所选月份的每一天都将显示在该元素内部的days列表中。</p>
+<h2 id="css样式">2. CSS样式</h2>
+<p>本例中大部分的基础CSS样式省略介绍，在此仅介绍其中的body-list类。该类用于设置日历表头和日期数据的栅格显示。我们将整个ul元素的宽度设置为100%，并将其除以7，就可以得到每一个li元素的宽度，即14.28%，将这些元素左浮动显示，就可以得到日期的7列显示，样式代码如下：</p>
+<pre class="css"><code>.calendar{
+    width:450px;
+    height:350px;
+    background:#fff;
+    box-shadow:0px 1px 1px rgba(0,0,0,0.1);
+}
+.body-list ul{
+    width:100%;
+    font-family:arial;
+    font-weight:bold;
+    font-size:14px;
+}
+.body-list ul li{
+    width:14.28%;
+    height:36px;
+    line-height:36px;
+    list-style-type:none;
+    display:block;
+    box-sizing:border-box;
+    float:left;
+    text-align:center;
+}</code></pre>
+<p>此外，我们为今天、今天之前及今天之后的日期分别创建了不同的类。其中，用浅灰色来显示过去的日期，深灰色来显示将来的日期，日期当天则使用浅绿色背景、绿色文字加以显示，样式代码如下：</p>
+<pre class="css"><code>.lightgrey{
+    color:#a8a8a8; /*浅灰色*/
+}
+.darkgrey{
+    color:#565656; /*深灰色*/
+}
+.green{
+    color:#6ac13c; /*绿色*/
+}
+.greenbox{
+    border:1px solid #6ac13c;
+    background:#e9f8df; /*浅绿色背景*/
+}</code></pre>
+<p>日历组件的初始显示效果如下图所示。</p>
+<p><img src="./images/HTML+JavaScript自己动手做日历0.png" /></p>
+<h2 id="javascript生成日历">3. JavaScript生成日历</h2>
+<p>接着使用JavaScript来动态生成日历信息。首先，我们要做一些前期的准备工作。由于闰年和非闰年的二月天数是不一样的，在此我们为这两种年份分别创建数组，以便于获取每个月的天数，同时为每个月份的英文名创建相应的数组变量，代码如下：</p>
+<pre class="js"><code>var month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31];
+var month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
+var month_name = [&quot;January&quot;,&quot;Febrary&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;,&quot;Auguest&quot;,&quot;September&quot;,&quot;October&quot;,&quot;November&quot;,&quot;December&quot;];</code></pre>
+<p>然后，为页面中的各种元素创建变量，以便于后续的引用，代码如下：</p>
+<pre class="js"><code>var holder = document.getElementById(&quot;days&quot;);
+var prev = document.getElementById(&quot;prev&quot;);
+var next = document.getElementById(&quot;next&quot;);
+var ctitle = document.getElementById(&quot;calendar-title&quot;);
+var cyear = document.getElementById(&quot;calendar-year&quot;);</code></pre>
+<p>创建一个Date对象来获取当前的日期时间，并通过getFullYear()方法来获取当前年份，getMonth()方法来获取月份，getDate()方法来获取当前日期。代码如下：</p>
+<pre class="js"><code>var my_date = new Date();
+var my_year = my_date.getFullYear();
+var my_month = my_date.getMonth();
+var my_day = my_date.getDate();</code></pre>
+<p>我们要实现日历的排布，最关键的问题是要知道某一月第一天究竟是星期几，然后才可以根据当月的天数来依次排列其后的日期。在此，专门为该功能创建一个函数，代码如下：</p>
+<pre class="js"><code>//获取某年某月第一天是星期几
+function dayStart(month, year) {
+    var tmpDate = new Date(year, month, 1);
+    return (tmpDate.getDay());
+}</code></pre>
+<p>此外，我们也创建一个相应的函数来获取某月的总天数，代码如下：</p>
+<pre class="js"><code>//计算某年是不是闰年，通过求年份除以4的余数即可
+function daysMonth(month, year) {
+    var tmp = year % 4;
+    if (tmp == 0) {
+        return (month_olympic[month]);
+    } else {
+        return (month_normal[month]);
+    }
+}</code></pre>
+<p>然后，创建一个refreshDate函数来生成月份显示，代码如下：</p>
+<pre class="js"><code>function refreshDate(){
+    var str = &quot;&quot;;
+    var totalDay = daysMonth(my_month, my_year); //获取该月总天数
+    var firstDay = dayStart(my_month, my_year); //获取该月第一天是星期几
+    var myclass;
+    for(var i=1; i&lt;firstDay; i++){ 
+        str += &quot;&lt;li&gt;&lt;/li&gt;&quot;; //为起始日之前的日期创建空白节点
+    }
+    for(var i=1; i&lt;=totalDay; i++){
+        if((i&lt;my_day &amp;&amp; my_year==my_date.getFullYear() &amp;&amp; my_month==my_date.getMonth()) || my_year&lt;my_date.getFullYear() || ( my_year==my_date.getFullYear() &amp;&amp; my_month&lt;my_date.getMonth())){ 
+            myclass = &quot; class=&#39;lightgrey&#39;&quot;; //当该日期在今天之前时，以浅灰色字体显示
+        }else if (i==my_day &amp;&amp; my_year==my_date.getFullYear() &amp;&amp; my_month==my_date.getMonth()){
+            myclass = &quot; class=&#39;green greenbox&#39;&quot;; //当天日期以绿色背景突出显示
+        }else{
+            myclass = &quot; class=&#39;darkgrey&#39;&quot;; //当该日期在今天之后时，以深灰字体显示
+        }
+        str += &quot;&lt;li&quot;+myclass+&quot;&gt;&quot;+i+&quot;&lt;/li&gt;&quot;; //创建日期节点
+    }
+    holder.innerHTML = str; //设置日期显示
+    ctitle.innerHTML = month_name[my_month]; //设置英文月份显示
+    cyear.innerHTML = my_year; //设置年份显示
+}
+refreshDate(); //执行该函数</code></pre>
+<p>测试页面，日历显示效果如下图所示。</p>
+<p><img src="./images/HTML+JavaScript自己动手做日历1.png" /></p>
+<h2 id="添加交互动作">4. 添加交互动作</h2>
+<p>最后，我们为prev和next元素分别创建onclick事件函数，使得每点击一次prev，则将当前月份减去1，并调用refreshDate函数刷新日历显示。当月份数值小于0时，则使年份减去1，并使月份变为11，使日历显示为前一年的12月。next的功能与其恰好相反。代码如下：</p>
+<pre class="js"><code>prev.onclick = function(e){
+    e.preventDefault();
+    my_month--;
+    if(my_month&lt;0){
+        my_year--;
+        my_month = 11;
+    }
+    refreshDate();
+}
+next.onclick = function(e){
+    e.preventDefault();
+    my_month++;
+    if(my_month&gt;11){
+        my_year++;
+        my_month = 0;
+    }
+    refreshDate();
+}</code></pre>
+<p>测试页面，日历中前一月、后一月的切换效果如下图所示。</p>
+<p><img src="./images/HTML+JavaScript自己动手做日历2.png" /></p>
+<p><img src="./images/HTML+JavaScript自己动手做日历3.png" /></p>
+<p>下载源文件：<a href="https://link.zhihu.com/?target=https%3A//cloud.ecnu.edu.cn/p/DVF08RwQGRi6Aw">https://cloud.ecnu.edu.cn/p/DVF08RwQGRi6Aw</a></p>
+<p>最后，希望这篇文章对大家自定义开发页面中的日历组件有所帮助！</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

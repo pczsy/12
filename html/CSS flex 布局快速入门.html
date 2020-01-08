@@ -1,0 +1,323 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS flex 布局快速入门' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS flex 布局快速入门</center></div><div class='banquan'>原文出处:本文由博客园博主消逝的风i提供。<br/>
+原文连接:https://www.cnblogs.com/abc-x/p/11100711.html</div><br>
+    <p>以前已经学过flex了，一直没做笔记，现在做下笔记再回忆下。</p>
+<p>首先，flex布局的迷之属性们，如果一知半解，机械记忆的话，那不到半个月基本忘光光。先感受一下这12个flex布局属性，是不是很&ldquo;迷&rdquo;人。</p>
+<p>父容器属性</p>
+<ul>
+<li>flex-flow</li>
+<li>flex-direction</li>
+<li>flex-wrap</li>
+<li>justify-content</li>
+<li>align-items</li>
+<li>align-content</li>
+</ul>
+<p>子元素属性</p>
+<ul>
+<li>order</li>
+<li>flex-grow</li>
+<li>flex-shrink</li>
+<li>flex-basis</li>
+<li>flex</li>
+<li>align-self</li>
+</ul>
+<p>而目前很多flex教程主要以列举属性为主，缺乏对比和理解性脉络。</p>
+<p>因此，下面会通过我梳理的一个脉络去理解flex布局，包括不同属性的异同以及一些容易造成误解的细节点，彻底弄懂flex布局。</p>
+<h2 id="一flex弹性盒模型">一、flex弹性盒模型</h2>
+<p>对于某个元素只要声明了&nbsp;<span class="cnblogs_code"><span style="color: #800000;">display: flex;</span></span>&nbsp;，那么这个元素就成为了弹性容器，具有flex弹性布局的特性。</p>
+<p><img src="./images/CSS flex 布局快速入门0.png" alt="" width="700" /></p>
+<ol>
+<li>每个弹性容器都有两根轴：<strong>主轴和交叉轴</strong>，两轴之间成90度关系。注意：<strong>水平的不一定就是主轴。</strong></li>
+<li>每根轴都有<strong>起点和终点</strong>，这对于元素的对齐非常重要。</li>
+<li>弹性容器中的所有子元素称为&lt;弹性元素&gt;，<strong>弹性元素永远沿主轴排列</strong>。</li>
+<li>弹性元素也可以通过&nbsp;<span class="cnblogs_code"><span style="color: #800000;">display:flex</span></span>&nbsp;设置为另一个弹性容器，形成嵌套关系。因此<strong>一个元素既可以是弹性容器也可以是弹性元素</strong>。</li>
+</ol>
+<p>弹性容器的两根轴非常重要，所有属性都是作用于轴的。下面从轴入手，将所有flex布局属性串起来理解。</p>
+<h2 id="二主轴">二、主轴</h2>
+<p>flex布局是一种<strong>一维布局</strong>模型，一次只能处理一个维度（一行或者一列）上的元素布局，作为对比的是二维布局<a title="CSS Grid 布局完全指南(图解 Grid 详细教程)" href="https://www.cnblogs.com/abc-x/p/10258695.html" target="_blank">CSS Grid布局</a>，可以同时处理行和列上的布局。</p>
+<p>也就是说，<strong>flex布局大部分的属性都是作用于主轴的，在交叉轴上很多时候只能被动地变化</strong>。</p>
+<h3 id="主轴的方向">1. 主轴的方向</h3>
+<p>我们可以在弹性容器上通过&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-direction</span></span>&nbsp;修改主轴的方向。如果主轴方向修改了，那么：</p>
+<ol>
+<li>交叉轴就会相应地旋转90度。</li>
+<li>弹性元素的排列方式也会发生改变，因为<strong>弹性元素永远沿主轴排列</strong>。</li>
+</ol>
+<p><img src="./images/CSS flex 布局快速入门1.png" alt="" width="700" /></p>
+<p>flex-direction:row</p>
+<p><img src="./images/CSS flex 布局快速入门2.png" alt="" width="700" /></p>
+<p>flex-direction:column</p>
+<p><img src="./images/CSS flex 布局快速入门3.png" alt="" width="700" /></p>
+<p>flex-direction:row-reverse</p>
+<p><img src="./images/CSS flex 布局快速入门4.png" alt="" width="700" /></p>
+<p>flex-direction:column-reverse</p>
+<h3 id="沿主轴的排列处理">2. 沿主轴的排列处理</h3>
+<p>弹性元素永远沿主轴排列，那么如果主轴排不下，该如何处理？</p>
+<p><img src="./images/CSS flex 布局快速入门5.png" alt="" width="700" /></p>
+<p>通过设置&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-wrap: nowrap | wrap | wrap-reverse</span></span>&nbsp;可使得主轴上的元素不折行、折行、反向折行。</p>
+<p>默认是&nbsp;<span class="cnblogs_code"><span style="color: #800000;">nowrap</span></span>&nbsp;不折行，难道任由元素直接溢出容器吗？当然不会，那么这里就涉及到元素的弹性伸缩应对，下面会讲到。</p>
+<p>&nbsp;<span class="cnblogs_code"><span style="color: #800000;">wrap</span></span>&nbsp;折行，顾名思义就是另起一行，那么折行之后行与行之间的间距（对齐）怎样调整？这里又涉及到交叉轴上的多行对齐。</p>
+<p>&nbsp;<span class="cnblogs_code"><span style="color: #800000;">wrap-reverse</span></span>&nbsp;反向折行，是从容器底部开始的折行，但每行元素之间的排列仍保留正向。</p>
+<p><img src="./images/CSS flex 布局快速入门6.png" alt="" width="700" /></p>
+<h3 id="一个复合属性">3. 一个复合属性</h3>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">flex-flow = flex-drection + flex-wrap</span></pre>
+</div>
+<pre><code><code><span class="hljs-attr"><br /></span></code>&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-flow</span></span>&nbsp;相当于规定了flex布局的&ldquo;工作流(flow)&rdquo;<br /><br /></pre>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">flex-flow: row nowrap;</span></pre>
+</div>
+<h2 id="三元素如何弹性伸缩应对">三、元素如何弹性伸缩应对</h2>
+<p>当&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-wrap: nowrap;</span></span>&nbsp;不折行时，容器宽度有剩余/不够分，弹性元素们该怎么&ldquo;弹性&rdquo;地伸缩应对？</p>
+<p>这里针对上面两种场景，引入两个属性(需应用在弹性元素上)</p>
+<ol>
+<li>&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-shrink</span></span>&nbsp;：缩小比例（容器宽度&lt;元素总宽度时如何收缩）</li>
+<li>&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;：放大比例（容器宽度&gt;元素总宽度时如何伸展）</li>
+</ol>
+<h3 id="flex-shrink-缩小比例">1. flex-shrink: 缩小比例</h3>
+<p>来看下以下场景，弹性容器&nbsp;<span class="cnblogs_code"><span style="color: #800000;">#container</span></span>&nbsp;宽度是200px，一共有三个弹性元素，宽度分别是50px、100px、120px。在不折行的情况下，此时容器宽度是明显不够分配的。</p>
+<p>实际上，&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-shrink</span></span>&nbsp;默认为1，也就是当不够分配时，元素都将等比例缩小，占满整个宽度，如下图。</p>
+<p><img src="./images/CSS flex 布局快速入门7.png" alt="" width="700" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">
+    display</span>:<span style="color: #0000ff;"> flex</span>;<span style="color: #ff0000;">
+    flex-wrap</span>:<span style="color: #0000ff;"> nowrap</span>;  
+}</pre>
+</div>
+<h4 id="元素收缩的计算方法">元素收缩的计算方法</h4>
+<p>真的是等比缩小(每个元素各减去70/3的宽度)吗？这里稍微深究一下它的收缩计算方法。</p>
+<ol>
+<li>弹性元素1：50px&rarr;37.03px</li>
+<li>弹性元素2：100px&rarr;74.08px</li>
+<li>弹性元素3：120px&rarr;88.89px</li>
+</ol>
+<p>先抛结论：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-shrink: 1</span></span>&nbsp;并非严格等比缩小，<strong>它还会考虑弹性元素本身的大小</strong>。</p>
+<ul>
+<li>容器剩余宽度：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">-70px</span></span>&nbsp;</li>
+<li>缩小因子的分母：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">1*50 + 1*100 + 1*120 = 270</span></span>&nbsp;&nbsp;(1为各元素flex-shrink的值)</li>
+<li>元素1的缩小因子：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">1*50/270</span></span>&nbsp;</li>
+<li>元素1的缩小宽度为缩小因子乘于容器剩余宽度：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">1*50/270 * (-70)</span></span>&nbsp;</li>
+<li>元素1最后则缩小为：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">50px + (1*50/270 *(-70)) = 37.03px</span></span>&nbsp;</li>
+</ul>
+<p>加入弹性元素本身大小作为计算方法的考虑因素，主要是为了避免将一些本身宽度较小的元素在收缩之后宽度变为0的情况出现。</p>
+<h3 id="flex-grow-放大比例">2. flex-grow: 放大比例</h3>
+<p>同样，弹性容器&nbsp;<span class="cnblogs_code"><span style="color: #800000;">#container</span></span>&nbsp;宽度是200px，但此时只有两个弹性元素，宽度分别是50px、100px。此时容器宽度是有剩余的。</p>
+<p>那么剩余的宽度该怎样分配？而&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;则决定了要不要分配以及各个分配多少。</p>
+<p>（1）在flex布局中，容器剩余宽度默认是不进行分配的，也就是所有弹性元素的&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;都为0。</p>
+<p><img src="./images/CSS flex 布局快速入门8.png" alt="" width="700" /></p>
+<p>（2）通过指定&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;为大于零的值，实现容器剩余宽度的分配比例设置。</p>
+<p><img src="./images/CSS flex 布局快速入门9.png" alt="" width="700" /></p>
+<h4 id="元素放大的计算方法">元素放大的计算方法</h4>
+<p>放大的计算方法并没有与缩小一样，将元素大小纳入考虑。</p>
+<p>仅仅按&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;声明的份数算出每个需分配多少，叠加到原来的尺寸上。</p>
+<ul>
+<li>容器剩余宽度：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">50px</span></span>&nbsp;</li>
+<li>分成每份：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">50px / (3+2) = 10px</span></span>&nbsp;</li>
+<li>元素1放大为：&nbsp;<span class="cnblogs_code"><span style="color: #800000;">50px + 3 * 10 = 80px</span></span>&nbsp;</li>
+</ul>
+<h4 id="无多余宽度时flex-grow无效">无多余宽度时，flex-grow无效</h4>
+<p>下图中，弹性容器的宽度正好等于元素宽度总和，无多余宽度，此时无论&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;是什么值都不会生效。</p>
+<p><img src="./images/CSS flex 布局快速入门10.png" alt="" width="700" /></p>
+<p>同理，对于&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-shrink</span></span>&nbsp;，在容器宽度有剩余时也是不会生效的。因此这两个属性是针对两种不同场景的互斥属性。</p>
+<h2 id="四弹性处理与刚性尺寸">四、弹性处理与刚性尺寸</h2>
+<p>在进行弹性处理之余，其实有些场景我们更希望元素尺寸固定，不需要进行弹性调整。设置元素尺寸除了width和height以外，flex还提供了一个&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-basis</span></span>&nbsp;属性。</p>
+<p><code>flex-basis</code>设置的是元素在主轴上的初始尺寸，所谓的初始尺寸就是元素在&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-grow</span></span>&nbsp;和&nbsp;<span class="cnblogs_code"><span style="color: #800000;">flex-shrink</span></span>&nbsp;生效前的尺寸。</p>
+<h3 id="与widthheight的区别">1. 与width/height的区别</h3>
+<p>首先以width为例进行比较。看下下面的例子。&nbsp;<span class="cnblogs_code"><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">display</span>:<span style="color: #0000ff;">flex</span>;}</span>&nbsp;。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">&lt;div id="container"&gt;
+  &lt;div&gt;11111&lt;/div&gt;
+  &lt;div&gt;22222&lt;/div&gt;
+&lt;/div&gt;</span></pre>
+</div>
+<h4 id="两者都为0">(1) 两者都为0</h4>
+<p><img src="./images/CSS flex 布局快速入门11.png" alt="" width="700" /></p>
+<ul>
+<li>width: 0 &mdash;&mdash; 完全没显示</li>
+<li>flex-basis: 0 &mdash;&mdash; 根据内容撑开宽度</li>
+</ul>
+<h4 id="两者非0">(2) 两者非0</h4>
+<p><img src="./images/CSS flex 布局快速入门12.png" alt="" width="700" /></p>
+<ul>
+<li>width: 非0;</li>
+<li>flex-basis: 非0</li>
+</ul>
+<p>&mdash;&mdash; 数值相同时两者等效</p>
+<p>&mdash;&mdash; 同时设置，flex-basis优先级高</p>
+<h4 id="flex-basis为auto">(3) flex-basis为auto</h4>
+<p><img src="./images/CSS flex 布局快速入门13.png" alt="" width="700" /></p>
+<p>flex-basis为auto时，如设置了width则元素尺寸由width决定；没有设置则由内容决定</p>
+<h4 id="flex-basis-主轴上的尺寸-width">(4) flex-basis == 主轴上的尺寸 != width</h4>
+<p><img src="./images/CSS flex 布局快速入门14.png" alt="" width="700" /></p>
+<ul>
+<li>将主轴方向改为：上&rarr;下</li>
+<li>此时主轴上的尺寸是元素的height</li>
+<li>flex-basis == height</li>
+</ul>
+<h3 id="常用的复合属性-flex">2. 常用的复合属性 flex</h3>
+<p>这个属性应该是最容易迷糊的一个，下面揭开它的真面目。</p>
+<p>flex = flex-grow + flex-shrink + flex-basis</p>
+<p>复合属性，前面说的三个属性的简写。</p>
+<p><img src="./images/CSS flex 布局快速入门15.png" alt="" width="700" /></p>
+<h4 id="一些简写">一些简写</h4>
+<ul>
+<li><code>flex: 1</code>&nbsp;=&nbsp;<code>flex: 1 1 0%</code></li>
+<li><code>flex: 2</code>&nbsp;=&nbsp;<code>flex: 2 1 0%</code></li>
+<li><code>flex: auto</code>&nbsp;=&nbsp;<code>flex: 1 1 auto;</code></li>
+<li><code>flex: none</code>&nbsp;=&nbsp;<code>flex: 0 0 auto;</code>&nbsp;// 常用于固定尺寸 不伸缩</li>
+</ul>
+<h4 id="flex1-和-flexauto-的区别">flex:1 和 flex:auto 的区别</h4>
+<p>其实可以归结于<code>flex-basis:0</code>和<code>flex-basis:auto</code>的区别。</p>
+<p><code>flex-basis</code>是指定初始尺寸，当设置为0时（绝对弹性元素），此时相当于告诉<code>flex-grow</code>和<code>flex-shrink</code>在伸缩的时候不需要考虑我的尺寸；相反当设置为<code>auto</code>时（相对弹性元素），此时则需要在伸缩时将元素尺寸纳入考虑。</p>
+<p>因此从下图（转自W3C）可以看到绝对弹性元素如果<code>flex-grow</code>值是一样的话，那么他们的尺寸一定是一样的。</p>
+<p><img src="./images/CSS flex 布局快速入门16.png" alt="" width="700" /></p>
+<h2 id="五容器内如何对齐">五、容器内如何对齐</h2>
+<p>前面讲完了元素大小关系之后，下面是另外一个重要议题&mdash;&mdash;<strong>如何对齐</strong>。可以发现上面的所有属性都是围绕主轴进行设置的，但在对齐方面则不得不加入作用于交叉轴上。需要注意的是这些对齐属性都是作用于容器上。</p>
+<h3 id="主轴上的对齐方式">1. 主轴上的对齐方式</h3>
+<p><strong>justify-content</strong></p>
+<p><strong><img src="./images/CSS flex 布局快速入门17.png" alt="" width="700" /></strong></p>
+<p>&nbsp;</p>
+<h3 id="交叉轴上的对齐方式">2. 交叉轴上的对齐方式</h3>
+<p>主轴上比较好理解，重点是交叉轴上。因为交叉轴上存在单行和多行两种情况。</p>
+<h4 id="交叉轴上的单行对齐">交叉轴上的单行对齐</h4>
+<p><strong>align-items</strong></p>
+<p>默认值是<code>stretch</code>，当元素没有设置具体尺寸时会将容器在交叉轴方向撑满。</p>
+<p>当<code>align-items</code>不为<code>stretch</code>时，此时除了对齐方式会改变之外，元素在交叉轴方向上的尺寸将由内容或自身尺寸（宽高）决定。</p>
+<p><img src="./images/CSS flex 布局快速入门18.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门19.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门20.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门21.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门22.png" alt="" width="700" /></p>
+<p>注意，交叉轴不一定是从上往下，这点再次强调也不为过。</p>
+<p><img src="./images/CSS flex 布局快速入门23.png" alt="" width="700" /></p>
+<h4 id="交叉轴上的多行对齐">交叉轴上的多行对齐</h4>
+<p>还记得可以通过<code>flex-wrap: wrap</code>使得元素在一行放不下时进行换行。在这种场景下就会在交叉轴上出现多行，多行情况下，flex布局提供了<code>align-content</code>属性设置对齐。</p>
+<p><code>align-content</code>与<code>align-items</code>比较类似，同时也比较容易迷糊。下面会将两者对比着来看它们的异同。</p>
+<p>首先明确一点：<code>align-content</code>只对多行元素有效，<strong>会以多行作为整体进行对齐</strong>，容器必须开启换行。</p>
+<pre class="js"><code class="hljs javascript">align-content: stretch | flex-start | flex-end | center | space-between | space-around
+
+align-items: stretch | flex-start | flex-end | center | baseline</code></pre>
+<p>在属性值上，<code>align-content</code>比<code>align-items</code>多了两个值：<code>space-between</code>和<code>space-around</code>。</p>
+<h4 id="align-content与align-items异同对比">align-content与align-items异同对比</h4>
+<p>与<code>align-items</code>一样，<code>align-content:</code>默认值也是<code>stretch</code>。两者同时都为<code>stretch</code>时，毫无悬念所有元素都是撑满交叉轴。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">
+
+align-items</span>:<span style="color: #0000ff;"> stretch</span>;<span style="color: #ff0000;"> align-content</span>:<span style="color: #0000ff;"> stretch</span>;
+
+}</pre>
+</div>
+<p><img src="./images/CSS flex 布局快速入门24.png" alt="" /></p>
+<p>当我们将align-items改为<code>flex-start</code>或者给弹性元素设置一个具体高度，此时效果是行与行之间形成了间距。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">
+  align-items</span>:<span style="color: #0000ff;"> flex-start</span>;<span style="color: #ff0000;">
+  align-content</span>:<span style="color: #0000ff;"> stretch</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">或者</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+#container </span>{<span style="color: #ff0000;">
+  align-content</span>:<span style="color: #0000ff;"> stretch</span>;
+}<span style="color: #800000;">
+#container &gt; div </span>{<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 30px</span>;
+}</pre>
+</div>
+<p>为什么？因为<code>align-content</code>会以整行为单位，此时会将整行进行拉伸占满交叉轴；而<code>align-items</code>设置了高度或者顶对齐，在不能用高度进行拉伸的情况下，选择了用间距。</p>
+<p><img src="./images/CSS flex 布局快速入门25.png" alt="" /></p>
+<p>尝试把<code>align-content</code>设置为顶对齐，此时以行为单位，整体高度通过内容撑开。</p>
+<p>而<code>align-items</code>仅仅管一行，因此在只有第一个元素设置了高度的情况下，第一行的其他元素遵循<code>align-items: stretch</code>也被拉伸到了50px。而第二行则保持高度不变。</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">
+  align-items</span>:<span style="color: #0000ff;"> stretch</span>;<span style="color: #ff0000;">
+  align-content</span>:<span style="color: #0000ff;"> flex-start</span>;
+}<span style="color: #800000;">
+#container &gt; div:first-child </span>{<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 50px</span>;
+}</pre>
+</div>
+<p><img src="./images/CSS flex 布局快速入门26.png" alt="" /></p>
+<p>两者的区别还是不明显？来看下面这个例子。</p>
+<p>这里仅对第二个元素的高度进行设置，其他元素高度则仍保持内容撑开。</p>
+<p><img src="./images/CSS flex 布局快速入门27.png" alt="" width="700" /></p>
+<p>以第一个图为例，会发现<code>align-content</code>会将所有行进行顶对齐，然后第一行由于第二个元素设置了较高的高度，因此体现出了底对齐。</p>
+<p>两者差异总结：</p>
+<ul>
+<li>两者&ldquo;作用域&rdquo;不同</li>
+<li>align-content管全局(所有行视为整体)</li>
+<li>align-items管单行</li>
+</ul>
+<h4 id="能否更灵活地设置交叉轴对齐">能否更灵活地设置交叉轴对齐</h4>
+<p>除了在容器上设置交叉轴对齐，还可以通过<code>align-self</code>单独对某个元素设置交叉轴对齐方式。</p>
+<ol>
+<li>值与<code>align-items</code>相同</li>
+<li>可覆盖容器的<code>align-items</code>属性</li>
+<li>默认值为<code>auto</code>，表示继承父元素的<code>align-items</code>属性</li>
+</ol>
+<p><img src="./images/CSS flex 布局快速入门28.png" alt="" width="700" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container </span>{<span style="color: #ff0000;">
+  display</span>:<span style="color: #0000ff;"> flex</span>;<span style="color: #ff0000;">
+  align-items</span>:<span style="color: #0000ff;"> flex-start</span>;
+}<span style="color: #800000;">
+
+#container &gt; div:first-child </span>{<span style="color: #ff0000;">
+  align-self</span>:<span style="color: #0000ff;"> stretch</span>;
+}<span style="color: #800000;">
+
+#container &gt; div:nth-child(3) </span>{<span style="color: #ff0000;">
+  align-self</span>:<span style="color: #0000ff;"> center</span>;
+}<span style="color: #800000;">
+
+#container &gt; div:nth-child(4) </span>{<span style="color: #ff0000;">
+  align-self</span>:<span style="color: #0000ff;"> flex-end</span>;
+}</pre>
+</div>
+<h2 id="六其他">六、其他</h2>
+<h3 id="order更优雅地调整元素顺序">order：更优雅地调整元素顺序</h3>
+<p><img src="./images/CSS flex 布局快速入门29.png" alt="" width="700" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">#container &gt; div:first-child </span>{<span style="color: #ff0000;">
+  order</span>:<span style="color: #0000ff;"> 2</span>;
+}<span style="color: #800000;">
+#container &gt; div:nth-child(2) </span>{<span style="color: #ff0000;">
+  order</span>:<span style="color: #0000ff;"> 4</span>;
+}<span style="color: #800000;">
+#container &gt; div:nth-child(3) </span>{<span style="color: #ff0000;">
+  order</span>:<span style="color: #0000ff;"> 1</span>;
+}<span style="color: #800000;">
+#container &gt; div:nth-child(4) </span>{<span style="color: #ff0000;">
+  order</span>:<span style="color: #0000ff;"> 3</span>;
+}</pre>
+</div>
+<p>order：可设置元素之间的排列顺序</p>
+<ol>
+<li>数值越小，越靠前，默认为0</li>
+<li>值相同时，以dom中元素排列为准</li>
+</ol>
+<h2 id="七总结">七、总结</h2>
+<p><img src="./images/CSS flex 布局快速入门30.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门31.png" alt="" width="700" /></p>
+<p><img src="./images/CSS flex 布局快速入门32.png" alt="" width="700" /></p>
+<pre class="js"></pre>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,186 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修vue中添加与删除，关键字搜索' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>vue中添加与删除，关键字搜索</center></div><div class='banquan'>原文出处:本文由博客园博主YH丶浩提供。<br/>
+原文连接:https://www.cnblogs.com/520yh/p/11659993.html</div><br>
+    <div class="cnblogs_code">
+<pre><code><span style="color: #008080;">  1</span> <span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  2</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  3</span> 
+<span style="color: #008080;">  4</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">name</span><span style="color: #0000ff;">="viewport"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="width=device-width, initial-scale=1.0"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  7</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">http-equiv</span><span style="color: #0000ff;">="X-UA-Compatible"</span><span style="color: #ff0000;"> content</span><span style="color: #0000ff;">="ie=edge"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  8</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">  9</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 10</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 11</span> 
+<span style="color: #008080;"> 12</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 13</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 14</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 15</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Id:
+</span><span style="color: #008080;"> 16</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> v-model</span><span style="color: #0000ff;">='id'</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 17</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 18</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">label </span><span style="color: #ff0000;">for</span><span style="color: #0000ff;">=""</span><span style="color: #0000ff;">&gt;</span><span style="color: #000000;">Name:
+</span><span style="color: #008080;"> 19</span>                 <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> v-model</span><span style="color: #0000ff;">='name' </span><span style="color: #ff0000;">@keyup.enter</span><span style="color: #0000ff;">='add'</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 20</span>             <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">label</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 21</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="button"</span><span style="color: #ff0000;"> value</span><span style="color: #0000ff;">="添加"</span><span style="color: #ff0000;"> @click</span><span style="color: #0000ff;">='addBtnFlag </span><span style="color: #ff0000;">&amp;&amp; add()'</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 22</span> <span style="color: #000000;">            搜索：
+</span><span style="color: #008080;"> 23</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="text"</span><span style="color: #ff0000;"> v-model</span><span style="color: #0000ff;">='keywords' </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="search"</span><span style="color: #ff0000;"> v-focus v-color</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 24</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 25</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 注意： v-for 循环的时候 ， key 属性只能使用 number获取string </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 26</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 注意：key 在使用的时候，必须使 v-bind 属性绑定的形式 指定 key 的值 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 27</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">在组件中，使用v-for循环的时候，或者在一些特殊的情况中，如果 v-for 有问题 ，必须 在使用 v-for 的同时 ，指定 唯一的字符串/数字 类型 :key  值  </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 28</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> v-for  中的数据，都是直接从 data 上的 list 中直接渲染过来的 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 29</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 自定义一个  search  方法，同时 ，把所有的关键词，通过传参的形式，传递给了 search 方法 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 30</span>         <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 在 search  方法内部，通过 执行 for 循环，把所有符合  搜索关键字的数据，保存到 一个新数组中 返回 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 31</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">v-for</span><span style="color: #0000ff;">='item </span><span style="color: #ff0000;">in search(keywords)' :key</span><span style="color: #0000ff;">="item.id"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 32</span>             <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">type</span><span style="color: #0000ff;">="checkbox"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 33</span> <span style="color: #000000;">            {{item.id}}---- {{item.name}}
+</span><span style="color: #008080;"> 34</span>             <span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> &lt;a @click='shift(index)'&gt;删除&lt;/a&gt; </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #008080;"> 35</span>             -----------------<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">a </span><span style="color: #ff0000;">@click.prevent</span><span style="color: #0000ff;">="del(item.id)"</span><span style="color: #0000ff;">&gt;</span>删除<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">a</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 36</span>         <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 37</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 38</span> 
+<span style="color: #008080;"> 39</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;"> 40</span>         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">使用 Vue.directive() 定义全局的指令 v-focus</span>
+<span style="color: #008080;"> 41</span>         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">其中：参数1：指令的名称，注意，在定义的时候，指令的名称前面，不需要加 v- 前缀，</span>
+<span style="color: #008080;"> 42</span>         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">但是：再调用的时候，必须 在指令名称前面 加上 v-  前缀来进行调用</span>
+<span style="color: #008080;"> 43</span>         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">参数2：是一个对象，这个对象身上，有一些指令相关的函数可以在特定的阶段，执行相关的操作</span>
+<span style="color: #008080;"> 44</span> <span style="background-color: #f5f5f5; color: #000000;">        Vue.directive(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">focus</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">, {
+</span><span style="color: #008080;"> 45</span> <span style="background-color: #f5f5f5; color: #000000;">            bind: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (el) {
+</span><span style="color: #008080;"> 46</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">每当指令绑定到元素上的时候，会立即执行这个 bind 函数，只执行一次</span>
+<span style="color: #008080;"> 47</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">注意：在每个 函数中，第一个参数，永远是 el  ， 表示 被绑定了指令的那个元素，这个 el 参数，是一个原生的的JS对象</span>
+<span style="color: #008080;"> 48</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">在元素 刚绑定了指令的时候，还没有 插入到 DOM 中去，这时候，调用focus 方法没有作用</span>
+<span style="color: #008080;"> 49</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">因为，一个元素，只有插入DOM之后，才能获取焦点</span>
+<span style="color: #008080;"> 50</span> <span style="background-color: #f5f5f5; color: #000000;">                el.focus()
+</span><span style="color: #008080;"> 51</span> <span style="background-color: #f5f5f5; color: #000000;">            },
+</span><span style="color: #008080;"> 52</span> <span style="background-color: #f5f5f5; color: #000000;">            inserted: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (el) {
+</span><span style="color: #008080;"> 53</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">inserted 表示元素 插入到DOM中的时候，会执行 inserted 函数【触发一次】</span>
+<span style="color: #008080;"> 54</span> <span style="background-color: #f5f5f5; color: #000000;">                el.focus()
+</span><span style="color: #008080;"> 55</span> <span style="background-color: #f5f5f5; color: #000000;">            },
+</span><span style="color: #008080;"> 56</span> <span style="background-color: #f5f5f5; color: #000000;">            updated: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (el) {
+</span><span style="color: #008080;"> 57</span>                 <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">当VNode更新的时候 会执行updated  可能会触发多次</span>
+<span style="color: #008080;"> 58</span> <span style="background-color: #f5f5f5; color: #000000;">            },
+</span><span style="color: #008080;"> 59</span> <span style="background-color: #f5f5f5; color: #000000;">        })
+</span><span style="color: #008080;"> 60</span> 
+<span style="color: #008080;"> 61</span> <span style="background-color: #f5f5f5; color: #000000;">        Vue.directive(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">color</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,{
+</span><span style="color: #008080;"> 62</span> <span style="background-color: #f5f5f5; color: #000000;">            bind: </span><span style="background-color: #f5f5f5; color: #0000ff;">function</span><span style="background-color: #f5f5f5; color: #000000;"> (el) {
+</span><span style="color: #008080;"> 63</span> <span style="background-color: #f5f5f5; color: #000000;">                el.style.color </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">red</span><span style="background-color: #f5f5f5; color: #000000;">'</span>
+<span style="color: #008080;"> 64</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;"> 65</span> <span style="background-color: #f5f5f5; color: #000000;">        })
+</span><span style="color: #008080;"> 66</span> 
+<span style="color: #008080;"> 67</span> 
+<span style="color: #008080;"> 68</span> 
+<span style="color: #008080;"> 69</span>         <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> vm </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+</span><span style="color: #008080;"> 70</span> <span style="background-color: #f5f5f5; color: #000000;">            el: </span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;"> 71</span> <span style="background-color: #f5f5f5; color: #000000;">            data: {
+</span><span style="color: #008080;"> 72</span> <span style="background-color: #f5f5f5; color: #000000;">                id: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;"> 73</span> <span style="background-color: #f5f5f5; color: #000000;">                name: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;"> 74</span> <span style="background-color: #f5f5f5; color: #000000;">                keywords: </span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">,</span><span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">关键词</span>
+<span style="color: #008080;"> 75</span> <span style="background-color: #f5f5f5; color: #000000;">                addBtnFlag:</span><span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">,
+</span><span style="color: #008080;"> 76</span> <span style="background-color: #f5f5f5; color: #000000;">                list: [
+</span><span style="color: #008080;"> 77</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">奥迪</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> },
+</span><span style="color: #008080;"> 78</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">2</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">宝马</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> },
+</span><span style="color: #008080;"> 79</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">3</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">奔驰</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> },
+</span><span style="color: #008080;"> 80</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">4</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">玛莎拉蒂</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> },
+</span><span style="color: #008080;"> 81</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">5</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">保时捷</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> },
+</span><span style="color: #008080;"> 82</span> <span style="background-color: #f5f5f5; color: #000000;">                    { id: </span><span style="background-color: #f5f5f5; color: #000000;">6</span><span style="background-color: #f5f5f5; color: #000000;">, name: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">五菱宏光</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;"> }
+</span><span style="color: #008080;"> 83</span> <span style="background-color: #f5f5f5; color: #000000;">                ]
+</span><span style="color: #008080;"> 84</span>               
+<span style="color: #008080;"> 85</span> <span style="background-color: #f5f5f5; color: #000000;">            },
+</span><span style="color: #008080;"> 86</span> <span style="background-color: #f5f5f5; color: #000000;">            methods: {
+</span><span style="color: #008080;"> 87</span> <span style="background-color: #f5f5f5; color: #000000;">                add() {
+</span><span style="color: #008080;"> 88</span>                    
+<span style="color: #008080;"> 89</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> this.list.push({ id: this.id, name: this.name })</span>
+<span style="color: #008080;"> 90</span>                   
+<span style="color: #008080;"> 91</span>                     <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;">( </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.id </span><span style="background-color: #f5f5f5; color: #000000;">==</span> <span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;">){
+</span><span style="color: #008080;"> 92</span> 
+<span style="color: #008080;"> 93</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.addBtnFlag</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span>
+<span style="color: #008080;"> 94</span> 
+<span style="color: #008080;"> 95</span> <span style="background-color: #f5f5f5; color: #000000;">                    }</span><span style="background-color: #f5f5f5; color: #0000ff;">else</span><span style="background-color: #f5f5f5; color: #000000;">{
+</span><span style="color: #008080;"> 96</span> 
+<span style="color: #008080;"> 97</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> car </span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #000000;"> { id: </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.id, name: </span><span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.name }
+</span><span style="color: #008080;"> 98</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.push(car)
+</span><span style="color: #008080;"> 99</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.id </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.name </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #000000;">''</span>
+<span style="color: #008080;">100</span> <span style="background-color: #f5f5f5; color: #000000;">                    }
+</span><span style="color: #008080;">101</span>                 
+<span style="color: #008080;">102</span> <span style="background-color: #f5f5f5; color: #000000;">                },
+</span><span style="color: #008080;">103</span> <span style="background-color: #f5f5f5; color: #000000;">                del(id) {
+</span><span style="color: #008080;">104</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">根据ID删除</span>
+<span style="color: #008080;">105</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> this.list.some((item,i)=&gt;{</span>
+<span style="color: #008080;">106</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">     if(item.id == id){</span>
+<span style="color: #008080;">107</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">         this.list.splice(i,1)</span>
+<span style="color: #008080;">108</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">         return true;</span>
+<span style="color: #008080;">109</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">     }</span>
+<span style="color: #008080;">110</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> })</span>
+<span style="color: #008080;">111</span>                     <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> index </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.findIndex(item </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">112</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (item.id </span><span style="background-color: #f5f5f5; color: #000000;">==</span><span style="background-color: #f5f5f5; color: #000000;"> id) {
+</span><span style="color: #008080;">113</span>                             <span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #0000ff;">true</span><span style="background-color: #f5f5f5; color: #000000;">;
+</span><span style="color: #008080;">114</span> <span style="background-color: #f5f5f5; color: #000000;">                        }
+</span><span style="color: #008080;">115</span> <span style="background-color: #f5f5f5; color: #000000;">                    })
+</span><span style="color: #008080;">116</span>                     <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.splice(index, </span><span style="background-color: #f5f5f5; color: #000000;">1</span><span style="background-color: #f5f5f5; color: #000000;">)
+</span><span style="color: #008080;">117</span> <span style="background-color: #f5f5f5; color: #000000;">                },
+</span><span style="color: #008080;">118</span> <span style="background-color: #f5f5f5; color: #000000;">                search(keywords) {
+</span><span style="color: #008080;">119</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">根据关键字，进行数据的搜索</span>
+<span style="color: #008080;">120</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> var newList = []</span>
+<span style="color: #008080;">121</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> this.list.forEach(item =&gt;{</span>
+<span style="color: #008080;">122</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">     if(item.name.indexOf(keywords) != -1){</span>
+<span style="color: #008080;">123</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">         newList.push(item)</span>
+<span style="color: #008080;">124</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">     }</span>
+<span style="color: #008080;">125</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> }) </span>
+<span style="color: #008080;">126</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> return newList</span>
+<span style="color: #008080;">127</span> 
+<span style="color: #008080;">128</span> 
+<span style="color: #008080;">129</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">注意：forEach some  filter findIndex  这些都是属于数组的新方法，</span>
+<span style="color: #008080;">130</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">都会对数组中的每一项，进行遍历，执行相关的操作；</span>
+<span style="color: #008080;">131</span> 
+<span style="color: #008080;">132</span>                     <span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #0000ff;">this</span><span style="background-color: #f5f5f5; color: #000000;">.list.filter(item </span><span style="background-color: #f5f5f5; color: #000000;">=&gt;</span><span style="background-color: #f5f5f5; color: #000000;"> {
+</span><span style="color: #008080;">133</span> 
+<span style="color: #008080;">134</span>                         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">if(item.name.indexOf(keywords) != -1)</span>
+<span style="color: #008080;">135</span> 
+<span style="color: #008080;">136</span>                         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">注意：ES6中，为字符串提供了一个新的方法，叫做 string.prototype.includes('要包含的字符串')</span>
+<span style="color: #008080;">137</span> 
+<span style="color: #008080;">138</span>                         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">如果包含，则返回 true 否则返回false</span>
+<span style="color: #008080;">139</span> 
+<span style="color: #008080;">140</span>                         <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;">contain</span>
+<span style="color: #008080;">141</span> 
+<span style="color: #008080;">142</span>                         <span style="background-color: #f5f5f5; color: #0000ff;">if</span><span style="background-color: #f5f5f5; color: #000000;"> (item.name.includes(keywords)) {
+</span><span style="color: #008080;">143</span>                             <span style="background-color: #f5f5f5; color: #0000ff;">return</span> <span style="background-color: #f5f5f5; color: #0000ff;">true</span>
+<span style="color: #008080;">144</span> <span style="background-color: #f5f5f5; color: #000000;">                        }
+</span><span style="color: #008080;">145</span> 
+<span style="color: #008080;">146</span> <span style="background-color: #f5f5f5; color: #000000;">                    })
+</span><span style="color: #008080;">147</span>                     <span style="background-color: #f5f5f5; color: #008000;">//</span><span style="background-color: #f5f5f5; color: #008000;"> return newList</span>
+<span style="color: #008080;">148</span> 
+<span style="color: #008080;">149</span> <span style="background-color: #f5f5f5; color: #000000;">                }
+</span><span style="color: #008080;">150</span> 
+<span style="color: #008080;">151</span> <span style="background-color: #f5f5f5; color: #000000;">            }
+</span><span style="color: #008080;">152</span> <span style="background-color: #f5f5f5; color: #000000;">        })
+</span><span style="color: #008080;">153</span> 
+<span style="color: #008080;">154</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">155</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">156</span> 
+<span style="color: #008080;">157</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;<img src="./images/vue中添加与删除，关键字搜索0.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

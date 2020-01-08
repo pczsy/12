@@ -1,0 +1,387 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(十六) 指令篇 v-on指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(十六) 指令篇 v-on指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11121952.html</div><br>
+    <p>可以用 <code>v-on</code> 指令监听 DOM 事件，并在触发时运行一些 JavaScript 代码，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="show('click',$event)"</span><span style="color: #ff0000;"> @mouseenter</span><span style="color: #0000ff;">="show('mouseenter',$event)"</span><span style="color: #0000ff;">&gt;</span>测试<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> app </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            methods:{ show(type,ev){console.log(type)} }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>渲染结果为:</p>
+<p><img src="./images/Vue.js 源码分析(十六) 指令篇 v-on指令详解0.png" alt="" /></p>
+<p>我们给测试按钮添加了一个mouseenter和click事件，鼠标移上去式控制台输出:</p>
+<p><img src="./images/Vue.js 源码分析(十六) 指令篇 v-on指令详解1.png" alt="" /></p>
+<p>当点击时，输出为:</p>
+<p><img src="./images/Vue.js 源码分析(十六) 指令篇 v-on指令详解2.png" alt="" /></p>
+<p>&nbsp;Vue的事件绑定有很多种写法，例如:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>{{message}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span> 
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test1"</span><span style="color: #0000ff;">&gt;</span>Test1<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>                   　　　　<span style="color: #008000;">&lt;!--</span><span style="color: #008000;">事件可以对应一个方法</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="test2('test2',$event)"</span><span style="color: #0000ff;">&gt;</span>Test2<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>          <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">方法还可以传递参数，$event表示原始的DOM事件</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="message='test3'"</span><span style="color: #0000ff;">&gt;</span>Test3<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>             　 <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">也可以是一个表达式</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="function(){message='test4'}"</span><span style="color: #0000ff;">&gt;</span>Test4<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>    <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">也可以是一个函数</span><span style="color: #008000;">--&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">button </span><span style="color: #ff0000;">@click</span><span style="color: #0000ff;">="()=&gt;{message='test5'}"</span><span style="color: #0000ff;">&gt;</span>Test5<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">button</span><span style="color: #0000ff;">&gt;</span>          <span style="color: #008000;">&lt;!--</span><span style="color: #008000;">也可以是一个箭头函数</span><span style="color: #008000;">--&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>  
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+        <span style="background-color: #f5f5f5; color: #0000ff;">var</span><span style="background-color: #f5f5f5; color: #000000;"> App </span><span style="background-color: #f5f5f5; color: #000000;">=</span> <span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({
+            el:</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,
+            data(){
+                </span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> {message:</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">Hello Vue</span><span style="background-color: #f5f5f5; color: #000000;">"</span><span style="background-color: #f5f5f5; color: #000000;">}
+            },
+            methods:{
+                test1(){console.log(</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">test1</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">);},
+                test2(text,ev){console.log(text);console.log(ev.type)}
+            }
+        })
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>可以看到v-on对应事件可以很多种格式的，可以是<span style="color: #ff0000;">当前Vue实例的一个方法、一个表达式、一个函数，或者一个箭头函数</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;<strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>&nbsp;以上面的第一个例子为例,Vue将DOM解析成AST对象时的时候执行到a节点时会执行processElement()函数,然后会执行processAttrs()函数,该函数会遍历每个属性，然后用判断是否以:或v-bind:开头,如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {      <span style="color: #008000;">//</span><span style="color: #008000;">第9526行 对剩余的属性进行分析</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList;
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {    <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性</span>
+    name = rawName = list[i].name;                <span style="color: #008000;">//</span><span style="color: #008000;">获取属性名</span>
+    value = list[i].value;                        <span style="color: #008000;">//</span><span style="color: #008000;">该属性对应的值</span>
+    <span style="color: #0000ff;">if</span> (dirRE.test(name)) {                       <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) {                    <span style="color: #008000;">//</span><span style="color: #008000;">bindRD等于/^:|^v-bind:/ ，即该属性是v-bind指令时 例如:&lt;a :href="url"&gt;你好&lt;/a&gt;</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">这里时v-bind指令对应的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) {               <span style="color: #ff0000;">//onRE等于/^@|^v-on:/，即该属性是v-on指令时</span>
+        name = name.replace(onRE, '');                              <span style="color: #008000;">//</span><span style="color: #008000;">获取绑定的事件类型  比如@click，此时name等于click   v-on:click此时name也等于click</span>
+        addHandler(el, name, value, modifiers, <span style="color: #0000ff;">false</span>, warn$2);      <span style="color: #ff0000;">//调用addHandler()函数将事件相关信息保存到el.events或nativeEvents里面</span>
+      } <span style="color: #0000ff;">else</span> {                                  <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives</span>
+       <span style="color: #008000;">/*</span><span style="color: #008000;">自定义指令的分支</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      }
+    } </span><span style="color: #0000ff;">else</span> {                                      <span style="color: #008000;">//</span><span style="color: #008000;">存储普通属性的分支</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> literal attribute</span>
+<span style="color: #000000;">      {
+        </span><span style="color: #0000ff;">var</span> res =<span style="color: #000000;"> parseText(value, delimiters);
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (res) {
+          warn$</span>2<span style="color: #000000;">(
+            name </span>+ "=\"" + value + "\": " +
+            'Interpolation inside attributes has been removed. ' +
+            'Use v-bind or the colon shorthand instead. For example, ' +
+            'instead of &lt;div id="{{ val }}"&gt;, use &lt;div :id="val"&gt;.'<span style="color: #000000;">
+          );
+        }
+      }
+      addAttr(el, name, JSON.stringify(value));
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> #6887 firefox doesn't update muted state if set via attribute</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> even immediately after element creation</span>
+      <span style="color: #0000ff;">if</span> (!el.component &amp;&amp;<span style="color: #000000;">
+          name </span>=== 'muted' &amp;&amp;<span style="color: #000000;">
+          platformMustUseProp(el.tag, el.attrsMap.type, name)) {
+        addProp(el, name, </span>'true'<span style="color: #000000;">);
+      }
+    }
+  }
+}</span></pre>
+</div>
+<p>addHandler()函数用于给对应的AST对象增加一个events属性，保存事件对应的信息，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> addHandler (     <span style="color: #008000;">//</span><span style="color: #008000;">第6573行  给el这个AST对象增加event或nativeEvents，用于记录事件的信息 </span>
+<span style="color: #000000;">  el,
+  name,
+  value,
+  modifiers,
+  important,
+  warn
+) {
+  modifiers </span>= modifiers ||<span style="color: #000000;"> emptyObject;
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> warn prevent and passive modifier</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (
+    </span>"development" !== 'production' &amp;&amp; warn &amp;&amp;<span style="color: #000000;">
+    modifiers.prevent </span>&amp;&amp;<span style="color: #000000;"> modifiers.passive
+  ) {
+    warn(
+      </span>'passive and prevent can\'t be used together. ' +
+      'Passive handler can\'t prevent default event.'<span style="color: #000000;">
+    );
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> check capture modifier</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.capture) {
+    </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.capture;
+    name </span>= '!' + name; <span style="color: #008000;">//</span><span style="color: #008000;"> mark the event as captured</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #0000ff;">if</span> (modifiers.once) {             <span style="color: #008000;">//</span><span style="color: #008000;">如果有once修饰符</span>
+    <span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.once;
+    name </span>= '~' + name; <span style="color: #008000;">//</span><span style="color: #008000;"> mark the event as once</span>
+<span style="color: #000000;">  }
+  </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.passive) {
+    </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.passive;
+    name </span>= '&amp;' + name; <span style="color: #008000;">//</span><span style="color: #008000;"> mark the event as passive</span>
+<span style="color: #000000;">  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> normalize click.right and click.middle since they don't actually fire</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> this is technically browser-specific, but at least for now browsers are</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> the only target envs that have right/middle clicks.</span>
+  <span style="color: #0000ff;">if</span> (name === 'click') {         <span style="color: #008000;">//</span><span style="color: #008000;">鼠标按键修饰符:如果是click事件，则根据modiflers进行修正</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.right) {
+      name </span>= 'contextmenu'<span style="color: #000000;">;
+      </span><span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.right;
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers.middle) {
+      name </span>= 'mouseup'<span style="color: #000000;">;
+    }
+  }
+
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> events;
+  </span><span style="color: #0000ff;">if</span> (modifiers.native) {       <span style="color: #008000;">//</span><span style="color: #008000;">如果存在native修饰符，则保存到el.nativeEvents里面，对于组件的自定义事件执行到这里</span>
+    <span style="color: #0000ff;">delete</span><span style="color: #000000;"> modifiers.native;
+    events </span>= el.nativeEvents || (el.nativeEvents =<span style="color: #000000;"> {});
+  } </span><span style="color: #0000ff;">else</span> {                      <span style="color: #008000;">//</span><span style="color: #008000;">否则保存到el.events里面</span>
+    events = el.events || (el.events =<span style="color: #000000;"> {});
+  }
+
+  </span><span style="color: #0000ff;">var</span> newHandler =<span style="color: #000000;"> {
+    value: value.trim()
+  };
+  </span><span style="color: #0000ff;">if</span> (modifiers !==<span style="color: #000000;"> emptyObject) {
+    newHandler.modifiers </span>=<span style="color: #000000;"> modifiers;
+  }
+
+  </span><span style="color: #0000ff;">var</span> handlers = events[name];          <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取已经存在的该事件对象</span>
+  <span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+  <span style="color: #0000ff;">if</span> (Array.isArray(handlers)) {        <span style="color: #008000;">//</span><span style="color: #008000;">如果是数组，表示已经插入了两次了，则再把newHandler添加进去</span>
+    important ?<span style="color: #000000;"> handlers.unshift(newHandler) : handlers.push(newHandler);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (handlers) {                 <span style="color: #008000;">//</span><span style="color: #008000;">如果handlers存在且不是数组，则表示只插入过一次，则把events[name]变为数组</span>
+    events[name] = important ?<span style="color: #000000;"> [newHandler, handlers] : [handlers, newHandler];
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    events[name] </span>= newHandler;           <span style="color: #008000;">//</span><span style="color: #008000;">否则表示是第一次新增该事件，则值为对应的newHandler</span>
+<span style="color: #000000;">  }
+
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>例子里执行到这里这里后对应的AST等于:</p>
+<p><img src="./images/Vue.js 源码分析(十六) 指令篇 v-on指令详解3.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候会调用genHandlers函数根据不同修饰符等生成对应的属性(作为_c函数的第二个data参数一部分)，</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genHandlers (    <span style="color: #008000;">//</span><span style="color: #008000;">第9992行 拼凑事件的data函数</span>
+<span style="color: #000000;">  events, 
+  isNative,
+  warn
+) {
+  </span><span style="color: #0000ff;">var</span> res = isNative ? 'nativeOn:{' : 'on:{';     <span style="color: #008000;">//</span><span style="color: #008000;">如果参数isNative为true则设置res为:nativeOn:{，否则为:on:{  ;对于组件来说isNative为true,原生事件来说是on</span>
+  <span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> name <span style="color: #0000ff;">in</span> events) {                      <span style="color: #008000;">//</span><span style="color: #008000;">遍历events，拼凑结果</span>
+    res += "\"" + name + "\":" + (genHandler(name, events[name])) + ","<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">return</span> res.slice(0, -1) + '}'<span style="color: #000000;">
+}</span></pre>
+</div>
+<p>genHandler会获取每个事件对应的代码，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genHandler (   <span style="color: #008000;">//</span><span style="color: #008000;">第10004行  name:事件名，比如:name handler:事件绑定的对象信息，比如:{value: "show", modifiers: {&hellip;}}</span>
+<span style="color: #000000;">  name,
+  handler
+) {
+  </span><span style="color: #0000ff;">if</span> (!<span style="color: #000000;">handler) {
+    </span><span style="color: #0000ff;">return</span> 'function(){}'<span style="color: #000000;">
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (Array.isArray(handler)) {   
+    </span><span style="color: #0000ff;">return</span> ("[" + (handler.map(<span style="color: #0000ff;">function</span> (handler) { <span style="color: #0000ff;">return</span> genHandler(name, handler); }).join(',')) + "]"<span style="color: #000000;">)
+  }
+
+  </span><span style="color: #0000ff;">var</span> isMethodPath = simplePathRE.test(handler.value);          <span style="color: #008000;">//</span><span style="color: #008000;">是否为简单的表达式，比如show、show_d、show1等</span>
+  <span style="color: #0000ff;">var</span> isFunctionExpression = fnExpRE.test(handler.value);       <span style="color: #008000;">//</span><span style="color: #008000;">是否为函数表达式(箭头函数或function(){}格式的匿名函数)</span>
+
+  <span style="color: #0000ff;">if</span> (!handler.modifiers) {                                     <span style="color: #008000;">//</span><span style="color: #008000;">如果该事件的修饰符为空</span>
+    <span style="color: #0000ff;">if</span> (isMethodPath || isFunctionExpression) {                     <span style="color: #008000;">//</span><span style="color: #008000;">如果是简单表达式或者是函数表达式</span>
+      <span style="color: #0000ff;">return</span> handler.value                                              <span style="color: #008000;">//</span><span style="color: #008000;">则直接返回handler.value,比如:show</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> ("function($event){" + (handler.value) + "}") <span style="color: #008000;">//</span><span style="color: #008000;"> inline statement  //否则返回带有一个$event变量的函数形式，比如:当value是个表达式时，例如:value=a+123，返回格式:function($event){a+123;}</span>
+  } <span style="color: #0000ff;">else</span> {                                                      <span style="color: #008000;">//</span><span style="color: #008000;">如果还存在修饰符(解析模板时有些修饰符被过滤掉了)</span>
+    <span style="color: #0000ff;">var</span> code = ''<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> genModifierCode = ''<span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> keys =<span style="color: #000000;"> [];
+    </span><span style="color: #0000ff;">for</span> (<span style="color: #0000ff;">var</span> key <span style="color: #0000ff;">in</span> handler.modifiers) {                          <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个修饰符，比如:prevent</span>
+      <span style="color: #0000ff;">if</span> (modifierCode[key]) {                                        <span style="color: #008000;">//</span><span style="color: #008000;">如果有在modifierCode里面定义   modifierCode是个数组，保存了一些内置修饰符对应的代码</span>
+        genModifierCode += modifierCode[key];                            <span style="color: #008000;">//</span><span style="color: #008000;">则拼凑到genModifierCode里面</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> left/right</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (keyCodes[key]) {
+          keys.push(key);
+        }
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (key === 'exact'<span style="color: #000000;">) {
+        </span><span style="color: #0000ff;">var</span> modifiers =<span style="color: #000000;"> (handler.modifiers);
+        genModifierCode </span>+=<span style="color: #000000;"> genGuard(
+          [</span>'ctrl', 'shift', 'alt', 'meta'<span style="color: #000000;">]
+            .filter(</span><span style="color: #0000ff;">function</span> (keyModifier) { <span style="color: #0000ff;">return</span> !<span style="color: #000000;">modifiers[keyModifier]; })
+            .map(</span><span style="color: #0000ff;">function</span> (keyModifier) { <span style="color: #0000ff;">return</span> ("$event." + keyModifier + "Key"<span style="color: #000000;">); })
+            .join(</span>'||'<span style="color: #000000;">)
+        );
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        keys.push(key);
+      }
+    }
+    </span><span style="color: #0000ff;">if</span> (keys.length) {                                          <span style="color: #008000;">//</span><span style="color: #008000;">如果有按键</span>
+      code += genKeyFilter(keys);                                   <span style="color: #008000;">//</span><span style="color: #008000;">则拼凑按键</span>
+<span style="color: #000000;">    }   
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> Make sure modifiers like prevent and stop get executed after key filtering</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (genModifierCode) {
+      code </span>+=<span style="color: #000000;"> genModifierCode;
+    }
+    </span><span style="color: #0000ff;">var</span> handlerCode =<span style="color: #000000;"> isMethodPath
+      </span>? ("return " + (handler.value) + "($event)"<span style="color: #000000;">)
+      : isFunctionExpression
+        </span>? ("return (" + (handler.value) + ")($event)"<span style="color: #000000;">)
+        : handler.value;
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">return</span> ("function($event){" + code + handlerCode + "}"<span style="color: #000000;">)
+  }
+}</span></pre>
+</div>
+<p>例子里执行到这里后生成的render函数等于:</p>
+<p>with(this){return _c('div',{attrs:{"id":"app"}},[_c('button',{on:{"click":function($event){show('click',$event)},"mouseenter":function($event){show('mouseenter',$event)}}},[_v("测试")])])}</p>
+<p>其中和事件有关的如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">on: {
+    </span>"click": <span style="color: #0000ff;">function</span><span style="color: #000000;">($event) {
+        show(</span>'click'<span style="color: #000000;">, $event)
+    },
+    </span>"mouseenter": <span style="color: #0000ff;">function</span><span style="color: #000000;">($event) {
+        show(</span>'mouseenter'<span style="color: #000000;">, $event)
+    }
+}</span></pre>
+</div>
+<p>最后在_watch渲染成真实的DOM节点后，就会调用events模块的updateDOMListeners钩子函数，该函数会获取该Vnode的on属性，依次遍历on对象里的每个元素，最后调用addEventListener去绑定对应的事件</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> updateDOMListeners (oldVnode, vnode) {     <span style="color: #008000;">//</span><span style="color: #008000;">第7083行 DOMN事件相关</span>
+  <span style="color: #0000ff;">if</span> (isUndef(oldVnode.data.on) &amp;&amp;<span style="color: #000000;"> isUndef(vnode.data.on)) {
+    </span><span style="color: #0000ff;">return</span><span style="color: #000000;">
+  }
+  </span><span style="color: #0000ff;">var</span> on = vnode.data.on || {};                                   <span style="color: #008000;">//</span><span style="color: #008000;">新Node上的事件  例如:{click: &fnof; ($event){}}</span>
+  <span style="color: #0000ff;">var</span> oldOn = oldVnode.data.on ||<span style="color: #000000;"> {};
+  target$</span>1 = vnode.elm;                                           <span style="color: #008000;">//</span><span style="color: #008000;">DOM引用</span>
+  normalizeEvents(on);                                            <span style="color: #008000;">//</span><span style="color: #008000;">处理V-model的</span>
+  updateListeners(on, oldOn, add$1, remove$2, vnode.context);     <span style="color: #008000;">//</span><span style="color: #ff0000;">调用updateListeners做进一步处理</span>
+  target$1 =<span style="color: #000000;"> undefined;
+}</span></pre>
+</div>
+<p>updateListeners()函数又会调用add$1函数去添加DOM事件，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> updateListeners (      <span style="color: #008000;">//</span><span style="color: #008000;">第2036行 更新DOM事件</span>
+<span style="color: #000000;">  on,
+  oldOn,
+  add,
+  remove$$</span>1<span style="color: #000000;">,
+  vm
+) {
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> name, def, cur, old, event;
+  </span><span style="color: #0000ff;">for</span> (name <span style="color: #0000ff;">in</span> on) {                  <span style="color: #008000;">//</span><span style="color: #008000;">遍历on,此时name就是对应的事件类型，比如:click</span>
+    def = cur =<span style="color: #000000;"> on[name];
+    old </span>=<span style="color: #000000;"> oldOn[name];
+    event </span>=<span style="color: #000000;"> normalizeEvent(name);
+    </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(cur)) {
+      </span>"development" !== 'production' &amp;&amp;<span style="color: #000000;"> warn(
+        </span>"Invalid handler for event \"" + (event.name) + "\": got " +<span style="color: #000000;"> String(cur),
+        vm
+      );
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (isUndef(old)) {                <span style="color: #008000;">//</span><span style="color: #008000;">如果old没有定义，则表示这是一个创建事件</span>
+      <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(cur.fns)) {
+        cur </span>= on[name] =<span style="color: #000000;"> createFnInvoker(cur);
+      }
+      add(event.name, cur, event.once, event.capture, event.passive, event.params);   </span><span style="color: #008000;">//</span><span style="color: #ff0000;">调用add()绑定事件</span>
+    } <span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (cur !==<span style="color: #000000;"> old) {
+      old.fns </span>=<span style="color: #000000;"> cur;
+      on[name] </span>=<span style="color: #000000;"> old;
+    }
+  }
+  </span><span style="color: #0000ff;">for</span> (name <span style="color: #0000ff;">in</span><span style="color: #000000;"> oldOn) {
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isUndef(on[name])) {
+      event </span>=<span style="color: #000000;"> normalizeEvent(name);
+      remove$$</span>1<span style="color: #000000;">(event.name, oldOn[name], event.capture);
+    }
+  }
+}</span></pre>
+</div>
+<p>updateListeners里的add函数，也就是全局的add$1函数才是最终的添加事件函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> add$1 (    <span style="color: #008000;">//</span><span style="color: #008000;">第7052行  绑定事件  event:事件名 handler:事件的函数 once$$1:是否只执行一次 capture:是否采用捕获状态 passive:可用于移动端性能提升</span>
+<span style="color: #000000;">  event,
+  handler,
+  once$$</span>1<span style="color: #000000;">,
+  capture,
+  passive
+) {
+  handler </span>=<span style="color: #000000;"> withMacroTask(handler);
+  </span><span style="color: #0000ff;">if</span> (once$$1) { handler = createOnceHandler(handler, event, capture); }  <span style="color: #008000;">//</span><span style="color: #008000;">如果有设置了once$$1，则继续使用createOnceHandler封装</span>
+  target$1.addEventListener(                                              <span style="color: #ff0000;">//调用原生的DOM APIaddEventListener添加对应的事件,2017年DOM规范对addEventListener()的第三个参数做了修订，可以是一个对象</span>
+<span style="color: #000000;">    event,
+    handler,
+    supportsPassive
+      </span>?<span style="color: #000000;"> { capture: capture, passive: passive }
+      : capture
+  );
+}</span></pre>
+</div>
+<p>我们看到Vue内部添加DOM事件最终也是通过addEventListener()来添加的，说到底，Vue只是把这些API进行了封装，使我们用起来更方便而已。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,562 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修CSS定位与布局' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>CSS定位与布局</center></div><div class='banquan'>原文出处:本文由博客园博主任风来去匆匆提供。<br/>
+原文连接:https://www.cnblogs.com/ruhaoren/p/11596509.html</div><br>
+    <p><span style="font-size: 14px;">我们在编写网页代码时，首先应该做的就是设计好页面的布局形式，然后再往里面填充内容。网页布局的好与坏，直接决定了网页最终的展示效果。PC端常见的网页布局形式有两列布局、三列布局等。在CSS中，我们通常使用浮动(float)、定位(position)、显示模式(display)相关属性结合使用，以达到预期效果。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>一　　文档流</strong></span></p>
+<p><span style="font-size: 14px;">　　文档流就是HTML文档内所有元素按照一定规律排列并显示的形式。</span></p>
+<p><span style="font-size: 14px;">　　CSS文档流大致可以分为3种：标准流，浮动流，定位流。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">　　<strong>1，标准流</strong></span></p>
+<p><span style="font-size: 14px;">　　默认情况下，HTML元素都在标准流中呈现和展示。我们之前把元素分为块级元素，行内元素，行内块级元素，他们的特性是块级独占一行，行内和行内块级可以在一行内共存，这些特性都是针对标准流的。总结一下就是，标准流中元素只能在水平或垂直方向上排版。如果元素是块级元素, 那么就会垂直排版，如果元素是行内元素/行内块级元素, 那么就会水平排版。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">　　<strong>2，浮动流</strong></span></p>
+<p><span style="font-size: 14px;">　　浮动流只有一种排版方式, 就是水平排版。 它只能设置某个元素在父元素内左对齐或者右对齐。设置了浮动的元素，<strong>将脱离标准流</strong>，之后它将无视元素的display属性，并且都被当做块级元素处理。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">div</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;<span style="color: #008000;">/*规定元素向左浮动*/
+</span><span style="color: #008080;">3</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">float:right;规定元素向右浮动</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">4</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　请注意，浮动float属性没有center取值，并且，如果设置了浮动属性，那么你将不能通过使用margin:0 auto；属性使元素居中。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">　　<strong>3，定位流</strong></span></p>
+<p><span style="font-size: 14px;">　　标准流和浮动流都只能在水平或垂直方向布局元素，但现实是，我们可能需要在上下左右几个方向上同时偏移元素，定位流正是为了解决这一问题而设计的。通过设置元素的position属性，可以让元素处于定为流中，并通过left、right、top、bottom属性设置元素具体的偏移量。</span></p>
+<p><span style="font-size: 14px;">　　定为流分为四种：</span></p>
+<p><span style="font-size: 14px;">　　　　a) static 静态定位，实际上所有元素默认都是静态定位的，即处于标准流中。</span></p>
+<p><span style="font-size: 14px;">　　　　b) relative 相对定位，元素保留在标准流中所占用的位置，但实际是<strong>边框及以内的部分将显示在偏移之后的位置</strong>。即虽然元素已经不再原来的位置了，但之前所占用的空间并不会被释放给其他标准流中的元素。</span></p>
+<p><span style="font-size: 14px;">　　　　c) absolute 绝对定位，元素脱离标准流，浏览器把它视作块级元素，不论定位之前它是何种元素，其他元素也将无视它。绝对定位的偏移量是相对于其<strong>有定位属性的第一个祖先元素的</strong>。</span></p>
+<p><span style="font-size: 14px;">　　　　d) fixed 固定定位，固定定位和绝对定位相似，但它的偏移量固定的相对于浏览器窗口。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>二　　浮动</strong></span></p>
+<p><span style="font-size: 14px;">　　当某个元素浮动之后，相当于从标准流中删除了该元素，标准流中的元素将会无视浮动元素，并且可能被浮动元素覆盖。</span></p>
+<p><span style="font-size: 14px;">　　当有多个元素浮动时，他们有以下特点：</span></p>
+<p><span style="font-size: 14px;">　　　　a) 在相同方向上浮动的元素，先浮动的元素会显示在前面。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.brother1</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">.brother2</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">6</span> }
+<span style="color: #008080;">7</span> <span style="color: #008000;">/*</span><span style="color: #008000;">brother1将显示在brother2的左边，如果都设置右浮动，那么brother1将显示在brother2的右边</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　　　b) 不同方向的浮动元素，会尽量去寻找并贴靠前面和它浮动方向相同的元素。如果前面没有其他浮动元素，那么它将紧贴其父元素的边界。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.son1</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;"> 3</span> }
+<span style="color: #008080;"> 4</span> <span style="color: #800000;">.son2</span>{
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">right</span>;
+<span style="color: #008080;"> 6</span> }
+<span style="color: #008080;"> 7</span> <span style="color: #800000;">.son3</span>{
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;"> 9</span> }
+<span style="color: #008080;">10</span> <span style="color: #008000;">/*</span><span style="color: #008000;">son1和son3会在父元素的左侧显示，并且son3紧跟在son1的后面。son2则在父元素的右侧显示，紧贴父元素上</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　　　<strong>c) 如果有未浮动的兄弟元素，那么元素在浮动之后，会根据它在标准流中的位置确定该在第几行展示。</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> .<span style="color: #800000;">brother1</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;">red</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;"> 4</span> }
+<span style="color: #008080;"> 5</span> .<span style="color: #800000;">brother2</span>{
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;">blue</span>;
+<span style="color: #008080;"> 7</span> }
+<span style="color: #008080;"> 8</span> .<span style="color: #800000;">brother3</span>{
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;">yellow</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">11</span> }
+<span style="color: #008080;">12</span> <span style="color: #008000;">/*</span><span style="color: #008000;">最终效果是：brother1和brother2在第一行显示，但brother1盖住了brother2，brother3单独在第二行显示</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　浮动元素还有一个特点：<strong>浮动元素不会挡住没有浮动元素中的文字, 没有浮动的文字会自动给浮动的元素让位置。这才是设计浮动的初衷。</strong></span></p>
+<p><span style="font-size: 14px;">　　元素浮动后会带来两个问题，第一个是造成父元素的高度塌陷，padding和margin无效。第二个是被其他元素无视，出现元素相互覆盖的现象。那么要怎样才能消除浮动对其他元素的影响呢？我们通过下面的方式清除浮动带来的影响。</span></p>
+<p><span style="font-size: 14px;">　　a) 为父元素设置固定的高度（解决问题一）。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    heigth</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">son</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">6</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　b) 为父元素设置浮动（解决问题一）。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">son</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">6</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　c) 设置clear属性。clear属性的功能是使浮动元素不去寻找相邻的其他浮动元素，从而消除浮动元素对其他元素的影响（解决问题二）。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">father::after</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    content</span>:<span style="color: #0000ff;">''</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">block</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">0</span>;
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    clear</span>:<span style="color: #0000ff;">both</span>;
+<span style="color: #008080;"> 6</span> }
+<span style="color: #008080;"> 7</span> <span style="color: #008000;">/*</span><span style="color: #008000;">俗称隔墙法，根据需要也可以设置在浮动元素自身或其父元素上</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 8</span> <span style="color: #800000;">son</span>{
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">10</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　d) 为父元素设置overflow:hidden;属性（解决问题二）。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    overflow</span>:<span style="color: #0000ff;">hidden</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #008000;">/*</span><span style="color: #008000;">原理是触发BFC机制</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">5</span> <span style="color: #800000;">son</span>{
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">7</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">&nbsp;</span></p>
+<p><span style="font-size: 16px;"><strong>三　　定位</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;">　　<strong>1，相对定位</strong></span></p>
+<p><span style="font-size: 14px;">　　通过给元素设置position:relative;属性设置元素相对定位。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.box</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">relative</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">4</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">5</span> }
+<span style="color: #008080;">6</span> <span style="color: #008000;">/*</span><span style="color: #008000;">box元素将在原来的位置向下和向右偏移50px，请注意：在定位流中，同一个方向上的定位属性只能使用一次</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　请注意在浏览器中的坐标系和一般坐标系并不相同。如果不清楚请看<a href="https://www.cnblogs.com/ruhaoren/p/11596443.html" target="_blank">《CSS基础》</a>第4.3节。</span></p>
+<p><span style="font-size: 14px;">　　<strong>在相对定位中，实际上元素并未脱离标准流，所以浏览器还是会区分它是否是块级或其他类型的元素。另外，设置元素的margin属性，实际上margin区域会出现在元素定位之前的位置。</strong></span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>2，绝对定位</strong></span></p>
+<p><span style="font-size: 14px;">　　通过给元素设置position:absolute;属性设置元素绝对定位。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.box</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">absolute</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">4</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">5</span> }
+<span style="color: #008080;">6</span> <span style="color: #008000;">/*</span><span style="color: #008000;">box元素将相对于父元素的左顶点（坐标原点）向下向右偏移50px</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　如果没有设置偏移量，默认top和left偏移量为0。如果元素所有祖先元素都没有定位属性，那么元素将相对body元素偏移。</span></p>
+<p><span style="font-size: 14px;">　　在使用绝对定位时有两个注意点：第一个是如果网页宽高较大时（大于浏览器可视区宽高），并且元素最终相对于body定位了，实际上它只是相对浏览器首屏的宽高进行偏移，而不是整个网页的宽高。第二个是绝对定位的元素会自动忽略有定位属性的祖先元素的padding属性。</span></p>
+<p><span style="font-size: 14px;">　　绝对定位一般和相对定位配合使用，父元素设置相对定位，但不设置偏移量（默认为0），子元素设置绝对定位，这样就可以把子元素的偏移控制在父元素之内。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">relative</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">absolute</span>;
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">7</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">8</span> }
+<span style="color: #008080;">9</span> <span style="color: #008000;">/*</span><span style="color: #008000;">子元素相对父元素进行偏移，二父元素不受影响</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">&nbsp;　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>3，固定定位</strong></span></p>
+<p><span style="font-size: 14px;">　　元素的固定定位和背景图片的关联性相似，可以控制元素是否随着滚动条滚动。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">div</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">fixed</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">4</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;">5</span> }    </span></pre>
+</div>
+<p><span style="font-size: 14px;">　　固定定位的元素相对于浏览器视口偏移，和绝对定位的元素一样，它会脱离标准文档流，并且浏览器把他们一致视作块级元素。</span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>4，z-index属性</strong></span></p>
+<p><span style="font-size: 14px;">　　默认情况下，所有元素都有一个z-index属性，用于定义它们的覆盖关系。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">div</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    z-index</span>:<span style="color: #0000ff;">999</span>;
+<span style="color: #008080;">3</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　通常情况下，元素的z-index属性值都是0，并且定位流中的元素会覆盖标准流中的元素，同在定位流中的元素，写在后面的会覆盖写在前面的元素。</span></p>
+<p><span style="font-size: 14px;">　　在定为流中，如果你想调整它们的覆盖关系，你可以设置它们的z-index属性，并且谁的值越大，显示优先级越高。</span></p>
+<p><span style="font-size: 14px;">　　<strong>需要注意的是，如果定位元素的父元素也设置了z-index属性，那么子元素的z-index属性将失效，并且最终是根据父元素的z-index属性来判断覆盖关系。</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>四　　居中与flex</strong></span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 14px;"><strong>　　1，水平居中</strong></span></p>
+<p><span style="font-size: 14px;"><strong>　</strong>　如果元素是文本、图片等行内元素，<span class="Apple-tab-span">在父元素中设置text-align:center即可实现<span class="Apple-tab-span">行内元素水平居中，如果子元素是不定宽块级元素，将子元素的display设置为inline-block，使子元素变成行内元素，可以实现块级元素的水平居中。</span></span></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">p</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    text-align</span>:<span style="color: #0000ff;">center</span>;
+<span style="color: #008080;"> 3</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">文本图片等水平居中</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 4</span> }
+<span style="color: #008080;"> 5</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    text-align</span>:<span style="color: #0000ff;">center</span>;
+<span style="color: #008080;"> 7</span> }
+<span style="color: #008080;"> 8</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">inlin-block</span>;
+<span style="color: #008080;">10</span>     <span style="color: #008000;">/*不定宽</span><span style="color: #008000;">块级元素，修改显示模式，利用text-align属性使其居中</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">11</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　如果子元素是定宽块级元素，又不想改变显示模式，那么可以通过设置margin属性实现水平居中。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">div</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">500px</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">300px</span>;
+<span style="color: #008080;">4</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;">0 auto</span>;
+<span style="color: #008080;">5</span> <span style="color: #008000;">    /*auto，让浏览器决定*/
+</span><span style="color: #008080;">6</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>2，垂直居中</strong></span></p>
+<p><span style="font-size: 14px;">　　首先，如果父元素高度一定，子元素是文本或图片等高度由内容撑开的行内元素，可以使用line-height属性让其垂直居中。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    font-size</span>:<span style="color: #0000ff;">20px</span>;
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    line-height</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">7</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　如果子元素是不定高度的块级元素，我们则可以通过给父元素设置display:table-cell；和vertical-align:middle；属性来解决。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">table-cell</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    vertical-align</span>:<span style="color: #0000ff;">middle</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">block</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">?</span>;
+<span style="color: #008080;"> 9</span> }</span><br /><span style="font-size: 14px;"><span style="color: #008080;">10</span> <span style="color: #008000;">/*这样实现垂直居中的原理是：使父元素以表格的形式呈现，再利用vertical-align属性在表格中是设置单元格内容垂直对齐方式的特性，从而达到块级元素垂直居中的效果。*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　需要注意的是：设置了dispaly:table-cell属性后，元素将忽略margin值。并且，如果你还设置了绝对定位或浮动，该属性功能将被破坏。</span></p>
+<p><span style="font-size: 14px;">　　如果子元素是定高的，那么你只需简单的使用margin属性，即可达到让元素垂直居中的目的。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">3</span> }
+<span style="color: #008080;">4</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;">5</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    margin-top</span>:<span style="color: #0000ff;">50px
+</span><span style="color: #008080;">7</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>3，水平垂直居中</strong></span></p>
+<p><span style="font-size: 14px;">　　通过上面的方式组合使用，即可达到元素水平垂直都居中的效果。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">800px</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">600px</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    text-align</span>:<span style="color: #0000ff;">center</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">600px</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    heigth</span>:<span style="color: #0000ff;">400px</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;">100px auto</span>;
+<span style="color: #008080;">10</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　或者使用绝对定位+相对定位。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.father</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">600px</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">800px</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">relative</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> <span style="color: #800000;">.son</span>{
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">400px</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">600px</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;">absolute</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    top</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">12</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>4，flex</strong></span></p>
+<p><span style="font-size: 14px;">　　flex即弹性布局，用来为盒状模型提供最大的灵活性。需要注意的是，元素使用flex布局后，float，clear和vertical-align属性将失效。flex是display(显示模式)属性的一个可选值，而不是position(定位)。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.box</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">flex</span>;
+<span style="color: #008080;">3</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">为块级元素设置弹性布局</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">4</span> }
+<span style="color: #008080;">5</span> <span style="color: #800000;">.inline-box</span>{
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">inline-flex</span>;
+<span style="color: #008080;">7</span>    <span style="color: #008000;">/*</span><span style="color: #008000;">为行内元素设置弹性布局</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">8</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">&nbsp;　　设置了弹性布局的盒子我们称为弹性盒子（flex box），或者把它称作容器（container）。如果把一个弹性盒子看成一个完整的工程（project），那么我们可以把弹性盒子内部的元素看做是单个的模块项目（module item），这些模块都会遵守弹性盒子的规范，通过设置一些属性，自动的调整自身的大小以适应弹性盒子中可用空间的变化。</span></p>
+<p><span style="font-size: 14px;">　　弹性盒子中默认有两根轴线，水平方向的主轴，垂直方向的纵轴（交叉轴）。轴线与盒子边框的交点是开始位置和结束位置。</span></p>
+<p><span style="font-size: 14px;"><img src="./images/CSS定位与布局0.png" alt="" /></span></p>
+<p><span style="font-size: 14px;">　　容器属性：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.box</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">flex</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    flex-direction</span>:<span style="color: #0000ff;">row</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #008000;">    /*该属性决定主轴的方向，即项目排列的方向。row，默认值，横向从左至右；colum，纵向从上至下展示项；row-reverse和row方向相反，colum-reverse和colum方向相反*/
+</span><span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    flex-wrap</span>:<span style="color: #0000ff;">nowrap</span>;
+<span style="color: #008080;"> 6</span> <span style="color: #008000;">    /*该属性定义如果一条轴线排不下，如何换行。nowrap，默认值，不换行；wrap,换行*/
+</span><span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    justify-content</span>:<span style="color: #0000ff;">flex-start</span>;
+<span style="color: #008080;"> 8</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">该属性定义项目在主轴上的对齐方式。flex-start，默认值，开始对齐（例如上面设置了横向从左至右排列项目，则这里表示左对齐，如果上面设置row-reverse，则这里表示右对齐），该属性还有几个可选值：flex-end，结束对齐；center，居中对齐；space-between，两端对齐；space-around，项目间隔相等</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    align-items</span>:<span style="color: #0000ff;">stretch</span>;
+<span style="color: #008080;">10</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">该属性定义项目在交叉轴上的对齐方式。stretch，默认值，如果项目没有具体高度，将占满整个容器；center，项目中线对齐；flex-start，开始对齐；flex-end，结束对齐；baseline，各项目的第一行文字基线对齐</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">11</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　要想项目自动的调整自身的大小以适应弹性盒子中可用空间的变化，还需要依赖项目自身的一些属性。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.item</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    order</span>:<span style="color: #0000ff;">1</span>;
+<span style="color: #008080;"> 3</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">设置项目排列的先后顺序，数字越大越靠后，如果没收设置，则谁写在前面谁就排在前面。</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    flex-grow</span>:<span style="color: #0000ff;">1</span>;
+<span style="color: #008080;"> 5</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">定义可以放大的比例，默认是0，表示不放大，1表示放大1倍，2表示放大2倍，以此类推。如果所有项目都设置成相同数字，那么容器的可用空间会被项目等分。</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    flex-shrink</span>:<span style="color: #0000ff;">1<strong><span style="color: #000000;">；
+</span></strong></span><span style="color: #008080;"> 7</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">定义可以缩小的比例，默认是1，表示可以缩小1倍，2表示缩小2倍，以此类推。0表示不缩小。如果所有项目都设置成相同数字，那么容器的可用空间会被项目等分。</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 8</span> <span style="color: #0000ff;"><span style="color: #ff0000;">    flex-basis</span>:auto</span>;
+<span style="color: #008080;"> 9</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">定义项目占用主轴的长度，可以是width或height属性一样的值。比如百分比，px，em等。两个特殊值：auto（默认的）表示占用盒子本来的大小；0则表示只占项目内容区域的大小（）</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">10</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　缩放和尺寸可以使用缩写形式。</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.item</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">1 1 auto</span>;
+<span style="color: #008080;">3</span>     <span style="color: #008000;">/*</span><span style="color: #008000;">分别表示flex-grow,flex-shrink,flex-basis</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">4</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　采用缩写形式时需要注意，如果只有一个数字值，则代表flex-grow；如果只有一个宽度值（有单位的），则代表flex-basis；如果值有两个值，那么第一个必须是数字，代表flex-grow，第二个可以是数字或宽度，分表代表flex-shrink或flex-basis。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>五　　两列布局</strong></span></p>
+<p><span style="font-size: 14px;"><strong>　　</strong>左侧定宽右侧自适应宽度的两列布局常用方式有下面几种：</span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>1，左边脱离标准流，右边使用margin属性使其偏移</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.left</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;"> 4</span>     <span style="color: #008000;">/*</span>
+<span style="color: #008080;"> 5</span> <span style="color: #008000;">    position:absolute;
+</span><span style="color: #008080;"> 6</span> <span style="color: #008000;">    left:0;
+</span><span style="color: #008080;"> 7</span>     <span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 8</span> }
+<span style="color: #008080;"> 9</span> <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    margin-left</span>:<span style="color: #0000ff;">200px
+</span><span style="color: #008080;">11</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>2，calc()</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.left</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">inline-block</span>;
+<span style="color: #008080;">4</span> }
+<span style="color: #008080;">5</span> <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">inline-block</span>;
+<span style="color: #008080;">7</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">calc(100% - 200px)</span>;
+<span style="color: #008080;">8</span> }
+<span style="color: #008080;">9</span> <span style="color: #008000;">/*</span><span style="color: #008000;">另一种形式是，左右均浮动，然后利用calc()动态计算右边的宽度</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>3，float+BFC</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #800000;">.left</span>{
+<span style="color: #008080;">2</span> <span style="color: #ff0000;">  width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">3</span> <span style="color: #ff0000;">  float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">4</span> }
+<span style="color: #008080;">5</span> <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">6</span> <span style="color: #ff0000;">  overflow</span>:<span style="color: #0000ff;"> auto</span>;
+<span style="color: #008080;">7</span> }
+<span style="color: #008080;">8</span> <span style="color: #008000;">/*</span><span style="color: #008000;">左侧浮动，但是右侧盒子通过overflow: auto;形成BFC，使右侧盒子不会无视浮动的元素</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>4，flex</strong></span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.wrap</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;">flex</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    aligin</span>:<span style="color: #0000ff;">items:flex-start</span>;
+<span style="color: #008080;"> 4</span> }
+<span style="color: #008080;"> 5</span> <span style="color: #800000;">.left</span>{
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">50px</span>;
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">0 0 auto</span>;
+<span style="color: #008080;"> 8</span> }
+<span style="color: #008080;"> 9</span> <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">1 1 auto</span>;
+<span style="color: #008080;">11</span> }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>六　　三列布局</strong></span></p>
+<p><span style="font-size: 14px;">　　一般的3列布局要求是：中间自适应宽度，左右两边定宽。满足这种要求的布局我们一般有两种方式，圣杯布局和双飞翼布局。</span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>1，圣杯布局</strong></span></p>
+<p><span style="font-size: 14px;">　　HTML部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">='wrap'</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;<span style="color: #000000;">center</span>&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　CSS部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> .<span style="color: #800000;">wrap</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 50%</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">400px</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;">50px auto</span>;
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;"> 6</span> }
+<span style="color: #008080;"> 7</span> .<span style="color: #800000;">wrap .center</span>{
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 100%</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">400px</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> left</span>;
+<span style="color: #008080;">11</span> }
+<span style="color: #008080;">12</span> .<span style="color: #800000;">wrap .left</span>{
+<span style="color: #008080;">13</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 400px</span>;
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> left</span>;
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">    margin-left</span>:<span style="color: #0000ff;"> -100%</span>;
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">    left</span>:<span style="color: #0000ff;">-100px</span>;
+<span style="color: #008080;">19</span> }
+<span style="color: #008080;">20</span> .<span style="color: #800000;">wrap .right</span>{
+<span style="color: #008080;">21</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;"> 400px</span>;
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">100px</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> right</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">    margin-left</span>:<span style="color: #0000ff;"> -100%</span>;
+<span style="color: #008080;">25</span> <span style="color: #ff0000;">    position</span>:<span style="color: #0000ff;"> relative</span>;
+<span style="color: #008080;">26</span> <span style="color: #ff0000;">    right</span>:<span style="color: #0000ff;">-100px</span>;
+<span style="color: #008080;">27</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　原理：左中右三块均设置浮动，center宽度100%，left和right通过设置负margin值， 使其和center处于同一行，然后利用相对定位让其分布于center的两边。</span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><strong><span style="font-size: 14px;">　　2，双飞翼布局</span></strong></p>
+<p><span style="font-size: 14px;">　　HTML部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div class</span><span style="color: #0000ff;">='wrap'</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>         <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="content"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">6</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>right<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">7</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　CSS部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> .<span style="color: #800000;">wrap</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 50%</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">400px</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;">50px auto</span>;
+<span style="color: #008080;"> 5</span> }
+<span style="color: #008080;"> 6</span> .<span style="color: #800000;">wrap .center</span>{
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 100%</span>;
+<span style="color: #008080;"> 8</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">300px</span>;
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> left</span>;
+<span style="color: #008080;">10</span> }
+<span style="color: #008080;">11</span> .<span style="color: #800000;">wrap .center .content</span>{
+<span style="color: #008080;">12</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;">0 100px</span>;
+<span style="color: #008080;">13</span> }
+<span style="color: #008080;">14</span> .<span style="color: #800000;">wrap .left</span>{
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 100px</span>;
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">300px</span>;
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> left</span>;
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">    margin-left</span>:<span style="color: #0000ff;"> -100%</span>;
+<span style="color: #008080;">19</span> }
+<span style="color: #008080;">20</span> .<span style="color: #800000;">wrap .right</span>{
+<span style="color: #008080;">21</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;"> 100px</span>;
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">    height</span>:<span style="color: #0000ff;">300px</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">    float</span>:<span style="color: #0000ff;"> right</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">    margin-left</span>:<span style="color: #0000ff;"> -100%</span>;
+<span style="color: #008080;">25</span> }</span></pre>
+</div>
+<p><span style="font-size: 14px;">　　原理：左中右三块均设置浮动，center宽度100%，left和right通过设置负margin值，使其和center处于同一行，此时left和right实际上遮住了部分center，所以center中的content需要设置margin。</span></p>
+<p><span style="font-size: 14px;">　　圣杯布局和双飞翼布局的区别：除了HTML代码结构不同外，圣杯布局的center宽度即为内容区宽度，left和right靠在其两边。双飞翼布局的center宽度等于内容区宽度加left和right宽度。因为它的left和right实际上占用（遮住）了center的空间，所以需要在center中新增一个.content的div，并设置它的margin，以便空出left和right的位置。</span></p>
+<p><span style="font-size: 14px;">　　圣杯布局和双飞翼布局的好处是，center区域可以优先于左右两边被浏览器渲染。不过现代浏览器普遍性能良好，这点优先根本不易被用户察觉到。</span></p>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>3，calc()</strong></span></p>
+<p><span style="font-size: 14px;">　　通过calc()函数我们也可以轻松满足两边定宽，中间自适应的要求。</span></p>
+<p><span style="font-size: 14px;">　　HTML部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;">1</span> <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="wrap"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">2</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="left"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">3</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="right"</span><span style="color: #0000ff;">&gt;</span>left<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">4</span>     <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">class</span><span style="color: #0000ff;">="center"</span><span style="color: #0000ff;">&gt;</span>center<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #008080;">5</span> <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　CSS部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.wrap</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">     width</span>:<span style="color: #0000ff;">80%</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">     margin</span>:<span style="color: #0000ff;"> 0 auto</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">     background-color</span>:<span style="color: #0000ff;"> #ccc</span>;
+<span style="color: #008080;"> 5</span>      <span style="color: #008000;">/*</span><span style="color: #008000;">position: relative;</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;"> 6</span>  }
+<span style="color: #008080;"> 7</span>          
+<span style="color: #008080;"> 8</span> .wrap<span style="color: #800000;"> .center</span>{
+<span style="color: #008080;"> 9</span> <span style="color: #ff0000;">     background-color</span>:<span style="color: #0000ff;"> blue</span>;
+<span style="color: #008080;">10</span> <span style="color: #ff0000;">     margin-left</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">     width</span>:<span style="color: #0000ff;">calc(100% - 400px)</span>;
+<span style="color: #008080;">12</span> }
+<span style="color: #008080;">13</span> .wrap <span style="color: #800000;">.left</span>{
+<span style="color: #008080;">14</span> <span style="color: #ff0000;">     background-color</span>:<span style="color: #0000ff;"> red</span>;
+<span style="color: #008080;">15</span> <span style="color: #ff0000;">     width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">     float</span>:<span style="color: #0000ff;">left</span>;
+<span style="color: #008080;">17</span>      <span style="color: #008000;">/*</span><span style="color: #008000;">position: absolute;
+</span><span style="color: #008080;">18</span> <span style="color: #008000;">     left: 0;
+</span><span style="color: #008080;">19</span> <span style="color: #008000;">     top:0;</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">20</span> }
+<span style="color: #008080;">21</span> .wrap <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">     background-color</span>:<span style="color: #0000ff;"> yellow</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">     width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">     float</span>:<span style="color: #0000ff;">right</span>;
+<span style="color: #008080;">25</span>      <span style="color: #008000;">/*</span><span style="color: #008000;">position: absolute;
+</span><span style="color: #008080;">26</span> <span style="color: #008000;">     right: 0;
+</span><span style="color: #008080;">27</span> <span style="color: #008000;">     top:0;</span><span style="color: #008000;">*/</span>
+<span style="color: #008080;">28</span> }
+<span style="color: #008080;">29</span> <span style="color: #008000;">/*</span><span style="color: #008000;">通过浮动和定位都可以实现两边固定的效果,需要注意的是，使用浮动需要把center区域放到left和right之后，原因请往上看浮动的第三个特征</span><span style="color: #008000;">*/</span></span></pre>
+</div>
+<p><span style="font-size: 14px;">　　</span></p>
+<p><span style="font-size: 14px;">　　<strong>4，flex布局</strong></span></p>
+<p><span style="font-size: 14px;">　　HTML部分同calc()。</span></p>
+<p><span style="font-size: 14px;">　　CSS部分：</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="font-size: 14px;"><span style="color: #008080;"> 1</span> <span style="color: #800000;">.wrap</span>{
+<span style="color: #008080;"> 2</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">80%</span>;
+<span style="color: #008080;"> 3</span> <span style="color: #ff0000;">    margin</span>:<span style="color: #0000ff;"> 0 auto</span>;
+<span style="color: #008080;"> 4</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> #ccc</span>;
+<span style="color: #008080;"> 5</span> <span style="color: #ff0000;">    display</span>:<span style="color: #0000ff;"> flex</span>;
+<span style="color: #008080;"> 6</span> <span style="color: #ff0000;">    flex-direction</span>:<span style="color: #0000ff;"> row</span>;
+<span style="color: #008080;"> 7</span> <span style="color: #ff0000;">    flex-wrap</span>:<span style="color: #0000ff;"> nowrap</span>;
+<span style="color: #008080;"> 8</span> }
+<span style="color: #008080;"> 9</span> 
+<span style="color: #008080;">10</span> <span style="color: #800000;">.center</span>{
+<span style="color: #008080;">11</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> blue</span>;
+<span style="color: #008080;">12</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">1 0 auto</span>;
+<span style="color: #008080;">13</span> <span style="color: #ff0000;">    order</span>:<span style="color: #0000ff;">1</span>;
+<span style="color: #008080;">14</span> }
+<span style="color: #008080;">15</span> <span style="color: #800000;">.left</span>{
+<span style="color: #008080;">16</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> red</span>;
+<span style="color: #008080;">17</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">18</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">0 0 auto</span>;
+<span style="color: #008080;">19</span> <span style="color: #ff0000;">    order</span>:<span style="color: #0000ff;">0</span>;
+<span style="color: #008080;">20</span> }
+<span style="color: #008080;">21</span> <span style="color: #800000;">.right</span>{
+<span style="color: #008080;">22</span> <span style="color: #ff0000;">    background-color</span>:<span style="color: #0000ff;"> yellow</span>;
+<span style="color: #008080;">23</span> <span style="color: #ff0000;">    width</span>:<span style="color: #0000ff;">200px</span>;
+<span style="color: #008080;">24</span> <span style="color: #ff0000;">    flex</span>:<span style="color: #0000ff;">0 0 auto</span>;
+<span style="color: #008080;">25</span> <span style="color: #ff0000;">    order</span>:<span style="color: #0000ff;">2</span>;
+<span style="color: #008080;">26</span> }</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

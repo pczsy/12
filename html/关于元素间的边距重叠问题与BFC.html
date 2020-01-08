@@ -1,0 +1,161 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修关于元素间的边距重叠问题与BFC' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>关于元素间的边距重叠问题与BFC</center></div><div class='banquan'>原文出处:本文由博客园博主Leophen提供。<br/>
+原文连接:https://www.cnblogs.com/Leophen/p/11361531.html</div><br>
+    <h2>一、边距重叠常见情况</h2>
+<p>&nbsp;</p>
+<h3>1、垂直方向上相邻元素的重叠</h3>
+<p>（水平方向上不会发生重叠）</p>
+<p><img src="./images/关于元素间的边距重叠问题与BFC0.png" alt="" width="509" height="349" /></p>
+<p>&nbsp;</p>
+<h3>2、 垂直方向上父子元素间的重叠</h3>
+<p><img src="./images/关于元素间的边距重叠问题与BFC1.png" alt="" width="487" height="251" /></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h2>二、BFC</h2>
+<p>&nbsp;</p>
+<h3>1、什么是 BFC</h3>
+<p>BFC（Block Formatting Context），即块级格式化上下文，创建了 BFC 的元素是一个独立的容器，里面无论如何布局都不会影响到外面的元素</p>
+<p>&nbsp;</p>
+<h3>2、创建 BFC 的方法</h3>
+<p>（1）设置 overflow 属性，除了 visible 以外的值（例如 hidden、auto）</p>
+<p>（2）设置 float 属性，除了 none 以外的值（例如 left、right）</p>
+<p>（3）设置 position 属性，除了static 和 relative 以外的值（例如 absolute、fixed）</p>
+<p>（4）设置 display 属性，可以是 flex、inline-block、table-cell...</p>
+<p>&nbsp;</p>
+<h3>3、BFC 的使用场景</h3>
+<p>（1）解决元素间的边距重叠问题 -- 分别添加创建了 BFC 的父元素</p>
+<p><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC2.png" alt="" width="175" height="293" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC3.png" alt="" width="128" height="55" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC4.png" alt="" width="173" height="303" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 创建BFC前 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #008000;">&lt;!--</span><span style="color: #008000;"> 创建BFC后 </span><span style="color: #008000;">--&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC前 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> #7b81ca</span>;<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> 30px</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC后 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+section </span>{<span style="color: #ff0000;">
+  overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> #7b81ca</span>;<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> 30px</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>（2）解决浮动重叠问题 --&nbsp;为非浮动的元素创建 BFC</p>
+<p>（常用于文字环绕图片的效果）</p>
+<p><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC5.png" alt="" width="168" height="168" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC3.png" alt="" width="128" height="55" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC7.png" alt="" width="248" height="167" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC前 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+section </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(244, 220, 250, 0.8)</span>;<span style="color: #ff0000;">
+  float</span>:<span style="color: #0000ff;"> left</span>;
+}<span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(123, 129, 202, 0.8)</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC后 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+section </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(244, 220, 250, 0.8)</span>;<span style="color: #ff0000;">
+  float</span>:<span style="color: #0000ff;"> left</span>;
+}<span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 200px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(123, 129, 202, 0.8)</span>;<span style="color: #ff0000;">
+  overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>（3）清除浮动，解决浮动元素的父元素高度塌陷问题 --&nbsp;为父元素创建 BFC</p>
+<p>&nbsp;<img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC8.png" alt="" width="111" height="110" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC3.png" alt="" width="128" height="55" /><img style="vertical-align: middle;" src="./images/关于元素间的边距重叠问题与BFC10.png" alt="" width="324" height="111" /></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+  <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">section</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC前 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+section </span>{<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(244, 220, 250, 1)</span>;
+}<span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(123, 129, 202, 1)</span>;<span style="color: #ff0000;">
+  float</span>:<span style="color: #0000ff;"> left</span>;
+}
+
+<span style="color: #008000;">/*</span><span style="color: #008000;"> 创建BFC后 </span><span style="color: #008000;">*/</span><span style="color: #800000;">
+section </span>{<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(244, 220, 250, 1)</span>;<span style="color: #ff0000;">
+  overflow</span>:<span style="color: #0000ff;"> hidden</span>;
+}<span style="color: #800000;">
+div </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> 100px</span>;<span style="color: #ff0000;">
+  background</span>:<span style="color: #0000ff;"> rgba(123, 129, 202, 1)</span>;<span style="color: #ff0000;">
+  float</span>:<span style="color: #0000ff;"> left</span>;
+}</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

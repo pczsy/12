@@ -1,0 +1,167 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）</center></div><div class='banquan'>原文出处:本文由博客园博主大史不说话提供。<br/>
+原文连接:https://www.cnblogs.com/dashnowords/p/11234360.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#一.-模型的制作">一. 模型的制作</a><ul>
+        <li><a href="#生成字体模型">1.1 生成字体模型</a></li>
+        <li><a href="#多表面贴图">1.2 多表面贴图</a></li>
+        </ul></li>
+        <li><a href="#二.-镜头及动画">二. 镜头及动画</a></li>
+        <li><a href="#三.-大作业总结">三. 大作业总结</a></li>
+        </ul>
+    </div>
+</div>
+<p><img src="./images/【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）0.png" /></p>
+<blockquote>
+<p>示例代码托管在：<a href="https://github.com/dashnowords/blogs/tree/master/Demo/threejs-demo/%E5%B8%A6%E7%9D%80canvas%E5%8E%BB%E6%B5%81%E6%B5%AA%EF%BC%8813%EF%BC%89-demo">http://www.github.com/dashnowords/blogs</a></p>
+<p>博客园地址：<a href="https://www.cnblogs.com/dashnowords/p/10127926.html">《大史住在大前端》原创博文目录</a></p>
+<p>华为云社区地址：<a href="https://bbs.huaweicloud.com/blogs/8ae7e6420a4611e9bd5a7ca23e93a891">【你要的前端打怪升级指南】</a></p>
+</blockquote>
+<p>有了上一篇基础知识的储备，本节就来制作一下简易版的<code>MARVEL</code>的片头动画。<a href="https://bbs.huaweicloud.com/blogs/aa483d2cac2111e9b759fa163e330718">【点击观看动画效果】</a></p>
+<h2 id="一.-模型的制作">一. 模型的制作</h2>
+<h3 id="生成字体模型">1.1 生成字体模型</h3>
+<p>字体模型的生成使用到了<code>THREE.TextGeometry</code>，它需要先加载字体文件，然后在回调函数中生成字体模型，相当于在<code>THREE.ShapeGeometry</code>实例上绘制平面图形，然后再拉伸成为<code>THREE.ExtrudeGeometry</code>拉伸体。基本代码如下：</p>
+<pre><code><code>var loader = new THREE.FontLoader();
+loader.load( &#39;fonts/helvetiker_regular.typeface.json&#39;, function ( font ) {
+    var geometry = new THREE.TextGeometry( &#39;MARVEL&#39;,{
+        font: font,
+        size: 80,//平面形状大小
+        height: 5,//拉伸高度
+        curveSegments: 12,//默认使用的三角面片数，越多则表面越平滑
+        bevelEnabled: true,//是否使用倒角
+        bevelThickness: 10,
+        bevelSize: 8,
+        bevelOffset: 0,
+        bevelSegments: 5
+    } );
+} );</code></pre>
+<p>本例中为了在不同的字母表面使用不同的<code>videoTexture</code>来进行贴图，所以将6个字母分成3组进行生成，所以在生成过程中需要动态调整几何体的空间位置，避免最后生成的模型都挤在一起。调整的方法如下：</p>
+<pre><code><code>//geometry指字体模型实例
+geometry.computeBoundingBox();
+
+//计算过一次以后，包围盒属性就会添加到geometry.boundingBox上，然后就可以以此为依据进行调整
+cube.position.x = - (font.boundingBox.max.x - font.boundingBox.min.x)/2 + tempPos; 
+cube.position.y = - (font.boundingBox.max.y - font.boundingBox.min.y)/2; 
+cube.position.z = - (font.boundingBox.max.z - font.boundingBox.min.z)/2; </code></pre>
+<p>调整的思路就是，通过将<code>x,y,z</code>三个方向都偏移包围盒自身尺寸的一半，从而达到将定位参考点移动到立方体的几何中心的目的,<code>tempPos</code>记录上一个几何体总宽度，作为下一个几何体横向（<code>x</code>方向）的偏移参考，这样就可以保证几何体横向错开。设置好参数后，就可以生成<code>MARVEL</code>生成的字体模型线框图(下图在材料中开启了<code>wireframe</code>线框模式)：</p>
+<p><img src="./images/【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）1.png" /></p>
+<h3 id="多表面贴图">1.2 多表面贴图</h3>
+<p>从上面的线框图可以看到，字体模型虽然很容易生成，但是使用了超过100个三角面，再用上一节中的手动贴图修复的方法显然是行不通的，所以此处需要想办法通过程序来自动贴图。</p>
+<p>首先，每一个面都有一个<code>normal</code>属性，它是一个归一化的向量，表明了这个面在空间中的指向，也就是面的<code>法向量</code>。比如上面例子中，字母的正面表面的法向量就是从屏幕内垂直指向屏幕外，也就是<code>+z</code>方向，所以这个面的法向量实例<code>vector3</code>中的<code>z</code>分量一定是正值。从动画进行的角度看，我们需要使用到的表面是模型的正面，左面和下面。左面实际上就是法向量中<code>x</code>分量为负数的面，下面就是<code>y</code>坐标为负数的面，通过法向量的特征，我们就可以挑选出从特定角度观察几何体时看到的效果，例如遍历几何体的表面，把所有法向量中<code>z</code>为正数的面挑出来，实际上就相当于在z轴正方向往负方向看时看到的图形，也就是平面的<code>MARVEL</code>这几个字母。</p>
+<p>在不规则表面贴图，就像把电影投影到一个不规则表面进行放映，比如将投影仪的幕布折叠成某个形状，画面依旧会以二维投影的形式展现在幕布上。举个栗子，比如现在要给<code>M</code>和<code>A</code>这两个字母的下表面贴图（都是凹进去的），需要选出的面的法向量特征满足<code>y &lt; 0</code>，然后求出包围盒大小后，对应关系如下：</p>
+<p><img src="./images/【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）2.png" /></p>
+<p>所以贴图时，需要将素材的<code>y</code>方向（0-1之间的某个数字）坐标按比例映射到包围盒<code>z</code>方向，将素材<code>x</code>方向坐标按比例映射到包围盒x方向，如上图所示。有了映射关系，就可以让程序遍历表面并自动进行贴图处理，上图的贴图效果最终会是类似下面的样子：</p>
+<p><img src="./images/【带着canvas去流浪（13）】用Three.js制作简易的MARVEL片头动画（下）3.png" /></p>
+<p><code>A</code>的字体模型内部有一个封闭空间，其中也有法向量<code>z</code>值小于0的面，它们也会按照同样的坐标转换标准被贴图。示例demo中的自动贴图相关代码如下：</p>
+<pre><code><code>//重新计算uv贴图部分
+function rebuildUV(geo) {
+    if(!geo.isGeometry) return;
+
+    const max = geo.boundingBox.max;
+    const min = geo.boundingBox.min;
+    const offset = new THREE.Vector3(0 - min.x,0 - min.y, 0 - min.z);
+    const range = new THREE.Vector3(max.x  -  min.x,max.y - min.y, max.z - min.z);
+    const faces = geo.faces;
+
+    geo.faceVertexUvs [0] = []; 
+
+    for(let i = 0; i&lt; faces.length; i++){
+        const v1 = geo.vertices [faces [i] .a],
+        v2 = geo.vertices [faces [i] .b],
+        v3 = geo.vertices [faces [i] .c]; 
+
+        //faces[i].normal中为归一化的向量，可以表明面的指向
+        if(faces[i].normal.z &gt; 0){
+            //z &gt; 0 的面面向屏幕正面，与使用者相对。
+            geo.faceVertexUvs[0].push([
+                new THREE.Vector2((v1.x+offset.x)/range.x,(v1.y+offset.y)/range.y),
+                new THREE.Vector2((v2.x+offset.x)/range.x,(v2.y+offset.y)/range.y),
+                new THREE.Vector2((v3.x+offset.x)/range.x,(v3.y+offset.y)/range.y)
+            ]);
+        }else if (faces[i].normal.y &lt; 0){
+            // y &lt; 0 的面为模型下面
+            geo.faceVertexUvs[0].push([
+                new THREE.Vector2((v1.x+offset.x)/range.x,(v1.z+offset.z)/range.z),
+                new THREE.Vector2((v2.x+offset.x)/range.x,(v2.z+offset.z)/range.z),
+                new THREE.Vector2((v3.x+offset.x)/range.x,(v3.z+offset.z)/range.z),
+            ]) 
+        } else{
+            //没有用到的表面默认为不贴图
+            geo.faceVertexUvs[0].push([
+                new THREE.Vector2(0,0),
+                new THREE.Vector2(0,0),
+                new THREE.Vector2(0,0)
+            ]);
+        }
+    }
+    geo.uvsNeedUpdate = true;
+}</code></pre>
+<h2 id="二.-镜头及动画">二. 镜头及动画</h2>
+<p>变角度观察立体模型时，透视相机的效果会更逼真一些，本例中使用正交相机进行开发。关于这两种相机的使用，直观的区别是：</p>
+<p>使用透视相机就好比使用者在调节一个真实摄像机的参数来改变出现在镜头中的画面的效果，可以说是一种间接确定拍摄范围，且它的视场是一个锥形区域；而正交相机相当于是直接设定拍摄范围的长宽高，至于镜头该在哪不需要关心，它的视场是一个矩形盒子，更像是一种平面投影，也不会有透视造成的变形效果。</p>
+<p>正交相机的构造函数如下：</p>
+<pre><code><code>OrthographicCamera( left : Number, right : Number, top : Number, bottom : Number, near : Number, far : Number )
+left — Camera frustum left plane.
+right — Camera frustum right plane.
+top — Camera frustum top plane.
+bottom — Camera frustum bottom plane.
+near — Camera frustum near plane.
+far — Camera frustum far plane.</code></pre>
+<p>通过传入左右上下远近6个参数来确定一个矩形盒子作为舞台区域，在舞台内的就可以显示，不在舞台内的就不显示，比如下面示例中如果绕y轴转动字体模型，就会有一部分超出所设定的舞台区域：</p>
+<p>[](<a href="https://img2018.cnblogs.com/blog/1354575/201907/1354575-20190723204434735-254014144.png" class="uri">https://img2018.cnblogs.com/blog/1354575/201907/1354575-20190723204434735-254014144.png</a></p>
+<p>)</p>
+<p>由于正交相机的舞台是一个矩形盒子，所以无论远近，投影在前后表面的图形都是一样的（透视相机则不同，和真实效果更类似，离得越远，看到的物体越小），所以调节正交相机<code>position.z</code>通常是达不到预期效果的，只能更新相机参数的上下左右坐标值改变投影面的大小，也就是正交相机舞台的正投影面区域，来模拟<code>z</code>方向位置的变化造成的视觉效果变化。正交相机的参数修改后需要显示调用一下<code>camera.updateProjectionMatrix( )</code>来让其生效。</p>
+<p>本例中镜头变化相关代码如下(远近效果通过调节相机实现，角度翻转通过操作字体模型组实现)：</p>
+<pre><code><code>//模拟相机移动轨迹
+function mockCameraTrack() {
+    //1.初始轨迹调整相机参数，将镜头拉远
+    if (camera.right &lt; windowWidth) {   
+
+        //镜头位置
+        camera.left -= step;
+        camera.right += step;
+        camera.top += step;
+        camera.bottom -= step;
+    }
+
+    //2.到达预设时间时开始反转
+    if (group.rotation.x &lt; 0){
+          if(windowWidth - camera.right &lt; 200){
+              step = 3;
+              rotationStep = 0.6;
+          }
+        group.position.x += 0.2 * step;
+        group.rotation.x += rotationStep * Math.PI / 180;
+        group.rotation.z -= (rotationStep * 5 / 9) * Math.PI / 180;
+    }
+
+    //更新相机投影坐标
+    camera.updateProjectionMatrix();
+}</code></pre>
+<h2 id="三.-大作业总结">三. 大作业总结</h2>
+<p>通过大作业的练习，熟悉了很多<code>three.js</code>的特性，希望感兴趣的读者也可以自行练习，比如把整个片头动画都做出来什么的。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

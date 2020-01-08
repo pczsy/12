@@ -1,0 +1,383 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修Vue.js 源码分析(二十二) 指令篇 v-model指令详解' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>Vue.js 源码分析(二十二) 指令篇 v-model指令详解</center></div><div class='banquan'>原文出处:本文由博客园博主大沙漠提供。<br/>
+原文连接:https://www.cnblogs.com/greatdesert/p/11154239.html</div><br>
+    <p>Vue.js提供了v-model指令用于双向数据绑定，比如在输入框上使用时，输入的内容会事实映射到绑定的数据上，绑定的数据又可以显示在页面里，数据显示的过程是自动完成的。</p>
+<p><code>v-model</code>本质上不过是语法糖。它负责监听用户的输入事件以更新数据，并对一些极端场景进行一些特殊处理。例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id="app"&gt;
+        &lt;p&gt;Message is: {{message}}&lt;/p&gt;
+        &lt;input v-model="message" placeholder="edit me" type="text"&gt;
+    &lt;/div&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        Vue.config.productionTip</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        Vue.config.devtools</span>=<span style="color: #0000ff;">false</span><span style="color: #000000;">;
+        </span><span style="color: #0000ff;">new</span> Vue({el: '#app',data(){<span style="color: #0000ff;">return</span> { message:''<span style="color: #000000;"> }}})
+    </span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>渲染如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十二) 指令篇 v-model指令详解0.png" alt="" /></p>
+<p>当我们在输入框输入内容时，Message is:后面会自动显示输入框里的内容，反过来当修改Vue实例的message时，输入框也会自动更新为该内容。</p>
+<p>与事件的修饰符类似，v-model也有修饰符，用于控制数据同步的时机，v-model可以添加三个修饰符:lazy、number和trim，具体可以看官网。</p>
+<p>我们如果不用v-model，手写一些事件也可以实现例子里的效果，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;!</span><span style="color: #ff00ff;">DOCTYPE html</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">html </span><span style="color: #ff0000;">lang</span><span style="color: #0000ff;">="en"</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">meta </span><span style="color: #ff0000;">charset</span><span style="color: #0000ff;">="UTF-8"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>Document<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">title</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script </span><span style="color: #ff0000;">src</span><span style="color: #0000ff;">="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"</span><span style="color: #0000ff;">&gt;&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">head</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="app"</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>Message is: {{message}}<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">input </span><span style="color: #ff0000;">:value</span><span style="color: #0000ff;">="message"</span><span style="color: #ff0000;"> @input</span><span style="color: #0000ff;">="message=$event.target.value"</span><span style="color: #ff0000;"> placeholder</span><span style="color: #0000ff;">="edit me"</span><span style="color: #ff0000;"> type</span><span style="color: #0000ff;">="text"</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span><span style="background-color: #f5f5f5; color: #000000;">
+        Vue.config.productionTip</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        Vue.config.devtools</span><span style="background-color: #f5f5f5; color: #000000;">=</span><span style="background-color: #f5f5f5; color: #0000ff;">false</span><span style="background-color: #f5f5f5; color: #000000;">;
+        </span><span style="background-color: #f5f5f5; color: #0000ff;">new</span><span style="background-color: #f5f5f5; color: #000000;"> Vue({el: </span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">#app</span><span style="background-color: #f5f5f5; color: #000000;">'</span><span style="background-color: #f5f5f5; color: #000000;">,data(){</span><span style="background-color: #f5f5f5; color: #0000ff;">return</span><span style="background-color: #f5f5f5; color: #000000;"> { message:</span><span style="background-color: #f5f5f5; color: #000000;">''</span><span style="background-color: #f5f5f5; color: #000000;"> }}})
+    </span><span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">script</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">html</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p><span style="color: #ff0000;">我们自己手写的和用v-model有一点不同，就是当输入中文时，输入了拼音，但是没有按回车时，p标签也会显示message信息的，而用v-model实现的双向绑定是只有等到回车按下去了才会渲染的，这是因为v-model内部监听了compositionstart和compositionend事件，有兴趣的同学具体可以查看一下这两个事件的用法，网上教程挺多的。</span></p>
+<p>&nbsp;</p>
+<p><strong><span style="font-size: 18pt;">源码分析</span></strong></p>
+<hr />
+<p>Vue是可以自定义指令的，其中v-model和v-show是Vue的内置指令，它的写法和我们的自定义指令是一样的，都保存到Vue.options.directives上，例如:</p>
+<div class="cnblogs_code">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Document&lt;/title&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;script&gt;<span style="color: #000000;">
+        console.log(Vue.options.directives) 　　　　<span style="color: #ff0000;">//打印Vue.options.directives的值
+    </span></span>&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+</div>
+<p>输出如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十二) 指令篇 v-model指令详解1.png" alt="" /></p>
+<p>Vue内部通过extend(Vue.options.directives, platformDirectives); 将v-model和v-show的指令信息保存到Vue.options.directives里面，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> platformDirectives = {                           <span style="color: #008000;">//</span><span style="color: #008000;">第8417行  内置指令 v-module和v-show  platformDirectives的意思是这两个指令和平台无关的，不管任何环境都可以用这两个指令</span>
+<span style="color: #000000;">  model: directive,
+  show: show
+}
+
+extend(Vue.options.directives, platformDirectives); </span><span style="color: #008000;">//</span><span style="color: #008000;">第8515行 将两个指令信息保存到Vue.options.directives里面</span></pre>
+</div>
+<p>Vue的源码实现代码比较多，我们一步步来，以上面的第一个例子为例，当Vue将模板解析成AST对象解析到input时会processAttrs()函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> processAttrs (el) {            <span style="color: #008000;">//</span><span style="color: #008000;">第9526行 对剩余的属性进行分析</span>
+  <span style="color: #0000ff;">var</span> list =<span style="color: #000000;"> el.attrsList;
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, name, rawName, value, modifiers, isProp;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = list.length; i &lt; l; i++) {      <span style="color: #008000;">//</span><span style="color: #008000;">遍历每个属性</span>
+    name = rawName =<span style="color: #000000;"> list[i].name;
+    value </span>=<span style="color: #000000;"> list[i].value;
+    </span><span style="color: #0000ff;">if</span> (dirRE.test(name)) {                         <span style="color: #008000;">//</span><span style="color: #008000;">如果该属性以v-、@或:开头，表示这是Vue内部指令</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> mark element as dynamic</span>
+      el.hasBindings = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> modifiers</span>
+      modifiers =<span style="color: #000000;"> parseModifiers(name);
+      </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (modifiers) {
+        name </span>= name.replace(modifierRE, ''<span style="color: #000000;">);
+      }
+      </span><span style="color: #0000ff;">if</span> (bindRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-bind              //bindRD等于/^:|^v-bind:/ ，即该属性是v-bind指令时</span>
+       <span style="color: #008000;">/*</span><span style="color: #008000;">v-bind逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (onRE.test(name)) { <span style="color: #008000;">//</span><span style="color: #008000;"> v-on           //onRE等于/^@|^v-on:/，即该属性是v-on指令时</span>
+        <span style="color: #008000;">/*</span><span style="color: #008000;">v-on逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+      } </span><span style="color: #0000ff;">else</span> { <span style="color: #008000;">//</span><span style="color: #008000;"> normal directives                   //普通指令</span>
+        name = name.replace(dirRE, '');                   <span style="color: #008000;">//</span><span style="color: #008000;">去掉指令前缀，比如v-model执行后等于model</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> parse arg</span>
+        <span style="color: #0000ff;">var</span> argMatch = name.match(argRE);                 <span style="color: #008000;">//</span><span style="color: #008000;">argRE等于:(.*)$/，如果name以:开头的话</span>
+        <span style="color: #0000ff;">var</span> arg = argMatch &amp;&amp; argMatch[1<span style="color: #000000;">];
+        </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (arg) {
+          name </span>= name.slice(0, -(arg.length + 1<span style="color: #000000;">));
+        }
+        addDirective(el, name, rawName, value, arg, modifiers);   </span><span style="color: #008000;">//</span><span style="color: #008000;"><span style="color: #ff0000;">执行addDirective给el增加一个directives属性</span>，值是一个数组，例如:[{name: "model", rawName: "v-model", value: "message", arg: null, modifiers: undefined}]</span>
+        <span style="color: #0000ff;">if</span> ("development" !== 'production' &amp;&amp; name === 'model'<span style="color: #000000;">) {
+          checkForAliasModel(el, value);
+        }
+      }
+    } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+      </span><span style="color: #008000;">/*</span><span style="color: #008000;">普通特性的逻辑</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+    }
+  }
+}</span></pre>
+</div>
+<p><span style="color: #000000;">addDirective会给AST对象增加一个directives属性，用于保存对应的指令信息，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> addDirective (     <span style="color: #008000;">//</span><span style="color: #008000;">第6561行 指令相关，给el这个AST对象增加一个directives属性，值为该指令的信息，比如:</span>
+<span style="color: #000000;">  el, 
+  name,
+  rawName,
+  value,
+  arg,
+  modifiers
+) {
+  (el.directives </span>|| (el.directives =<span style="color: #000000;"> [])).push({ name: name, rawName: rawName, value: value, arg: arg, modifiers: modifiers });
+  el.plain </span>= <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+}</span></pre>
+</div>
+<p>例子里的 &lt;input v-model="message" placeholder="edit me" type="text"&gt;对应的AST对象如下:</p>
+<p><img src="./images/Vue.js 源码分析(二十二) 指令篇 v-model指令详解2.png" alt="" /></p>
+<p>接下来在generate生成rendre函数的时候，获取data属性时会执行genDirectives()函数，该函数会执行全局的model函数，也就是v-model的初始化函数，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genDirectives (el, state) {        <span style="color: #008000;">//</span><span style="color: #008000;">第10352行 获取指令</span>
+  <span style="color: #0000ff;">var</span> dirs = el.directives;                   <span style="color: #008000;">//</span><span style="color: #008000;">获取元素的directives属性，是个数组，例如:[{name: "model", rawName: "v-model", value: "message", arg: null, modifiers: undefined}]</span>
+  <span style="color: #0000ff;">if</span> (!dirs) { <span style="color: #0000ff;">return</span> }                       <span style="color: #008000;">//</span><span style="color: #008000;">如果没有directives则直接返回</span>
+  <span style="color: #0000ff;">var</span> res = 'directives:['<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span> hasRuntime = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> i, l, dir, needRuntime;
+  </span><span style="color: #0000ff;">for</span> (i = 0, l = dirs.length; i &lt; l; i++) {        <span style="color: #008000;">//</span><span style="color: #008000;">遍历dirs</span>
+    dir = dirs[i];                                  <span style="color: #008000;">//</span><span style="color: #008000;">每一个directive，例如:{name: "model", rawName: "v-model", value: "message", arg: null, modifiers: undefined}</span>
+    needRuntime = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+    </span><span style="color: #0000ff;">var</span> gen = state.directives[dir.name];           <span style="color: #008000;">//</span><span style="color: #ff0000;">获取对应的指令函数，如果是v-model,则对应model函数，可能为空的，只有内部指令才有</span>
+    <span style="color: #0000ff;">if</span><span style="color: #000000;"> (gen) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> compile-time directive that manipulates AST.</span>
+      <span style="color: #008000;">//</span><span style="color: #008000;"> returns true if it also needs a runtime counterpart.</span>
+      needRuntime = !!gen(el, dir, state.warn);      <span style="color: #ff0000;"> //执行指令对应的函数，也就是全局的model函数</span>
+<span style="color: #000000;">    }
+    </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (needRuntime) {
+      hasRuntime </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+      res </span>+= "{name:\"" + (dir.name) + "\",rawName:\"" + (dir.rawName) + "\"" + (dir.value ? (",value:(" + (dir.value) + "),expression:" + (JSON.stringify(dir.value))) : '') + (dir.arg ? (",arg:\"" + (dir.arg) + "\"") : '') + (dir.modifiers ? (",modifiers:" + (JSON.stringify(dir.modifiers))) : '') + "},"<span style="color: #000000;">;
+    }
+  }
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (hasRuntime) { 
+    </span><span style="color: #0000ff;">return</span> res.slice(0, -1) + ']'                 <span style="color: #008000;">//</span><span style="color: #008000;">去掉最后的逗号，并加一个]，最后返回</span>
+<span style="color: #000000;">  }
+}</span></pre>
+</div>
+<p>model()函数会根据不同的tag(select、input的不同)做不同的处理，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> model (      <span style="color: #008000;">//</span><span style="color: #008000;">第6854行 v-model指令的初始化</span>
+<span style="color: #000000;">  el,
+  dir,
+  _warn
+) {   
+  warn$</span>1 =<span style="color: #000000;"> _warn;
+  </span><span style="color: #0000ff;">var</span> value = dir.value;                                        <span style="color: #008000;">//</span><span style="color: #008000;">值</span>
+  <span style="color: #0000ff;">var</span> modifiers = dir.modifiers;                                <span style="color: #008000;">//</span><span style="color: #008000;">修饰符</span>
+  <span style="color: #0000ff;">var</span> tag = el.tag;                                             <span style="color: #008000;">//</span><span style="color: #008000;">标签名,比如:input</span>
+  <span style="color: #0000ff;">var</span> type =<span style="color: #000000;"> el.attrsMap.type;
+
+  {
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> inputs with type="file" are read only and setting the input's</span>
+    <span style="color: #008000;">//</span><span style="color: #008000;"> value will throw an error.</span>
+    <span style="color: #0000ff;">if</span> (tag === 'input' &amp;&amp; type === 'file'<span style="color: #000000;">) {
+      warn$</span>1<span style="color: #000000;">(
+        </span>"&lt;" + (el.tag) + " v-model=\"" + value + "\" type=\"file\"&gt;:\n" +
+        "File inputs are read only. Use a v-on:change listener instead."<span style="color: #000000;">
+      );
+    }
+  }
+
+  </span><span style="color: #0000ff;">if</span><span style="color: #000000;"> (el.component) {
+    genComponentModel(el, value, modifiers);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> component v-model doesn't need extra runtime</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tag === 'select') {                              <span style="color: #008000;">//</span><span style="color: #008000;">如果typ为select下拉类型</span>
+<span style="color: #000000;">    genSelect(el, value, modifiers);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tag === 'input' &amp;&amp; type === 'checkbox'<span style="color: #000000;">) {
+    genCheckboxModel(el, value, modifiers);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tag === 'input' &amp;&amp; type === 'radio'<span style="color: #000000;">) {
+    genRadioModel(el, value, modifiers);
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (tag === 'input' || tag === 'textarea') {         <span style="color: #008000;">//</span><span style="color: #008000;">如果是input标签，或者是textarea标签</span>
+<span style="color: #000000;">    genDefaultModel(el, value, modifiers); 　　　　　　　　　　　　<span style="color: #ff0000;">//则执行genDefaultModel()函数</span>
+  } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (!<span style="color: #000000;">config.isReservedTag(tag)) {
+    genComponentModel(el, value, modifiers);
+    </span><span style="color: #008000;">//</span><span style="color: #008000;"> component v-model doesn't need extra runtime</span>
+    <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">false</span><span style="color: #000000;">
+  } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+    warn$</span>1<span style="color: #000000;">(
+      </span>"&lt;" + (el.tag) + " v-model=\"" + value + "\"&gt;: " +
+      "v-model is not supported on this element type. " +
+      'If you are working with contenteditable, it\'s recommended to ' +
+      'wrap a library dedicated for that purpose inside a custom component.'<span style="color: #000000;">
+    );
+  }
+
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> ensure runtime directive metadata</span>
+  <span style="color: #0000ff;">return</span> <span style="color: #0000ff;">true</span><span style="color: #000000;">
+}</span></pre>
+</div>
+<p>genDefaultModel会在el的value绑定对应的值,并调用addHandler()添加对应的事件，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> genDefaultModel (          <span style="color: #008000;">//</span><span style="color: #008000;">第6965行  nput标签 和textarea标签 el:AST对象 value:对应值</span>
+<span style="color: #000000;">  el,
+  value,
+  modifiers
+) {
+  </span><span style="color: #0000ff;">var</span> type = el.attrsMap.type;                                  <span style="color: #008000;">//</span><span style="color: #008000;">获取type值，比如text，如果未指定则为undefined</span>
+
+  <span style="color: #008000;">//</span><span style="color: #008000;"> warn if v-bind:value conflicts with v-model</span>
+  <span style="color: #008000;">//</span><span style="color: #008000;"> except for inputs with v-bind:type</span>
+<span style="color: #000000;">  {
+    </span><span style="color: #0000ff;">var</span> value$1 = el.attrsMap['v-bind:value'] || el.attrsMap[':value'];           <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取动态绑定的value值</span>
+    <span style="color: #0000ff;">var</span> typeBinding = el.attrsMap['v-bind:type'] || el.attrsMap[':type'];         <span style="color: #008000;">//</span><span style="color: #008000;">尝试获取动态绑定的type值</span>
+    <span style="color: #0000ff;">if</span> (value$1 &amp;&amp; !typeBinding) {                                                <span style="color: #008000;">//</span><span style="color: #008000;">如果动态绑定了value 且没有绑定type，则报错</span>
+      <span style="color: #0000ff;">var</span> binding = el.attrsMap['v-bind:value'] ? 'v-bind:value' : ':value'<span style="color: #000000;">;                  
+      warn$</span>1<span style="color: #000000;">(
+        binding </span>+ "=\"" + value$1 + "\" conflicts with v-model on the same element " +
+        'because the latter already expands to a value binding internally'<span style="color: #000000;">
+      );
+    }
+  }
+
+  </span><span style="color: #0000ff;">var</span> ref = modifiers ||<span style="color: #000000;"> {}; 
+  </span><span style="color: #0000ff;">var</span> lazy = ref.lazy;                                                        <span style="color: #008000;">//</span><span style="color: #008000;">获取lazy修饰符</span>
+  <span style="color: #0000ff;">var</span> number = ref.number;                                                    <span style="color: #008000;">//</span><span style="color: #008000;">获取number修饰符</span>
+  <span style="color: #0000ff;">var</span> trim = ref.trim;                                                        <span style="color: #008000;">//</span><span style="color: #008000;">获取trim修饰符</span>
+  <span style="color: #0000ff;">var</span> needCompositionGuard = !lazy &amp;&amp; type !== 'range'<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">var</span> event = lazy                                                            <span style="color: #008000;">//</span><span style="color: #008000;">如果有lazy修饰符则绑定为change事件，否则绑定input事件</span>
+    ? 'change'<span style="color: #000000;">
+    : type </span>=== 'range'
+      ?<span style="color: #000000;"> RANGE_TOKEN
+      : </span>'input'<span style="color: #000000;">;
+
+  </span><span style="color: #0000ff;">var</span> valueExpression = '$event.target.value'<span style="color: #000000;">;
+  </span><span style="color: #0000ff;">if</span> (trim) {                                                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果有trim修饰符，则在值后面加上trim()</span>
+    valueExpression = "$event.target.value.trim()"<span style="color: #000000;">;
+  }
+  </span><span style="color: #0000ff;">if</span> (number) {                                                               <span style="color: #008000;">//</span><span style="color: #008000;">如果有number修饰符,则加上_n函数,就是全局的toNumber函数</span>
+    valueExpression = "_n(" + valueExpression + ")"<span style="color: #000000;">;
+  }
+
+  </span><span style="color: #0000ff;">var</span> code = genAssignmentCode(value, valueExpression);                       <span style="color: #008000;">//</span><span style="color: #008000;">返回一个表达式，例如:message=$event.target.value</span>
+  <span style="color: #0000ff;">if</span> (needCompositionGuard) {                                                 <span style="color: #008000;">//</span><span style="color: #008000;">如果需要composing配合,则在前面加上一段if语句</span>
+    code = "if($event.target.composing)return;" +<span style="color: #000000;"> code;
+  }
+ 
+  </span><span style="color: #ff0000;">//双向绑定就是靠着两行代码的</span>
+  addProp(el, 'value', ("(" + value + ")"));                                  <span style="color: #008000;">//</span><span style="color: #008000;">添加一个value的prop</span>
+  addHandler(el, event, code, <span style="color: #0000ff;">null</span>, <span style="color: #0000ff;">true</span>);                                    <span style="color: #008000;">//</span><span style="color: #008000;">添加event事件</span>
+  <span style="color: #0000ff;">if</span> (trim ||<span style="color: #000000;"> number) {                                             
+    addHandler(el, </span>'blur', '$forceUpdate()'<span style="color: #000000;">);
+  }
+}</span></pre>
+</div>
+<p>渲染完成后对应的render函数如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span>){<span style="color: #0000ff;">return</span> _c('div',{attrs:{"id":"app"}},[_c('p',[_v("Message is: "+_s(message))]),_v(" "),_c('input',{directives:[{name:"model",rawName:"v-model",value:(message),expression:"message"}],attrs:{"placeholder":"edit me","type":"text"},domProps:{"value":(message)},on:{"input":<span style="color: #0000ff;">function</span>($event){<span style="color: #0000ff;">if</span>($event.target.composing)<span style="color: #0000ff;">return</span>;message=$event.target.value}}})])}</pre>
+</div>
+<p>我们整理一下就看得清楚一点，如下:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">with</span>(<span style="color: #0000ff;">this</span><span style="color: #000000;">) {
+    </span><span style="color: #0000ff;">return</span> _c('div'<span style="color: #000000;">, {
+        attrs: {
+            </span>"id": "app"<span style="color: #000000;">
+        }
+    },
+    [_c(</span>'p', [_v("Message is: " + _s(message))]), _v(" "), _c('input'<span style="color: #000000;">, {
+       <span style="color: #ff0000;"> directives: [{
+            name: </span></span><span style="color: #ff0000;">"model",
+            rawName: "v-model",
+            value: (message),
+            expression: "message"</span><span style="color: #000000;"><span style="color: #ff0000;">
+        }],</span>
+        attrs: {
+            </span>"placeholder": "edit me"<span style="color: #000000;">,
+            </span>"type": "text"<span style="color: #000000;">
+        },
+        domProps: {
+            </span>"value"<span style="color: #000000;">: (message)
+        },
+       <span style="color: #ff0000;"> on: {
+            </span></span><span style="color: #ff0000;">"input": function($event) {
+                if ($event.target.composing) return;
+                message =</span><span style="color: #000000;"><span style="color: #ff0000;"> $event.target.value
+            }
+        }</span>
+    })])
+}</span></pre>
+</div>
+<p>最后等DOM节点渲染成功后就会执行events模块的初始化事件 并且会执行directive模块的inserted钩子函数:</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">var</span> directive =<span style="color: #000000;"> {
+  inserted: </span><span style="color: #0000ff;">function</span> inserted (el, binding, vnode, oldVnode) {      <span style="color: #008000;">//</span><span style="color: #008000;">第7951行</span>
+    <span style="color: #0000ff;">if</span> (vnode.tag === 'select'<span style="color: #000000;">) {
+      </span><span style="color: #008000;">//</span><span style="color: #008000;"> #6903</span>
+      <span style="color: #0000ff;">if</span> (oldVnode.elm &amp;&amp; !<span style="color: #000000;">oldVnode.elm._vOptions) {
+        mergeVNodeHook(vnode, </span>'postpatch', <span style="color: #0000ff;">function</span><span style="color: #000000;"> () {
+          directive.componentUpdated(el, binding, vnode);
+        });
+      } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+        setSelected(el, binding, vnode.context);
+      }
+      el._vOptions </span>=<span style="color: #000000;"> [].map.call(el.options, getValue);
+    } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (vnode.tag === 'textarea' || isTextInputType(el.type)) {      <span style="color: #008000;">//</span><span style="color: #008000;">如果tag是textarea节点，或者type为这些之一:text,number,password,search,email,tel,url</span>
+      el._vModifiers = binding.modifiers;                                       <span style="color: #008000;">//</span><span style="color: #008000;">保存修饰符</span>
+      <span style="color: #0000ff;">if</span> (!binding.modifiers.lazy) {                                            <span style="color: #008000;">//</span><span style="color: #008000;">如果没有lazy修饰符,先后绑定三个事件</span>
+        el.addEventListener('compositionstart'<span style="color: #000000;">, onCompositionStart);
+        el.addEventListener(</span>'compositionend'<span style="color: #000000;">, onCompositionEnd);
+        </span><span style="color: #008000;">//</span><span style="color: #008000;"> Safari &lt; 10.2 &amp; UIWebView doesn't fire compositionend when</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> switching focus before confirming composition choice</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> this also fixes the issue where some browsers e.g. iOS Chrome</span>
+        <span style="color: #008000;">//</span><span style="color: #008000;"> fires "change" instead of "input" on autocomplete.</span>
+        el.addEventListener('change'<span style="color: #000000;">, onCompositionEnd);
+        </span><span style="color: #008000;">/*</span><span style="color: #008000;"> istanbul ignore if </span><span style="color: #008000;">*/</span>
+        <span style="color: #0000ff;">if</span><span style="color: #000000;"> (isIE9) {
+          el.vmodel </span>= <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+        }
+      }
+    }
+  },</span></pre>
+</div>
+<p><span style="color: #000000;">onCompositionStart和<span style="color: #000000;">onCompositionEnd</span>分别对应compositionstart和compositionend事件，如下:</span></p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">function</span> onCompositionStart (e) {       <span style="color: #008000;">//</span><span style="color: #008000;">第8056行</span>
+  e.target.composing = <span style="color: #0000ff;">true</span><span style="color: #000000;">;
+}
+
+</span><span style="color: #0000ff;">function</span><span style="color: #000000;"> onCompositionEnd (e) {
+  </span><span style="color: #008000;">//</span><span style="color: #008000;"> prevent triggering an input event for no reason</span>
+  <span style="color: #0000ff;">if</span> (!e.target.composing) { <span style="color: #0000ff;">return</span> }   <span style="color: #008000;">//</span><span style="color: #008000;">如果e.target.composing为false，则直接返回，即保证不会重复触发</span>
+  e.target.composing = <span style="color: #0000ff;">false</span><span style="color: #000000;">;
+  trigger(e.target, </span>'input');               <span style="color: #008000;">//</span><span style="color: #008000;">触发e.target的input事件</span>
+<span style="color: #000000;">}
+
+</span><span style="color: #0000ff;">function</span> trigger (el, type) {           <span style="color: #008000;">//</span><span style="color: #008000;">触发el上的type事件 例如type等于:input</span>
+  <span style="color: #0000ff;">var</span> e = document.createEvent('HTMLEvents');   <span style="color: #008000;">//</span><span style="color: #008000;">创建一个HTMLEvents类型</span>
+  e.initEvent(type, <span style="color: #0000ff;">true</span>, <span style="color: #0000ff;">true</span>);                <span style="color: #008000;">//</span><span style="color: #008000;">初始化事件</span>
+  el.dispatchEvent(e);                           <span style="color: #ff0000;">//向el这个元素派发e这个事件</span>
+}</pre>
+</div>
+<p style="display: none;">writer by:大沙漠 QQ:22969969</p>
+<p>最后执行的el.dispatchEvent(e)就会触发我们生成的render函数上定义的input事件</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

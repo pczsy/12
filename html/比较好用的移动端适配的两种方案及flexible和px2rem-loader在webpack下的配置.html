@@ -1,0 +1,271 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修比较好用的移动端适配的两种方案及flexible和px2rem-loader在webpack下的配置' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>比较好用的移动端适配的两种方案及flexible和px2rem-loader在webpack下的配置</center></div><div class='banquan'>原文出处:本文由博客园博主蓓蕾心晴提供。<br/>
+原文连接:https://www.cnblogs.com/beileixinqing/p/11283315.html</div><br>
+    <p>移动端适配，目前自己常用的两种 方案，参考以下两篇好文</p>
+<p><strong>方案一：使用lib-flexible包</strong></p>
+<p><a href="https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html" target="_blank">https://www.w3cplus.com/mobile/lib-flexible-for-html5-layout.html</a></p>
+<p>使用flexible包方式，安装&nbsp;lib-flexible 包和 px2rem-loader包</p>
+<div class="cnblogs_code">
+<pre><code>npm <span style="color: #0000ff;">install</span> --save-dev lib-flexible px2rem-loader</pre>
+</div>
+<p>在需要的js文件中头部引入，如果是vue项目就引入到main.js中：</p>
+<div class="cnblogs_code">
+<pre><code>import <span style="color: #800000;">'</span><span style="color: #800000;">lib-flexible</span><span style="color: #800000;">'</span></pre>
+</div>
+<p>webpack配置loader，注意顺序很重要，顺序不对会出错</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">{
+                test: </span>/\.css$/<span style="color: #000000;">,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    </span>'css-loader'<span style="color: #000000;">,
+                    {loader: </span>'px2rem-loader'<span style="color: #000000;">, options: {
+                            remUni: </span>75<span style="color: #000000;">,
+                            remPrecision: </span>8<span style="color: #000000;">,
+                        }},
+                    {loader: </span>'postcss-loader', options: {plugins: [require("autoprefixer")("last 100 versions"<span style="color: #000000;">)]}}
+                ]
+            },
+            {
+                test: </span>/\.less$/<span style="color: #000000;">,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    </span>'css-loader?importLoaders=1'<span style="color: #000000;">,
+                    {loader: </span>'px2rem-loader'<span style="color: #000000;">, options: {
+                            remUni: </span>75<span style="color: #000000;">,
+                            remPrecision: </span>8<span style="color: #000000;">,
+                        }},
+                    {loader: </span>'postcss-loader', options: {plugins: [require("autoprefixer")("last 100 versions"<span style="color: #000000;">)]}},
+                    </span>'less-loader'<span style="color: #000000;">,
+                ]
+            },</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>这里有个问题，在安卓下flexible.js源码是全部按dpr=1来适配的，那自然是不行的，我们修改一下源码，改为按devicePixelRatio显示</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">if</span><span style="color: #000000;"> (isIPhone) {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> iOS下，对于2和3的屏，用2倍的方案，其余的用1倍方案</span>
+            <span style="color: #0000ff;">if</span> (devicePixelRatio &gt;= 3 &amp;&amp; (!dpr || dpr &gt;= 3<span style="color: #000000;">)) {
+                dpr </span>= 3<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span> <span style="color: #0000ff;">if</span> (devicePixelRatio &gt;= 2 &amp;&amp; (!dpr || dpr &gt;= 2<span style="color: #000000;">)){
+                dpr </span>= 2<span style="color: #000000;">;
+            } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+                dpr </span>= 1<span style="color: #000000;">;
+            }
+        } </span><span style="color: #0000ff;">else</span><span style="color: #000000;"> {
+            </span><span style="color: #008000;">//</span><span style="color: #008000;"> 其他设备下，仍旧使用1倍的方案</span>
+            dpr = devicePixelRatio; <span style="color: #008000;">//</span><span style="color: #008000;">这里将原来=1改为devicePixelRatio</span>
+        }</pre>
+</div>
+<p>然后写针对不同dpr下字体大小的视频，这里用less实现：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">.font-dpr(@font-size) </span>{<span style="color: #ff0000;">
+  font-size</span>:<span style="color: #0000ff;"> @font-size</span>;<span style="color: #ff0000;">
+  [data-dpr="1"] &amp; {
+    font-size</span>:<span style="color: #0000ff;"> @font-size</span>;
+  }<span style="color: #800000;">
+  [data-dpr="2"] &amp; </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> @font-size * 2</span>;
+  }<span style="color: #800000;">
+  // for mx3
+  [data-dpr="2.5"] &amp; </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> @font-size * 2</span>;
+  }<span style="color: #800000;">
+  //for 小米note,for 小米mix
+  [data-dpr="2.75"] &amp; </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> @font-size * 2.2</span>;
+  }<span style="color: #800000;">
+  [data-dpr="3"] &amp; </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> @font-size * 2.2</span>;
+  }<span style="color: #800000;">
+  // for 三星note4 ,三星s6
+  [data-dpr="4"] &amp; </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> @font-size * 2</span>;
+  }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>使用的时候直接.font-dpr(20) 这样婶儿就可以了。</p>
+<p><strong>方案二：使用less或者sass等CSS 预处理语言写适配方案</strong></p>
+<p><a href="https://juejin.im/post/5caaa230e51d452b672f9703#heading-7" target="_blank">https://juejin.im/post/5caaa230e51d452b672f9703#heading-7</a></p>
+<p>基准按照设计图尺寸，但是缺点是不通用，不同页面可能设计图基准尺寸不同，导致在页面自己的less文件中重置基准值也不生效，这里想到了一个兼容的办法，就是在本页面的less中将传入宽度或字体的数字进行换算。</p>
+<p>这里贴出我的mixin.less</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">// rem 单位换算：定为 75px 只是方便运算，750px-75px、640-64px、1080px-108px，如此类推
+@baseSize: 37.5; // 默认根元素大小基准值375,即设计图尺寸为宽375px，不同页面设计图尺寸不同，在页面css头部重新初始化并重新定义html根元素的font-size
+@baseDesign: 375;
+
+.font-size(@px) </span>{<span style="color: #ff0000;">
+  font-size</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.margin(@px) </span>{<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.margin-all(@a,@b,@c,@d) </span>{<span style="color: #ff0000;">
+  margin</span>:<span style="color: #0000ff;"> (@a/@baseSize/2)*1rem (@b/@baseSize/2)*1rem (@c/@baseSize/2)*1rem (@d/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.padding(@px) </span>{<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.padding-all(@a,@b,@c,@d) </span>{<span style="color: #ff0000;">
+  padding</span>:<span style="color: #0000ff;"> (@a/@baseSize/2)*1rem (@b/@baseSize/2)*1rem (@c/@baseSize/2)*1rem (@d/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.width(@px) </span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.height(@px) </span>{<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.min-width(@px) </span>{<span style="color: #ff0000;">
+  min-width</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.max-width(@px) </span>{<span style="color: #ff0000;">
+  max-width</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.line-height(@px) </span>{<span style="color: #ff0000;">
+  line-height</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.margin-right(@px) </span>{<span style="color: #ff0000;">
+  margin-right</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.padding-right(@px) </span>{<span style="color: #ff0000;">
+  padding-right</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.margin-left(@px) </span>{<span style="color: #ff0000;">
+  margin-left</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.padding-left(@px) </span>{<span style="color: #ff0000;">
+  padding-left</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.margin-top(@px) </span>{<span style="color: #ff0000;">
+  //margin</span>:<span style="color: #0000ff;"> @px /(@baseDesign/2) * 100vw</span>;<span style="color: #ff0000;">
+  margin-top</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.padding-top(@px) </span>{<span style="color: #ff0000;">
+  padding-top</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.margin-bottom(@px) </span>{<span style="color: #ff0000;">
+  margin-bottom</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.padding-bottom(@px) </span>{<span style="color: #ff0000;">
+  padding-bottom</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+.border(@px,@color) </span>{<span style="color: #ff0000;">
+  position</span>:<span style="color: #0000ff;"> relative</span>;<span style="color: #ff0000;">
+  &amp;</span>:<span style="color: #0000ff;">:before{
+    content: ""</span>;<span style="color: #ff0000;">
+    position</span>:<span style="color: #0000ff;"> absolute</span>;<span style="color: #ff0000;">
+    left</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    top</span>:<span style="color: #0000ff;"> 0</span>;<span style="color: #ff0000;">
+    width</span>:<span style="color: #0000ff;"> 200%</span>;<span style="color: #ff0000;">
+    border</span>:<span style="color: #0000ff;">1px solid @color</span>;<span style="color: #ff0000;">
+    color</span>:<span style="color: #0000ff;"> @color</span>;<span style="color: #ff0000;">
+    height</span>:<span style="color: #0000ff;"> 200%</span>;<span style="color: #ff0000;">
+    -webkit-transform-origin</span>:<span style="color: #0000ff;"> left top</span>;<span style="color: #ff0000;">
+    transform-origin</span>:<span style="color: #0000ff;"> left top</span>;<span style="color: #ff0000;">
+    -webkit-transform</span>:<span style="color: #0000ff;"> scale(0.5)</span>;<span style="color: #ff0000;">
+    transform</span>:<span style="color: #0000ff;"> scale(0.5)</span>;<span style="color: #ff0000;">
+    pointer-events</span>:<span style="color: #0000ff;"> none</span>; <span style="color: #008000;">/*</span><span style="color: #008000;"> 防止点击触发 </span><span style="color: #008000;">*/</span><span style="color: #ff0000;">
+    box-sizing</span>:<span style="color: #0000ff;"> border-box</span>;<span style="color: #ff0000;">
+    @media screen and (min-device-pixel-ratio</span>:<span style="color: #0000ff;">3),(-webkit-min-device-pixel-ratio:3){
+      width: 300%</span>;<span style="color: #ff0000;">
+      height</span>:<span style="color: #0000ff;"> 300%</span>;<span style="color: #ff0000;">
+      -webkit-transform</span>:<span style="color: #0000ff;"> scale(0.33)</span>;<span style="color: #ff0000;">
+      transform</span>:<span style="color: #0000ff;"> scale(0.33)</span>;
+    }<span style="color: #800000;">
+  }
+}
+
+.border-radius(@px) </span>{<span style="color: #ff0000;">
+  border-radius</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.border-width(@a,@b,@c,@d) </span>{<span style="color: #ff0000;">
+  border-width</span>:<span style="color: #0000ff;"> (@a/@baseSize/2)*1rem (@b/@baseSize/2)*1rem (@c/@baseSize/2)*1rem (@d/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.top(@px)</span>{<span style="color: #ff0000;">
+  top</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.left(@px)</span>{<span style="color: #ff0000;">
+  left</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.right(@px)</span>{<span style="color: #ff0000;">
+  right</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+.bottom(@px)</span>{<span style="color: #ff0000;">
+  bottom</span>:<span style="color: #0000ff;"> (@px/@baseSize/2)*1rem</span>;
+}<span style="color: #800000;">
+
+@imgPath: "../../assets/images/";
+
+// 根元素大小使用 vw 单位
+html </span>{<span style="color: #ff0000;">
+  font-size</span>:<span style="color: #0000ff;"> (@baseSize/(@baseDesign / 2)) * 100vw</span>;<span style="color: #ff0000;">
+
+  @media screen and (orientation</span>:<span style="color: #0000ff;"> landscape) {
+    font-size: (@baseSize/(@baseDesign / 2)) * 100vh</span>;
+  }<span style="color: #800000;">
+
+  // 同时，通过Media Queries 限制根元素最大最小值
+  @media screen and (max-width: 320px) </span>{<span style="color: #ff0000;">
+    font-size</span>:<span style="color: #0000ff;"> 64px</span>;
+  }<span style="color: #800000;">
+  //横屏下ipad等平板font-size最大限制
+ </span><span style="color: #008000;">/*</span><span style="color: #008000;"> @media screen and (min-width: 813px) {
+    font-size: 108px;
+  }</span><span style="color: #008000;">*/</span><span style="color: #800000;">
+}</span></pre>
+</div>
+<p>如果使用该mixin的页面设计图宽度为其他尺寸，比如320，则进行换算：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">@base: 320;
+@convert: 375/@base;
+
+.info</span>{<span style="color: #ff0000;">
+    .width(56*@convert);
+    .height(30*@convert);
+</span>}</pre>
+</div>
+<p>这样进行转换之后可以保证页面中显示的尺寸是完全跟图片中的尺寸一致。</p>
+<p>如果设计图页面是一个banner类型，这样相当于是页面横屏，且高度很低，建议重置mixin中的html根元素字体设置，由vh改为vw,形如：</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #800000;">html</span>{<span style="color: #ff0000;">
+  width</span>:<span style="color: #0000ff;">100vw</span>;<span style="color: #ff0000;">
+  height</span>:<span style="color: #0000ff;">100vh</span>;<span style="color: #ff0000;">
+  @media screen and (orientation</span>:<span style="color: #0000ff;"> landscape) {
+    font-size: (@baseSize/(@baseDesign / 2)) * 100vw</span>;
+  }<span style="color: #800000;">
+}</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

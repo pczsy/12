@@ -1,0 +1,177 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修萤火虫效果' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>萤火虫效果</center></div><div class='banquan'>原文出处:本文由博客园博主野鹤亦闲云提供。<br/>
+原文连接:https://www.cnblogs.com/xiaoyaolang/p/11927486.html</div><br>
+    <p>萤火虫</p>
+<div class="cnblogs_Highlighter">
+<pre><code>		&lt;style type="text/css"&gt;
+			*{
+				padding: 0;
+				margin: 0;
+			}
+				#bg{
+					background: url(img/bg.jpg)  no-repeat;
+					background-size: cover;
+					width: 100%;
+					height: 100%;
+					position: fixed;
+				}
+				img {
+					width: 18px;
+					height: 18px;
+					position: absolute;
+					
+				}
+		&lt;/style&gt;
+	&lt;/head&gt;
+	&lt;body&gt;
+		&lt;div id="bg"&gt;
+			
+		&lt;/div&gt;
+	&lt;/body&gt;
+&lt;/html&gt;
+&lt;script src="public.js"&gt;&lt;/script&gt;
+&lt;script src="sport5.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+	/*
+	确定构造函数 ： FireFly
+	确定属性 ：  动态创建的每一个img
+	确定功能 ：  init 动态创建     运动  
+	 */
+	window.onload = function(){
+		var count = rand(30,80);
+		for(var i = 0; i &lt; count; i++){
+			new FireFly().init();
+		}
+		
+	}
+	
+	function FireFly(){
+		this.star = document.createElement("img");
+		this.init = function(){
+			this.star.src = "img/1.jpg";
+			this.star.style.left = rand(0,window.innerWidth - this.star.offsetWidth) + "px";
+			this.star.style.top = rand(0,window.innerHeight - this.star.offsetHeight) + "px";
+			document.body.appendChild(this.star);
+			setInterval(function(){//定时器中的this是window,用bind去改变里面的this，变为实例
+				this.fly();
+			}.bind(this),1000)
+		}
+		this.fly = function(){
+			move(this.star,{
+				"left" : rand(0,window.innerWidth - this.star.offsetWidth),
+				"top" : rand(0,window.innerHeight - this.star.offsetHeight)
+			});
+		}
+	}
+
+	/*var res = new FireFly();
+	res.init()*/
+
+&lt;/script&gt;
+</pre>
+</div>
+<p>　　public.js</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;collapse:true;;gutter:true;">function $id(id){//给我一个id名，返回一个这个id的元素
+	return document.getElementById(id);
+}
+//求随机数
+function rand(min,max){
+	return Math.round(Math.random()*(max - min) + min);
+}
+
+//随机的16进制颜色
+function getColor(){
+	var str = "0123456789ABCDEF";//十六进制字符串
+	var color = "#";
+	for(var i = 0; i &lt;= 5; i++){//取6个数
+		color += str.charAt(rand(0,15));
+		//rand(0,15)随机0-15之间的数，作为charAt()的下标，取出下标对应的字符
+	}
+	return color;
+}
+function zero(val){
+	return val &lt; 10 ? "0" + val : val;
+}
+//时间差
+function diff(start,end){//2000-2018  2018 - 2000
+	//console.log(start.getTime());
+	return Math.abs(start.getTime() - end.getTime())/1000;
+}
+</pre>
+</div>
+<p>　　sport5.js</p>
+<div class="cnblogs_Highlighter">
+<pre class="brush:html;collapse:true;;gutter:true;">//obj要操作的对象
+//josn:要改变的属性和目标值
+//callback:回调函数；某件事件结束了，再调用我这个函数
+
+//设置 宽    10 高 60
+function move(obj,json,callback){
+	clearInterval(obj.timer);
+	obj.timer = setInterval(function(){
+		var flag = true;//代表每一个属性都到达目标值，不等于目标值不移除定时器
+		for(var attr in json){
+			var cur = 0;
+			if(attr == "opacity"){
+				cur = parseFloat(getStyle(obj,attr)) * 100;//因为getComputedStyle取出来是字符串；所以parseFloat
+			}else{
+				cur = parseInt(getStyle(obj,attr));//有单位 所以parseInt
+			}			
+			var speed = (json[attr] - cur) / 10;
+			speed = speed &gt; 0 ? Math.ceil(speed) : Math.floor(speed);
+			if(cur != json[attr]){
+				flag = false;
+			}
+			
+			if(attr == "opacity"){
+				obj.style[attr] =  (cur + speed) / 100;
+			}else{
+				obj.style[attr] =  cur + speed + "px";
+			}
+		}		
+	// 宽    flag   true         高   flag  flase	
+		if(flag){			
+			clearInterval(obj.timer);//代表着上一件事已经做完了
+			if(callback){
+				callback();
+			}
+				
+		}
+	},30)
+}
+
+//获取非行内元素样式    实际值  
+function getStyle(obj,attr){
+	if(window.getComputedStyle){
+		return window.getComputedStyle(obj)[attr];
+	}else{
+		return obj.currentStyle[attr];
+	}
+}
+</pre>
+</div>
+<p>　　<img src="./images/萤火虫效果0.png" alt="" /><img src="./images/萤火虫效果1.png" alt="" /><img src="./images/萤火虫效果2.png" alt="" /></p>
+<p>&nbsp;</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

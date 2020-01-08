@@ -1,0 +1,595 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修WebGL的颜色渲染-渲染一张DEM(数字高程模型)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>WebGL的颜色渲染-渲染一张DEM(数字高程模型)</center></div><div class='banquan'>原文出处:本文由博客园博主charlee44提供。<br/>
+原文连接:https://www.cnblogs.com/charlee44/p/10799995.html</div><br>
+    <div class="toc">
+    <p class="toc-title">目录</p>
+    <div class="toc-list">
+        <ul>
+        <li><a href="#具体实例">1. 具体实例</a></li>
+        <li><a href="#解决方案">2. 解决方案</a><ul>
+        <li><a href="#dem数据.xyz文件">1) DEM数据.XYZ文件</a></li>
+        <li><a href="#showdem.html">2) showDEM.html</a></li>
+        <li><a href="#showdem.js">3) showDEM.js</a></li>
+        <li><a href="#运行结果">4) 运行结果</a></li>
+        </ul></li>
+        <li><a href="#详细讲解">3. 详细讲解</a><ul>
+        <li><a href="#读取文件">1) 读取文件</a></li>
+        <li><a href="#绘制函数">2) 绘制函数</a></li>
+        <li><a href="#使用缓冲区对象">3) 使用缓冲区对象</a></li>
+        </ul></li>
+        <li><a href="#其他">4. 其他</a></li>
+        </ul>
+    </div>
+</div>
+<h1 id="具体实例">1. 具体实例</h1>
+<p>通过WebGL，可以渲染生成DEM(数字高程模型)。DEM(数字高程模型)是网格点组成的模型，每个点都有x，y，z值；x，y根据一定的间距组成网格状，同时根据z值的高低来选定每个点的颜色RGB。通过这个例子可以熟悉WebGL颜色渲染的过程。</p>
+<h1 id="解决方案">2. 解决方案</h1>
+<h2 id="dem数据.xyz文件">1) DEM数据.XYZ文件</h2>
+<p>这里使用的DEM文件的数据组织如下，如下图所示。<br />
+<img src="./images/WebGL的颜色渲染-渲染一张DEM(数字高程模型)0.png" /><br />
+其中每一行表示一个点，前三个数值表示位置XYZ，后三个数值表示颜色RGB。</p>
+<h2 id="showdem.html">2) showDEM.html</h2>
+<pre><code><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;title&gt; 显示地形 &lt;/title&gt;
+    &lt;script src=&quot;lib/webgl-utils.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;lib/webgl-debug.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;lib/cuon-utils.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;lib/cuon-matrix.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;showDEM.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+    &lt;div&gt;&lt;input type = &#39;file&#39; id = &#39;demFile&#39; &gt;&lt;/div&gt;
+    &lt;!-- &lt;div&gt;&lt;textarea id=&quot;output&quot; rows=&quot;300&quot; cols=&quot;200&quot;&gt;&lt;/textarea&gt;&lt;/div&gt; --&gt;
+    &lt;div&gt;
+        &lt;canvas id =&quot;demCanvas&quot; width=&quot;600&quot; height=&quot;600&quot;&gt;
+            请使用支持WebGL的浏览器
+        &lt;/canvas&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+
+&lt;/html&gt;</code></pre>
+<h2 id="showdem.js">3) showDEM.js</h2>
+<pre><code><code>// Vertex shader program
+var VSHADER_SOURCE =
+    //&#39;precision highp float;\n&#39; +
+    &#39;attribute vec4 a_Position;\n&#39; +
+    &#39;attribute vec4 a_Color;\n&#39; +
+    &#39;uniform mat4 u_MvpMatrix;\n&#39; +
+    &#39;varying vec4 v_Color;\n&#39; +
+    &#39;void main() {\n&#39; +
+    &#39;  gl_Position = u_MvpMatrix * a_Position;\n&#39; +
+    &#39;  v_Color = a_Color;\n&#39; +
+    &#39;}\n&#39;;
+
+// Fragment shader program
+var FSHADER_SOURCE =
+    &#39;#ifdef GL_ES\n&#39; +
+    &#39;precision mediump float;\n&#39; +
+    &#39;#endif\n&#39; +
+    &#39;varying vec4 v_Color;\n&#39; +
+    &#39;void main() {\n&#39; +
+    &#39;  gl_FragColor = v_Color;\n&#39; +
+    &#39;}\n&#39;;
+
+//
+var col = 89;       //DEM宽
+var row = 245;      //DEM高
+
+// Current rotation angle ([x-axis, y-axis] degrees)
+var currentAngle = [0.0, 0.0];
+
+//当前lookAt()函数初始视点的高度
+var eyeHight = 2000.0;
+
+//setPerspective()远截面
+var far = 3000;
+
+//
+window.onload = function () {
+    var demFile = document.getElementById(&#39;demFile&#39;);
+    if (!demFile) {
+        console.log(&quot;Error!&quot;);
+        return;
+    }
+
+    //demFile.onchange = openFile(event);
+    demFile.addEventListener(&quot;change&quot;, function (event) {
+        //判断浏览器是否支持FileReader接口
+        if (typeof FileReader == &#39;undefined&#39;) {
+            console.log(&quot;你的浏览器不支持FileReader接口！&quot;);
+            return;
+        }
+
+        //
+        var reader = new FileReader();
+        reader.onload = function () {
+            if (reader.result) {        
+                //        
+                var stringlines = reader.result.split(&quot;\n&quot;);
+                verticesColors = new Float32Array(stringlines.length * 6);
+            
+                //
+                var pn = 0;
+                var ci = 0;
+                for (var i = 0; i &lt; stringlines.length; i++) {
+                    if (!stringlines[i]) {
+                        continue;
+                    }
+                    var subline = stringlines[i].split(&#39;,&#39;);
+                    if (subline.length != 6) {
+                        console.log(&quot;错误的文件格式！&quot;);
+                        return;
+                    }
+                    for (var j = 0; j &lt; subline.length; j++) {
+                        verticesColors[ci] = parseFloat(subline[j]);
+                        ci++;
+                    }
+                    pn++;
+                }
+            
+                if (ci &lt; 3) {
+                    console.log(&quot;错误的文件格式！&quot;);
+                }
+
+                //
+                var minX = verticesColors[0];
+                var maxX = verticesColors[0];
+                var minY = verticesColors[1];
+                var maxY = verticesColors[1];
+                var minZ = verticesColors[2];
+                var maxZ = verticesColors[2];
+                for (var i = 0; i &lt; pn; i++) {
+                    minX = Math.min(minX, verticesColors[i * 6]);
+                    maxX = Math.max(maxX, verticesColors[i * 6]);
+                    minY = Math.min(minY, verticesColors[i * 6 + 1]);
+                    maxY = Math.max(maxY, verticesColors[i * 6 + 1]);
+                    minZ = Math.min(minZ, verticesColors[i * 6 + 2]);
+                    maxZ = Math.max(maxZ, verticesColors[i * 6 + 2]);
+                }
+               
+                //包围盒中心
+                var cx = (minX + maxX) / 2.0;
+                var cy = (minY + maxY) / 2.0;
+                var cz = (minZ + maxZ) / 2.0;
+
+                //根据视点高度算出setPerspective()函数的合理角度
+                var fovy = (maxY - minY) / 2.0 / eyeHight;
+                fovy = 180.0 / Math.PI * Math.atan(fovy) * 2;
+
+                startDraw(verticesColors, cx, cy, cz, fovy);
+            }
+        };
+
+        //
+        var input = event.target;
+        reader.readAsText(input.files[0]);
+    });
+}
+
+function startDraw(verticesColors, cx, cy, cz, fovy) {
+    // Retrieve &lt;canvas&gt; element
+    var canvas = document.getElementById(&#39;demCanvas&#39;);
+
+    // Get the rendering context for WebGL
+    var gl = getWebGLContext(canvas);
+    if (!gl) {
+        console.log(&#39;Failed to get the rendering context for WebGL&#39;);
+        return;
+    }
+
+    // Initialize shaders
+    if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+        console.log(&#39;Failed to intialize shaders.&#39;);
+        return;
+    }
+
+    // Set the vertex coordinates and color (the blue triangle is in the front)
+    n = initVertexBuffers(gl, verticesColors);          //, verticesColors, n
+    if (n &lt; 0) {
+        console.log(&#39;Failed to set the vertex information&#39;);
+        return;
+    }
+
+    // Get the storage location of u_MvpMatrix
+    var u_MvpMatrix = gl.getUniformLocation(gl.program, &#39;u_MvpMatrix&#39;);
+    if (!u_MvpMatrix) {
+        console.log(&#39;Failed to get the storage location of u_MvpMatrix&#39;);
+        return;
+    }
+
+    // Register the event handler 
+    initEventHandlers(canvas);
+
+    // Specify the color for clearing &lt;canvas&gt;
+    gl.clearColor(0, 0, 0, 1);
+    gl.enable(gl.DEPTH_TEST);
+
+    // Start drawing
+    var tick = function () {
+
+        //setPerspective()宽高比
+        var aspect = canvas.width / canvas.height;
+
+        //
+        draw(gl, n, aspect, cx, cy, cz, fovy, u_MvpMatrix);
+        requestAnimationFrame(tick, canvas);
+    };
+    tick();
+}
+
+//
+function initEventHandlers(canvas) {
+    var dragging = false;         // Dragging or not
+    var lastX = -1, lastY = -1;   // Last position of the mouse
+
+    // Mouse is pressed
+    canvas.onmousedown = function (ev) {
+        var x = ev.clientX;
+        var y = ev.clientY;
+        // Start dragging if a moue is in &lt;canvas&gt;
+        var rect = ev.target.getBoundingClientRect();
+        if (rect.left &lt;= x &amp;&amp; x &lt; rect.right &amp;&amp; rect.top &lt;= y &amp;&amp; y &lt; rect.bottom) {
+            lastX = x;
+            lastY = y;
+            dragging = true;
+        }
+    };
+
+    //鼠标离开时
+    canvas.onmouseleave = function (ev) {
+        dragging = false;
+    };
+
+    // Mouse is released
+    canvas.onmouseup = function (ev) {
+        dragging = false;
+    };
+
+    // Mouse is moved
+    canvas.onmousemove = function (ev) {
+        var x = ev.clientX;
+        var y = ev.clientY;
+        if (dragging) {
+            var factor = 100 / canvas.height; // The rotation ratio
+            var dx = factor * (x - lastX);
+            var dy = factor * (y - lastY);
+            // Limit x-axis rotation angle to -90 to 90 degrees
+            //currentAngle[0] = Math.max(Math.min(currentAngle[0] + dy, 90.0), -90.0);
+            currentAngle[0] = currentAngle[0] + dy;
+            currentAngle[1] = currentAngle[1] + dx;
+        }
+        lastX = x, lastY = y;
+    };
+
+    //鼠标缩放
+    canvas.onmousewheel = function (event) {
+        var lastHeight = eyeHight;
+        if (event.wheelDelta &gt; 0) {
+            eyeHight = Math.max(1, eyeHight - 80);
+        } else {
+            eyeHight = eyeHight + 80;
+        }
+
+        far = far + eyeHight - lastHeight;
+    };
+}
+
+function draw(gl, n, aspect, cx, cy, cz, fovy, u_MvpMatrix) {
+    //模型矩阵
+    var modelMatrix = new Matrix4();
+    modelMatrix.rotate(currentAngle[0], 1.0, 0.0, 0.0); // Rotation around x-axis 
+    modelMatrix.rotate(currentAngle[1], 0.0, 1.0, 0.0); // Rotation around y-axis    
+    modelMatrix.translate(-cx, -cy, -cz);
+
+    //视图矩阵
+    var viewMatrix = new Matrix4();
+    viewMatrix.lookAt(0, 0, eyeHight, 0, 0, 0, 0, 1, 0);
+
+    //投影矩阵
+    var projMatrix = new Matrix4();
+    projMatrix.setPerspective(fovy, aspect, 10, far);
+
+    //模型视图投影矩阵
+    var mvpMatrix = new Matrix4();
+    mvpMatrix.set(projMatrix).multiply(viewMatrix).multiply(modelMatrix);
+
+    // Pass the model view projection matrix to u_MvpMatrix
+    gl.uniformMatrix4fv(u_MvpMatrix, false, mvpMatrix.elements);
+
+    // Clear color and depth buffer
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    // Draw the cube 
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0);
+}
+
+function initVertexBuffers(gl, verticesColors) {
+    //DEM的一个网格是由两个三角形组成的
+    //      0------1            1
+    //      |                   |
+    //      |                   |
+    //      col       col------col+1    
+    var indices = new Uint16Array((row - 1) * (col - 1) * 6);
+    var ci = 0;
+    for (var yi = 0; yi &lt; row - 1; yi++) {
+        for (var xi = 0; xi &lt; col - 1; xi++) {
+            indices[ci * 6] = yi * col + xi;
+            indices[ci * 6 + 1] = (yi + 1) * col + xi;
+            indices[ci * 6 + 2] = yi * col + xi + 1;
+            indices[ci * 6 + 3] = (yi + 1) * col + xi;
+            indices[ci * 6 + 4] = (yi + 1) * col + xi + 1;
+            indices[ci * 6 + 5] = yi * col + xi + 1;
+            ci++;
+        }
+    }
+
+    //创建缓冲区对象
+    var vertexColorBuffer = gl.createBuffer();
+    var indexBuffer = gl.createBuffer();
+    if (!vertexColorBuffer || !indexBuffer) {
+        return -1;
+    }
+
+    // 将缓冲区对象绑定到目标
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+    // 向缓冲区对象中写入数据
+    gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
+
+    //
+    var FSIZE = verticesColors.BYTES_PER_ELEMENT;
+    // 向缓冲区对象分配a_Position变量
+    var a_Position = gl.getAttribLocation(gl.program, &#39;a_Position&#39;);
+    if (a_Position &lt; 0) {
+        console.log(&#39;Failed to get the storage location of a_Position&#39;);
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+    //开启a_Position变量
+    gl.enableVertexAttribArray(a_Position);
+
+    // 向缓冲区对象分配a_Color变量
+    var a_Color = gl.getAttribLocation(gl.program, &#39;a_Color&#39;);
+    if (a_Color &lt; 0) {
+        console.log(&#39;Failed to get the storage location of a_Color&#39;);
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+    //开启a_Color变量
+    gl.enableVertexAttribArray(a_Color);
+
+    // 写入并绑定顶点数组的索引值
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+    return indices.length;
+}</code></pre>
+<h2 id="运行结果">4) 运行结果</h2>
+<p>用chrome打开showDEM.html，选择DEM文件，界面就会显示DEM的渲染效果：<br />
+<img src="./images/WebGL的颜色渲染-渲染一张DEM(数字高程模型)1.png" /></p>
+<h1 id="详细讲解">3. 详细讲解</h1>
+<h2 id="读取文件">1) 读取文件</h2>
+<p>程序的第一步是通过JS的FileReader（）函数读取DEM文件，在其回调函数中读取到数组verticesColors中，它包含了位置和颜色信息。读取完成后调用绘制函数startDraw（）。</p>
+<pre><code><code>//
+var reader = new FileReader();
+reader.onload = function () {
+    if (reader.result) {        
+        //        
+        var stringlines = reader.result.split(&quot;\n&quot;);
+        verticesColors = new Float32Array(stringlines.length * 6);
+    
+        //
+        var pn = 0;
+        var ci = 0;
+        for (var i = 0; i &lt; stringlines.length; i++) {
+            if (!stringlines[i]) {
+                continue;
+            }
+            var subline = stringlines[i].split(&#39;,&#39;);
+            if (subline.length != 6) {
+                console.log(&quot;错误的文件格式！&quot;);
+                return;
+            }
+            for (var j = 0; j &lt; subline.length; j++) {
+                verticesColors[ci] = parseFloat(subline[j]);
+                ci++;
+            }
+            pn++;
+        }
+    
+        if (ci &lt; 3) {
+            console.log(&quot;错误的文件格式！&quot;);
+        }
+
+        //
+        var minX = verticesColors[0];
+        var maxX = verticesColors[0];
+        var minY = verticesColors[1];
+        var maxY = verticesColors[1];
+        var minZ = verticesColors[2];
+        var maxZ = verticesColors[2];
+        for (var i = 0; i &lt; pn; i++) {
+            minX = Math.min(minX, verticesColors[i * 6]);
+            maxX = Math.max(maxX, verticesColors[i * 6]);
+            minY = Math.min(minY, verticesColors[i * 6 + 1]);
+            maxY = Math.max(maxY, verticesColors[i * 6 + 1]);
+            minZ = Math.min(minZ, verticesColors[i * 6 + 2]);
+            maxZ = Math.max(maxZ, verticesColors[i * 6 + 2]);
+        }
+       
+        //包围盒中心
+        var cx = (minX + maxX) / 2.0;
+        var cy = (minY + maxY) / 2.0;
+        var cz = (minZ + maxZ) / 2.0;
+
+        //根据视点高度算出setPerspective()函数的合理角度
+        var fovy = (maxY - minY) / 2.0 / eyeHight;
+        fovy = 180.0 / Math.PI * Math.atan(fovy) * 2;
+
+        startDraw(verticesColors, cx, cy, cz, fovy);
+    }
+};
+
+//
+var input = event.target;
+reader.readAsText(input.files[0]);</code></pre>
+<h2 id="绘制函数">2) 绘制函数</h2>
+<p>绘制DEM跟绘制一个简单三角形的步骤是差不多的：</p>
+<ol>
+<li>获取WebGL环境。</li>
+<li>初始化shaders，构建着色器。</li>
+<li>初始化顶点数组，分配到缓冲对象。</li>
+<li>绑定鼠标键盘事件，设置模型视图投影变换矩阵。</li>
+<li>在重绘函数中调用WebGL函数绘制。</li>
+</ol>
+<p>其中最关键的步骤是第三步，初始化顶点数组initVertexBuffers()。</p>
+<pre><code><code>function startDraw(verticesColors, cx, cy, cz, fovy) {
+    // Retrieve &lt;canvas&gt; element
+    var canvas = document.getElementById(&#39;demCanvas&#39;);
+
+    // Get the rendering context for WebGL
+    var gl = getWebGLContext(canvas);
+    if (!gl) {
+        console.log(&#39;Failed to get the rendering context for WebGL&#39;);
+        return;
+    }
+
+    // Initialize shaders
+    if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+        console.log(&#39;Failed to intialize shaders.&#39;);
+        return;
+    }
+
+    // Set the vertex coordinates and color (the blue triangle is in the front)
+    n = initVertexBuffers(gl, verticesColors);          //, verticesColors, n
+    if (n &lt; 0) {
+        console.log(&#39;Failed to set the vertex information&#39;);
+        return;
+    }
+
+    // Get the storage location of u_MvpMatrix
+    var u_MvpMatrix = gl.getUniformLocation(gl.program, &#39;u_MvpMatrix&#39;);
+    if (!u_MvpMatrix) {
+        console.log(&#39;Failed to get the storage location of u_MvpMatrix&#39;);
+        return;
+    }
+
+    // Register the event handler 
+    initEventHandlers(canvas);
+
+    // Specify the color for clearing &lt;canvas&gt;
+    gl.clearColor(0, 0, 0, 1);
+    gl.enable(gl.DEPTH_TEST);
+
+    // Start drawing
+    var tick = function () {
+
+        //setPerspective()宽高比
+        var aspect = canvas.width / canvas.height;
+
+        //
+        draw(gl, n, aspect, cx, cy, cz, fovy, u_MvpMatrix);
+        requestAnimationFrame(tick, canvas);
+    };
+    tick();
+}</code></pre>
+<h2 id="使用缓冲区对象">3) 使用缓冲区对象</h2>
+<p>在函数initVertexBuffers（）中包含了使用缓冲区对象向顶点着色器传入多个顶点数据的过程：</p>
+<ol>
+<li>创建缓冲区对象（gl.createBuffer()）；</li>
+<li>绑定缓冲区对象（gl.bindBuffer()）；</li>
+<li>将数据写入缓冲区对象（gl.bufferData）；</li>
+<li>将缓冲区对象分配给一个attribute变量(gl.vertexAttribPointer)</li>
+<li>开启attribute变量(gl.enableVertexAttribArray)；</li>
+</ol>
+<p>在本例中，在JS中申请的数组verticesColors分成位置和颜色两部分分配给缓冲区对象，并传入顶点着色器；vertexAttribPointer（）是其关键的函数，需要详细了解其参数的用法。最后，把顶点数据的索引值绑定到缓冲区对象，WebGL可以访问索引来间接访问顶点数据进行绘制。</p>
+<pre><code><code>function initVertexBuffers(gl, verticesColors) {
+    //DEM的一个网格是由两个三角形组成的
+    //      0------1            1
+    //      |                   |
+    //      |                   |
+    //      col       col------col+1    
+    var indices = new Uint16Array((row - 1) * (col - 1) * 6);
+    var ci = 0;
+    for (var yi = 0; yi &lt; row - 1; yi++) {
+        for (var xi = 0; xi &lt; col - 1; xi++) {
+            indices[ci * 6] = yi * col + xi;
+            indices[ci * 6 + 1] = (yi + 1) * col + xi;
+            indices[ci * 6 + 2] = yi * col + xi + 1;
+            indices[ci * 6 + 3] = (yi + 1) * col + xi;
+            indices[ci * 6 + 4] = (yi + 1) * col + xi + 1;
+            indices[ci * 6 + 5] = yi * col + xi + 1;
+            ci++;
+        }
+    }
+
+    //创建缓冲区对象
+    var vertexColorBuffer = gl.createBuffer();
+    var indexBuffer = gl.createBuffer();
+    if (!vertexColorBuffer || !indexBuffer) {
+        return -1;
+    }
+
+    // 将缓冲区对象绑定到目标
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexColorBuffer);
+    // 向缓冲区对象中写入数据
+    gl.bufferData(gl.ARRAY_BUFFER, verticesColors, gl.STATIC_DRAW);
+
+    //
+    var FSIZE = verticesColors.BYTES_PER_ELEMENT;
+    // 向缓冲区对象分配a_Position变量
+    var a_Position = gl.getAttribLocation(gl.program, &#39;a_Position&#39;);
+    if (a_Position &lt; 0) {
+        console.log(&#39;Failed to get the storage location of a_Position&#39;);
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Position, 3, gl.FLOAT, false, FSIZE * 6, 0);
+    //开启a_Position变量
+    gl.enableVertexAttribArray(a_Position);
+
+    // 向缓冲区对象分配a_Color变量
+    var a_Color = gl.getAttribLocation(gl.program, &#39;a_Color&#39;);
+    if (a_Color &lt; 0) {
+        console.log(&#39;Failed to get the storage location of a_Color&#39;);
+        return -1;
+    }
+    gl.vertexAttribPointer(a_Color, 3, gl.FLOAT, false, FSIZE * 6, FSIZE * 3);
+    //开启a_Color变量
+    gl.enableVertexAttribArray(a_Color);
+
+    // 写入并绑定顶点数组的索引值
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+    return indices.length;
+}</code></pre>
+<h1 id="其他">4. 其他</h1>
+<p>1.这里用到了几个《WebGL编程指南》书中提供的JS组件。全部源代码(包含DEM数据)地址链接：<a href="https://share.weiyun.com/5cvt8PJ" class="uri">https://share.weiyun.com/5cvt8PJ</a> ，密码：4aqs8e。<br />
+2.如果关心如何设置模型视图投影变换矩阵，以及绑定鼠标键盘事件，可参看这篇文章：<a href="https://www.cnblogs.com/charlee44/p/10393227.html">WebGL或OpenGL关于模型视图投影变换的设置技巧</a>。<br />
+3.渲染的结果如果加入光照，效果会更好。</p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

@@ -1,0 +1,151 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修深度行盒与行块盒（空白，参考线，行盒右拉伸）' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>深度行盒与行块盒（空白，参考线，行盒右拉伸）</center></div><div class='banquan'>原文出处:本文由博客园博主加减乘除t提供。<br/>
+原文连接:https://www.cnblogs.com/lipmtb/p/lineBox.html</div><br>
+    <h2 id="容器内的行块盒和行盒">容器内的行块盒和行盒</h2>
+<pre><code><code>  &lt;!-- test1: 关于行盒和行块盒的空白折叠问题 --&gt;
+    &lt;!-- 行块盒右边的空白折叠为一个 （操作：切换span2的display为inline ,往右书写ggg1的位置）--&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;display:block;font-size:32px;background-color:rgb(252, 240, 171);&quot;&gt;ggg1
+        &lt;/span&gt;
+        &lt;span class=&quot;span2&quot; style=&quot;display:inline-block;font-size:64px;background-color:rgb(252, 183, 171);&quot;&gt;ggg1
+        &lt;/span&gt; ggg1
+
+    &lt;/div&gt;
+
+
+    &lt;!-- 行盒的右边空白忽略 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;display:block;font-size:32px;background-color:rgb(252, 240, 171);&quot;&gt;ggg1
+        &lt;/span&gt;
+        &lt;span class=&quot;span2&quot; style=&quot;font-size:32px;background-color:rgb(252, 183, 171);&quot;&gt;ggg1
+        &lt;/span&gt;
+        ggg1
+    &lt;/div&gt;
+
+
+    &lt;!-- test2:行块盒与行块盒 --&gt;
+    &lt;!-- 行块盒右边的空白折叠为一个，由父元素的font-size控制大小 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;display:inline-block;font-size:32px;background-color:rgb(252, 240, 171);&quot;&gt;ggg2
+        &lt;/span&gt;&lt;span class=&quot;span2&quot; style=&quot;display:inline-block;font-size:64px;background-color:rgb(252, 183, 171);&quot;&gt;ggg2
+        &lt;/span&gt;
+        &lt;span class=&quot;span3&quot; style=&quot;display:inline-block;font-size:32px;background-color:rgb(247, 87, 161);&quot;&gt;ggg2
+        &lt;/span&gt;
+
+    &lt;/div&gt;
+
+
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;display:inline-block;font-size:32px;background-color:rgb(252, 240, 171);&quot;&gt;ggg2
+        &lt;/span&gt;&lt;span class=&quot;span2&quot; style=&quot;display:inline-block;font-size:64px;background-color:rgb(252, 183, 171);&quot;&gt;ggg2
+        &lt;/span&gt;
+        &lt;span class=&quot;span3&quot; style=&quot;display:inline-block;font-size:32px;background-color:rgb(247, 87, 161);&quot;&gt;ggg2
+        &lt;/span&gt;ggg2 ggg2
+
+    &lt;/div&gt;
+
+
+    &lt;!--test3:  行盒与行盒 (特别) --&gt;
+    &lt;!-- 行盒子后面摆放&quot;行盒&quot;(有文本就有)，前一个行盒子出现右拉伸 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;font-size:32px;background-color:rgb(252, 240, 171);&quot;&gt;ggg3
+        &lt;/span&gt;
+
+        &lt;span class=&quot;span2&quot; style=&quot;font-size:64px;background-color:rgb(252, 183, 171);&quot;&gt;ggg3
+        &lt;/span&gt; ggg3 ggg3
+
+    &lt;/div&gt;
+
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;font-size:32px;background-color:rgb(252, 215, 8);&quot;&gt;ggg3
+        &lt;/span&gt;
+
+
+        &lt;span class=&quot;span2&quot; style=&quot;font-size:0px;background-color:rgb(255, 1, 1);&quot;&gt;ggg3
+        &lt;/span&gt;
+
+    &lt;/div&gt;
+
+
+  &lt;!-- test4: 行盒子后面摆放&quot;行块盒&quot;，前一个行盒子出现右拉伸 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;font-size:32px;background-color:rgb(194, 252, 171);&quot;&gt;ggg4
+        &lt;/span&gt;
+
+        &lt;span class=&quot;span2&quot;
+            style=&quot;display:inline-block;font-size:64px;background-color:rgb(52, 247, 3);&quot;&gt;
+        &lt;/span&gt;
+
+    &lt;/div&gt;
+
+
+ &lt;!-- test5: span2后面无行盒子或者行块盒子，无右拉伸 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span1&quot; style=&quot;font-size:32px;background-color:rgb(194, 252, 171);&quot;&gt;ggg5
+        &lt;/span&gt;
+
+        &lt;span class=&quot;span2&quot; style=&quot;font-size:64px;background-color:rgb(252, 203, 171);&quot;&gt;ggg5
+        &lt;/span&gt;
+       
+    &lt;/div&gt;
+
+ 
+ &lt;!-- test6: 行盒左右两边一个行块盒 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span2&quot;
+            style=&quot;display:inline-block;height:60px;width:100px;font-size:64px;background-color:rgb(252, 171, 171);&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;span1&quot; style=&quot;font-size:32px;background-color:rgb(194, 252, 171);&quot;&gt;ggg6
+        &lt;/span&gt;
+
+        &lt;span class=&quot;span2&quot;
+            style=&quot;display:inline-block;height:60px;width:100px;font-size:64px;background-color:rgb(252, 203, 171);&quot;&gt;
+        &lt;/span&gt;
+
+    &lt;/div&gt;
+
+
+&lt;!-- test7: 去掉ggg77效果一样，说明父元素有参考线 --&gt;
+    &lt;div class=&quot;div-span&quot; style=&#39;border:1px solid;margin:10px;font-size:16px;font-family:cursive;&#39;&gt;
+        &lt;span class=&quot;span2&quot;
+            style=&quot;display:inline-block;height:40px;width:100px;font-size:64px;background-color:rgb(252, 171, 171);&quot;&gt;
+        &lt;/span&gt;
+       
+        &lt;span class=&quot;span2&quot;
+            style=&quot;display:inline-block;height:60px;width:120px;background-color:rgb(197, 83, 7);&quot;&gt;
+        &lt;/span&gt;
+        ggg77
+
+    &lt;/div&gt;</code></pre>
+<h2 id="总结">总结</h2>
+<ol>
+<li>文字的大小由: font-size,font-family,line-height决定<br />
+设置文字的相对大小时候px,em,百分比，文字的内容实际高度content-area通常高于设置的值（不同的font-family比例不同，同一种文字比例相同，按比例计算），而且还有字体设计者设置的默认行高（行高&gt;=0）</li>
+<li>图片(可替换元素)和无子元素的inline-block元素的行为类似，都是下外边距作为参考线</li>
+<li><p>一个元素内部有行盒（或者行块盒），且font-size&gt;0时，该元素会产生参考线</p></li>
+<li>行盒子右边有行盒子（有文本的）或者行块盒（任意的，甚至宽高0，无子元素）会导致该元素右伸展</li>
+<li>行块盒与行盒或者行块盒之间 ，如果之间有空隙发生空白折叠（代码书写的多个换行或者空格合并为一个），空白大小由该元素包含块的font-size大小决定</li>
+<li><p>vertical-align 可以设置行盒或者行块盒</p></li>
+</ol>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

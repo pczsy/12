@@ -1,0 +1,144 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修HTML连载28-标签的权重' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>HTML连载28-标签的权重</center></div><div class='banquan'>原文出处:本文由博客园博主心悦君兮君不知-睿提供。<br/>
+原文连接:https://www.cnblogs.com/ruigege0000/p/11306527.html</div><br>
+    <p>一、什么是优先级的权重</p>
+<p>1.作用：当多个选择器混合在一起的时候，我们可以通过计算权重来判断谁的优先级最高。</p>
+<p>2.权重的计算规则</p>
+<p>公共代码：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #0000ff;">&lt;</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;</span><span style="color: #800000;">div </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="identity1"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="box1"</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+            <span style="color: #0000ff;">&lt;</span><span style="color: #800000;">p </span><span style="color: #ff0000;">id</span><span style="color: #0000ff;">="identity2"</span><span style="color: #ff0000;"> class</span><span style="color: #0000ff;">="box2"</span><span style="color: #0000ff;">&gt;</span>试炼语句<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">p</span><span style="color: #0000ff;">&gt;</span>
+
+        <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">li</span><span style="color: #0000ff;">&gt;</span>
+
+    <span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">ul</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">div</span><span style="color: #0000ff;">&gt;</span>
+
+<span style="color: #0000ff;">&lt;/</span><span style="color: #800000;">body</span><span style="color: #0000ff;">&gt;</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>（1）首先计算选择器中有多少个id，id多的选择器优先级最高；</p>
+<p>例子：</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #identity1 .box2{
+
+            color: red;
+
+        }
+
+        .box1 .box2{
+
+            color: blue;
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载28-标签的权重0.png" alt="" /></p>
+<p>（2）如果id选择器同样多，那么类选择器多的优先级高</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">       .box1 .box2{
+
+            color: blue;
+
+        }
+
+        div ul li p{
+
+            color: purple;
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载28-标签的权重1.png" alt="" /></p>
+<p>（3）如果类名的个数也一样多，那么标签个数多的个数多的优先级高</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #identity1 ul{
+
+            color: red;
+
+        }
+
+        #identity1 ul li p{
+
+            color: purple;
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载28-标签的权重2.png" alt="" /></p>
+<p>（4）如果上述三条全都一样，那么谁在后面听谁的</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #identity1 ul li{
+
+            color: blue;
+
+        }
+
+        #identity1 ul p{
+
+            color: red;
+
+        }</span></pre>
+</div>
+<p>&nbsp;</p>
+<p><img src="./images/HTML连载28-标签的权重3.png" alt="" /></p>
+<p>3.注意：只有选择器是直接选中标签的才需要计算</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #000000;">        #identity1{
+
+            color: blue;
+
+        }
+
+        p{
+
+            color: red;
+
+        }</span></pre>
+</div>
+<p><img src="./images/HTML连载28-标签的权重4.png" alt="" /></p>
+<p>二、源码：</p>
+<p>d88&amp;89_the_weiht_of_selector.html</p>
+<p>地址:</p>
+<p>https://github.com/ruigege66/HTML_learning/blob/master/d88%2689_the_weiht_of_selector.html</p>
+<p>2.CSDN：https://blog.csdn.net/weixin_44630050（心悦君兮君不知-睿）3.博客园：https://www.cnblogs.com/ruigege0000/</p>
+<p>4.欢迎关注微信公众号：傅里叶变换，后台回复&ldquo;礼包&rdquo;获取Java大数据学习视频礼包</p>
+<p>&nbsp;<img src="./images/HTML连载28-标签的权重5.png" alt="" /></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

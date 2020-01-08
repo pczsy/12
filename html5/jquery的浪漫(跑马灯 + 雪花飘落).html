@@ -1,0 +1,241 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修jquery的浪漫(跑马灯 + 雪花飘落)' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>jquery的浪漫(跑马灯 + 雪花飘落)</center></div><div class='banquan'>原文出处:本文由博客园博主smile_or提供。<br/>
+原文连接:https://www.cnblogs.com/sgs123/p/10813613.html</div><br>
+    <h2 id="jquery的浪漫">jquery的浪漫</h2>
+<h3 id="主要用到知识点">主要用到知识点：</h3>
+<ul>
+<li>鼠标事件onmousedown() onmousemove() onmouseup()</li>
+<li>jquery的运用，对dom元素的增删改查</li>
+<li><p>css3 3d 功能的灵活运用</p>
+<h3 id="实现的功能">实现的功能</h3></li>
+<li>跑马灯效果 文字自动输入 雪花飘落 鼠标点击 滑动生成雪花 背景音乐等</li>
+<li><p>看效果</p></li>
+</ul>
+<p><img src="./images/jquery的浪漫(跑马灯 + 雪花飘落)0.png" alt="Alt" /></p>
+<h3 id="html">html：</h3>
+<pre><code><code>   &lt;div class=&quot;text&quot;&gt;
+        &lt;marquee behavior=&quot;alternate&quot;&gt;时光不老，我们不散&lt;/marquee&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;box&quot;&gt;
+        &lt;div class=&quot;pic&quot;&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;img src=&quot;./img/1.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;text1&quot;&gt;&lt;/div&gt;
+    &lt;audio 
+        src=&quot;http://www.170mv.com/kw/other.web.rh01.sycdn.kuwo.cn/resource/n1/59/88/1388628737.mp3&quot; 
+        autoplay
+        loop
+    &gt;&lt;/audio&gt;</code></pre>
+<h3 id="css">css：</h3>
+<pre class="css"><code>    *{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    html,body{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        cursor: pointer;
+    }
+    .wraper{
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+    }
+    .text,.text1{
+        width:500px;
+        margin: 0 auto;
+        color: #fff;
+        font-size: 30px;
+    }
+    .text1{
+        color: rgba(19, 128, 230, 0.849);
+    }
+    .box{
+        width: 500px;
+        height: 300px;
+        margin: 150px auto;
+        perspective: 800px;
+        perspective-origin: 50% 50%;
+    }
+    .box .pic{
+        width: 500px;
+        height: 300px;
+        transform-style: preserve-3d;
+        animation: play 10s linear infinite;
+        position: relative;
+    }
+    .pic ul li{
+        border-radius: 5px;
+        width: 300px;
+        height: 300px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        transition: transform 0.2s ease-in;
+    }
+    .pic ul li img{
+        width:100%;
+        height:100%;
+    }
+    .pic ul li:nth-child(1){
+        transform: rotateY(0deg) translateZ(150px);
+    }
+    .pic ul li:nth-child(2){
+        transform: rotateY(90deg) translateZ(150px);
+    }
+    .pic ul li:nth-child(3){
+        transform: rotateY(180deg) translateZ(150px);
+    }
+    .pic ul li:nth-child(4){
+        transform: rotateY(270deg) translateZ(150px);
+    }
+    .pic ul li:nth-child(5){
+        transform: rotateX(90deg) translateZ(150px);
+    }
+    .pic ul li:nth-child(6){
+        transform: rotateX(-90deg) translateZ(150px);
+    }
+
+    .box:hover .pic ul li:nth-child(1){
+        transform: rotateY(0deg) translateZ(250px);
+    }
+    .box:hover .pic ul li:nth-child(2){
+        transform: rotateY(90deg) translateZ(250px);
+    }
+    .box:hover .pic ul li:nth-child(3){
+        transform: rotateY(180deg) translateZ(250px);
+    }
+    .box:hover .pic ul li:nth-child(4){
+        transform: rotateY(270deg) translateZ(250px);
+    }
+    .box:hover .pic ul li:nth-child(5){
+        transform: rotateX(90deg) translateZ(250px);
+    }
+    .box:hover .pic ul li:nth-child(6){
+        transform: rotateX(-90deg) translateZ(250px);
+    }
+    @keyframes play{
+        0%{
+            transform:rotateX(0deg) rotateY(0deg);
+        }
+        100%{
+            transform: rotateX(360deg) rotateY(360deg);
+        }
+    }</code></pre>
+<h3 id="js">js：</h3>
+<pre class="javascript"><code>    var text = document.getElementsByClassName(&#39;text1&#39;)[0];
+    window.onload = function(){
+        var str = &#39;悠悠岁月之间我心永远不变，纵使沧海桑天爱你至到永远，我不在乎昨天更无所谓明天，抛开世间一切，唯独对你的思念一生一世海枯石烂！&#39;
+        var i = 0;
+        var timer = setInterval(function(){
+            text.innerHTML +=str.charAt(i);
+            i++;
+            if(i &gt;str.length){
+                i = 0;
+                text.innerHTML = &#39;&#39;
+            }
+        },150)
+    //雪花效果  
+        var xh = &#39;❉&#39;
+        var minSize = 5;
+        var maxSize = 50;
+        var time = 100;
+        var color = &quot;#fff&quot;;
+        var boxW = $(window).width();
+        var boxH = document.body.clientHeight;
+        var div = $(&#39;&lt;div&gt;&lt;/div&gt;&#39;).css({
+            &#39;position&#39;:&#39;absolute&#39;,
+            &#39;top&#39;:&#39;0px&#39;
+        }).html(xh);
+        var timer1 = setInterval(function(){
+            var size = Math.random()*maxSize + minSize;
+            var left = Math.random()*boxW;
+            var opacity = Math.random()*0.8 + 0.3;
+            var endLeft = Math.random() * boxW;
+            var endTop = boxH - 100;
+            var speed = Math.random()*7000 + 3000;
+            div.clone().appendTo($(&#39;body&#39;)).css({
+                &#39;left&#39;:left,
+                &#39;font-size&#39;:size,
+                &#39;opacity&#39;:opacity,
+                &#39;color&#39;:color
+            }).animate({
+                &#39;top&#39;:endTop,
+                &#39;left&#39;:endLeft,
+                &#39;opacity&#39;:&#39;0.1&#39;
+            }, speed,function(){
+                $(this).remove();
+            })
+        },time)
+        function cursor(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var size = Math.random() * maxSize + minSize;
+            var left = e.pageX - size / 2;
+            var top = e.pageY - size / 2;
+            var opacity = Math.random() * 0.8 + 0.3;
+            var endLeft = Math.random() * boxW;
+            var endTop = boxH - 100;
+            var speed = Math.random() * 7000 + 3000;
+            div.clone().appendTo($(&#39;body&#39;)).css({
+                &#39;left&#39;: left,
+                &#39;top&#39;: top,
+                &#39;font-size&#39;: size,
+                &#39;opacity&#39;: opacity,
+                &#39;color&#39;: color,
+                &#39;z-index&#39;:&#39;100&#39;
+            }).animate({
+                &#39;top&#39;: endTop,
+                &#39;left&#39;: endLeft,
+                &#39;opacity&#39;: &#39;0.1&#39;
+            }, speed, function () {
+                $(this).remove();
+            })
+        }
+        $(&#39;body&#39;).on(&#39;mousedown&#39;,function(e){
+            cursor(e);
+            $(document).on(&#39;mousemove&#39;,function(ev){
+                cursor(ev);
+            })
+            $(document).on(&#39;mouseup&#39;,function(){
+                $(document).off(&#39;mousemove&#39;).off(&#39;mousedown&#39;);
+            })
+        })
+    } </code></pre>
+<p>参考自：腾讯课堂渡一教育</p>
+
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>

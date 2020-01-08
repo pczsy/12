@@ -1,0 +1,143 @@
+<html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='applicable-device' content='pc'><meta name='keywords' content='电脑,电脑讲解,电脑技术,编程,电脑故障维修浅谈Vue下的components模板' />
+<script src='../../highlight/highlight.pack.js'></script>
+<link rel='stylesheet' type='text/css' href='../../highlight/styles/monokai.css'/>
+
+<link rel='stylesheet' href='../../fenxiang/dist/css/share.min.css'>
+<script src='../../fenxiang/src/js/social-share.js'></script>
+<script src='../../fenxiang/src/js/qrcode.js'></script>
+
+</head><body><script>hljs.initHighlightingOnLoad();</script><script>
+var system ={};  
+var p = navigator.platform;       
+system.win = p.indexOf('Win') == 0;  
+system.mac = p.indexOf('Mac') == 0;  
+system.x11 = (p == 'X11') || (p.indexOf('Linux') == 0);     
+if(system.win||system.mac||system.xll){
+document.write("<link href='../css/3.css' rel='stylesheet' type='text/css'>");}else{ document.write("<link href='../css/3wap.css' rel='stylesheet' type='text/css'>");}</script><script src='../../js/3.js'></script><div class='div2'><div class='heading_nav'><ul><div><li><a href='../../index.html'>首页</a></li>
+</div><div onclick='hidden1()' >分享</div>
+</ul></div></div>
+<div id='heading_nav2'> 
+<li class='row' >
+<div class='social-share' data-mode='prepend'><a href='javascript:' class='social-share-icon icon-heart'></a></div></li></div><script charset='utf-8' src='../../3/js/hengfu.js'></script><script charset='utf-8' src='../../3/js/hengfu2.js'></script><hr><div class='div1'><div class='biaoti'><center>浅谈Vue下的components模板</center></div><div class='banquan'>原文出处:本文由博客园博主程序猿的日常1提供。<br/>
+原文连接:https://www.cnblogs.com/xsd1/p/11941615.html</div><br>
+    <p>浅谈Vue下的components模板<br />在我们越来越深入Vue时，我们会发现我们对HTML代码的工程量会越来越少，今天我们来谈谈Vue下的 components模板的 初步使用方法与 应用</p>
+<p>我们先来简单的写一段components代码<br />(局部方法创造模板)</p>
+<div class="cnblogs_code">
+<div class="cnblogs_code">
+<pre><code>&lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">app</span><span style="color: #800000;">"</span>&gt;
+&lt;haha&gt;&lt;/haha&gt;
+&lt;/div&gt;
+
+<span style="color: #008000;">/*</span><span style="color: #008000;">
+这是最简单常用的一种创造模板方法，局部方法创造模板
+要注意,局部模板 的作用范围 只在 相对的vue对象 范围内 
+比如 这个例子, &lt;haha&gt;&lt;/haha&gt;的范围 只在 &lt;div id="app"&gt; &lt;/div&gt;内
+因为 haha 挂载在 vm的components下 而 vm挂载的 对应节点是 id=app的 div上
+
+
+</span><span style="color: #008000;">*/</span><span style="color: #000000;">
+let vm </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+el:</span><span style="color: #800000;">"</span><span style="color: #800000;">#app</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+data:{
+},
+components:{
+</span><span style="color: #800000;">"</span><span style="color: #800000;">haha</span><span style="color: #800000;">"</span><span style="color: #000000;">:{
+template:</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;div&gt;哈哈哈&lt;div&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+}
+});</span></pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<blockquote>
+<p>(共有模板/全局模板)，全局模板 顾名思义 肯定是 放在哪里都能用</p>
+</blockquote>
+<div class="cnblogs_code">
+<pre><code>&lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">app</span><span style="color: #800000;">"</span>&gt;
+&lt;hehe&gt;&lt;/hehe&gt;
+&lt;/div&gt;
+
+
+<span style="color: #008000;">//</span><span style="color: #008000;">这里使用Vue.component原型方法来创造</span>
+<span style="color: #000000;">Vue.component(
+</span><span style="color: #800000;">"</span><span style="color: #800000;">hehe</span><span style="color: #800000;">"</span>,template:<span style="color: #800000;">"</span><span style="color: #800000;">&lt;div&gt;呵呵呵&lt;div&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+);
+
+let vm </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+el:</span><span style="color: #800000;">"</span><span style="color: #800000;">#app</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+data:{
+},
+components:{
+</span><span style="color: #008000;">//</span><span style="color: #008000;">这里则不需要添加,因为 互不影响</span>
+<span style="color: #000000;">}
+});</span></pre>
+</div>
+<p>其他方法：</p>
+<div class="cnblogs_code">
+<pre><code>&lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">app</span><span style="color: #800000;">"</span>&gt;
+&lt;xixi&gt;&lt;/xixi&gt;
+&lt;/div&gt;<span style="color: #000000;">
+
+let xixi</span>=<span style="color: #000000;">{
+template:</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;div&gt;嘻嘻嘻&lt;div&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+
+let vm </span>= <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+el : </span><span style="color: #800000;">"</span><span style="color: #800000;">#app</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+data{
+},
+components:{
+xixi
+}
+
+});</span></pre>
+</div>
+<p>(模板的继承)，全局模板 顾名思义 肯定是 放在哪里都能用</p>
+<div class="cnblogs_code">
+<pre><code><span style="color: #008000;">/*</span><span style="color: #008000;">
+我们来讲个最简单的 父亲，儿子 ，孙子的 例子
+要注意以下几点：
+1.先实例化对象vm
+2.造出parent模板,并挂载在 vm的 conponents 下
+3.造出 son 模板 并 挂载 在 父级 parent 的conponents下，并在 父级template属性中 包裹住自己的 模板名标签 ；同理 造出孙子标签
+4.在HTML节点中添加 目标 根节点
+（节点的顺序一定要书写正确）
+</span><span style="color: #008000;">*/</span>
+&lt;div id=<span style="color: #800000;">"</span><span style="color: #800000;">app</span><span style="color: #800000;">"</span>&gt;
+&lt;parent&gt;&lt;/parent&gt;
+&lt;/div&gt;
+
+<span style="color: #008000;">//</span><span style="color: #008000;">创建 孙子 模板</span>
+let grendson =<span style="color: #000000;"> { 
+template:</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;div&gt;孙子&lt;/div&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建 儿子 模板</span>
+let son=<span style="color: #000000;"> { 
+template:</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;son&gt;儿子&lt;grendson &gt;孙子&lt;/grendson &gt;&lt;/son&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+components:{
+grendson 
+}
+}
+
+</span><span style="color: #008000;">//</span><span style="color: #008000;">创建 父亲 模板</span>
+let parent =<span style="color: #000000;"> { 
+template:</span><span style="color: #800000;">"</span><span style="color: #800000;">&lt;div&gt;父亲&lt;son&gt;&lt;/son&gt;&lt;/div&gt;</span><span style="color: #800000;">"</span><span style="color: #000000;">
+components:{
+son
+}
+}
+</span><span style="color: #008000;">//</span><span style="color: #008000;">实例化vm对象</span>
+let vm = <span style="color: #0000ff;">new</span><span style="color: #000000;"> Vue({
+el:</span><span style="color: #800000;">"</span><span style="color: #800000;">#app</span><span style="color: #800000;">"</span><span style="color: #000000;">,
+data:{
+},
+components:{
+parent
+}
+});</span></pre>
+</div>
+<p>相信很多人在刚接触前端或者中期时候总会遇到一些问题及瓶颈期，如学了一段时间没有方向感或者坚持不下去一个人学习枯燥乏味有问题也不知道怎么解决，对此我整理了一些资料 喜欢我的文章想与更多资深大牛一起讨论和学习的话 欢迎加入我的学习交流群<a class=" wrap external" href="https://link.zhihu.com/?target=https%3A//jq.qq.com/%3F_wv%3D1027%26k%3D59jir0A" rel="nofollow noreferrer" target="_blank" data-za-detail-view-id="1043">907694362</a></p>
+</div>
+</div><hr><script charset='utf-8' src='../../js/sming.js'></script></body></html>
